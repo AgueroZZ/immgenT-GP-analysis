@@ -9,7 +9,7 @@
 #   S2C  Boxplots of CD8A/CD8B log-normalized CITE-seq protein expression in
 #        CD8 cells, resting vs activated.
 #
-# Source: ported from script/Figure_Lineage.R (see Figure2.R for the main
+# Source: ported from Figure_Lineage.R (see Figure2.R for the main
 # Figure 2 panels from the same file).
 
 library(ggplot2)
@@ -22,8 +22,8 @@ library(Matrix) # protein_mat_normalized_lognorm is a dgCMatrix; rownames()
                 # to zero cells during this refactor -- keep this library() call.
 
 data_path <- "data/"
-figure_path <- "figure-refactor/Figure S2/"
-source("code-refactor/R/plot_utils.R") # tukey_outliers()
+figure_path <- "figures/generated/Figure S2/"
+source("code/R/plot_utils.R") # tukey_outliers()
 
 # ============================================================
 # Load data

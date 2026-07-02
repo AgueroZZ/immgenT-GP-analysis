@@ -19,7 +19,7 @@
 # not intended to be run against the data/ directory in this repo (which
 # only contains the already-extracted, filtered outputs).
 #
-# Source: ported from code/extract_data.R, unchanged apart from path
+# Source: ported from extract_data.R, unchanged apart from path
 # variables and this header.
 
 libs <- c("fastTopics", "flashier", "Matrix", "Seurat", "qs")

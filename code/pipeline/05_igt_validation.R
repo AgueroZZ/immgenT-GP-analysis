@@ -9,16 +9,16 @@
 #     full-data GPs by cosine similarity of gene scores, producing the score
 #     matrix consumed by FigureS1.R (panels S1A/S1B).
 #
-# GAP (Stage A): ported from code/validate_by_experiments.R, this stage
+# GAP (Stage A): ported from validate_by_experiments.R, this stage
 # needs data/flashier_snmf_matrix.qs, which (like flashier_snmf.rds itself,
 # see 01_extract_data.R) is not produced by any script in this repository --
 # presumably a lightly-filtered copy of shifted_log_counts.qs created
 # interactively. The data/igt_specific/*.qs outputs of this stage already
 # exist in this repo, so Stage B can run without re-doing Stage A.
 #
-# Source: Stage B ported from code/summarize_validation_by_experiment.R
+# Source: Stage B ported from summarize_validation_by_experiment.R
 # (near-identical to the cosine-matching code embedded in
-# script/Figure_Saturation.R, which FigureS1.R's plotting logic was ported
+# Figure_Saturation.R, which FigureS1.R's plotting logic was ported
 # from) -- kept separate here as the "produce the score matrix" step,
 # distinct from FigureS1.R's "plot from the cached score matrix" step.
 
@@ -31,7 +31,7 @@
 # X_path <- file.path(data_path, "flashier_snmf_matrix.qs")  # GAP: not produced anywhere in this repo
 # seurat_meta <- readRDS(paste0(data_path, "seurat_meta.rds"))
 # out_dir <- "igt_specific"
-# ... (per-IGT flash() fit + qsave(), see code/validate_by_experiments.R for the full script)
+# ... (per-IGT flash() fit + qsave(), see validate_by_experiments.R for the full script)
 
 # ============================================================
 # Stage B: Hungarian-match each IGT-specific fit against the full model

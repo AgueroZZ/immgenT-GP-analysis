@@ -12,7 +12,7 @@
 #   4e  Alluvial diagram: organ of origin -> GP -> Level-2 cell type, for
 #       GP+ cells of the 7 organ-specific GPs.
 #
-# Source: ported from script/Figure_Organ.R, which mixed these 5 panels with
+# Source: ported from Figure_Organ.R, which mixed these 5 panels with
 # other exploratory analyses (extra AUC scatter variants, per-organ ROC
 # curves, a broken/undefined-object "gp_decomposition.pdf" panel) that are
 # dropped here since they don't correspond to a final figure panel.
@@ -23,7 +23,7 @@
 #   organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds,
 #   shifted_log_counts_subset.rds
 #   (the three *_AUC_list_figure_no_thymocytes_healthy.rds files are produced
-#   by code-refactor/pipeline/02_compute_auc.R)
+#   by code/pipeline/02_compute_auc.R)
 
 library(ggplot2)
 library(ggrepel)
@@ -38,7 +38,7 @@ library(cowplot)
 library(ggalluvial)
 
 data_path <- "data/"
-figure_path <- "figure-refactor/Figure 4/"
+figure_path <- "figures/generated/Figure 4/"
 
 # ============================================================
 # Load data (healthy, non-thymocyte reference)
@@ -53,7 +53,7 @@ organ_AUC_list <- readRDS(paste0(
   data_path, "organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds"
 ))
 # Read from the Seurat object directly, not the stale cached seurat_meta.rds
-# (see code-refactor/R/setup_data.R for why).
+# (see code/R/setup_data.R for why).
 seurat_meta <- readRDS(paste0(
   data_path, "igt1_96_withtotalvi20260206_clean_ADTonly.Rds"
 ))@meta.data

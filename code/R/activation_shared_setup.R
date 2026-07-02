@@ -4,11 +4,11 @@
 # GPs, the same CD4/CD8 activated-vs-resting cell groupings, and the same
 # semantic color grouping (CD4-only / CD8-only / both-up / both-down). This
 # was duplicated near-verbatim across panels in the original
-# script/Figure_Activation.R; factored here so both figure scripts source it
+# Figure_Activation.R; factored here so both figure scripts source it
 # once instead of repeating ~150 lines of setup each.
 #
 # Requires L_pm_filtered, F_pm_filtered, seurat_meta_filtered to already be
-# loaded (see code-refactor/R/setup_data.R::load_gp_data()).
+# loaded (see code/R/setup_data.R::load_gp_data()).
 
 # DGE of one group vs another, per GP, on the loading matrix L1 (using F1's
 # genes for AveExpr only -- the "expression" side of a limma-style topTable).

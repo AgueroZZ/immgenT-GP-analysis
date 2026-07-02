@@ -12,7 +12,7 @@
 # ..._backfit200.rds as an existing input until that variant is
 # reconstructed.
 #
-# Source: ported from code/analyze_protein_selected_lognorm_full.R,
+# Source: ported from analyze_protein_selected_lognorm_full.R,
 # unchanged apart from path variables and this header.
 
 library(flashier)

@@ -6,7 +6,7 @@
 # same MDE embedding: left, cells passing the GP's curated protein gate;
 # right, an equally sized set of cells with the highest GP loading.
 #
-# Source: ported from script/gated_protein_loading_plot.R's live gallery
+# Source: ported from gated_protein_loading_plot.R's live gallery
 # section (the ~450 preceding lines of commented-out single-GP exploratory
 # calls are dropped -- they never produced a saved output).
 
@@ -16,9 +16,9 @@ library(patchwork)
 library(Matrix)
 
 data_path <- "data/"
-figure_path <- "figure-refactor/Figure S6/"
-source("code-refactor/R/gated_protein_helpers.R")
-source("code-refactor/R/citeseq_shared_setup.R")
+figure_path <- "figures/generated/Figure S6/"
+source("code/R/gated_protein_helpers.R")
+source("code/R/citeseq_shared_setup.R")
 
 # GPs shown in main Figure 6 (panels 6c-6f) are excluded from this gallery.
 GPs_fig6 <- c("GP171", "GP23", "GP12", "GP80")

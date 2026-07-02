@@ -15,9 +15,9 @@
 #       with CD69, with a CD69-correlation strip.
 #   6j,6k  Mean loading of those 10 GPs per tissue (j) and per lineage (k).
 #
-# Source: ported from script/Figure_CITEseq.R (panels b, g, h, i, j, k) and
-# script/gated_protein_loading_plot.R (panels c-f, using
-# plot_gated_gp_vs_protein() from code-refactor/R/gated_protein_helpers.R,
+# Source: ported from Figure_CITEseq.R (panels b, g, h, i, j, k) and
+# gated_protein_loading_plot.R (panels c-f, using
+# plot_gated_gp_vs_protein() from code/R/gated_protein_helpers.R,
 # shared with FigureS6.R).
 
 library(ggplot2)
@@ -29,15 +29,15 @@ library(tidyr)
 library(Matrix) # protein matrices are dgCMatrix; must be attached for `[` to dispatch
 
 data_path <- "data/"
-figure_path <- "figure-refactor/Figure 6/"
-source("code-refactor/R/gated_protein_helpers.R")
+figure_path <- "figures/generated/Figure 6/"
+source("code/R/gated_protein_helpers.R")
 
 # 6a: hand-drawn schematic -- not code-generated, no output here.
 
 # ============================================================
 # Load data (shared with FigureS6.R)
 # ============================================================
-source("code-refactor/R/citeseq_shared_setup.R")
+source("code/R/citeseq_shared_setup.R")
 
 # Re-derive the normalized protein matrix used only by this script's panel
 # 6b (Protein_F_pm_raw filtered/scaled -- FigureS6.R doesn't need it).

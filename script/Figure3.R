@@ -14,10 +14,10 @@
 #   3g  Heatmap of mean GP loading per Level-2 sub-lineage, across the 7
 #       T-cell lineages.
 #
-# Source: ported from script/Figure_Activation.R, which also produced the
+# Source: ported from Figure_Activation.R, which also produced the
 # Figure S3 panels (see FigureS3.R) from the same curated GP set and cell
 # groupings -- that shared setup now lives in
-# code-refactor/R/activation_shared_setup.R, sourced by both scripts.
+# code/R/activation_shared_setup.R, sourced by both scripts.
 
 library(ggplot2)
 library(ggrepel)
@@ -28,9 +28,9 @@ library(pheatmap)
 library(scales)
 
 data_path <- "data/"
-figure_path <- "figure-refactor/Figure 3/"
-source("code-refactor/R/plot_utils.R") # scale_cols()
-source("code-refactor/R/tf_network.R") # optimize_bipartite_order(), plot_tf_gp_network_v2()
+figure_path <- "figures/generated/Figure 3/"
+source("code/R/plot_utils.R") # scale_cols()
+source("code/R/tf_network.R") # optimize_bipartite_order(), plot_tf_gp_network_v2()
 
 # ============================================================
 # Load data
@@ -42,7 +42,7 @@ colnames(F_pm_filtered) <- paste0("GP", seq_len(ncol(F_pm_filtered)))
 seurat_meta <- readRDS(paste0(data_path, "igt1_96_withtotalvi20260206_clean_ADTonly.Rds"))@meta.data
 seurat_meta_filtered <- seurat_meta[rownames(L_pm_filtered), ]
 
-source("code-refactor/R/activation_shared_setup.R")
+source("code/R/activation_shared_setup.R")
 
 # ============================================================
 # 3a: Standardized mean difference, activated vs resting, CD4 vs CD8

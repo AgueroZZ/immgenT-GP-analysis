@@ -1,13 +1,13 @@
 # Small, generic helpers shared across multiple Figure*.R scripts.
 # (Figure/topic-specific plotting functions live in their own
-# code-refactor/R/<topic>_plots.R file instead of here.)
+# code/R/<topic>_plots.R file instead of here.)
 
 # Multiply each column j of A by b[j].
 scale_cols <- function(A, b) t(t(A) * b)
 
 # Iteratively drop cells whose total GP membership (rowSum of L) exceeds
 # max_val, renormalizing columns to max 1 after each pass. Used once
-# upstream (see code-refactor/pipeline/01_extract_data.R) to produce the
+# upstream (see code/pipeline/01_extract_data.R) to produce the
 # cached L_pm_filtered.rds / F_pm_filtered.rds that every figure script reads.
 filter_cells_by_total_membership <- function(L, max_val = 10, numiter = 10) {
   n <- nrow(L)

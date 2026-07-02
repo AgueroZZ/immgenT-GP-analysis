@@ -11,15 +11,15 @@
 #   S1D  Heatmap of per-IGT mean loading for the 10 highest-variance GPs from
 #        S1C (IGTs with >= 500 spleen-standard cells only).
 #
-# Source: S1A/S1B ported from script/Figure_Saturation.R; S1C/S1D from
-# script/Figure_batch.R (panels a/b only -- that script's `plot_gp_loading()`
+# Source: S1A/S1B ported from Figure_Saturation.R; S1C/S1D from
+# Figure_batch.R (panels a/b only -- that script's `plot_gp_loading()`
 # helper is defined but never called for a saved output, so it's dropped).
 #
 # S1A/S1B reuse the per-IGT cosine-matching score matrix
 # (data/igt_specific_cosine_scores.csv) rather than recomputing it here --
 # recomputing requires Hungarian-matching each of the ~80 per-IGT
 # refactorizations in data/igt_specific/*.qs against the full model, which is
-# the job of code-refactor/pipeline/05_igt_validation.R (run once upstream).
+# the job of code/pipeline/05_igt_validation.R (run once upstream).
 
 library(dplyr)
 library(tidyr)
@@ -27,12 +27,12 @@ library(ggplot2)
 library(pheatmap)
 
 data_path <- "data/"
-figure_path <- "figure-refactor/Figure S1/"
+figure_path <- "figures/generated/Figure S1/"
 gp_label <- function(x) sub("^K(\\d+)$", "GP\\1", x)
 
 # ============================================================
 # S1A/S1B: load the cached per-IGT cosine score matrix
-# (GPs x IGTs; produced by code-refactor/pipeline/05_igt_validation.R)
+# (GPs x IGTs; produced by code/pipeline/05_igt_validation.R)
 # ============================================================
 score_mat <- as.matrix(read.csv(paste0(data_path, "igt_specific_cosine_scores.csv"), row.names = 1, check.names = FALSE))
 

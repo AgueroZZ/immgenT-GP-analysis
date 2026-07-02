@@ -4,11 +4,11 @@
 # predicts well (AUC > 0.8, driven by high loading), plus its top positive
 # and negative signature genes.
 #
-# Source: ported from script/Supplement_Table1.R (unchanged apart from the
+# Source: ported from Supplement_Table1.R (unchanged apart from the
 # output path).
 
 data_path <- "data/"
-output_path <- "figure-refactor/"
+output_path <- "figures/generated/"
 
 L_pm_filtered <- readRDS(paste0(data_path, "L_pm_filtered.rds"))
 F_pm_filtered <- readRDS(paste0(data_path, "F_pm_filtered.rds"))

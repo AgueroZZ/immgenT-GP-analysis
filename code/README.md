@@ -1,15 +1,15 @@
-# code-refactor/
+# code/
 
-Reusable R code backing `script-refactor/`. Nothing here writes to
+Reusable R code backing `script/`. Nothing here writes to
 `figures/` or the original `code/`/`script/` directories — see
-`../script-refactor/README.md` for how the figure scripts use this.
+`../script/README.md` for how the figure scripts use this.
 
 ## R/ — sourced helpers
 
 | File | Used by | Contents |
 |---|---|---|
 | `setup_data.R` | (generic) | `load_gp_data()`: consolidated L/F/metadata loading, replacing the ~15-line block duplicated at the top of every original `Figure_*.R`. Not all figure scripts use it directly (several load slightly different subsets inline), but it's the reference pattern. |
-| `roc_auc.R` | Figure2, Figure4, pipeline/02 | `compute_auc_by_group()`, `compute_auc_matrix()`, `compute_auc_threshold_by_group()`, `compute_auc_threshold_matrix()` — one-vs-rest AUC/threshold per GP. From `code/ROC.R`, unchanged. |
+| `roc_auc.R` | Figure2, Figure4, pipeline/02 | `compute_auc_by_group()`, `compute_auc_matrix()`, `compute_auc_threshold_by_group()`, `compute_auc_threshold_matrix()` — one-vs-rest AUC/threshold per GP. From `ROC.R`, unchanged. |
 | `plot_utils.R` | Figure1, Figure2, FigureS2 | `scale_cols()`, `filter_cells_by_total_membership()`, `tukey_outliers()`, `lineage_colors()`. |
 | `lineage_plots.R` | Figure2 | `plot_gp_swarm()`, `plot_loadings_on_mde()`. |
 | `volcano_helpers.R` | Figure1, Figure2 | `plot_gp_signature_volcano()` ("signature volcano" per-gene view). **Not from `script/`/`code/`** — ported from the separate `immgen-signature` Shiny app (`.../Immgen/webapps/immgen-signature/R/mod_signature.R`), a sibling project outside this repo. See the file header for the full provenance note and the caveat about its `n_label` parameter. |

@@ -1,8 +1,8 @@
 # Bipartite TF-GP network layout + plotting.
-# Used by script-refactor/Figure3.R (panel c) and FigureS3.R are both built
-# from this shared machinery, ported from script/Figure_Activation.R (which
-# itself absorbed this logic from script/Figure_TF.R and
-# script/Figure_TF_and_Activation.R -- all three files had their own
+# Used by script/Figure3.R (panel c) and FigureS3.R are both built
+# from this shared machinery, ported from Figure_Activation.R (which
+# itself absorbed this logic from Figure_TF.R and
+# Figure_TF_and_Activation.R -- all three files had their own
 # near-identical copy before this refactor).
 
 # Barycenter-based bipartite ordering. Keeps each color group contiguous;

@@ -1,5 +1,5 @@
-# Plotting helpers shared by script-refactor/Figure2.R and FigureS2.R
-# (T-cell lineage GPs). Ported from script/Figure_Lineage.R.
+# Plotting helpers shared by script/Figure2.R and FigureS2.R
+# (T-cell lineage GPs). Ported from Figure_Lineage.R.
 
 # Unified GP-by-lineage swarm plot.
 #

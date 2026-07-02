@@ -5,7 +5,7 @@
 # restricted to non-thymocyte, healthy cells. Feeds Figure2.R (2A) and
 # TableS1.R.
 #
-# GAP: Figure4.R (script-refactor/) consumes
+# GAP: Figure4.R (script/) consumes
 # level_1_AUC_list_figure_no_thymocytes_healthy.rds /
 # organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds -- differently
 # named from this script's output despite this script already restricting
@@ -15,10 +15,10 @@
 # names actually consumed by Figure2.R/TableS1.R; the *_no_thymocytes_healthy
 # variants are treated as an existing input for Figure4.R.
 #
-# Source: ported from code/runAUC.R, unchanged apart from path variables.
+# Source: ported from runAUC.R, unchanged apart from path variables.
 
 library(dplyr)
-source("code-refactor/R/roc_auc.R")
+source("code/R/roc_auc.R")
 
 data_path <- "data/"
 

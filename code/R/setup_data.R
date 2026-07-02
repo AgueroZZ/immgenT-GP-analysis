@@ -1,4 +1,4 @@
-# Consolidated data loading for the figure scripts in script-refactor/.
+# Consolidated data loading for the figure scripts in script/.
 #
 # Every Figure_*.R in the old script/ directory repeated the same ~15-line
 # block at the top: read L_pm_filtered.rds / F_pm_filtered.rds, rename their
@@ -7,8 +7,8 @@
 # just calls load_gp_data() and gets a consistent set of objects back.
 #
 # L_pm_filtered.rds / F_pm_filtered.rds are themselves produced upstream by
-# code-refactor/pipeline/01_extract_data.R (cell-loading matrix filtered by
-# filter_cells_by_total_membership(), see code-refactor/R/plot_utils.R).
+# code/pipeline/01_extract_data.R (cell-loading matrix filtered by
+# filter_cells_by_total_membership(), see code/R/plot_utils.R).
 #
 # NOTE: cell metadata is read from the Seurat object's @meta.data, not from
 # the cached data/seurat_meta.rds -- that cached file was found during this

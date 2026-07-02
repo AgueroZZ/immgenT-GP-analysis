@@ -11,13 +11,13 @@
 #        vs all other conditions.
 #   s3h  Bipartite TF-GP network for Gata3, Rorc, Tbx21.
 #
-# Source: ported from script/Figure_Activation.R (see Figure3.R for the main
+# Source: ported from Figure_Activation.R (see Figure3.R for the main
 # Figure 3 panels from the same file). Shared curated-GP setup lives in
-# code-refactor/R/activation_shared_setup.R.
+# code/R/activation_shared_setup.R.
 #
 # Panel s3c has no corresponding block in the original script -- it is
 # reconstructed here following the same per-organ threshold-rate pattern
-# used for Figure 4b (script-refactor/Figure4.R), applied to GP26 at the
+# used for Figure 4b (script/Figure4.R), applied to GP26 at the
 # caption's stated 0.2 threshold.
 
 library(ggplot2)
@@ -28,9 +28,9 @@ library(pheatmap)
 library(scales)
 
 data_path <- "data/"
-figure_path <- "figure-refactor/Figure S3/"
-source("code-refactor/R/plot_utils.R") # scale_cols()
-source("code-refactor/R/tf_network.R") # optimize_bipartite_order(), plot_tf_gp_network_v2()
+figure_path <- "figures/generated/Figure S3/"
+source("code/R/plot_utils.R") # scale_cols()
+source("code/R/tf_network.R") # optimize_bipartite_order(), plot_tf_gp_network_v2()
 
 # ============================================================
 # Load data
@@ -43,7 +43,7 @@ seurat_meta <- readRDS(paste0(data_path, "igt1_96_withtotalvi20260206_clean_ADTo
 seurat_meta_filtered <- seurat_meta[rownames(L_pm_filtered), ]
 df_sig <- read.csv(paste0(data_path, "GSEA_signatures_select_toplot.csv"), header = TRUE, sep = ",")
 
-source("code-refactor/R/activation_shared_setup.R")
+source("code/R/activation_shared_setup.R")
 
 # ============================================================
 # s3c: Fraction of cells per organ with GP26 loading > 0.2

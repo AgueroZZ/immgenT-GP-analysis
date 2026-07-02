@@ -4,7 +4,7 @@
 # NOT from script/ or code/ -- like plot_gp_signature_volcano() in
 # volcano_helpers.R, this is ported from the separate "immgen-signature"
 # Shiny app (.../Immgen/webapps/immgen-signature/R/mod_cross_gp.R,
-# `.build_heatmap()`), used by script-refactor/Figure2.R for panel 2M.
+# `.build_heatmap()`), used by script/Figure2.R for panel 2M.
 
 # The app's 4 selectable diverging palettes; "bwr" (Blue-White-Red) is the
 # module's default and what the published panel uses.
