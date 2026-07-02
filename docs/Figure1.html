@@ -360,7 +360,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -371,8 +371,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -385,9 +385,9 @@ aria-hidden="true"></span> </a>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong>
@@ -408,6 +408,24 @@ versions</em> tab lists the development history.
 </div>
 <div id="checks" class="tab-pane fade">
 <div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
@@ -495,18 +513,64 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongnoversioncontrol">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>Repository version:</strong> no
-version control </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong06b2461">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong> 06b2461
+</a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongnoversioncontrol"
+<div id="strongRepositoryversionstrong06b2461"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Tracking code development and connecting the code version to the
-results is critical for reproducibility. To start using Git, open the
-Terminal and type <code>git init</code> in your project directory.</p>
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version 06b2461.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis/.Rhistory
+    Ignored:    analysis/assets/.DS_Store
+    Ignored:    code/.DS_Store
+    Ignored:    code/.Rhistory
+    Ignored:    data
+    Ignored:    figures/final-selected/.DS_Store
+    Ignored:    figures/final-selected/bits/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure 1/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure 2/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure 3/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure 4/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure 6/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure 7/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure S1/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure S2/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure S3/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure S6/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure S7/.DS_Store
+    Ignored:    script/.DS_Store
+    Ignored:    script/.Rhistory
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
 </div>
 </div>
 </div>
@@ -515,10 +579,72 @@ Terminal and type <code>git init</code> in your project directory.</p>
 </div>
 <div id="versions" class="tab-pane fade">
 <p>
-This project is not being versioned with Git. To obtain the full
-reproducibility benefits of using workflowr, please see
-<code>?wflow_start</code>.
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/Figure1.Rmd</code>) and HTML
+(<code>docs/Figure1.html</code>) files. If you’ve configured a remote
+Git repository (see <code>?wflow_git_remote</code>), click on the
+hyperlinks in the table below to view the files as they were in that
+past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+06b2461
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-02
+</td>
+<td>
+Initial commit: immgenT-GP-analysis
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+06b2461
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-02
+</td>
+<td>
+Initial commit: immgenT-GP-analysis
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -598,6 +724,43 @@ p_1A &lt;- ggplot(plot_df_sub, aes(x = MDE_1, y = MDE_2)) +
   guides(color = guide_legend(override.aes = list(size = 4)))
 ggsave(filename = paste0(figure_path, &quot;1A.pdf&quot;), plot = p_1A, width = 5, height = 5)</code></pre>
 <p><img src="assets/Figure1/1A.png" width="50%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-1A">
+Past versions of 1A.png
+</button>
+</p>
+<div id="fig-1A" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+06b2461
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div class="figcaption">
 <p><strong>Fig. 1A.</strong> Global MDE embedding of all non-thymocyte
 cells, colored by major lineage (cells subsampled per lineage for
@@ -689,6 +852,43 @@ pdf(paste0(figure_path, &quot;1C.pdf&quot;), width = 15, height = 20, useDingbat
 draw(ht, merge_legend = TRUE)
 dev.off()</code></pre>
 <p><img src="assets/Figure1/1C.png" width="50%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-1C">
+Past versions of 1C.png
+</button>
+</p>
+<div id="fig-1C" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+06b2461
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div class="figcaption">
 <p><strong>Fig. 1C.</strong> Heatmap of all 200 GP loadings across a
 stratified sample of cells, ordered by lineage then organ; columns (GPs)
@@ -709,6 +909,43 @@ mean_shifted_log_expr &lt;- readRDS(paste0(data_path, &quot;mean_shifted_log_exp
 p_1D &lt;- plot_gp_signature_volcano(&quot;GP1&quot;, F_pm_normalized_1d, mean_shifted_log_expr, threshold = 0.1, n_label = 47, bg_alpha = 0.2)
 ggsave(filename = paste0(figure_path, &quot;1D.pdf&quot;), plot = p_1D, width = 7, height = 5.5)</code></pre>
 <p><img src="assets/Figure1/1D.png" width="50%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-1D">
+Past versions of 1D.png
+</button>
+</p>
+<div id="fig-1D" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+06b2461
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div class="figcaption">
 <p><strong>Fig. 1D.</strong> “Signature volcano” plot for one example GP
 (GP1): each gene’s normalized score (x-axis, max |score| = 1) versus its
@@ -730,6 +967,43 @@ pdf(paste0(figure_path, &quot;1E.pdf&quot;), width = 6, height = 4, useDingbats 
 hist(gp_active_cell_prop, breaks = 100, xlab = &quot;Proportion of highly active cells per GP&quot;, main = &quot;Histogram of highly active cells per GP (proportion)&quot;, freq = TRUE)
 dev.off()</code></pre>
 <p><img src="assets/Figure1/1E.png" width="50%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-1E">
+Past versions of 1E.png
+</button>
+</p>
+<div id="fig-1E" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+06b2461
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div class="figcaption">
 <p><strong>Fig. 1E.</strong> Histogram of the proportion of cells with
 high loading (&gt; 0.1) per GP, across all 200 GPs.</p>
@@ -748,6 +1022,43 @@ pdf(paste0(figure_path, &quot;hist_active_genes_prop_per_GP.pdf&quot;), width = 
 hist(gp_active_gene_prop, breaks = 100, xlab = &quot;Proportion of highly active genes per GP&quot;, main = &quot;Histogram of highly active genes per GP (proportion)&quot;, freq = TRUE)
 dev.off()</code></pre>
 <p><img src="assets/Figure1/1F.png" width="50%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-1F">
+Past versions of 1F.png
+</button>
+</p>
+<div id="fig-1F" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+06b2461
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div class="figcaption">
 <p><strong>Fig. 1F.</strong> Histogram of the number of highly-active
 genes (|score| &gt; 0.25 of that GP’s max) per GP.</p>
@@ -776,6 +1087,43 @@ p_1G &lt;- ggplot(plot_df_g, aes(x = Group_Label, y = Active_Cell_Counts, fill =
   theme(plot.title = element_text(face = &quot;bold&quot;, size = 14, hjust = 0.5), plot.subtitle = element_text(size = 11, color = &quot;gray30&quot;, hjust = 0.5), axis.text.x = element_text(size = 11, angle = 45, hjust = 1), axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 13, face = &quot;bold&quot;), legend.position = &quot;none&quot;, panel.grid.minor = element_blank())
 ggsave(filename = paste0(figure_path, &quot;1G.pdf&quot;), plot = p_1G, width = 6, height = 4, dpi = 300) # boxplot_active_cells_per_GP_level1</code></pre>
 <p><img src="assets/Figure1/1G.png" width="50%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-1G">
+Past versions of 1G.png
+</button>
+</p>
+<div id="fig-1G" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+06b2461
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div class="figcaption">
 <p><strong>Fig. 1G.</strong> Boxplot of the number of active GPs
 (loading &gt; 0.1) per cell, grouped by major lineage.</p>
@@ -801,6 +1149,43 @@ p_1H &lt;- ggplot(gp_active_cell_counts_df, aes(x = Group, y = Active_Cell_Count
   theme(plot.title = element_text(face = &quot;bold&quot;, size = 14, hjust = 0.5), axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 13, face = &quot;bold&quot;), legend.position = &quot;none&quot;)
 ggsave(filename = paste0(figure_path, &quot;1H.pdf&quot;), plot = p_1H, width = 6, height = 4, dpi = 300) # boxplot_active_cells_per_GP</code></pre>
 <p><img src="assets/Figure1/1H.png" width="50%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-1H">
+Past versions of 1H.png
+</button>
+</p>
+<div id="fig-1H" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+06b2461
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div class="figcaption">
 <p><strong>Fig. 1H.</strong> Boxplot of the number of active GPs per
 cell, comparing activated versus resting cells.</p>
@@ -822,6 +1207,43 @@ p_1I &lt;- ggplot(df_nz, aes(CD44_Protein_Level, Active_GP_Counts)) +
   theme_minimal(base_size = 13)
 ggsave(filename = paste0(figure_path, &quot;1I.pdf&quot;), plot = p_1I, width = 6, height = 4, dpi = 300) # scatterplot_CD44_vs_active_GPs</code></pre>
 <p><img src="assets/Figure1/1I.png" width="50%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-1I">
+Past versions of 1I.png
+</button>
+</p>
+<div id="fig-1I" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+06b2461
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div class="figcaption">
 <p><strong>Fig. 1I.</strong> Scatter plot of CD44 surface-protein level
 (log-normalized) against the number of active GPs per cell.</p>
@@ -858,10 +1280,11 @@ loaded via a namespace (and not attached):
  [9] jsonlite_2.0.0  workflowr_1.7.2 glue_1.8.1      rprojroot_2.1.1
 [13] git2r_0.36.2    htmltools_0.5.9 httpuv_1.6.16   sass_0.4.10    
 [17] rmarkdown_2.30  evaluate_1.0.5  jquerylib_0.1.4 tibble_3.3.0   
-[21] fastmap_1.2.0   yaml_2.3.12     lifecycle_1.0.5 stringr_1.6.0  
-[25] compiler_4.5.1  fs_1.6.6        Rcpp_1.1.1-1.1  pkgconfig_2.0.3
-[29] later_1.4.4     digest_0.6.39   R6_2.6.1        pillar_1.11.1  
-[33] magrittr_2.0.5  bslib_0.9.0     tools_4.5.1     cachem_1.1.0   </code></pre>
+[21] fastmap_1.2.0   yaml_2.3.12     lifecycle_1.0.5 whisker_0.4.1  
+[25] stringr_1.6.0   compiler_4.5.1  fs_1.6.6        Rcpp_1.1.1-1.1 
+[29] pkgconfig_2.0.3 later_1.4.4     digest_0.6.39   R6_2.6.1       
+[33] pillar_1.11.1   magrittr_2.0.5  bslib_0.9.0     tools_4.5.1    
+[37] cachem_1.1.0   </code></pre>
 </div>
 </div>
 </div>

@@ -360,7 +360,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -371,8 +371,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -385,9 +385,9 @@ aria-hidden="true"></span> </a>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong>
@@ -408,6 +408,24 @@ versions</em> tab lists the development history.
 </div>
 <div id="checks" class="tab-pane fade">
 <div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
@@ -495,18 +513,64 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongnoversioncontrol">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>Repository version:</strong> no
-version control </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong06b2461">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong> 06b2461
+</a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongnoversioncontrol"
+<div id="strongRepositoryversionstrong06b2461"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Tracking code development and connecting the code version to the
-results is critical for reproducibility. To start using Git, open the
-Terminal and type <code>git init</code> in your project directory.</p>
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version 06b2461.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis/.Rhistory
+    Ignored:    analysis/assets/.DS_Store
+    Ignored:    code/.DS_Store
+    Ignored:    code/.Rhistory
+    Ignored:    data
+    Ignored:    figures/final-selected/.DS_Store
+    Ignored:    figures/final-selected/bits/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure 1/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure 2/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure 3/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure 4/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure 6/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure 7/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure S1/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure S2/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure S3/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure S6/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure S7/.DS_Store
+    Ignored:    script/.DS_Store
+    Ignored:    script/.Rhistory
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
 </div>
 </div>
 </div>
@@ -515,10 +579,72 @@ Terminal and type <code>git init</code> in your project directory.</p>
 </div>
 <div id="versions" class="tab-pane fade">
 <p>
-This project is not being versioned with Git. To obtain the full
-reproducibility benefits of using workflowr, please see
-<code>?wflow_start</code>.
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/TableS1.Rmd</code>) and HTML
+(<code>docs/TableS1.html</code>) files. If you’ve configured a remote
+Git repository (see <code>?wflow_git_remote</code>), click on the
+hyperlinks in the table below to view the files as they were in that
+past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+06b2461
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-02
+</td>
+<td>
+Initial commit: immgenT-GP-analysis
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+06b2461
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-02
+</td>
+<td>
+Initial commit: immgenT-GP-analysis
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -855,10 +981,11 @@ loaded via a namespace (and not attached):
  [9] jsonlite_2.0.0  workflowr_1.7.2 glue_1.8.1      rprojroot_2.1.1
 [13] git2r_0.36.2    htmltools_0.5.9 httpuv_1.6.16   sass_0.4.10    
 [17] rmarkdown_2.30  evaluate_1.0.5  jquerylib_0.1.4 tibble_3.3.0   
-[21] fastmap_1.2.0   yaml_2.3.12     lifecycle_1.0.5 stringr_1.6.0  
-[25] compiler_4.5.1  fs_1.6.6        Rcpp_1.1.1-1.1  pkgconfig_2.0.3
-[29] later_1.4.4     digest_0.6.39   R6_2.6.1        pillar_1.11.1  
-[33] magrittr_2.0.5  bslib_0.9.0     tools_4.5.1     cachem_1.1.0   </code></pre>
+[21] fastmap_1.2.0   yaml_2.3.12     lifecycle_1.0.5 whisker_0.4.1  
+[25] stringr_1.6.0   compiler_4.5.1  fs_1.6.6        Rcpp_1.1.1-1.1 
+[29] pkgconfig_2.0.3 later_1.4.4     digest_0.6.39   R6_2.6.1       
+[33] pillar_1.11.1   magrittr_2.0.5  bslib_0.9.0     tools_4.5.1    
+[37] cachem_1.1.0   </code></pre>
 </div>
 </div>
 </div>
