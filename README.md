@@ -5,10 +5,6 @@ RNA-seq/CITE-seq data: ~200 GPs learned by empirical Bayes matrix
 factorization (EBMF), and how they relate to cell lineage, tissue,
 activation state, transcription factors, and surface protein expression.
 
-This project was split out from `immgen-t-factors` (with David Zemmour) so
-the cleaned-up, per-figure reproduction code and the public-facing workflowr
-site could move forward independently of that repo's other ongoing analyses.
-
 ## Layout
 
 - `data/` -- input data (symlinked from `../immgen-t-factors/data`; not
