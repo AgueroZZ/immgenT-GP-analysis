@@ -19,6 +19,12 @@
 # reconstructed here following the same per-organ threshold-rate pattern
 # used for Figure 4b (script/Figure4.R), applied to GP26 at the
 # caption's stated 0.2 threshold.
+#
+# Required inputs (data/) -- see code/README.md's "Data provenance" table
+# for the full picture:
+#   L_pm_filtered.rds, F_pm_filtered.rds     [gap, no producer script here]
+#   igt1_96_..._ADTonly.Rds                  [primary input Seurat object]
+#   GSEA_signatures_select_toplot.csv        [external: curated gene-set collection]
 
 library(ggplot2)
 library(ggrepel)

@@ -1,7 +1,6 @@
 # code/
 
-Reusable R code backing `script/`. Nothing here writes to
-`figures/` or the original `code/`/`script/` directories — see
+Reusable R code backing `script/`. Nothing here writes to `figures/` — see
 `../script/README.md` for how the figure scripts use this.
 
 ## R/ — sourced helpers
@@ -38,35 +37,47 @@ which already contains their cached outputs.
 5. `05_igt_validation.R` — per-batch (IGT) reproducibility validation
    (feeds FigureS1).
 
-### Known gaps (flagged inline in each script, repeated here for visibility)
+## Data provenance
 
-- **`flashier_snmf.rds`** (the raw flashier semi-NMF fit) and
-  **`flashier_snmf_matrix.qs`** (its input matrix) are read by
-  `01_extract_data.R` / `05_igt_validation.R` but produced by no script in
-  this repository — the model-fitting step was run interactively/on a
-  cluster and that script wasn't preserved here. You (the repo owner)
-  mentioned you have this script and will add it separately.
-- **`protein_flash_selected_summary_lognorm_backfit200.rds`** (consumed by
-  Figure6/FigureS6) is not reproduced exactly by `04_protein_projection.R`
-  — that script produces the same object without the `_backfit200` suffix
-  (presumably a longer-`maxiter` rerun that wasn't saved back under a
-  script).
-- **`level_1_AUC_list_figure_no_thymocytes_healthy.rds`** and its
-  `organ_simplified` counterpart (consumed by Figure4) are a differently-named
-  variant of `02_compute_auc.R`'s output, despite that script already
-  restricting to non-thymocyte/healthy cells.
+Every `data/*` file read anywhere in `script/` or `code/pipeline/`, and
+which step (if any) in this repo produces it. Figure scripts also flag
+their own inputs inline via a `Required inputs` header comment that points
+back to this table.
+
+| `data/` file | Produced by | Notes |
+|---|---|---|
+| `igt1_96_withtotalvi20260206_clean_ADTonly.Rds` | *(primary input)* | Processed Seurat object (RNA + CITE-seq ADT); not produced by anything in this repo, it's the starting point. |
+| `flashier_snmf.rds` | **gap** | Raw flashier semi-NMF fit. Fit interactively/on a cluster; that fitting script is not yet in this repo (to be added). |
+| `flashier_snmf_matrix.qs` | **gap** | Input matrix to the fit above; same status. |
+| `flashier_snmf_fitted_prior.rda` | **gap** | Saved alongside `flashier_snmf.rds` from the same interactive fit; not reproduced here. Used by Figure1.R's PVE-type panel. |
+| `flashier_snmf_summary.rds` | `01_extract_data.R` | Condenses `flashier_snmf.rds` into `L_pm`/`F_pm`/`elbo`/`pve`. |
+| `L_pm_filtered.rds`, `F_pm_filtered.rds` | **gap** | These are `flashier_snmf_summary.rds`'s `L_pm`/`F_pm` after `filter_cells_by_total_membership()` (`code/R/plot_utils.R`) — the script that ran that filter and saved these exact files is not preserved here. |
+| `shifted_log_counts.qs`, `counts.qs` | `01_extract_data.R` | Gene-filtered RNA counts (raw and shifted-log). |
+| `shifted_log_counts_subset.rds` | **gap** | A subset of `shifted_log_counts.qs` (used by Figure4's panel c); the subsetting script isn't preserved. |
+| `mean_shifted_log_expr.rds` | **gap** | Per-gene mean shifted-log expression, most likely `colMeans()` of `shifted_log_counts.qs`; not scripted here. |
+| `protein_mat.rds`, `protein_mat_normalized.rds` | `01_extract_data.R` | CITE-seq ADT matrix (raw and CLR-normalized). |
+| `protein_mat_normalized_lognorm.rds` | **gap** | A differently-named/derived variant of `protein_mat_normalized.rds`; the exact transform isn't preserved. |
+| `Thresholds_Selected_Proteins.csv`, `GMM_Thresholds_Summary.csv` | `03_protein_thresholds.R` | Per-protein positivity thresholds. |
+| `TableS4_citeseq_qc_20250513.csv` | *(external)* | The manuscript's own Supplementary Table S4 (manually reviewed protein QC classifications) — not computationally derived. |
+| `CITEseq_markers_full.rds` | **gap** | Curated per-GP marker-protein table (positive/negative signature); presumably manually reviewed, not scripted here. |
+| `protein_flash_selected_summary_lognorm.rds` | `04_protein_projection.R` | Re-estimated protein factor matrix U (Figure 6 panel a schematic). |
+| `protein_flash_selected_summary_lognorm_backfit200.rds` | **gap** | The variant actually consumed by Figure6/FigureS6 — likely the same script re-run with a larger `maxiter` and saved under a different name; not reproduced exactly. |
+| `level_1_AUC_list_figure.rds`, `level_2_AUC_list_figure.rds`, `organ_simplified_AUC_list_figure.rds` | `02_compute_auc.R` | Per-GP AUC/threshold for predicting level-1/level-2/organ, restricted to non-thymocyte healthy cells. |
+| `level_1_AUC_list_figure_no_thymocytes_healthy.rds`, `level_2_AUC_list_figure_no_thymocytes_healthy.rds`, `organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds` | **gap** | Consumed by Figure4; a differently-named variant of `02_compute_auc.R`'s output despite that script already restricting to non-thymocyte/healthy cells. Both variants exist side-by-side in `data/`, suggesting a later rerun changed the naming without an updated script being preserved. |
+| `condition_detailed_AUC_list_figure.rds` | **gap** | Consumed by TableS1; the same AUC pattern as `02_compute_auc.R` but grouped by `condition_detailed` instead of level_1/level_2/organ — not scripted here, though it would follow the same pattern as the other three. |
+| `umap_result.rds` | **gap** | The MDE/UMAP embedding coordinates used throughout. The dimensionality-reduction step itself is not scripted anywhere in this repo. |
+| `igt_specific_cosine_scores.csv`, `igt_specific_validated_matrix.csv` | `05_igt_validation.R` (Stage B) | Per-IGT reproducibility score matrix (feeds FigureS1). |
+| `igt_specific/*.qs` (per-IGT flashier fits) | **gap** (Stage A) | Already present in `data/`; the per-IGT re-fitting step that produced them is not scripted here (see `05_igt_validation.R`'s header). |
+| `GSEA_signatures_select_toplot.csv` | *(external)* | A curated/downloaded gene-set collection (e.g. from MSigDB), not generated by any script here. |
 
 None of these gaps block reproducing the 9 figures from the `data/` files
-already in this repo — they only matter if regenerating those cached
-files from more raw inputs.
+already in this repo — they only matter if regenerating those cached files
+from more raw inputs.
 
 ### Explicitly out of scope
 
-The pre-existing `code/` validation suite (`halves_validation*.R`,
-`quarter_validation.R`, `eighth_validation.R`, `reproducibility.R`,
-`00_/01_bi_cross_validation.R`, `compare_K200_K300.R`,
-`replicate_RQVI_*.R`, and the exploratory pre-production fitting scripts
-`fit_nmf*.R`/`run_irlba.R`) was confirmed (via grep across all figure
-scripts) to feed **no panel in any of the 9 figures reproduced here** — it
-supports methods-text robustness claims, not a figure. Left untouched in
-`code/`, per your scoping decision.
+A validation suite (split-sample reproducibility, bi-cross-validation, rank
+comparison, and pre-production model-fitting scripts) was confirmed via
+grep across all figure scripts to feed **no panel in any of the 9 figures
+reproduced here** — it supports methods-text robustness claims, not a
+figure, so it isn't included in this repository.

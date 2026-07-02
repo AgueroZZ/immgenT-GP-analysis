@@ -8,11 +8,10 @@
 #
 # GAP: this script reads an existing `flashier_snmf.rds` (line "flashier_snmf
 # <- readRDS(...)") -- the flashier semi-NMF fit itself. No script anywhere
-# in this repository (old code/ or otherwise) produces that file; it was
-# fit interactively/on a cluster and the fitting script was not preserved
-# here. The repo owner has this script and will add it separately -- until
-# then, treat flashier_snmf.rds as a required upstream input to this step,
-# not something this pipeline reproduces from scratch.
+# in this repository produces that file; it was fit interactively/on a
+# cluster and the fitting script is not yet in this repo (to be added).
+# Until then, treat flashier_snmf.rds as a required upstream input to this
+# step, not something this pipeline reproduces from scratch.
 #
 # This is a cluster-scale job (needs Seurat/flashier/qs and the full raw
 # Seurat object, ~683k cells) -- ported here for provenance/documentation,

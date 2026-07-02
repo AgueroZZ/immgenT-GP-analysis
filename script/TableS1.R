@@ -6,16 +6,19 @@
 #
 # Source: ported from Supplement_Table1.R (unchanged apart from the
 # output path).
+#
+# Required inputs (data/) -- see code/README.md's "Data provenance" table
+# for the full picture.
 
 data_path <- "data/"
 output_path <- "figures/generated/"
 
-L_pm_filtered <- readRDS(paste0(data_path, "L_pm_filtered.rds"))
-F_pm_filtered <- readRDS(paste0(data_path, "F_pm_filtered.rds"))
-level_1_AUC_list <- readRDS(paste0(data_path, "level_1_AUC_list_figure.rds"))
-level_2_AUC_list <- readRDS(paste0(data_path, "level_2_AUC_list_figure.rds"))
-condition_detailed_AUC_list_figure <- readRDS(paste0(data_path, "condition_detailed_AUC_list_figure.rds"))
-organ_simplified_AUC_list_figure <- readRDS(paste0(data_path, "organ_simplified_AUC_list_figure.rds"))
+L_pm_filtered <- readRDS(paste0(data_path, "L_pm_filtered.rds")) # gap, no producer script here
+F_pm_filtered <- readRDS(paste0(data_path, "F_pm_filtered.rds")) # gap, no producer script here
+level_1_AUC_list <- readRDS(paste0(data_path, "level_1_AUC_list_figure.rds")) # code/pipeline/02_compute_auc.R
+level_2_AUC_list <- readRDS(paste0(data_path, "level_2_AUC_list_figure.rds")) # code/pipeline/02_compute_auc.R
+condition_detailed_AUC_list_figure <- readRDS(paste0(data_path, "condition_detailed_AUC_list_figure.rds")) # gap, no producer script here
+organ_simplified_AUC_list_figure <- readRDS(paste0(data_path, "organ_simplified_AUC_list_figure.rds")) # code/pipeline/02_compute_auc.R
 
 # Normalize F_pm_filtered such that each column has max abs value of 1
 F_pm_filtered <- apply(F_pm_filtered, 2, function(x) x / max(abs(x)))

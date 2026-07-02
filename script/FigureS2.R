@@ -11,6 +11,12 @@
 #
 # Source: ported from Figure_Lineage.R (see Figure2.R for the main
 # Figure 2 panels from the same file).
+#
+# Required inputs (data/) -- see code/README.md's "Data provenance" table
+# for the full picture:
+#   igt1_96_..._ADTonly.Rds                  [primary input Seurat object]
+#   L_pm_filtered.rds                        [gap, no producer script here]
+#   protein_mat_normalized_lognorm.rds       [gap, no producer script here]
 
 library(ggplot2)
 library(dplyr)

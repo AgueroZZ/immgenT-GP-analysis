@@ -1,14 +1,16 @@
 # Consolidated data loading for the figure scripts in script/.
 #
-# Every Figure_*.R in the old script/ directory repeated the same ~15-line
+# Every original pre-refactor figure script repeated the same ~15-line
 # block at the top: read L_pm_filtered.rds / F_pm_filtered.rds, rename their
 # K## columns to GP##, read the cell metadata, and subset it to the filtered
 # cells. This factors that block into one function so every figure script
 # just calls load_gp_data() and gets a consistent set of objects back.
 #
-# L_pm_filtered.rds / F_pm_filtered.rds are themselves produced upstream by
-# code/pipeline/01_extract_data.R (cell-loading matrix filtered by
-# filter_cells_by_total_membership(), see code/R/plot_utils.R).
+# L_pm_filtered.rds / F_pm_filtered.rds are flashier_snmf_summary.rds's
+# L_pm/F_pm after filter_cells_by_total_membership() (code/R/plot_utils.R)
+# -- but the script that ran that filter and saved these exact files isn't
+# preserved in this repo; see the "Data provenance" table in
+# code/README.md.
 #
 # NOTE: cell metadata is read from the Seurat object's @meta.data, not from
 # the cached data/seurat_meta.rds -- that cached file was found during this

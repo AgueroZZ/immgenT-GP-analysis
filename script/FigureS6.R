@@ -9,6 +9,19 @@
 # Source: ported from gated_protein_loading_plot.R's live gallery
 # section (the ~450 preceding lines of commented-out single-GP exploratory
 # calls are dropped -- they never produced a saved output).
+#
+# Required inputs (data/), read via code/R/citeseq_shared_setup.R below --
+# see code/README.md's "Data provenance" table for the full picture:
+#   L_pm_filtered.rds, F_pm_filtered.rds        [gap, no producer script here]
+#   igt1_96_..._ADTonly.Rds                     [primary input Seurat object]
+#   protein_mat_normalized_lognorm.rds          [gap, no producer script here]
+#   umap_result.rds                             [gap, no producer script here]
+#   protein_flash_selected_summary_lognorm_backfit200.rds
+#     [gap -- code/pipeline/04_protein_projection.R produces the
+#     non-backfit200 variant, not this exact file]
+#   TableS4_citeseq_qc_20250513.csv             [external: manuscript's own Table S4]
+#   Thresholds_Selected_Proteins.csv            [code/pipeline/03_protein_thresholds.R]
+#   CITEseq_markers_full.rds                    [gap, no producer script here]
 
 library(ggplot2)
 library(dplyr)

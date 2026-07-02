@@ -20,6 +20,12 @@
 # recomputing requires Hungarian-matching each of the ~80 per-IGT
 # refactorizations in data/igt_specific/*.qs against the full model, which is
 # the job of code/pipeline/05_igt_validation.R (run once upstream).
+#
+# Required inputs (data/) -- see code/README.md's "Data provenance" table
+# for the full picture:
+#   igt_specific_cosine_scores.csv           [code/pipeline/05_igt_validation.R]
+#   L_pm_filtered.rds                        [gap, no producer script here]
+#   igt1_96_..._ADTonly.Rds                  [primary input Seurat object]
 
 library(dplyr)
 library(tidyr)

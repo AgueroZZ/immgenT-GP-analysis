@@ -17,13 +17,17 @@
 # curves, a broken/undefined-object "gp_decomposition.pdf" panel) that are
 # dropped here since they don't correspond to a final figure panel.
 #
-# Required inputs (data/): L_pm_filtered.rds, F_pm_filtered.rds,
-#   seurat_meta.rds, level_1_AUC_list_figure_no_thymocytes_healthy.rds,
+# Required inputs (data/) -- see code/README.md's "Data provenance" table
+# for the full picture:
+#   L_pm_filtered.rds, F_pm_filtered.rds     [gap, no producer script here]
+#   igt1_96_..._ADTonly.Rds                  [primary input Seurat object]
+#   shifted_log_counts_subset.rds            [gap, no producer script here]
+#   level_1_AUC_list_figure_no_thymocytes_healthy.rds,
 #   level_2_AUC_list_figure_no_thymocytes_healthy.rds,
-#   organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds,
-#   shifted_log_counts_subset.rds
-#   (the three *_AUC_list_figure_no_thymocytes_healthy.rds files are produced
-#   by code/pipeline/02_compute_auc.R)
+#   organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds
+#     [gap -- code/pipeline/02_compute_auc.R produces the similarly-named
+#     *_figure.rds variants (used by Figure2/TableS1), not these exact
+#     _no_thymocytes_healthy files; see that script's header for detail]
 
 library(ggplot2)
 library(ggrepel)
