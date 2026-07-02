@@ -7,7 +7,7 @@ editor_options:
 ---
 
 Both pages are produced by
-[`script-refactor/FigureS6.R`](https://github.com/stephenslab/immgen-t-factors/blob/main/script-refactor/FigureS6.R),
+[`script-refactor/FigureS6.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script-refactor/FigureS6.R),
 which shares its CITE-seq setup and gating logic with
 [Figure 6c-f](Figure6.html#fig6cf) via `code-refactor/R/citeseq_shared_setup.R`
 and `code-refactor/R/gated_protein_helpers.R`. The code below is shown for

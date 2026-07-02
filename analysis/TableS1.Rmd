@@ -7,7 +7,7 @@ editor_options:
 ---
 
 Produced by
-[`script-refactor/TableS1.R`](https://github.com/stephenslab/immgen-t-factors/blob/main/script-refactor/TableS1.R):
+[`script-refactor/TableS1.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script-refactor/TableS1.R):
 
 ```{r table-s1-code, code=readLines("../script-refactor/TableS1.R"), eval=FALSE}
 ```
@@ -15,7 +15,7 @@ Produced by
 ## Table {#tables1}
 
 Showing the first 20 rows (of 200); download the full table at
-[`figure-refactor/Supplementary_Table1_GP_summary.csv`](https://github.com/stephenslab/immgen-t-factors/blob/main/figure-refactor/Supplementary_Table1_GP_summary.csv).
+[`figure-refactor/Supplementary_Table1_GP_summary.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figure-refactor/Supplementary_Table1_GP_summary.csv).
 
 ```{r table-s1-preview, echo=FALSE, message=FALSE}
 tab <- read.csv("../figure-refactor/Supplementary_Table1_GP_summary.csv", stringsAsFactors = FALSE)

@@ -7,7 +7,7 @@ editor_options:
 ---
 
 All panels are produced by
-[`script-refactor/Figure4.R`](https://github.com/stephenslab/immgen-t-factors/blob/main/script-refactor/Figure4.R).
+[`script-refactor/Figure4.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script-refactor/Figure4.R).
 The code below is shown for reference (not re-executed on this page); the
 images are its pre-rendered output.
 

@@ -7,7 +7,7 @@ editor_options:
 ---
 
 All panels except (a) are produced by
-[`script-refactor/Figure6.R`](https://github.com/stephenslab/immgen-t-factors/blob/main/script-refactor/Figure6.R),
+[`script-refactor/Figure6.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script-refactor/Figure6.R),
 which shares its CITE-seq setup with [Figure S6](FigureS6.html) via
 `code-refactor/R/citeseq_shared_setup.R`. The code below is shown for
 reference (not re-executed on this page, since this script takes about a
