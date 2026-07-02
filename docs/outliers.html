@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Ziang Zhang" />
+
+<meta name="date" content="2025-10-07" />
+
+<title>outliers</title>
+
+<script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">immgen-t factors</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Overview</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/stephenslab/immgen-t-factors">source</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">outliers</h1>
+<h4 class="author">Ziang Zhang</h4>
+<h4 class="date">2025-10-07</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2025-10-08
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>immgen-t-factors/analysis/</code>
+<span class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.1). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed1code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(1)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed1code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(1)</code> was run prior to running the
+code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabimmgentfactorstree11036e0be1d85f3ea3d5f1b09c88471c695cc706targetblank11036e0a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/stephenslab/immgen-t-factors/tree/11036e0be1d85f3ea3d5f1b09c88471c695cc706" target="_blank">11036e0</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabimmgentfactorstree11036e0be1d85f3ea3d5f1b09c88471c695cc706targetblank11036e0a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/stephenslab/immgen-t-factors/tree/11036e0be1d85f3ea3d5f1b09c88471c695cc706" target="_blank">11036e0</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/site_libs/
+
+Untracked files:
+    Untracked:  .DS_Store
+    Untracked:  .gitignore
+    Untracked:  analysis/.DS_Store
+    Untracked:  analysis/UMAP_factors.rmd
+    Untracked:  code/.DS_Store
+    Untracked:  code/ROC.R
+    Untracked:  code/analyze_protein.R
+    Untracked:  code/analyze_protein.sbatch
+    Untracked:  code/analyze_protein_selected.R
+    Untracked:  code/analyze_protein_selected.sbatch
+    Untracked:  code/halves_validation1.R
+    Untracked:  code/halves_validation2.R
+    Untracked:  code/replicate_whole_data.sbatch
+    Untracked:  data/.DS_Store
+    Untracked:  data/annot_level1.rds
+    Untracked:  data/annot_level2.rds
+    Untracked:  data/condition_broad.rds
+    Untracked:  data/condition_broad_AUC.rds
+    Untracked:  data/condition_detailed.rds
+    Untracked:  data/condition_detailed_AUC.rds
+    Untracked:  data/flash_fixed_F_pm.rds
+    Untracked:  data/flash_fixed_loading.rds
+    Untracked:  data/flashier_snmf_summary.rds
+    Untracked:  data/level_1_AUC.rds
+    Untracked:  data/organ.rds
+    Untracked:  data/organ_AUC.rds
+    Untracked:  data/protein_flash_selected_summary.rds
+    Untracked:  data/protein_mat.rds
+    Untracked:  data/protein_mat_normalized.rds
+    Untracked:  data/replicate_whole_data.sbatch
+    Untracked:  data/seurat_meta.rds
+    Untracked:  data/umap_result.rds
+
+Unstaged changes:
+    Deleted:    code/halves_validation.R
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/outliers.rmd</code>) and HTML
+(<code>docs/outliers.html</code>) files. If you’ve configured a remote
+Git repository (see <code>?wflow_git_remote</code>), click on the
+hyperlinks in the table below to view the files as they were in that
+past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/11036e0be1d85f3ea3d5f1b09c88471c695cc706/analysis/outliers.rmd" target="_blank">11036e0</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-08
+</td>
+<td>
+workflowr::wflow_publish("analysis/outliers.rmd")
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<p>Here we will investigate the outlier observations.</p>
+<pre class="r"><code>source(&quot;https://raw.githubusercontent.com/stephenslab/single-cell-jamboree/refs/heads/main/code/group_factors.R&quot;)
+library(fastTopics)
+library(cowplot)
+library(ggplot2)</code></pre>
+<pre><code>Warning: package &#39;ggplot2&#39; was built under R version 4.3.3</code></pre>
+<p>Read in the meta-information and the factorization result:</p>
+<pre class="r"><code>data_path &lt;- &quot;../data/&quot;
+code_path &lt;- &quot;../code/&quot;
+# data_path &lt;- &quot;data/&quot;
+# code_path &lt;- &quot;code/&quot;
+source(paste0(code_path, &quot;ROC.R&quot;))
+seurat_meta &lt;- readRDS(paste0(data_path, &quot;seurat_meta.rds&quot;))
+flashier_snmf_summary &lt;- readRDS(paste0(data_path, &quot;flashier_snmf_summary.rds&quot;))
+colnames(flashier_snmf_summary$F_pm) &lt;- paste0(&quot;K&quot;, 1:ncol(flashier_snmf_summary$F_pm))</code></pre>
+<pre class="r"><code># Normalize the L matrix based on 99 quantile
+D &lt;- diag(1 / apply(flashier_snmf_summary$L_pm, 2, function(x) quantile(x,0.99)))
+L_pm &lt;- flashier_snmf_summary$L_pm %*% D
+F_pm &lt;- flashier_snmf_summary$F_pm %*% solve(D)
+colnames(F_pm) &lt;- paste0(&quot;K&quot;, 1:ncol(F_pm))
+
+cells_flashier &lt;- rownames(flashier_snmf_summary$L_pm)
+cells_seurat &lt;- seurat_meta$cellID
+which(!cells_flashier %in% cells_seurat)</code></pre>
+<pre><code>[1] 140070 505759</code></pre>
+<pre class="r"><code>L_pm &lt;- L_pm[cells_flashier %in% cells_seurat, ]
+all(rownames(L_pm) == cells_seurat)</code></pre>
+<pre><code>[1] TRUE</code></pre>
+<pre class="r"><code>L_pm_old &lt;- L_pm
+colnames(L_pm_old) &lt;- paste0(&quot;K&quot;, 1:ncol(L_pm_old))
+L_pm &lt;- L_pm_old[, flashier_snmf_summary$pve &gt; 1e-4]</code></pre>
+<p>Find a few factors with huge range of loadings:</p>
+<pre class="r"><code># compute ranges
+range_loadings &lt;- apply(L_pm_old, 2, function(x) max(x) - min(x))
+# the factors with very large ranges
+top_factors &lt;- colnames(L_pm_old)[which(range_loadings &gt;= 80)]
+top_factors</code></pre>
+<pre><code>  [1] &quot;K4&quot;   &quot;K8&quot;   &quot;K17&quot;  &quot;K19&quot;  &quot;K23&quot;  &quot;K24&quot;  &quot;K25&quot;  &quot;K26&quot;  &quot;K27&quot;  &quot;K28&quot; 
+ [11] &quot;K31&quot;  &quot;K32&quot;  &quot;K33&quot;  &quot;K37&quot;  &quot;K38&quot;  &quot;K39&quot;  &quot;K41&quot;  &quot;K42&quot;  &quot;K43&quot;  &quot;K44&quot; 
+ [21] &quot;K45&quot;  &quot;K47&quot;  &quot;K48&quot;  &quot;K49&quot;  &quot;K51&quot;  &quot;K52&quot;  &quot;K53&quot;  &quot;K54&quot;  &quot;K55&quot;  &quot;K56&quot; 
+ [31] &quot;K58&quot;  &quot;K59&quot;  &quot;K60&quot;  &quot;K64&quot;  &quot;K65&quot;  &quot;K66&quot;  &quot;K67&quot;  &quot;K69&quot;  &quot;K70&quot;  &quot;K71&quot; 
+ [41] &quot;K73&quot;  &quot;K75&quot;  &quot;K76&quot;  &quot;K78&quot;  &quot;K79&quot;  &quot;K80&quot;  &quot;K81&quot;  &quot;K82&quot;  &quot;K83&quot;  &quot;K84&quot; 
+ [51] &quot;K85&quot;  &quot;K86&quot;  &quot;K87&quot;  &quot;K88&quot;  &quot;K89&quot;  &quot;K90&quot;  &quot;K91&quot;  &quot;K92&quot;  &quot;K93&quot;  &quot;K94&quot; 
+ [61] &quot;K95&quot;  &quot;K96&quot;  &quot;K97&quot;  &quot;K98&quot;  &quot;K99&quot;  &quot;K102&quot; &quot;K103&quot; &quot;K104&quot; &quot;K105&quot; &quot;K106&quot;
+ [71] &quot;K107&quot; &quot;K108&quot; &quot;K109&quot; &quot;K110&quot; &quot;K111&quot; &quot;K112&quot; &quot;K113&quot; &quot;K114&quot; &quot;K115&quot; &quot;K116&quot;
+ [81] &quot;K117&quot; &quot;K122&quot; &quot;K123&quot; &quot;K124&quot; &quot;K125&quot; &quot;K126&quot; &quot;K128&quot; &quot;K129&quot; &quot;K131&quot; &quot;K132&quot;
+ [91] &quot;K133&quot; &quot;K134&quot; &quot;K136&quot; &quot;K137&quot; &quot;K138&quot; &quot;K139&quot; &quot;K140&quot; &quot;K141&quot; &quot;K142&quot; &quot;K143&quot;
+[101] &quot;K144&quot; &quot;K145&quot; &quot;K146&quot; &quot;K147&quot; &quot;K148&quot; &quot;K149&quot; &quot;K150&quot; &quot;K152&quot; &quot;K155&quot; &quot;K156&quot;
+[111] &quot;K157&quot; &quot;K158&quot; &quot;K160&quot; &quot;K164&quot; &quot;K165&quot; &quot;K167&quot; &quot;K168&quot; &quot;K170&quot; &quot;K171&quot; &quot;K172&quot;
+[121] &quot;K175&quot; &quot;K178&quot; &quot;K179&quot; &quot;K180&quot; &quot;K182&quot; &quot;K183&quot; &quot;K184&quot; &quot;K185&quot; &quot;K186&quot; &quot;K187&quot;
+[131] &quot;K188&quot; &quot;K189&quot; &quot;K190&quot; &quot;K191&quot; &quot;K193&quot; &quot;K194&quot; &quot;K195&quot; &quot;K196&quot; &quot;K198&quot; &quot;K199&quot;
+[141] &quot;K200&quot;</code></pre>
+<p>Take a look at their (normalized) values of F:</p>
+<pre class="r"><code>kset &lt;- c(&quot;K4&quot;, &quot;K8&quot;, &quot;K28&quot;, &quot;K37&quot;, &quot;K58&quot;)
+F_pm_subset &lt;- flashier_snmf_summary$F_pm[, kset]
+
+# Normalize F_pm_subset by columns range to [-1, 1]
+D_f &lt;- diag(1 / apply(F_pm_subset, 2, function(x) max(x) - min(x) ))
+F_pm_subset_normalized &lt;- F_pm_subset %*% D_f
+rownames(F_pm_subset_normalized) &lt;- rownames(F_pm_subset)
+colnames(F_pm_subset_normalized) &lt;- colnames(F_pm_subset)
+
+p1 &lt;- annotation_heatmap(F_pm_subset_normalized,n = 2,
+                         dim = kset,
+                         show_dims = kset,
+                         select_features = &quot;largest&quot;,
+                         font_size = 9) +
+  labs(title = &quot;select_features = \&quot;largest\&quot;&quot;) +
+  theme(plot.title = element_text(face = &quot;plain&quot;,size = 9))</code></pre>
+<pre><code># Features selected for plot: Tmsb10 Fau Dock2 Rack1 Fth1 S100a6 Ccl5 Gzma CT010467.1 Cmss1 Gzmb Csn2 Csn1s2a Cdk8 Cd8b1 Cd8a Cd4 Igfbp4 
+c(&quot;Tmsb10&quot;, &quot;Fau&quot;, &quot;Dock2&quot;, &quot;Rack1&quot;, &quot;Fth1&quot;, &quot;S100a6&quot;, &quot;Ccl5&quot;, 
+&quot;Gzma&quot;, &quot;CT010467.1&quot;, &quot;Cmss1&quot;, &quot;Gzmb&quot;, &quot;Csn2&quot;, &quot;Csn1s2a&quot;, &quot;Cdk8&quot;, 
+&quot;Cd8b1&quot;, &quot;Cd8a&quot;, &quot;Cd4&quot;, &quot;Igfbp4&quot;)</code></pre>
+<pre class="r"><code>p2 &lt;- annotation_heatmap(F_pm_subset_normalized,n = 2,
+                         dim = kset,
+                         show_dims = kset,
+                         select_features = &quot;distinctive&quot;,
+                         compare_dims = kset,
+                         font_size = 9) +
+  labs(title = &quot;select_features = \&quot;distinctive\&quot;&quot;) +
+  theme(plot.title = element_text(face = &quot;plain&quot;,size = 9))</code></pre>
+<pre><code># Features selected for plot: Limd2 Pfn1 Rack1 Ptprc Areg Ctla2a Gzma Ccl5 Cmss1 Cdk8 S100a6 Nkg7 Csn2 Csn1s2a Cd8b1 Cd8a Cd4 Tspan32 
+c(&quot;Limd2&quot;, &quot;Pfn1&quot;, &quot;Rack1&quot;, &quot;Ptprc&quot;, &quot;Areg&quot;, &quot;Ctla2a&quot;, &quot;Gzma&quot;, 
+&quot;Ccl5&quot;, &quot;Cmss1&quot;, &quot;Cdk8&quot;, &quot;S100a6&quot;, &quot;Nkg7&quot;, &quot;Csn2&quot;, &quot;Csn1s2a&quot;, 
+&quot;Cd8b1&quot;, &quot;Cd8a&quot;, &quot;Cd4&quot;, &quot;Tspan32&quot;)</code></pre>
+<pre class="r"><code>plot_grid(p1,p2,nrow = 1,ncol = 2)</code></pre>
+<p><img src="figure/outliers.rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>boxplot(F_pm_subset_normalized, ylab = &quot;(Normalized) Factor values&quot;)</code></pre>
+<p><img src="figure/outliers.rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The majority of factors that have large range of loadings are factors
+that have very small pve (e.g. pve &lt; 1e-4):</p>
+<pre class="r"><code>pve_df &lt;- data.frame(K = colnames(flashier_snmf_summary$F_pm),
+                     pve = flashier_snmf_summary$pve,
+                     range = range_loadings)
+
+ggplot(pve_df, aes(x = pve, y = range)) +
+  geom_point() +
+  geom_text(data = subset(pve_df, K %in% top_factors),
+            aes(label = K), vjust = -1, size = 3) +
+  scale_x_log10() +
+  scale_y_log10() +
+  # add a vertical line at pve = 1e-4
+  geom_vline(xintercept = 1e-4, linetype = &quot;dashed&quot;, color = &quot;red&quot;) +
+  labs(x = &quot;Proportion of variance explained&quot;,
+       y = &quot;Range of loadings&quot;) +
+  theme_minimal()</code></pre>
+<p><img src="figure/outliers.rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.3.1 (2023-06-16)
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS 15.6.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: America/Chicago
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] ggplot2_3.5.2     cowplot_1.1.3     fastTopics_0.7-25
+
+loaded via a namespace (and not attached):
+ [1] gtable_0.3.6        xfun_0.52           bslib_0.9.0        
+ [4] htmlwidgets_1.6.4   ggrepel_0.9.6       lattice_0.22-6     
+ [7] quadprog_1.5-8      vctrs_0.6.5         tools_4.3.1        
+[10] generics_0.1.4      parallel_4.3.1      tibble_3.2.1       
+[13] pkgconfig_2.0.3     Matrix_1.6-4        data.table_1.16.2  
+[16] SQUAREM_2021.1      RColorBrewer_1.1-3  RcppParallel_5.1.9 
+[19] lifecycle_1.0.4     truncnorm_1.0-9     compiler_4.3.1     
+[22] farver_2.1.2        stringr_1.5.1       git2r_0.33.0       
+[25] progress_1.2.3      RhpcBLASctl_0.23-42 httpuv_1.6.16      
+[28] htmltools_0.5.8.1   sass_0.4.10         yaml_2.3.10        
+[31] lazyeval_0.2.2      plotly_4.10.4       later_1.4.2        
+[34] pillar_1.10.2       crayon_1.5.3        jquerylib_0.1.4    
+[37] whisker_0.4.1       tidyr_1.3.1         uwot_0.1.16        
+[40] cachem_1.1.0        gtools_3.9.5        tidyselect_1.2.1   
+[43] digest_0.6.37       Rtsne_0.17          stringi_1.8.7      
+[46] reshape2_1.4.4      dplyr_1.1.4         purrr_1.0.4        
+[49] ashr_2.2-66         rprojroot_2.0.4     fastmap_1.2.0      
+[52] grid_4.3.1          cli_3.6.5           invgamma_1.1       
+[55] magrittr_2.0.3      withr_3.0.2         prettyunits_1.2.0  
+[58] scales_1.4.0        promises_1.3.3      rmarkdown_2.28     
+[61] httr_1.4.7          workflowr_1.7.1     hms_1.1.3          
+[64] pbapply_1.7-2       evaluate_1.0.3      knitr_1.50         
+[67] irlba_2.3.5.1       viridisLite_0.4.2   rlang_1.1.6        
+[70] Rcpp_1.0.14         mixsqp_0.3-54       glue_1.8.0         
+[73] rstudioapi_0.16.0   jsonlite_2.0.0      plyr_1.8.9         
+[76] R6_2.6.1            fs_1.6.6           </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

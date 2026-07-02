@@ -1,0 +1,34 @@
+---
+title: "Figure S6: GP loadings recover protein-gated populations across GPs"
+author: "Ziang Zhang"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+Both pages are produced by
+[`script-refactor/FigureS6.R`](https://github.com/stephenslab/immgen-t-factors/blob/main/script-refactor/FigureS6.R),
+which shares its CITE-seq setup and gating logic with
+[Figure 6c-f](Figure6.html#fig6cf) via `code-refactor/R/citeseq_shared_setup.R`
+and `code-refactor/R/gated_protein_helpers.R`. The code below is shown for
+reference (not re-executed on this page, since this script takes roughly a
+minute and a half to render ~25 GPs x 2 embeddings each); the images are its
+pre-rendered output.
+
+## Setup
+
+```{r figs6-setup, code=readLines("../script-refactor/FigureS6.R")[1:21], eval=FALSE}
+```
+
+## Gallery pages {#figs6-gallery}
+
+```{r figs6-code, code=readLines("../script-refactor/FigureS6.R")[23:88], eval=FALSE}
+```
+
+```{r figs6-img, echo=FALSE, out.width="100%"}
+knitr::include_graphics(c("assets/FigureS6/s6-1.png", "assets/FigureS6/s6-2.png"))
+```
+
+::: {.figcaption}
+**Fig. S6.** Extension of Figure 6c-f to all well-aligned GPs, shown as two gallery pages (s6-1 and s6-2). For each GP, cells are shown twice on the same MDE embedding: left, cells passing a protein gate built from the GP's curated marker signature (positive markers above, negative below), with the gate size reported as "Matched n"; right, an equally sized set of cells with the highest GP loading. Highlighted cells are colored by two-dimensional density and all other cells are grey; thymocytes, proliferating, and "miniverse" cells are excluded. Each panel is labeled with its GP and protein signature.
+:::

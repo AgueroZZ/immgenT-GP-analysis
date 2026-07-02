@@ -1,0 +1,18 @@
+/* Figure/table caption styling: visually distinct from body text so
+   readers can tell "this paragraph describes the panel" at a glance. */
+.figcaption {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.95em;
+  line-height: 1.5;
+  color: #333;
+  background-color: #f7f7f9;
+  border-left: 4px solid #4a76c4;
+  border-radius: 3px;
+  padding: 10px 16px;
+  margin: 12px 0 28px 0;
+}
+
+.figcaption strong {
+  font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+  color: #2c3e50;
+}

@@ -1,0 +1,118 @@
+---
+title: "outliers"
+author: "Ziang Zhang"
+date: "2025-10-07"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+Here we will investigate the outlier observations.
+
+```{r}
+source("https://raw.githubusercontent.com/stephenslab/single-cell-jamboree/refs/heads/main/code/group_factors.R")
+library(fastTopics)
+library(cowplot)
+library(ggplot2)
+```
+
+Read in the meta-information and the factorization result:
+
+```{r}
+data_path <- "../data/"
+code_path <- "../code/"
+# data_path <- "data/"
+# code_path <- "code/"
+source(paste0(code_path, "ROC.R"))
+seurat_meta <- readRDS(paste0(data_path, "seurat_meta.rds"))
+flashier_snmf_summary <- readRDS(paste0(data_path, "flashier_snmf_summary.rds"))
+colnames(flashier_snmf_summary$F_pm) <- paste0("K", 1:ncol(flashier_snmf_summary$F_pm))
+```
+
+```{r}
+# Normalize the L matrix based on 99 quantile
+D <- diag(1 / apply(flashier_snmf_summary$L_pm, 2, function(x) quantile(x,0.99)))
+L_pm <- flashier_snmf_summary$L_pm %*% D
+F_pm <- flashier_snmf_summary$F_pm %*% solve(D)
+colnames(F_pm) <- paste0("K", 1:ncol(F_pm))
+
+cells_flashier <- rownames(flashier_snmf_summary$L_pm)
+cells_seurat <- seurat_meta$cellID
+which(!cells_flashier %in% cells_seurat)
+
+L_pm <- L_pm[cells_flashier %in% cells_seurat, ]
+all(rownames(L_pm) == cells_seurat)
+
+L_pm_old <- L_pm
+colnames(L_pm_old) <- paste0("K", 1:ncol(L_pm_old))
+L_pm <- L_pm_old[, flashier_snmf_summary$pve > 1e-4]
+```
+
+Find a few factors with huge range of loadings:
+
+```{r}
+# compute ranges
+range_loadings <- apply(L_pm_old, 2, function(x) max(x) - min(x))
+# the factors with very large ranges
+top_factors <- colnames(L_pm_old)[which(range_loadings >= 80)]
+top_factors
+```
+
+Take a look at their (normalized) values of F:
+
+```{r}
+kset <- c("K4", "K8", "K28", "K37", "K58")
+F_pm_subset <- flashier_snmf_summary$F_pm[, kset]
+
+# Normalize F_pm_subset by columns range to [-1, 1]
+D_f <- diag(1 / apply(F_pm_subset, 2, function(x) max(x) - min(x) ))
+F_pm_subset_normalized <- F_pm_subset %*% D_f
+rownames(F_pm_subset_normalized) <- rownames(F_pm_subset)
+colnames(F_pm_subset_normalized) <- colnames(F_pm_subset)
+
+p1 <- annotation_heatmap(F_pm_subset_normalized,n = 2,
+                         dim = kset,
+                         show_dims = kset,
+                         select_features = "largest",
+                         font_size = 9) +
+  labs(title = "select_features = \"largest\"") +
+  theme(plot.title = element_text(face = "plain",size = 9))
+p2 <- annotation_heatmap(F_pm_subset_normalized,n = 2,
+                         dim = kset,
+                         show_dims = kset,
+                         select_features = "distinctive",
+                         compare_dims = kset,
+                         font_size = 9) +
+  labs(title = "select_features = \"distinctive\"") +
+  theme(plot.title = element_text(face = "plain",size = 9))
+plot_grid(p1,p2,nrow = 1,ncol = 2)
+```
+
+```{r}
+boxplot(F_pm_subset_normalized, ylab = "(Normalized) Factor values")
+```
+
+The majority of factors that have large range of loadings are factors that have very small pve (e.g. pve < 1e-4):
+
+```{r}
+pve_df <- data.frame(K = colnames(flashier_snmf_summary$F_pm),
+                     pve = flashier_snmf_summary$pve,
+                     range = range_loadings)
+
+ggplot(pve_df, aes(x = pve, y = range)) +
+  geom_point() +
+  geom_text(data = subset(pve_df, K %in% top_factors),
+            aes(label = K), vjust = -1, size = 3) +
+  scale_x_log10() +
+  scale_y_log10() +
+  # add a vertical line at pve = 1e-4
+  geom_vline(xintercept = 1e-4, linetype = "dashed", color = "red") +
+  labs(x = "Proportion of variance explained",
+       y = "Range of loadings") +
+  theme_minimal()
+```
+
+
+
+
+

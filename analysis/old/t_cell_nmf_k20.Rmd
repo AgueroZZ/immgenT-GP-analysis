@@ -1,0 +1,733 @@
+---
+title: NMF analysis of the T cell data with 20 factors
+author: Peter Carbonetto
+output: workflowr::wflow_html
+---
+
+Here I'm exploring whether a *non-negative matrix factorization* (NMF)
+of the shifted log counts is a good model for these data. While I do
+not expect that $K = 20$ factors will be sufficient to capture all the
+interesting structure, it should reveal the primary structure.  One
+other advantage of using fewer factors is that some of the interesting
+broader-scale structure could be obscured if it is split up into many
+detailed factors.
+
+```{r knitr-opts, include=FALSE}
+knitr::opts_chunk$set(comment = "#",collapse = TRUE,results = "hold",
+                      fig.align = "center",dpi = 120)
+```
+
+Load the packages needed for this analysis:
+
+```{r load-pkgs, message=FALSE}
+library(Matrix)
+library(fastTopics)
+library(flashier)
+library(readr)
+library(ggplot2)
+library(cowplot)
+library(pathways)
+library(singlecelljamboreeR)
+```
+
+Load the meta-data, the semi-NMF results, and the NMF results:
+
+```{r load-data}
+load("../data/flashier_snmf_ldf.RData")
+load("../outputs/fl_nmf_k=20.RData")
+L <- fl_nmf_ldf$L
+F <- fl_nmf_ldf$F
+k <- ncol(L)
+colnames(L) <- paste0("k",1:20)
+colnames(F) <- paste0("k",1:20)
+rm(fl_nmf_ldf)
+```
+
+Add a couple columns to the meta-data table to make it easier to
+perform the analyses below:
+
+```{r prepare-meta-data}
+sample_info <-
+  transform(sample_info,
+    miniverse = grepl("miniverse",sample_info$annotation_level2,fixed = TRUE),
+    prolif    = grepl("prolif",sample_info$annotation_level2,fixed = TRUE))
+```
+
+```{r gene-sets}
+data(gene_sets_mouse)
+gene_sets     <- gene_sets_mouse$gene_sets
+gene_info     <- gene_sets_mouse$gene_info
+gene_set_info <- gene_sets_mouse$gene_set_info
+j <- which(with(gene_sets_mouse$gene_set_info,
+                (database == "MSigDB-C2" &
+                 grepl("CP",sub_category_code,fixed = TRUE)) |
+                (database == "MSigDB-C5") &
+                 grepl("GO",sub_category_code,fixed = TRUE)))
+genes <- sort(intersect(rownames(F),gene_info$Symbol))
+i1 <- match(genes,gene_info$Symbol)
+i2 <- match(genes,rownames(F))
+gene_info     <- gene_info[i1,]
+gene_set_info <- gene_set_info[j,]
+gene_sets     <- gene_sets[i1,j]
+F             <- F[i2,]
+rownames(gene_sets)     <- gene_info$Symbol
+rownames(gene_set_info) <- gene_set_info$id
+```
+
+TO DO:
+
++ Remove "miniverse" cells from the Structure plots below.
+
++ Remove "proliferative" cells from the Structure plots below.
+
++ Start running GSEA on some of the factors.
+
+These are the colors I will use throughout (I try to be consistent
+with the use of the colors across the different Structure plots):
+
+```{r colors}
+factor_colors <- c("#66a61e","limegreen","#7570b3","#d95f02","#fdbf6f",
+                   "#1f78b4","#e31a1c","magenta","#b2df8a","#66c2a5",
+				   "#a6cee3","#e6ab02","#a6761d","#1b9e77","#ff7f00",
+				   "gold","cyan","#8da0cb","#33a02c","#e7298a")
+names(factor_colors) <- paste0("k",1:20)
+```
+
+Here I define a function that is used in my exploratory analyses below
+to identify factors that might capture the categories of interest
+(cell types, organs, conditions, etc). This is done simply by
+computing the median factor membership among the cells in each group,
+then ranking the factors that exhibit the largest differences in the
+median factor membership between two of the groups. (I use the median
+instead of the mean because the median is less sensitive to outliers.)
+
+```{r rank-effects-function}
+rank_effects_by_group_contrasts <- function (effects_matrix, grouping) {
+  n <- nlevels(grouping)
+  k <- ncol(effects_matrix)
+  B <- matrix(0,k,n)
+  rownames(B) <- colnames(effects_matrix)
+  colnames(B) <- levels(grouping)
+  for (i in levels(grouping)) {
+    j     <- which(grouping == i)
+    B[,i] <- apply(effects_matrix[j,],2,median)
+  }
+  return(apply(B,1,function (x) diff(range(x))))
+}
+```
+
+## Cell-type factors {#factors_cell_type}
+
+This is my attempt at identifying factors that might capture the major
+cell types ("level 1" annotation):
+
+```{r identify-cell-type-factors-1, fig.height=2.25, fig.width=2.5, warning=FALSE}
+cell_type <- sample_info$annotation_level1
+y <- rank_effects_by_group_contrasts(L,cell_type)
+k_set <- order(y,decreasing = TRUE)
+qplot(1:k,y[k_set]) +
+  labs(x = "rank",y = "value") +
+  theme_cowplot(font_size = 12)
+```
+
+These are the factors that show the largest differences and are
+therefore promising candidates for capturing the major cell types:
+
+```{r identify-cell-type-factors-2}
+y[y > 0.05]
+```
+
+Now create a Structure plot with the cells grouped by major cell-type
+(the "level 1" annotation):
+
+```{r structure-plot-by-cell-type, fig.height=2, fig.width=7.25, results="hide", message=FALSE}
+set.seed(1)
+cell_type_factors <- c("k1","k6","k14","k15","k18","k3","k5")
+cell_type <- sample_info$annotation_level1
+cells <- which(cell_type == "CD4" | cell_type == "CD8")
+cells <- sample(cells,1e5)
+cells <- sort(c(cells,which(cell_type != "CD4" & cell_type != "CD8")))
+p1 <- structure_plot(L[cells,cell_type_factors],gap = 10,n = 2000,
+                     topics = cell_type_factors,
+		     	     colors = factor_colors[cell_type_factors],
+                     grouping = cell_type[cells]) +
+  labs(y = "membership",color = "",fill = "") +
+  theme(legend.position = "bottom")
+p1
+```
+
+It is quite striking to me that the provided cluster labels do not
+correspond very well to the NMF factor memberships, which suggests to
+me that these "major cell types" not very accurate, and could be
+misleading.
+
+## Factors capturing organ effects {#factors_organ}
+
+Next let's look for factors that correspond well with the organs.
+
+```{r identify-organ-factors-1, fig.height=2.25, fig.width=2.5}
+organ <- sample_info$organ_simplified
+y <- rank_effects_by_group_contrasts(L,organ)
+k_set <- order(y,decreasing = TRUE)
+qplot(1:k,y[k_set]) +
+  labs(x = "rank",y = "value") +
+  theme_cowplot(font_size = 12)
+```
+
+These are the factors that show the largest differences and therefore
+are promising factors for capturing "organ effects":
+
+```{r identify-organ-factors-2}
+y[y > 0.05]
+```
+
+Here is the Structure plot by organ:
+
+```{r structure-plot-by-organ, fig.height=2.25, fig.width=7.25, results="hide", message=FALSE}
+set.seed(1)
+organ_factors <- c("k3","k5","k15")
+organ <- sample_info$organ_simplified
+cells <- sort(c(sample(which(organ == "spleen"),6e4),
+                sample(which(organ == "LN"),6e4),
+                which(organ != "spleen" & organ != "LN")))
+L1 <- L[cells,organ_factors]
+L1 <- cbind(k0 = 0.01,L1)
+p2 <- structure_plot(L1,gap = 10,n = 2000,grouping = organ[cells],topics = 4:1,
+                     colors = c("black",factor_colors[organ_factors])) +
+  labs(y = "membership",color = "",fill = "") +
+  theme(legend.position = "bottom")
+p2
+```
+
+TO DO: Improve formatting using... kabble?
+
+```{r gsea-k15}
+cell_type_factors <- setdiff(cell_type_factors,"k1")
+F1 <- F[,cell_type_factors]
+F1 <- compute_le_effects(F1)
+gsea_k15 <- singlecelljamboreeR::perform_gsea(F1[,"k15"],gene_sets,
+                                              gene_set_info,L = 10,
+                                              verbose = TRUE)
+out <- gsea_k15$selected_gene_sets
+out$top_genes <- sapply(out$top_genes,function (x) paste(x,collapse = " "))
+out$lbf  <- round(out$lbf,digits = 6)
+out$pip  <- round(out$pip,digits = 6)
+out$coef <- round(out$coef,digits = 6)
+write_csv(out,"gsea_nmf_k15.csv",quote = "none")
+out[c("name","coef","genes")]
+```
+
+```{r}
+plot(F[,"k15"],F1[,"k15"],pch = 20)
+```
+
+## Factors capturing condition effects {#factors_condition}
+
+```{r identify-condition-factors-1, fig.height=2.25, fig.width=2.5}
+cond_broad <- sample_info$condition_broad
+y <- rank_effects_by_group_contrasts(L,cond_broad)
+k_set <- order(y,decreasing = TRUE)
+qplot(1:k,y[k_set]) +
+  labs(x = "rank",y = "value") +
+  theme_cowplot(font_size = 12)
+```
+
+These are the factors that show the largest differences and therefore
+are promising factors for capturing "condition effects":
+
+```{r identify-condition-factors-2}
+y[y > 0.045]
+```
+
+Here is the Structure plot by condition:
+
+```{r structure-plot-by-condition, fig.height=2.25, fig.width=7.25, results="hide", message=FALSE}
+set.seed(1)
+cond_factors <- c("k6","k14")
+cond_broad <- sample_info$condition_broad
+cells <- sort(c(sample(which(cond_broad == "healthy"),1e5),
+                which(cond_broad != "healthy")))
+p3 <- structure_plot(L[cells,cond_factors],gap = 10,n = 2000,
+	   	  	         topics = c("k6","k14"),
+                     grouping = cond_broad[cells],
+			         colors = factor_colors[cond_factors]) +
+  labs(y = "membership",color = "",fill = "") +
+  theme(legend.position = "bottom")
+p3
+```
+
+There are clearly some factors capturing some sort of effect of
+immunization/virus and another capturing infection (virus, bacteria,
+parasite, autoimmune), but we need to drill down to the cell types or
+perhaps the more detailed conditions to better understand these
+factors.
+
+## Structure within the major cell types {#factors_within_cell_types}
+
+Let's now look at whether there are factors that capture minor cell
+types within the major cell types. Let's start with the CD4+ T cells.
+
+```{r identify-CD4-factors-1, fig.height=2.25, fig.width=2.5}
+cd4_clusters <-
+  c("CD4_cl25","CD4_cl1","CD4_cl2","CD4_cl3","CD4_cl4","CD4_cl5","CD4_cl7",
+    "CD4_cl9","CD4_cl10","CD4_cl12","CD4_cl13","CD4_cl14","CD4_cl15",
+    "CD4_cl16","CD4_cl17","CD4_cl18","CD4_cl20","CD4_cl21","CD4_cl22",
+    "CD4_cl23","CD4_cl28")
+cells <- which(with(sample_info,
+                    annotation_level1 == "CD4" & !prolif & !miniverse))
+cluster <- sample_info$annotation_level2
+cluster <- factor(cluster[cells],cd4_clusters)
+L1      <- L[cells,]
+y <- rank_effects_by_group_contrasts(L1,cluster)
+k_set <- order(y,decreasing = TRUE)
+qplot(1:k,y[k_set]) +
+  labs(x = "rank",y = "value") +
+  theme_cowplot(font_size = 12)
+```
+
+### CD4+ T cells {#cd4_factors}
+
+These are the factors that might capture the different types of CD4+ T
+cells:
+
+```{r identify-CD4-factors-2}
+y[y > 0.1]
+```
+
+Here is the Structure plot for the CD4+ T cells:
+
+```{r structure-plot-CD4, fig.height=2.4, fig.width=7.25, results="hide", message=FALSE}
+set.seed(1)
+cd4_factors <- c("k6","k8","k14","k17","k18")
+big_clusters <- c("CD4_cl1","CD4_cl2","CD4_cl3")
+cells <- sort(c(sample(which(is.element(cluster,big_clusters)),3e4),
+                which(!is.element(cluster,big_clusters))))
+p4 <- structure_plot(L1[cells,cd4_factors],gap = 5,n = 2000,
+  		             topics = cd4_factors,
+			         grouping = cluster[cells],
+			         colors = factor_colors[cd4_factors]) +
+  labs(y = "membership",color = "",fill = "") +
+  theme(legend.position = "bottom")
+p4
+```
+
+There is a lot of interesting substructure to make sense of within the
+CD4+ cells, but this substructure could also be shared by other cell
+types, so we need to look at the other cell types as well to make
+sense of this.
+
+### CD8+ T cells {#cd8_factors}
+
+Let's now examine the CD8+ T cells.
+
+```{r identify-CD8-factors-1, fig.height=2.25, fig.width=2.5}
+cd8_clusters <- 
+  c("CD8_cl1","CD8_cl2","CD8_cl4","CD8_cl5","CD8_cl6","CD8_cl7",
+    "CD8_cl10","CD8_cl11","CD8_cl12","CD8_cl13","CD8_cl14","CD8_cl15",
+    "CD8_cl18","CD8_cl20","CD8_cl22","CD8_cl25","CD8_cl26","CD8_cl27",
+    "CD8_cl28","CD8aa_cl1","CD8aa_cl16","CD8aa_cl20","CD8aa_cl40",
+    "CD8aa_cl56")
+cells <- which(with(sample_info,
+                    (annotation_level1 == "CD8" |
+					 annotation_level1 == "CD8aa")
+				    & !prolif & !miniverse))
+cluster <- sample_info$annotation_level2
+cluster <- factor(cluster[cells],cd8_clusters)
+L1      <- L[cells,]
+y <- rank_effects_by_group_contrasts(L1,cluster)
+k_set <- order(y,decreasing = TRUE)
+qplot(1:k,y[k_set]) +
+  labs(x = "rank",y = "value") +
+  theme_cowplot(font_size = 12)
+```
+
+These are the factors that might capture the different types of CD8+ T
+cells:
+
+```{r identify-CD8-factors-2}
+y[y > 0.1]
+```
+
+```{r structure-plot-CD8, fig.height=2.4, fig.width=7.25, results="hide", message=FALSE}
+set.seed(1)
+cd8_factors <- c("k3","k6","k8","k14","k17")
+cells <- sort(c(sample(which(cluster == "CD8_cl1"),2e4),
+                which(cluster != "CD8_cd1")))
+p5 <- structure_plot(L1[cells,cd8_factors],gap = 5,n = 2000,
+					 topics = cd8_factors,
+					 grouping = cluster[cells],
+				 	 colors = factor_colors[cd8_factors]) +
+  labs(y = "membership",color = "",fill = "") +
+  theme(legend.position = "bottom")
+p5
+```
+
+It is interesting that there is a lot of shared structure amongst the
+CD4+ and CD8+ T cells, but there are also some factors (GEPs) that are
+are unique to each.
+
+### Treg cells {#treg_factors}
+
+Now let's take a closer look at the Treg cells:
+
+```{r identify-Treg-factors-1, fig.height=2.25, fig.width=2.5}
+treg_clusters <- 
+  c("Treg_cl1","Treg_cl2","Treg_cl3","Treg_cl4","Treg_cl7","Treg_cl8",
+    "Treg_cl6")
+cells   <- which(with(sample_info,
+                      annotation_level1 == "Treg" &
+					  !prolif & !miniverse))
+cluster <- sample_info$annotation_level2
+cluster <- factor(cluster[cells],treg_clusters)
+L1      <- L[cells,]
+y <- rank_effects_by_group_contrasts(L1,cluster)
+k_set <- order(y,decreasing = TRUE)
+qplot(1:k,y[k_set]) +
+  labs(x = "rank",y = "value") +
+  theme_cowplot(font_size = 12)
+```
+
+These are the factors that might capture the different types of Treg
+cells:
+
+```{r identify-Treg-factors-2, eval=FALSE}
+y[y > 0.05]
+```
+
+Here is the Structure plot for the Treg cells:
+
+```{r structure-plot-Treg, fig.height=2.25, fig.width=7.25, results="hide", message=FALSE}
+set.seed(1)
+treg_factors <- c("k1","k6","k8","k14","k17","k18")
+cells <- sort(c(sample(which(cluster == "Treg_cl1")),
+                which(cluster != "Treg_cl1")))
+p6 <- structure_plot(L1[cells,treg_factors],gap = 10,n = 2000,
+  		             topics = treg_factors,
+			         grouping = cluster[cells],
+					 colors = factor_colors[treg_factors]) +
+  labs(y = "membership",color = "",fill = "") +
+  theme(legend.position = "bottom")
+p6
+```
+
+## Gamma-delta T cells
+
+Here we take a closer look at the $\gamma\delta$ T cells:
+
+```{r identify-gdT-factors-1, fig.height=2.25, fig.width=2.5}
+gdt_clusters <-
+  c("gdT_cl7","gdT_cl5","gdT_cl9","gdT_cl10","gdT_cl26","gdT_cl43",
+    "gdT_cl46","gdT_cl23","gdT_cl4","gdT_cl52","gdT_cl2","gdT_cl11",
+	"gdT_cl12","gdT_cl28","gdT_cl33","gdT_cl35","gdT_cl42","gdT_cl50",
+	"gdT_cl54")
+cells <- which(with(sample_info,
+                    annotation_level1 == "gdT" &
+	  		        !prolif & !miniverse))
+cluster <- sample_info$annotation_level2
+cluster <- factor(cluster[cells],gdt_clusters)
+L1      <- L[cells,]
+y <- rank_effects_by_group_contrasts(L1,cluster)
+k_set <- order(y,decreasing = TRUE)
+qplot(1:k,y[k_set]) +
+  labs(x = "rank",y = "value") +
+  theme_cowplot(font_size = 12)
+```
+
+These are the factors that might capture the different types of
+$\gamma\delta$ T cells cells:
+
+```{r identify-gdT-factors-2, eval=FALSE}
+y[y > 0.05]
+```
+
+Here is the Structure plot for the $\gamma\delta$ T cells:
+
+```{r structure-plot-gdT, fig.height=2.25, fig.width=7.25, results="hide", message=FALSE}
+set.seed(1)
+gdt_factors <- c("k3","k5","k6","k8","k18")
+p7 <- structure_plot(L1[,gdt_factors],gap = 10,n = 2000,
+  		             topics = gdt_factors,
+			         grouping = cluster,
+					 colors = factor_colors[gdt_factors]) +
+  labs(y = "membership",color = "",fill = "") +
+  theme(legend.position = "bottom")
+p7
+```
+
+## Proliferative cells {#proliferative}
+
+A couple factors seem to be capturing "proliferative cells".
+
+```{r prolif-box-plots, fig.height=2, fig.width=5}
+pdat <- data.frame(k4     = L[,"k4"],
+                   k16    = L[,"k16"],
+                   prolif = sample_info$prolif)
+q1 <- ggplot(pdat,aes(x = prolif,y = k4)) +
+  geom_boxplot(width = 0.35) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "proliferating cell")
+q2 <- ggplot(pdat,aes(x = prolif,y = k16)) +
+  geom_boxplot(width = 0.35) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "proliferating cell")
+plot_grid(q1,q2,nrow = 1,ncol = 2)		
+```
+
+Here is the Structure plot showing the membership in more detail:
+
+```{r prolif-structure-plot, fig.height=2.25, fig.width=7.25, results="hide", message=FALSE}
+set.seed(1)
+prolif_factors <- c("k4","k16")
+cells1 <- which(is.element(sample_info$annotation_level2,
+                           c("CD4_prolif","CD8aa_prolif",
+	 					     "DN_prolif","DP_prolif","Treg_prolif",
+					 		 "gdT_prolif","nonconv_prolif")))
+cells2 <- which(sample_info$annotation_level2 == "CD8_prolif")
+cells  <- sort(c(cells1,sample(cells2,5000)))
+cluster <- sample_info$annotation_level2
+cluster <- factor(cluster[cells])
+L1      <- L[cells,]
+p8 <- structure_plot(L1[,prolif_factors],gap = 10,n = 2000,
+  		             topics = prolif_factors,
+			         grouping = cluster,
+					 colors = factor_colors[prolif_factors]) +
+  labs(y = "membership",color = "",fill = "") +
+  theme(legend.position = "bottom")
+p8
+```
+
+## Review of the results, and open questions {#review}
+
+Let's put everything we have so far into one unified figure:
+
+```{r all-structure-plot, fig.height=13, fig.width=7.25, results="hide", message=FALSE}
+plot_grid(p1,p2,p3,p4,p5,p6,p7,
+          nrow = 7,ncol = 1,
+		  rel_heights = c(5,5,5,6,6,6,6))
+```
+
+Factor 7 seems to be a batch effect:
+
+```{r factor-7-box-plot, fig.width=7.25, fig.height=2}
+pdat <- data.frame(IGT = sample_info$IGT,
+                   k7 = L[,"k7"])
+ggplot(pdat,aes(x = IGT,y = k7)) +
+  geom_boxplot() +
+  theme_cowplot(font_size = 8) +
+  theme(axis.ticks  = element_blank(),
+        axis.text.x = element_text(angle = 90,hjust = 1))
+```
+
+Factors 9, 10, 11 and 19 also seems to be a batch effects:
+
+```{r factor-9-10-11-19-box-plots, fig.width=7.25, fig.height=6}
+pdat <- data.frame(IGT  = sample_info$IGT,
+                    k9  = L[,"k9"],
+					k10 = L[,"k10"],
+					k11 = L[,"k11"],
+					k19 = L[,"k19"])
+q1 <- ggplot(pdat,aes(x = IGT,y = k9)) +
+  geom_boxplot() +
+  theme_cowplot(font_size = 8) +
+  theme(axis.ticks  = element_blank(),
+        axis.text.x = element_text(angle = 90,hjust = 1,vjust = 0.5))
+q2 <- ggplot(pdat,aes(x = IGT,y = k10)) +
+  geom_boxplot() +
+  theme_cowplot(font_size = 8) +
+  theme(axis.ticks  = element_blank(),
+        axis.text.x = element_text(angle = 90,hjust = 1,vjust = 0.5))
+q3 <- ggplot(pdat,aes(x = IGT,y = k11)) +
+  geom_boxplot() +
+  theme_cowplot(font_size = 8) +
+  theme(axis.ticks  = element_blank(),
+        axis.text.x = element_text(angle = 90,hjust = 1,vjust = 0.5))
+q4 <- ggplot(pdat,aes(x = IGT,y = k19)) +
+  geom_boxplot() +
+  theme_cowplot(font_size = 8) +
+  theme(axis.ticks  = element_blank(),
+        axis.text.x = element_text(angle = 90,hjust = 1,vjust = 0.5))
+plot_grid(q1,q2,q3,q4,nrow = 4,ncol = 1)
+```
+
+And possibly factor 13:
+
+```{r factor-13-box-plots, fig.width=2, fig.height=2}
+pdat <- data.frame(IGT51 = (sample_info$IGT == "IGT51"),
+                   k13 = L[,"k13"])
+ggplot(pdat,aes(x = IGT51,y = k13)) +
+  geom_boxplot(width = 0.35) +
+  theme_cowplot(font_size = 12)
+```
+
+Factor 10 may be capturing a "placenta effect" in
+baseline/E12.5/E15.5/E18.5 conditions:
+
+```{r factor-10-boxplot-organ, fig.height=2, fig.width=6}
+pdat <- data.frame(organ     = sample_info$organ_simplified,
+                   condition = sample_info$condition_detailed,
+                   k10       = L[,"k10"])
+q1 <- ggplot(pdat,aes(x = organ,y = k10)) +
+    geom_boxplot() +
+    theme_cowplot(font_size = 9) +
+    theme(axis.ticks  = element_blank(),
+          axis.text.x = element_text(angle = 90,hjust = 1,vjust = 0.5))
+q2 <- ggplot(pdat,aes(x = condition,y = k10)) +
+    geom_boxplot() +
+    theme_cowplot(font_size = 8) +
+    theme(axis.ticks  = element_blank(),
+          axis.text.x = element_text(angle = 90,hjust = 1,vjust = 0.5))
+plot_grid(q1,q2,nrow = 2,ncol = 1)
+```
+
+And factor 19 may be capturing an effect of spleen + mammary gland,
+in baseline/3dpp conditions: 
+
+```{r factor-19-boxplot-organ, fig.height=4, fig.width=7}
+pdat <- data.frame(organ     = sample_info$organ_simplified,
+                   condition = sample_info$condition_detailed,
+                   k19       = L[,"k19"])
+q1 <- ggplot(pdat,aes(x = organ,y = k19)) +
+    geom_boxplot() +
+    theme_cowplot(font_size = 9) +
+    theme(axis.ticks  = element_blank(),
+          axis.text.x = element_text(angle = 90,hjust = 1,vjust = 0.5))
+q2 <- ggplot(pdat,aes(x = condition,y = k19)) +
+    geom_boxplot() +
+    theme_cowplot(font_size = 8) +
+    theme(axis.ticks  = element_blank(),
+          axis.text.x = element_text(angle = 90,hjust = 1,vjust = 0.5))
+plot_grid(q1,q2,nrow = 2,ncol = 1)
+```
+
+Factor 2 seems to capture quite well the "miniverse" effect (whatever
+that is?):
+
+```{r factor-2-box-plot, fig.width=2.5, fig.height=2}
+pdat <- data.frame(k2 = L[,"k2"],
+                   miniverse = sample_info$miniverse)
+ggplot(pdat,aes(x = miniverse,y = k2)) +
+  geom_boxplot(width = 0.35) +
+  theme_cowplot(font_size = 12)
+```
+
+*What is factor 2?*
+
+The hunt for the "resting GEP"...
+
+```{r resting, fig.height=2, fig.width=2.25}
+genes <- c("Sell","Ccr7","Lef1","Satb1","Tcf7")
+resting_factors <- c("k2","k8","k17")
+effects_heatmap(F[genes,resting_factors])
+```
+
+## Miscellaneous notes {#misc}
+
+It is interesting that many of the NMF factors correlate quite
+strongly with individual factors in the semi-NMF result:
+
+```{r nmf-vs-snmf-1, fig.height=2, fig.width=4.5}
+y <- rep(0,20)
+names(y) <- paste0("k",1:20)
+for (i in 1:20) {
+  x <- drop(cor(L[,i],fl_snmf_ldf$L))
+  names(x) <- paste0("k",1:200)
+  y[i] <- max(abs(x))
+}
+y <- sort(y,decreasing = TRUE)
+pdat <- data.frame(k = names(y),cor = y,stringsAsFactors = FALSE)
+pdat <- transform(pdat,k = factor(k,k))
+ggplot(pdat,aes(x = k,y = cor)) +
+  geom_point() +
+  scale_y_continuous(breaks = seq(0,1,0.1)) +
+  labs(x = "",y = "correlation") +
+  theme_cowplot(font_size = 9)
+```
+
+In particular, the majority of the NMF factors have quite good
+correlation with one of the semi-NMF factors, and almost all are at
+least modestly correlated (>50%) with at least one of the semi-NMF
+factors. This suggests that this NMF model with $K = 20$ factors is
+doing a reasonably good job capturing the primary structure.
+
+```{r nmf-vs-snmf-2}
+sum(y > 0.98)
+sum(y > 0.75)
+sum(y > 0.5)
+```
+
+Complete or emerging interpretation:
+
+1. "Baseline" factor. (56% correlation with factor 15 in the semi-NMF
+   k=200 fit.)
+
+2. "Miniverse" effect (76% correlated with factor 2 in the semi-NMF
+   k=200 fit).
+
+3. CD8aa, gdT and to a lesser extent DN cells, specific to spleen, LN,
+   skin and lung, and to a subset of these conditions: KbxN, Mfurfur,
+   MTB, HDM_secondary, saureus. (Also is 80% correlated with factor 3
+   in the semi-NMF k=200 fit.)
+
+4. Structure within proliferative cells (93% correlated with factor 20
+   in the semi-NMF k=200 fit).
+   
+5. Skin-specific gdT cells. Very strongly correlated (99%) with factor
+   8 in the semi-NMF k=200 fit. Corresponds very closely with cluster
+   gdT_cl9.
+
+7. Batch effect (IGT13, IGT14). Also note that it is 94%
+   correlated with factor 9 from the semi-NMF k=200 fit.
+
+9. Batch effect (IGT9), in "baseline" condition only. Very strongly
+   correlated (99%) with factor 24 in the semi-NMF k=200 fit.
+
+10. Placenta in baseline/E12.5/E15.5/E18.5 (98% correlation with
+    factor 19 in the semi-NMF k=200 fit).
+
+11. Batch effect, in "baseline" condition only (94% correlatation with
+    factor 39 in the semi-NMF k=200 fit).
+
+13. Batch effect (IGT51).
+
+15. Thymocytes (95% correlation with factor 7 in the semi-NMF
+    k=200 fit).
+
+16. Structure within proliferative cells (77% correlated with factor 5
+    in the semi-NMF k=200 fit).
+
+18. Strongly correlated (93%) with factor 13 in the semi-NMF k=200
+    fit. Active in a subset of conditions (PDAC, MTB, EXX.5, etc),
+    mainly in gdT and nonconv cells.
+
+19. Spleen and mammary gland in baseline/3dpp (>99.9% correlation with
+    factor 37 in the semi-NMF k=200 fit).
+
+In-progress interpretation:
+
+6. Some CD8+ cells, but maybe active in only some organs and/or conditions?
+Modestly correlated (57%) with factor 10 in the semi-NMF k=200 fit.
+
+14. T-reg cells (mostly), but maybe active in only some organs and/or
+    conditions? Quite well correlated (76%) with factor 12 in the
+    semi-NMF k=200 fit.
+
+Putative "resting" GEPs:
+
+8. *Notes go here.*
+
+17. *Notes go here.*
+
+Other factors:
+
+Elusive and rare factors:
+
+```{r elusive-factors}
+sum(L[,12] > 0.5)
+sum(L[,20] > 0.5)
+```
+
+12. Very strongly correlated (>99.9%) with factor 33 in the semi-NMF
+    k=200 fit.
+
+20. Quite well correlalted (84%) with factor 40 in the semi-NMF k=200
+    fit.

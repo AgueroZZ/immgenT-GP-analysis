@@ -1,0 +1,4194 @@
+---
+title: "Figures for the manuscript"
+author: "Ziang Zhang"
+date: "2026-02-13"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+library(ggplot2)
+library(ggrepel)
+library(patchwork)
+library(cowplot)
+library(fastTopics)
+library(dplyr)
+library(pheatmap)
+library(scales)
+library(scattermore)
+
+data_path <- "../data/"
+code_path <- "../code/"
+data_path <- "data/"
+code_path <- "code/"
+source(paste0(code_path, "ROC.R"))
+# seurat_meta <- readRDS(paste0(data_path, "seurat_meta.rds"))
+seurat_meta <- readRDS(paste0(data_path, "igt1_96_withtotalvi20260206_clean_ADTonly.Rds"))@meta.data
+flashier_snmf_summary <- readRDS(paste0(data_path, "flashier_snmf_summary.rds"))
+cells_flashier <- rownames(flashier_snmf_summary$L_pm)
+cells_seurat <- seurat_meta$cellID
+which(!cells_flashier %in% cells_seurat)
+L_pm <- flashier_snmf_summary$L_pm[cells_flashier %in% cells_seurat, ]
+
+filter_cells_by_total_membership <- function (L, max_val = 10, numiter = 10) {
+  n <- nrow(L)
+  rows <- 1:n
+  for (iter in 1:numiter) {
+    x <- rowSums(L)
+    cat(sprintf("%d. Filtered out %d cells.\n",iter,sum(x > max_val)))
+    i <- which(x <= max_val)
+    L <- L[i,]
+    rows <- rows[i]
+    d <- apply(L,2,max)
+    L <- scale_cols(L,1/d)
+  }
+  return(rows)
+}
+scale_cols <- function (A, b) t(t(A) * b)
+```
+
+Normalize L_pm for better visualization, so max of each column is 1
+
+```{r}
+D <- apply(L_pm,2,max)
+L_pm_norm <- scale_cols(L_pm,1/D)
+F_pm <- flashier_snmf_summary$F_pm
+F_pm_norm <- scale_cols(F_pm,D)
+```
+
+```{r}
+# The above normalization absorbs the scale of L into F. We can also normalize L and F separately, so that the max of each column of L and abs(F) is 1, and the scale factor is stored in D.
+Dl <- apply(L_pm,2,max)
+Df <- apply(abs(F_pm),2,max)
+ldf_list <- c()
+ldf_list$L_pm_norm <- scale_cols(L_pm,1/Dl)
+ldf_list$F_pm_norm <- scale_cols(F_pm,1/Df)
+ldf_list$D <- Dl * Df
+
+# check if LDF = LF still holds after normalization, take 100 cells and 100 genes for fast computation
+A <- ldf_list$L_pm_norm[1:100,] %*% diag(ldf_list$D) %*% t(ldf_list$F_pm_norm[1:100,])
+B <- L_pm[1:100,] %*% t(F_pm[1:100,])
+max(abs(A - B)) / max(1, max(abs(B)))
+```
+
+```{r}
+colnames(L_pm) <- paste0("K", seq_len(ncol(L_pm)))
+colnames(F_pm) <- paste0("F", seq_len(ncol(F_pm)))
+
+D <- diag(1 / apply(L_pm, 2, function(x) max(x)))
+L <- L_pm %*% D
+cells <- filter_cells_by_total_membership(L,numiter = 12)
+seurat_meta_filtered <- seurat_meta[cells,]
+L_pm_filtered <- L_pm[cells,]
+d <- apply(L_pm_filtered,2,max)
+L_pm_filtered <- scale_cols(L_pm_filtered,1/d)
+
+# normalize F correspondingly
+F_pm_filtered <- scale_cols(F_pm,d)
+
+L_pm_no_thymocytes_normalized <- L_pm_filtered[seurat_meta_filtered$annotation_level1 != "thymocyte", ]
+seurat_meta_filtered_no_thymocytes <- seurat_meta_filtered[seurat_meta_filtered$annotation_level1 != "thymocyte", ]
+```
+
+```{r}
+d_l <- apply(L_pm_filtered, 2, function(x) max(x))
+d_f <- apply(abs(F_pm_filtered), 2, function(x) max(x))
+d <- d_l * d_f
+hist(d, breaks = 50, main = "Distribution of LDF values", xlab = "LDF")
+```
+
+
+```{r}
+# save L_pm_filtered and F_pm_filtered for later use
+saveRDS(L_pm_filtered, paste0(data_path, "L_pm_filtered.rds"))
+saveRDS(F_pm_filtered, paste0(data_path, "F_pm_filtered.rds"))
+```
+
+```{r}
+L_pm_filtered <- readRDS(paste0(data_path, "L_pm_filtered.rds"))
+F_pm_filtered <- readRDS(paste0(data_path, "F_pm_filtered.rds"))
+seurat_meta_filtered <- seurat_meta[rownames(L_pm_filtered),]
+```
+
+```{r}
+# also adjust the ldf_list for the filtered data
+Dl_filtered <- apply(L_pm_filtered,2,max)
+Df_filtered <- apply(abs(F_pm_filtered),2,max)
+ldf_list_filtered <- c()
+ldf_list_filtered$L_pm_norm <- scale_cols(L_pm_filtered,1/Dl_filtered)
+ldf_list_filtered$F_pm_norm <- scale_cols(F_pm_filtered,1/Df_filtered)
+ldf_list_filtered$D <- Dl_filtered * Df_filtered
+
+# check if LDF = LF still holds after normalization, take 100 cells and 100 genes for fast computation
+A <- ldf_list_filtered$L_pm_norm[1:100,] %*% diag(ldf_list_filtered$D) %*% t(ldf_list_filtered$F_pm_norm[1:100,])
+B <- L_pm_filtered[1:100,] %*% t(F_pm_filtered[1:100,])
+max(abs(A - B)) / max(1, max(abs(B)))
+
+# save ldf_list_filtered
+saveRDS(ldf_list_filtered, paste0(data_path, "ldf_list_filtered.rds"))
+```
+
+
+## Scatterplot of sparsity
+
+```{r}
+options(scipen = 999)
+pve <- flashier_snmf_summary$pve
+eps <- 0 
+pve_log <- log10(pve + eps)
+
+pve_log_min <- quantile(pve_log, 0.02, na.rm = TRUE)
+pve_log_max <- quantile(pve_log, 0.98, na.rm = TRUE)
+pve_log_clipped <- pmin(pmax(pve_log, pve_log_min), pve_log_max)
+
+pve_scaled <- (pve_log_clipped - min(pve_log_clipped)) /
+              (max(pve_log_clipped) - min(pve_log_clipped))
+
+n_col <- 100
+pal <- colorRampPalette(c("lightgray", "skyblue", "darkblue"))(n_col)
+idx_col <- pmin(pmax(1, floor(pve_scaled * (n_col - 1)) + 1), n_col)
+col_points <- pal[idx_col]
+
+load(paste0(data_path, "flashier_snmf_fitted_prior.rda"))
+l_pi_vec <- c()
+for (i in 1:200) {
+  l_pi_vec <- c(l_pi_vec, flashier_snmf_fitted_prior$L_ghat[[i]]$pi[1])
+}
+f_pi_vec <- c()
+for (i in 1:200) {
+  f_pi_vec <- c(f_pi_vec, flashier_snmf_fitted_prior$F_ghat[[i]]$pi[1])
+}
+
+p_cells <- (1 - l_pi_vec)
+p_genes <- (1 - f_pi_vec)
+
+pdf("tmp_figures/scatter_e_active_cells_vs_genes.pdf", width = 6, height = 6)
+plot(
+  p_cells, p_genes,
+  xlab = "Expected proportion of active cells",
+  ylab = "Expected proportion of active genes",
+  log  = "xy",
+  col  = col_points,
+  pch  = 19,
+  xaxt = "n",
+  yaxt = "n",
+  main = "Expected proportion of active cells vs genes per GP\n(colored by PVE)"
+)
+ticks <- c(0.0001, 0.001, 0.01, 0.05, 0.1, 0.3, 0.5, 1)
+axis(1, at = ticks, labels = paste0(ticks * 100, "%"))
+axis(2, at = ticks, labels = paste0(ticks * 100, "%"))
+brks_pve <- c(1e-7, 1e-5, 1e-3, 1e-2, 0.1, 0.2)  
+brks_pve <- brks_pve[brks_pve >= min(pve) & brks_pve <= max(pve)]
+brks_log <- log10(brks_pve + eps)
+brks_log_clipped <- pmin(pmax(brks_log, pve_log_min), pve_log_max)
+brks_scaled <- (brks_log_clipped - min(pve_log_clipped)) /
+               (max(pve_log_clipped) - min(pve_log_clipped))
+brks_idx <- pmin(pmax(1, floor(brks_scaled * (n_col - 1)) + 1), n_col)
+brks_cols <- pal[brks_idx]
+legend(
+  "bottomright",
+  legend = format(brks_pve, scientific = TRUE, digits = 2),
+  col    = brks_cols,
+  pch    = 15,
+  pt.cex = 1.5,
+  title  = "PVE",
+  bty    = "n"
+)
+dev.off()
+```
+
+```{r}
+gp_active_cell_counts_level1 <- data.frame(
+  Group = seurat_meta_filtered$annotation_level1,
+  Active_Cell_Counts = rowSums(L_pm_filtered > 1e-1)
+)
+
+p <- ggplot(gp_active_cell_counts_level1, aes(x = Group, y = Active_Cell_Counts, fill = Group)) +
+  geom_boxplot(outlier.size = 0.4, width = 0.6, alpha = 0.8, color = "gray40") +
+  scale_fill_manual(values = ZemmourLib::immgent_colors$level1) +
+  labs(
+    title = "",
+    x = "",
+    y = "Number of highly active GPs"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+    axis.text.x = element_text(size = 12, angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 12),
+    axis.title.y = element_text(size = 13, face = "bold"),
+    legend.position = "none"
+  )
+```
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(purrr)
+# number of cells in each group
+cell_number_group <- table(seurat_meta_filtered$annotation_level1)
+
+# compute number of upper and lower interval of the number of active GP in each group
+median_number_group <- gp_active_cell_counts_level1 %>% group_by(Group) %>% summarise(median = median(Active_Cell_Counts)) %>% ungroup()
+lower_number_group <- gp_active_cell_counts_level1 %>% group_by(Group) %>% summarise(lower = quantile(Active_Cell_Counts, p = 0.1)) %>% ungroup()
+upper_number_group <- gp_active_cell_counts_level1 %>% group_by(Group) %>% summarise(upper = quantile(Active_Cell_Counts, p = 0.9)) %>% ungroup()
+
+# produce a interval plot
+# 1. Merge all summary statistics into a single data frame for plotting
+plot_data <- list(median_number_group, lower_number_group, upper_number_group) %>%
+  reduce(left_join, by = "Group")
+
+# 2. Optional: Add the sample size (n) to the Group labels for better context
+# This uses the cell_number_group table you created earlier
+counts_df <- as.data.frame(cell_number_group)
+colnames(counts_df) <- c("Group", "n")
+
+plot_data <- plot_data %>%
+  left_join(counts_df, by = "Group") %>%
+  mutate(Group_Label = paste0(Group, "\n(n=", n, ")"))
+
+# 3. Produce the interval plot
+# Produce the interval plot sorted by cell count (descending)
+ggplot(plot_data, aes(x = reorder(Group_Label, -n), y = median, ymin = lower, ymax = upper)) +
+  # Use geom_pointrange to show the median (point) and the 10th-90th interval (lines)
+  geom_pointrange(aes(color = Group), size = 0.8) +
+  # Customizing the layout
+  theme_minimal() +
+  labs(
+    title = "Active Gene Programs per Group",
+    subtitle = "Sorted by cell count (High to Low). Error bars: 10th-90th percentiles.",
+    x = "Cell Group (Annotation Level 1)",
+    y = "Number of Active GPs"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1), # Rotate labels for readability
+    legend.position = "none",                         # Remove legend as X-axis identifies groups
+    panel.grid.minor = element_blank()                # Clean up the background
+  )
+```
+
+```{r}
+library(dplyr)
+library(ggplot2)
+
+# 1. Calculate cell counts and create the labels (Group + n)
+group_counts <- gp_active_cell_counts_level1 %>%
+  group_by(Group) %>%
+  summarise(n = n()) %>%
+  mutate(Group_Label = paste0(Group, "\n(n=", n, ")"))
+
+# 2. Join the labels back to the original data
+plot_df <- gp_active_cell_counts_level1 %>%
+  left_join(group_counts, by = "Group")
+
+# 3. Create the merged plot
+p <- ggplot(plot_df, aes(x = reorder(Group_Label, -n), y = Active_Cell_Counts, fill = Group)) +
+  # Draw boxplot using the distribution data
+  geom_boxplot(outlier.size = 0.4, width = 0.6, alpha = 0.8, color = "gray40") +
+  # Apply your specific color palette
+  scale_fill_manual(values = ZemmourLib::immgent_colors$level1) +
+  # Use the descriptive labels from the previous interval plot
+  labs(
+    title = "Active Gene Programs per Group",
+    subtitle = "Sorted by cell count (High to Low).",
+    x = "Cell Group (Annotation Level 1)",
+    y = "Number of highly active GPs"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+    plot.subtitle = element_text(size = 11, color = "gray30", hjust = 0.5),
+    axis.text.x = element_text(size = 11, angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 12),
+    axis.title.y = element_text(size = 13, face = "bold"),
+    legend.position = "none",
+    panel.grid.minor = element_blank()
+  )
+
+p
+
+ggsave(
+  filename = "tmp_figures/boxplot_active_cells_per_GP_level1.pdf",
+  plot = p, width = 6, height = 4, dpi = 300
+)
+```
+
+
+
+
+## Structure plot against level 1:
+
+```{r}
+set.seed(1234)
+color_coding <- ZemmourLib::immgent_colors$level1
+# create level1_category_to_factor manually now
+level1_category_to_factor <- c(
+  "Treg" = "K68",
+  "CD8" = "K58",
+  "nonconv" = "K30",
+  "DN" = "K22",
+  "CD8aa" = "K29",
+  "gdT" = "K3"
+)
+fit2 <- L_pm_filtered[, level1_category_to_factor, drop = FALSE]
+cell_type <- seurat_meta[rownames(fit2), "annotation_level1"]
+cells <- which(cell_type == "CD4" | cell_type == "CD8")
+cells <- sample(cells,1e5)
+cells <- sort(c(cells,which(cell_type != "CD4" & cell_type != "CD8" & cell_type != "thymocyte" & cell_type != "DP")))
+
+structure_plot(fit2[cells,],gap = 40, n = 10000,
+               colors = color_coding[names(level1_category_to_factor)],
+               grouping = cell_type[cells]) +
+  labs(y = "membership",color = "",fill = "") +
+  guides(
+    fill = guide_legend(nrow = 1),
+    color = guide_legend(nrow = 1)
+  ) +
+  theme(
+    legend.position = "bottom",
+    legend.direction = "horizontal",
+    legend.box = "horizontal",
+    axis.text.x = element_text(size = 10, angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 12),
+    axis.title = element_text(size = 14, face = "bold"),
+    legend.text = element_text(size = 12),
+    legend.title = element_text(size = 13)
+  )
+
+ggsave(
+  filename = "structure_plot_level1.pdf",
+  width = 10, height = 6, dpi = 300
+)
+```
+
+## Heatmap of log2FC of loadings for all the 200 GPs, for each of the level 1 lineage
+
+```{r}
+level_1_categories <- unique(seurat_meta_filtered$annotation_level1)
+
+cell_ids <- rownames(L_pm_filtered)
+level1 <- seurat_meta_filtered$annotation_level1[
+  match(cell_ids, seurat_meta_filtered$cellID)
+]
+
+reference_median_loading <- matrix(
+  NA_real_,
+  nrow = length(level_1_categories),
+  ncol = ncol(L_pm_filtered),
+  dimnames = list(level_1_categories, colnames(L_pm_filtered))
+)
+
+for (ct in level_1_categories) {
+  other_cells <- which(level1 != ct & !is.na(level1))
+  reference_median_loading[ct, ] <- apply(
+    L_pm_filtered[other_cells, , drop = FALSE],
+    2,
+    median,
+    na.rm = TRUE
+  )
+}
+```
+
+
+```{r}
+# compute median loading for each level-1 lineage and each GP
+median_loading_matrix <- sapply(colnames(L_pm_filtered), function(gp) {
+  sapply(level_1_categories, function(cat) {
+    cells_in_cat <- which(seurat_meta_filtered$annotation_level1 == cat)
+    median(L_pm_filtered[cells_in_cat, gp], na.rm = TRUE)
+  })
+})
+rownames(median_loading_matrix) <- level_1_categories
+
+# also mean
+mean_loading_matrix <- sapply(colnames(L_pm_filtered), function(gp) {
+  sapply(level_1_categories, function(cat) {
+    cells_in_cat <- which(seurat_meta_filtered$annotation_level1 == cat)
+    mean(L_pm_filtered[cells_in_cat, gp], na.rm = TRUE)
+  })
+})
+rownames(mean_loading_matrix) <- level_1_categories
+```
+
+```{r}
+log2fc_matrix <- log2((median_loading_matrix) / (reference_median_loading))
+
+log2fc_cap <- pmax(pmin(log2fc_matrix, 3), -3)
+factor_levels <- colnames(log2fc_cap)
+factor_levels <- factor_levels[order(as.numeric(sub("^K", "", factor_levels)))]
+level1_names <- rownames(log2fc_cap)
+
+df_long <- as.data.frame(log2fc_cap) |> 
+  rownames_to_column("Level1") |> 
+  pivot_longer(-Level1, names_to = "GP", values_to = "log2FC") |> 
+  mutate(GP = factor(GP, levels = factor_levels),
+         Level1 = factor(Level1, levels = level1_names))
+
+gp_anchors <- c("K3","K22", "K29","K30", "K58", "K68")  
+
+ggplot(df_long, aes(x = GP, y = Level1, fill = log2FC)) +
+  geom_tile(color = "grey85", linewidth = 0.25) +
+  scale_fill_gradient2(
+    low = "blue", mid = "white", high = "red",
+    midpoint = 0, limits = c(-3, 3), oob = scales::squish
+  ) +
+  scale_x_discrete(
+    breaks = gp_anchors,
+    labels = gp_anchors
+  ) +
+  labs(x = "Gene Program (GP)", y = "Level 1 Lineage", fill = "Log2 Fold Change") +
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),  
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 7),
+    axis.text.y = element_text(size = 7),
+    axis.title = element_text(size = 12, face = "bold"),
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 11)
+  )
+
+ggsave(
+  filename = "log2FC_heatmap_level1.pdf",
+  width = 15, height = 8, dpi = 300
+)
+
+```
+
+Also produce a heatmap of the median loading for each level-1 lineage and each GP, with the same order of GPs as the log2FC heatmap:
+
+```{r}
+gp_anchors <- c("K3","K22", "K29","K30", "K58", "K68")
+  
+median_loading_df <- as.data.frame(median_loading_matrix) |>
+  tibble::rownames_to_column("Level1") |>
+  tidyr::pivot_longer(-Level1, names_to = "GP", values_to = "MedianLoading") |>
+  dplyr::mutate(
+    GP = factor(GP, levels = factor_levels),
+    Level1 = factor(Level1, levels = level1_names)
+  )
+
+ggplot(median_loading_df, aes(x = GP, y = Level1, fill = MedianLoading)) +
+  geom_tile(color = "grey85", linewidth = 0.25) +
+  scale_fill_gradient(
+    low = "white", high = "#D73027",
+    limits = c(0, 0.3),
+    oob = scales::squish
+  ) +
+  scale_x_discrete(
+    breaks = gp_anchors,
+    labels = gp_anchors
+  ) +
+  labs(x = "Gene Program (GP)", y = "Level 1 Lineage", fill = "Median Loading") +
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 7),
+    axis.text.y = element_text(size = 10),
+    axis.title = element_text(size = 12, face = "bold"),
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 11)
+  )
+```
+
+For mean
+
+```{r}
+mean_loading_df <- as.data.frame(mean_loading_matrix) |>
+  tibble::rownames_to_column("Level1") |>
+  tidyr::pivot_longer(-Level1, names_to = "GP", values_to = "MeanLoading") |>
+  dplyr::mutate(
+    GP = factor(GP, levels = factor_levels),
+    Level1 = factor(Level1, levels = level1_names)
+  )
+
+ggplot(mean_loading_df, aes(x = GP, y = Level1, fill = MeanLoading)) +
+  geom_tile(color = "grey85", linewidth = 0.25) +
+  scale_fill_gradient(
+    low = "white", high = "#D73027",
+    limits = c(0, 0.3),
+    oob = scales::squish
+  ) +
+  scale_x_discrete(
+    breaks = gp_anchors,
+    labels = gp_anchors
+  ) +
+  labs(x = "Gene Program (GP)", y = "Level 1 Lineage", fill = "Mean Loading") +
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 7),
+    axis.text.y = element_text(size = 10),
+    axis.title = element_text(size = 12, face = "bold"),
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 11)
+  )
+
+ggsave(
+  filename = "mean_loading_heatmap_level1.pdf",
+  width = 15, height = 8, dpi = 300
+)
+```
+
+
+## Proportion of cells with high loading in each level-1
+
+```{r}
+proportion_high_loading <- sapply(colnames(L_pm_filtered), function(gp) {
+  sapply(level_1_categories, function(cat) {
+    cells_in_cat <- which(seurat_meta_filtered$annotation_level1 == cat)
+    mean(L_pm_filtered[cells_in_cat, gp] > 0.1, na.rm = TRUE)
+  })
+})
+rownames(proportion_high_loading) <- level_1_categories
+
+# filter out thymocyte, we don't care thymocyte in this plot
+proportion_high_loading <- proportion_high_loading[rownames(proportion_high_loading) != "thymocyte", ]
+```
+
+Dotplot of proportion of highly active cells for each level-1 lineage and each GP:
+
+```{r}
+# only keep GPs that are at least 0.1 in one of the lineages
+proportion_high_loading_selected <- proportion_high_loading[, apply(proportion_high_loading, 2, function(x) any(x > 0.1))]
+
+keep_gp <- apply(proportion_high_loading, 2, function(x) any(x > 0.1))
+proportion_high_loading_selected <- proportion_high_loading[, keep_gp, drop = FALSE]
+median_loading_selected <- median_loading_matrix[rownames(proportion_high_loading_selected), keep_gp, drop = FALSE]
+
+clamp <- function(x, lo, hi) pmin(pmax(x, lo), hi)
+
+prop_long <- as.data.frame(proportion_high_loading_selected) |>
+  tibble::rownames_to_column("Level1") |>
+  tidyr::pivot_longer(-Level1, names_to="GP", values_to="PropHigh")
+
+med_long <- as.data.frame(median_loading_selected) |>
+  tibble::rownames_to_column("Level1") |>
+  tidyr::pivot_longer(-Level1, names_to="GP", values_to="MedianLoading")
+
+proportion_df <- dplyr::left_join(prop_long, med_long, by = c("Level1","GP")) |>
+  dplyr::mutate(
+    GP = factor(GP, levels = factor_levels),
+    Level1 = factor(Level1, levels = level1_names),
+    Prop_clamped = clamp(PropHigh, 0, 0.3)
+  )
+
+ggplot(proportion_df, aes(x = GP, y = Level1)) +
+  geom_point(aes(size = Prop_clamped, color = MedianLoading), alpha = 0.9) +
+  scale_size(range = c(1, 6), limits = c(0, 0.5)) +
+  scale_color_viridis_c(option = "D", end = 0.95) +
+  labs(
+    x = "Gene Program (GP)",
+    y = "Level 1 Lineage",
+    color = "Median loading",
+    size  = "Prop. highly active"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 7),
+    axis.text.y = element_text(size = 10),
+    axis.title = element_text(size = 12, face = "bold"),
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 11)
+  )
+```
+
+```{r}
+library(dplyr)
+library(pheatmap)
+library(stringr)
+
+# ==========================================
+# 1. Data Selection and Filtering
+# ==========================================
+# 1) Keep only GPs that are at least 0.1 in one lineage
+keep_gp <- apply(proportion_high_loading, 2, function(x) any(x > 0.1, na.rm = TRUE))
+mat <- proportion_high_loading[, keep_gp, drop = FALSE]
+
+# 2) Clamp range for display (0 to 1) to enhance contrast
+clamp <- function(x, lo = 0, hi = 1) pmin(pmax(x, lo), hi)
+mat_disp <- clamp(mat, 0, 1)
+
+# 3) Drop 'thymocyte' and align rows/columns
+level1_names2 <- setdiff(level1_names, "thymocyte")
+rows_keep <- intersect(level1_names2, rownames(mat_disp))
+cols_keep <- intersect(factor_levels, colnames(mat_disp))
+
+mat_disp <- mat_disp[rows_keep, cols_keep, drop = FALSE]
+
+# ==========================================
+# 2. Row Annotation Setup
+# ==========================================
+# Create row annotation data frame
+ann_row <- data.frame(
+  Level1 = factor(rows_keep, levels = rows_keep)
+)
+rownames(ann_row) <- rows_keep
+
+# ==========================================
+# 3. Robust Color Mapping (Fixes the Error)
+# ==========================================
+# Get color library
+all_level1_cols <- ZemmourLib::immgent_colors$level1
+
+# Extract colors for present levels only
+current_levels <- levels(ann_row$Level1)
+level1_cols_used <- all_level1_cols[names(all_level1_cols) %in% current_levels]
+
+# Safety Check: If any level in data is missing from library, assign grey
+missing_levels <- setdiff(current_levels, names(level1_cols_used))
+if (length(missing_levels) > 0) {
+  extra_cols <- setNames(rep("grey80", length(missing_levels)), missing_levels)
+  level1_cols_used <- c(level1_cols_used, extra_cols)
+}
+
+# Final annotation color list
+ann_colors <- list(
+  Level1 = level1_cols_used
+)
+
+# ==========================================
+# 4. Plotting the Heatmap
+# ==========================================
+# Define the heatmap color palette (White to Red)
+hm_cols <- colorRampPalette(c("white", "#D73027"))(101)
+
+pheatmap(
+  mat_disp,
+  color = hm_cols,
+  breaks = seq(0, 1, length.out = 101),
+  cluster_rows = FALSE,  # Keep the order of rows_keep
+  cluster_cols = FALSE,  # Keep the order of factor_levels
+  annotation_row = ann_row,
+  annotation_colors = ann_colors,
+  border_color = "white", # Light border makes it look cleaner than NA sometimes
+  show_rownames = TRUE,
+  show_colnames = TRUE,
+  fontsize_row = 10,
+  fontsize_col = 6,
+  angle_col = 90,
+  filename = "proportion_high_loading_heatmap_level1.pdf",
+  width = 8,
+  height = 8,
+  main = "Proportion of High Loading Cells per Lineage",
+  useRaster = FALSE       # Improves performance for large matrices
+)
+```
+
+
+
+
+## Plot DGE analysis compare resting versus activation
+
+```{r}
+FlashierDGE_corrected <- function (F1, L1, group1, group2, title_plot = ""){
+    loadings_group1 = colMeans(L1[group1, ])
+    loadings_group2 = colMeans(L1[group2, ])
+    loadings_groups = colMeans(L1[c(group1, group2), ])
+    mean_genes_group1 = F1 %*% loadings_group1
+    mean_genes_group2 = F1 %*% loadings_group2
+    mean_genes = F1 %*% colMeans(L1[c(group1, group2), ])
+    mean_change_loadings = loadings_group1 - loadings_group2
+    fc_genes = F1 %*% mean_change_loadings %>% as.data.frame()
+
+    vplot = data.frame(SYMBOL = names(mean_change_loadings), mean_change_loadings = mean_change_loadings, 
+        AveExpr = loadings_groups)
+    max_mean_change = ceiling(max(abs(vplot$mean_change_loadings)))
+    top_genes = vplot %>% dplyr::arrange(dplyr::desc(abs(mean_change_loadings))) %>% 
+        utils::head(50)
+    p1 = ggplot2::ggplot(data = vplot) + ggplot2::geom_point(ggplot2::aes(x = mean_change_loadings, 
+        y = AveExpr), colour = "black", alpha = I(1), size = I(1)) + 
+        ggplot2::xlim(-max_mean_change, max_mean_change) + ggrepel::geom_text_repel(data = top_genes, 
+        ggplot2::aes(x = mean_change_loadings, y = AveExpr, label = SYMBOL), 
+        size = 3, color = "red", box.padding = 0.35, point.padding = 0.5, 
+        segment.color = "grey50", max.overlaps = 20) + ggplot2::theme_minimal() + 
+        ggplot2::labs(x = "Difference in Mean Loading", y = "Average Loading", 
+            title = title_plot)
+    vplot_genes = data.frame(SYMBOL = rownames(fc_genes), log2FC = fc_genes[, 
+        1]/log(2), AveExpr = mean_genes[, 1])
+    max_fc_genes = ceiling(max(abs(vplot_genes$log2FC)))
+    top_genes_genes <- vplot_genes %>% dplyr::arrange(dplyr::desc(abs(log2FC))) %>% 
+        utils::head(50)
+    p2 <- ggplot2::ggplot(data = vplot_genes) + scattermore::geom_scattermore(ggplot2::aes(x = log2FC, 
+        y = AveExpr), colour = "black", alpha = I(1), size = I(1), 
+        pixels = c(512, 512)) + ggplot2::xlim(-max_fc_genes, 
+        max_fc_genes) + ggrepel::geom_text_repel(data = top_genes_genes, 
+        ggplot2::aes(x = log2FC, y = AveExpr, label = SYMBOL), 
+        size = 3, color = "red", box.padding = 0.35, point.padding = 0.5, 
+        segment.color = "grey50", max.overlaps = 20) + ggplot2::theme_minimal() + 
+        ggplot2::labs(x = "Fold Change (log2)", y = "Average Expression", 
+            title = title_plot)
+    list(p1 = p1, p2 = p2, diff_factors = vplot, diff_genes = vplot_genes)
+}
+```
+
+```{r}
+resting_cells <- seurat_meta_filtered$cellID[seurat_meta_filtered$annotation_level2_group == "resting"]
+activated_cells <- seurat_meta_filtered$cellID[seurat_meta_filtered$annotation_level2_group == "activated"]
+DGE_resting_activation <- FlashierDGE_corrected(F1 = F_pm_filtered,
+                                                  L1 = L_pm_filtered,
+                                                  group1 = activated_cells,
+                                                  group2 = resting_cells)
+
+p1 <- DGE_resting_activation$p1 +
+  labs(title = "DGE: Activated vs Resting") +
+  xlab("Difference in Mean Loading (Activated - Resting)") +
+  xlim(c(-0.25, 0.25))
+
+ggsave(p1, filename = "DGE_activated_vs_resting_loading.pdf", width = 5, height = 4)
+
+p2 <- DGE_resting_activation$p2 +
+  labs(title = "DGE: Activated vs Resting") +
+  xlab("(Projected) Log Fold Change in genes (Activated vs Resting)")
+
+ggsave(p2, filename = "DGE_activated_vs_resting_genes.pdf", width = 5, height = 4)
+```
+
+
+## Plot DGE analysis compare resting versus activation
+
+```{r}
+# Plot all UMAPs
+umap_result <- readRDS(paste0(data_path, "umap_result.rds"))
+colnames(umap_result) <- c("UMAP_1", "UMAP_2")
+umap_result <- umap_result[rownames(L_pm_filtered),]
+df_umap <- as.data.frame(umap_result)
+```
+
+```{r}
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(ggplot2)
+  library(scattermore)
+})
+
+set.seed(1)
+
+# 1) move rownames -> cellID
+df_umap2 <- df_umap %>%
+  tibble::rownames_to_column("cellID")
+
+# 2) join with metadata by cellID
+plot_df <- df_umap2 %>%
+  inner_join(
+    seurat_meta_filtered %>% select(cellID, annotation_level2_group),
+    by = "cellID"
+  )
+
+# 3) stratified subsample (keeps rare groups visible)
+max_total <- 1000000
+min_per_group <- 300
+cap_per_group <- 20000
+
+group_sizes <- plot_df %>% count(annotation_level2_group, name = "n")
+G <- nrow(group_sizes)
+base_per_group <- ceiling(max_total / max(G, 1))
+
+sample_plan <- group_sizes %>%
+  mutate(n_take = pmin(n, pmax(min_per_group, pmin(cap_per_group, base_per_group))))
+
+plot_df_sub <- plot_df %>%
+  group_by(annotation_level2_group) %>%
+  group_modify(~ dplyr::slice_sample(.x, n = sample_plan$n_take[sample_plan$annotation_level2_group == .y$annotation_level2_group])) %>%
+  ungroup()
+
+# 4) fast plot
+p_umap_level2_group <- ggplot(plot_df_sub, aes(x = UMAP_1, y = UMAP_2)) +
+  scattermore::geom_scattermore(aes(color = annotation_level2_group), pointsize = 1.2) +
+  coord_equal() +
+  theme_classic() +
+  labs(
+    title = "",
+    x = "UMAP 1", y = "UMAP 2", color = ""
+  )
+
+print(p_umap_level2_group)
+
+ggsave(p_umap_level2_group, filename = "UMAP_level2_group.pdf", width = 5, height = 4)
+```
+
+
+
+## What happen for the two types of gdT with/without K3?
+
+```{r}
+gdT_cells <- seurat_meta_filtered$cellID[seurat_meta_filtered$annotation_level1 == "gdT"]
+
+gdT_cells_withK3 <- gdT_cells[L_pm_filtered[gdT_cells, "K3"] > 0.1]
+gdT_cells_withoutK3 <- gdT_cells[L_pm_filtered[gdT_cells, "K3"] <= 0.1]
+
+table(seurat_meta_filtered$organ_simplified[seurat_meta_filtered$cellID %in% gdT_cells_withK3]) / length(gdT_cells_withK3)
+table(seurat_meta_filtered$organ_simplified[seurat_meta_filtered$cellID %in% gdT_cells_withoutK3]) / length(gdT_cells_withoutK3)
+```
+
+
+```{r}
+# DGE analysis for gdT with K3 vs without K3
+DGE_gdT_K3 <- FlashierDGE_corrected(F1 = F_pm_filtered,
+                                      L1 = L_pm_filtered,
+                                      group1 = gdT_cells_withK3,
+                                      group2 = gdT_cells_withoutK3)
+
+p1 <- DGE_gdT_K3$p1 +
+  labs(title = "DGE: gdT with K3 vs without K3") +
+  xlab("Log Fold Change in loading (gdT with K3 vs without K3)")
+
+ggsave(p1, filename = "DGE_gdT_K3_loading.pdf", width = 5, height = 4)
+
+p2 <- DGE_gdT_K3$p2 +
+  labs(title = "DGE: gdT with K3 vs without K3") +
+  xlab("Log Fold Change in genes (gdT with K3 vs without K3)")
+
+ggsave(p2, filename = "DGE_gdT_K3_genes.pdf", width = 5, height = 4)
+```
+
+Compare the gdT with K3 vs without K3 without K29, to see if the difference is driven by K29:
+
+```{r}
+gdT_cells <- seurat_meta_filtered$cellID[seurat_meta_filtered$annotation_level1 == "gdT"]
+
+gdT_cells_withK3 <- gdT_cells[L_pm_filtered[gdT_cells, "K3"] > 0.1]
+gdT_cells_withoutK3withoutK29 <- gdT_cells[L_pm_filtered[gdT_cells, "K3"] <= 0.1 & L_pm_filtered[gdT_cells, "K29"] <= 0.1]
+
+DGE_gdT_K3 <- FlashierDGE_corrected(F1 = F_pm_filtered,
+                                      L1 = L_pm_filtered,
+                                      group1 = gdT_cells_withK3,
+                                      group2 = gdT_cells_withoutK3withoutK29)
+
+# which level2 they come from?
+table(seurat_meta_filtered$annotation_level2[seurat_meta_filtered$cellID %in% gdT_cells_withK3])/length(gdT_cells_withK3)
+table(seurat_meta_filtered$annotation_level2[seurat_meta_filtered$cellID %in% gdT_cells_withoutK3withoutK29])/length(gdT_cells_withoutK3withoutK29)
+```
+
+
+
+
+```{r}
+gdT_cells_gdT_GKI <- seurat_meta_filtered$cellID[seurat_meta_filtered$annotation_level2 %in% c("gdT.G", "gdT.K", "gdT.I")]
+gdT_cells_gdT_others <- seurat_meta_filtered$cellID[(!seurat_meta_filtered$annotation_level2 %in% c("gdT.G", "gdT.K", "gdT.I")) & seurat_meta_filtered$annotation_level1 == "gdT"]
+
+# DGE analysis for gdT between gdT.G/K/I vs other gdT
+DGE_gdT_K3 <- FlashierDGE_corrected(F1 = F_pm_filtered,
+                                      L1 = L_pm_filtered,
+                                      group1 = gdT_cells_gdT_GKI,
+                                      group2 = gdT_cells_gdT_others)
+
+DGE_gdT_K3$p1
+```
+
+
+
+
+Create a UMAP for gdT cells:
+
+```{r}
+# umap_result <- readRDS(paste0(data_path, "umap_result.rds"))
+umap_result <- read.csv(paste0(data_path, "mde_totalvi2041006.csv"))
+colnames(umap_result) <- c("cellID","UMAP_1", "UMAP_2")
+rownames(umap_result) <- umap_result$cellID
+umap_result <- umap_result[, c("UMAP_1", "UMAP_2")]
+umap_result <- umap_result[rownames(L_pm_filtered),]
+
+gdT_cells <- seurat_meta_filtered$cellID[seurat_meta_filtered$annotation_level1 == "gdT"]
+umap_gdT <- umap_result[gdT_cells,]
+df_umap_gdT <- as.data.frame(umap_gdT)
+df_umap_gdT$cellID <- rownames(df_umap_gdT)
+df_umap_gdT <- df_umap_gdT %>%
+  inner_join(
+    seurat_meta_filtered %>% select(cellID, annotation_level2),
+    by = "cellID"
+  )
+
+p_umap_gdT <- ggplot(df_umap_gdT, aes(x = UMAP_1, y = UMAP_2)) +
+  scattermore::geom_scattermore(aes(color = annotation_level2), pointsize = 1.2) +
+  coord_equal() +
+  theme_classic() +
+  labs(
+    title = "UMAP of gdT cells",
+    x = "UMAP 1", y = "UMAP 2", color = ""
+  )
+```
+
+```{r}
+library(Seurat)
+gdT_igt1_96_withtotalvi20260206_clean <- readRDS("~/Desktop/Immgen/immgen-t-factors/data/gdT_igt1_96_withtotalvi20260206_clean.Rds")
+umap_result_gdT <- Embeddings(gdT_igt1_96_withtotalvi20260206_clean, "mde_incremental")
+colnames(umap_result_gdT) <- c("UMAP_1", "UMAP_2")
+
+gdT_cells <- seurat_meta_filtered$cellID[seurat_meta_filtered$annotation_level1 == "gdT"]
+umap_gdT <- umap_result_gdT[gdT_cells,]
+df_umap_gdT <- as.data.frame(umap_gdT)
+df_umap_gdT$cellID <- rownames(df_umap_gdT)
+df_umap_gdT <- df_umap_gdT %>%
+  inner_join(
+    seurat_meta_filtered %>% select(cellID, annotation_level2),
+    by = "cellID"
+  )
+
+p_umap_gdT <- ggplot(df_umap_gdT, aes(x = UMAP_1, y = UMAP_2)) +
+  scattermore::geom_scattermore(aes(color = annotation_level2), pointsize = 1.2) +
+  coord_equal() +
+  theme_classic() +
+  labs(
+    title = "UMAP of gdT cells",
+    x = "UMAP 1", y = "UMAP 2", color = ""
+  )
+p_umap_gdT
+
+ggsave(p_umap_gdT, filename = "UMAP_gdT_level2.pdf", width = 5, height = 4)
+```
+
+Plot the loading of K3 and K29 on the UMAP of gdT cells:
+
+```{r}
+plot_loadings_on_umap_v2 <- function(umap, loading, factor_num,
+                                     size = 0.25,
+                                     show_bg = TRUE,
+                                     bg_alpha = 0.05,
+                                     bg_color = "grey90",
+                                     clip_q = 0.99,
+                                     top_q = NULL,
+                                     viridis_option = "viridis",
+                                     viridis_direction = 1) {
+  stopifnot(is.matrix(umap) || is.data.frame(umap))
+  df <- as.data.frame(umap)
+  stopifnot(all(c("UMAP_1","UMAP_2") %in% colnames(df)))
+  stopifnot(nrow(df) == length(loading))
+
+  q_hi <- stats::quantile(loading, probs = clip_q, na.rm = TRUE)
+  loading_clip <- pmin(loading, q_hi)
+
+  if (!is.null(top_q)) {
+    stopifnot(top_q > 0 && top_q < 1)
+    thr <- stats::quantile(loading_clip, probs = top_q, na.rm = TRUE)
+    loading_plot <- ifelse(loading_clip >= thr, loading_clip, NA_real_)
+  } else {
+    loading_plot <- loading_clip
+  }
+
+  df$loading_plot <- loading_plot
+
+  p <- ggplot() +
+    # --- background layer (raster) ---
+    {
+      if (show_bg)
+        scattermore::geom_scattermore(
+          data = df,
+          mapping = aes(x = UMAP_1, y = UMAP_2),
+          pointsize = size,          # size in pixels
+          color = bg_color,
+          alpha = bg_alpha
+        )
+    } +
+    # --- colored loading layer (raster) ---
+    scattermore::geom_scattermore(
+      data = df,
+      mapping = aes(x = UMAP_1, y = UMAP_2, color = loading_plot),
+      pointsize = size*2,
+      alpha = 1,
+      na.rm = TRUE
+    ) +
+    scale_color_viridis_c(
+      option   = viridis_option,
+      direction = viridis_direction,
+      limits   = c(0, q_hi),
+      oob      = scales::squish,
+      breaks   = scales::pretty_breaks(4),
+      name     = paste0("K", factor_num, " loading")
+    ) +
+    coord_equal() +
+    labs(
+      title = paste0("Factor ", factor_num),
+      x = "", y = ""
+    ) +
+    theme_minimal() +
+    theme(panel.grid = element_blank())
+
+  p
+}
+```
+
+
+```{r}
+df_umap_gdT$K3_loading <- L_pm_filtered[df_umap_gdT$cellID, "K3"]
+df_umap_gdT$K29_loading <- L_pm_filtered[df_umap_gdT$cellID, "K29"]
+df_umap_gdT$K6_loading <- L_pm_filtered[df_umap_gdT$cellID, "K6"]
+
+p_umap_gdT_K3_v2 <- plot_loadings_on_umap_v2(umap = df_umap_gdT[, c("UMAP_1", "UMAP_2")],
+                                              loading = df_umap_gdT$K3_loading,
+                                              factor_num = 3,
+                                              size = 0.6,
+                                              show_bg = TRUE,
+                                              bg_alpha = 0.1,
+                                              bg_color = "grey90",
+                                              clip_q = 0.99,
+                                              top_q = NULL,
+                                              viridis_option = "viridis",
+                                              viridis_direction = 1)
+p_umap_gdT_K29_v2 <- plot_loadings_on_umap_v2(umap = df_umap_gdT[, c("UMAP_1", "UMAP_2")],
+                                               loading = df_umap_gdT$K29_loading,
+                                               factor_num = 29,
+                                               size = 0.6,
+                                               show_bg = TRUE,
+                                               bg_alpha = 0.1,
+                                               bg_color = "grey90",
+                                               clip_q = 0.99,
+                                               top_q = NULL,
+                                               viridis_option = "viridis",
+                                               viridis_direction = 1)
+
+
+
+p_umap_gdT_K6_v2 <- plot_loadings_on_umap_v2(umap = df_umap_gdT[, c("UMAP_1", "UMAP_2")],
+                                              loading = df_umap_gdT$K6_loading,
+                                              factor_num = 6,
+                                              size = 0.6,
+                                              show_bg = TRUE,
+                                              bg_alpha = 0.1,
+                                              bg_color = "grey90",
+                                              clip_q = 0.99,
+                                              top_q = NULL,
+                                              viridis_option = "viridis",
+                                              viridis_direction = 1)
+
+
+ggsave(p_umap_gdT_K3_v2, filename = "UMAP_gdT_K3_loading_v2.pdf", width = 5, height = 4)
+
+ggsave(p_umap_gdT_K29_v2, filename = "UMAP_gdT_K29_loading_v2.pdf", width = 5, height = 4)
+
+ggsave(p_umap_gdT_K6_v2, filename = "UMAP_gdT_K6_loading_v2.pdf", width = 5, height = 4)
+```
+
+## Compare DGE in CD4 and CD8 when comparing activated vs resting
+
+```{r}
+# DGE of CD4 activated vs resting
+CD4_cells <- seurat_meta_filtered$cellID[seurat_meta_filtered$annotation_level1 == "CD4"]
+CD4_resting_cells <- CD4_cells[seurat_meta_filtered$annotation_level2_group[match(CD4_cells, seurat_meta_filtered$cellID)] == "resting"]
+CD4_activated_cells <- CD4_cells[seurat_meta_filtered$annotation_level2_group[match(CD4_cells, seurat_meta_filtered$cellID)] == "activated"]
+
+CD4_DGE <- FlashierDGE_corrected(F1 = F_pm_filtered,
+                                      L1 = L_pm_filtered,
+                                      group1 = CD4_activated_cells,
+                                      group2 = CD4_resting_cells)
+
+# DGE of CD8 activated vs resting
+CD8_cells <- seurat_meta_filtered$cellID[seurat_meta_filtered$annotation_level1 == "CD8"]
+CD8_resting_cells <- CD8_cells[seurat_meta_filtered$annotation_level2_group[match(CD8_cells, seurat_meta_filtered$cellID)] == "resting"]
+CD8_activated_cells <- CD8_cells[seurat_meta_filtered$annotation_level2_group[match(CD8_cells, seurat_meta_filtered$cellID)] == "activated"]
+
+CD8_DGE <- FlashierDGE_corrected(F1 = F_pm_filtered,
+                                      L1 = L_pm_filtered,
+                                      group1 = CD8_activated_cells,
+                                      group2 = CD8_resting_cells)
+```
+
+```{r}
+top_quadrant_labels <- function(df, x, y, label, n = 10) {
+  x <- rlang::ensym(x)
+  y <- rlang::ensym(y)
+  label <- rlang::ensym(label)
+
+  df %>%
+    mutate(
+      quad = case_when(
+        !!x >= 0 & !!y >= 0 ~ "++",
+        !!x <  0 & !!y <  0 ~ "--",
+        !!x >= 0 & !!y <  0 ~ "+-",
+        TRUE                ~ "-+"
+      ),
+      score = case_when(
+        quad == "++" ~  (!!x) + (!!y),
+        quad == "--" ~ - (!!x) - (!!y),
+        quad == "+-" ~  (!!x) - (!!y),
+        quad == "-+" ~ - (!!x) + (!!y)
+      ),
+      lab_col = recode(
+        quad,
+        "++" = "darkgreen",
+        "--" = "darkred",
+        "+-" = "darkblue",
+        "-+" = "purple"
+      )
+    ) %>%
+    group_by(quad) %>%
+    slice_max(score, n = n, with_ties = FALSE) %>%
+    ungroup()
+}
+```
+
+```{r}
+# merge the DGE results for GPs:CD8_DGE$diff_factors and CD4_DGE$diff_factors
+diff_factors_CD4 <- CD4_DGE$diff_factors %>%
+  rename(mean_change_loadings_CD4 = mean_change_loadings,
+         AveExpr_CD4 = AveExpr)
+
+diff_factors_CD8 <- CD8_DGE$diff_factors %>%
+  rename(mean_change_loadings_CD8 = mean_change_loadings,
+         AveExpr_CD8 = AveExpr)
+
+diff_factors_merged <- diff_factors_CD4 %>%
+  inner_join(diff_factors_CD8, by = "SYMBOL")
+
+label_df <- top_quadrant_labels(diff_factors_merged, mean_change_loadings_CD4, mean_change_loadings_CD8, SYMBOL, n = 200)
+
+ggplot(diff_factors_merged, aes(mean_change_loadings_CD4, mean_change_loadings_CD8)) +
+  geom_point() +
+  coord_cartesian(xlim = c(-0.1, 0.2), ylim = c(-0.2, 0.2)) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "blue") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "blue") +
+  ggrepel::geom_text_repel(
+    data = label_df,
+    aes(label = SYMBOL, color = lab_col),
+    max.overlaps = 100,
+    size = 3, box.padding = 0.35, point.padding = 0.5, segment.color = "grey50",
+    show.legend = FALSE
+  ) +
+  scale_color_identity() +
+  labs(
+    x = "Difference in Mean Loading (CD4 Activated vs Resting)",
+    y = "Difference in Mean Loading (CD8 Activated vs Resting)",
+    # x = "Rel Difference in Mean Loading (CD4 Activated vs Resting)",
+    # y = "Rel Difference in Mean Loading (CD8 Activated vs Resting)",
+    title = "Comparison of GP Loadings between CD4 and CD8"
+  ) +
+  theme_minimal()
+
+ggsave(filename = "DGE_CD4_vs_CD8_loadings.pdf", 
+       width = 7, height = 6)
+
+```
+
+```{r}
+# similar plot for genes
+diff_genes_CD4 <- CD4_DGE$diff_genes %>%
+  rename(log2FC_CD4 = log2FC,
+         AveExpr_CD4 = AveExpr)
+diff_genes_CD8 <- CD8_DGE$diff_genes %>%
+  rename(log2FC_CD8 = log2FC,
+         AveExpr_CD8 = AveExpr)
+
+diff_genes_merged <- diff_genes_CD4 %>%
+  inner_join(diff_genes_CD8, by = "SYMBOL")
+
+diff_genes_merged <- CD4_DGE$diff_genes %>%
+  transmute(SYMBOL, log2FC_CD4 = log2FC, AveExpr_CD4 = AveExpr) %>%
+  inner_join(
+    CD8_DGE$diff_genes %>% transmute(SYMBOL, log2FC_CD8 = log2FC, AveExpr_CD8 = AveExpr),
+    by = "SYMBOL"
+  )
+
+label_df <- top_quadrant_labels(diff_genes_merged, log2FC_CD4, log2FC_CD8, SYMBOL, n = 10)
+
+ggplot(diff_genes_merged, aes(log2FC_CD4, log2FC_CD8)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "blue") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "blue") +
+  ggrepel::geom_text_repel(
+    data = label_df,
+    aes(label = SYMBOL, color = lab_col),
+    size = 3, box.padding = 0.10, point.padding = 0.15, segment.color = "grey50",
+    show.legend = FALSE
+  ) +
+  scale_color_identity() +
+  labs(
+    x = "Log2 Fold Change (CD4 Activated vs Resting)",
+    y = "Log2 Fold Change (CD8 Activated vs Resting)",
+    title = "Comparison of Gene Fold Changes between CD4 and CD8"
+  ) +
+  theme_minimal()
+
+ggsave(filename = "DGE_CD4_vs_CD8_genes.pdf", 
+       width = 7, height = 6)
+```
+
+## Heatmap for the selected GPs and their top associated genes:
+
+```{r}
+# Examples of both up regulated: K25, K26
+# Examples of only up regulated in CD8: K10, K43
+# Examples of only up regulated in CD4: K12, K58
+# Examples of down regulated in both: K171, K9
+# GPs_of_interest <- c("K25", "K26", "K10", "K43", "K12", "K58", "K171", "K9")
+GPs_of_interest <- paste0("K", c(25, 26, 10, 43, 12, 58, 171, 9, 79, 35, 72, 177, 161, 152, 162, 36, 56))
+kset <- GPs_of_interest
+
+F_pm_filtered_norm <- scale_cols(F_pm_filtered, 1 / apply(abs(F_pm_filtered), 2, max))
+colnames(F_pm_filtered_norm) <- paste0("K", seq_len(ncol(F_pm_filtered_norm)))
+
+F_pm_filtered_norm_subset <- F_pm_filtered_norm[, GPs_of_interest, drop = FALSE]
+
+jj <- annotation_heatmap(F_pm_filtered_norm_subset,n = 3,
+                   dim = kset,
+                   show_dims = kset,
+                   compare_dims = kset,
+                   select_features = "largest",
+                   feature_sign = "both",
+                   zero_value = 0.05,
+                   font_size = 15) +
+  theme(plot.title = element_text(face = "plain",size = 10))
+```
+
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(pheatmap)
+library(tibble)
+
+df <- jj@data %>%
+  transmute(gene = feature_name, gp = dim, value = as.numeric(value))
+
+# gene x gp matrix
+mat <- df %>%
+  pivot_wider(names_from = gp, values_from = value, values_fill = 0) %>%  # <- fill missing as 0
+  column_to_rownames("gene") %>%
+  as.matrix()
+
+# optional: drop genes that are all zeros
+mat <- mat[rowSums(abs(mat)) > 0, , drop = FALSE]
+
+# diverging colors: blue (neg) - white (0) - red (pos)
+max_abs <- max(abs(mat), na.rm = TRUE)
+bk <- seq(-max_abs, max_abs, length.out = 101)
+cols <- colorRampPalette(c("#4575B4", "white", "#D73027"))(100)
+
+# reorder the column
+mat <- mat[, kset, drop = FALSE]
+
+pheatmap(
+  mat,
+  color = cols,
+  breaks = bk,
+  cluster_rows = TRUE,
+  cluster_cols = TRUE,
+  show_rownames = TRUE,
+  show_colnames = TRUE,
+  # border_color = NA,
+  filename = "DGE_CD4_vs_CD8_GPs_heatmap.pdf", # save
+  width = 6,
+  height = 8
+)
+```
+
+
+
+## Plots showing the lineage-specific and lineage-shared GPs:
+
+```{r}
+compute_lineage_proportion <- function(lineage){
+  L_pm_filtered_lineage <- L_pm_filtered[seurat_meta_filtered$annotation_level1 == lineage, , drop = FALSE]
+  
+  # count proportion of cells in each GP with loading >= 0.1
+  lineage_proportion <- apply(L_pm_filtered_lineage, 2, function(x) mean(x >= 0.1, na.rm = TRUE))
+  
+  lineage_proportion
+}
+compute_lineage_median <- function(lineage){
+  L_pm_filtered_lineage <- L_pm_filtered[seurat_meta_filtered$annotation_level1 == lineage, , drop = FALSE]
+  
+  # compute median loading of each GP in this lineage
+  lineage_median <- apply(L_pm_filtered_lineage, 2, function(x) median(x, na.rm = TRUE))
+  
+  lineage_median
+}
+
+# do this for the 7 lineages of interest:
+lineages <- c("CD4", "CD8", "Treg", "DN", "Tz", "CD8aa", "gdT")
+lineage_proportions <- lapply(lineages, compute_lineage_proportion)
+lineage_medians <- lapply(lineages, compute_lineage_median)
+
+# combine into a matrix
+lineage_proportions_mat <- do.call(rbind, lineage_proportions)
+lineage_medians_mat <- do.call(rbind, lineage_medians)
+rownames(lineage_proportions_mat) <- lineages
+rownames(lineage_medians_mat) <- lineages
+```
+
+
+Heatmap:
+
+```{r}
+# make a heatmap of lineage_proportions_mat
+library(pheatmap)
+lineage_proportions_mat_sparse <- lineage_proportions_mat
+
+# only keep GPs that appear in at least one lineage with proportion >= 0.01
+keep_gps <- colSums(lineage_proportions_mat_sparse >= 0.01, na.rm = TRUE) > 0
+lineage_proportions_mat_sparse <- lineage_proportions_mat_sparse[, keep_gps, drop = FALSE]
+
+heatmap_lineage_active <- pheatmap(lineage_proportions_mat_sparse,
+         color = colorRampPalette(c("white", "red"))(100),
+         breaks = seq(0, 1, length.out = 101),
+         cluster_rows = TRUE,
+         cluster_cols = TRUE,
+         show_rownames = TRUE,
+         show_colnames = TRUE,
+         border_color = "grey",
+         filename = "gp_lineage_proportions_heatmap.pdf",
+         width = 10,
+         height = 6)
+```
+
+Dotplot:
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+plot_gp_lineage_dotplot <- function(lineage_proportions_mat, 
+                                    lineage_medians_mat,
+                                    percent_threshold = 0.05,
+                                    min_lineages = 1,
+                                    max_gps = 200,
+                                    log_size = FALSE,
+                                    border_color = "grey70",
+                                    lineage_order = NULL, 
+                                    gp_order = NULL) {    # New: vector of GP names
+  
+  # 1. Convert Proportions and Medians to long format
+  df_prop <- as.data.frame(as.table(as.matrix(lineage_proportions_mat)))
+  colnames(df_prop) <- c("Lineage", "GP", "Proportion")
+  
+  df_med <- as.data.frame(as.table(as.matrix(lineage_medians_mat)))
+  colnames(df_med) <- c("Lineage", "GP", "MedianLoading")
+  
+  # 2. Merge data
+  df_plot <- left_join(df_prop, df_med, by = c("Lineage", "GP"))
+  
+  # 3. Filter: Keep GPs that pass percent_threshold in >= min_lineages
+  keep_gps <- df_plot %>%
+    group_by(GP) %>%
+    summarize(n_active = sum(Proportion >= percent_threshold, na.rm = TRUE)) %>%
+    filter(n_active >= min_lineages) %>%
+    pull(GP)
+  
+  if (length(keep_gps) == 0) {
+    stop(paste("No GPs pass the threshold in at least", min_lineages, "lineages."))
+  }
+  
+  df_plot <- df_plot %>% filter(GP %in% keep_gps)
+  
+  # 4. Limit number of GPs for readability
+  if (length(unique(df_plot$GP)) > max_gps) {
+    top_gps <- df_plot %>%
+      group_by(GP) %>%
+      summarize(max_p = max(Proportion, na.rm = TRUE)) %>%
+      arrange(desc(max_p)) %>%
+      head(max_gps) %>%
+      pull(GP)
+    df_plot <- df_plot %>% filter(GP %in% top_gps)
+  }
+
+  # 5. Handle Manual Ordering
+  # Apply lineage order (Y-axis)
+  if (!is.null(lineage_order)) {
+    # Intersect with existing names to avoid errors if a lineage was filtered out
+    existing_lineages <- intersect(lineage_order, unique(df_plot$Lineage))
+    df_plot$Lineage <- factor(df_plot$Lineage, levels = rev(existing_lineages)) 
+    # Note: rev() used because ggplot plots from bottom-to-top
+  }
+  
+  # Apply GP order (X-axis)
+  if (!is.null(gp_order)) {
+    existing_gps <- intersect(gp_order, unique(df_plot$GP))
+    df_plot$GP <- factor(df_plot$GP, levels = existing_gps)
+  }
+
+  # 6. Handle Transformation
+  if (log_size) {
+    df_plot$size_val <- log10(df_plot$Proportion * 100 + 1)
+    size_label <- "log10(Prop% + 1)"
+  } else {
+    df_plot$size_val <- df_plot$Proportion
+    size_label <- "Proportion"
+  }
+
+  # 7. Build the Dotplot
+  p <- ggplot(df_plot, aes(x = GP, y = Lineage)) +
+    geom_point(aes(size = size_val, fill = MedianLoading), 
+               shape = 21, color = border_color, stroke = 0.2) +
+    
+    scale_fill_viridis_c(option = "magma", direction = -1, name = "Median\nLoading") +
+    scale_size_continuous(range = c(0, 6), name = size_label) +
+    
+    theme_bw() +
+    theme(
+      axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
+      panel.grid.major = element_line(color = "grey95"),
+      legend.position = "right"
+    ) +
+    labs(
+      title = "GP Lineage Dotplot",
+      subtitle = paste0("Showing GPs active in \u2265 ", min_lineages, " lineages",
+                        if(log_size) " (Log-scaled size)" else ""),
+      x = "Gene Programs",
+      y = "Cell Lineages"
+    )
+
+  return(p)
+}
+
+# obtain clustering
+heatmap_lineage_active_all <- pheatmap(lineage_proportions_mat,
+         color = colorRampPalette(c("white", "red"))(100),
+         breaks = seq(0, 1, length.out = 101),
+         cluster_rows = TRUE,
+         cluster_cols = TRUE,
+         show_rownames = TRUE,
+         show_colnames = TRUE,
+         border_color = "grey",
+         width = 10,
+         height = 6)
+
+# Usage:
+p_dot <- plot_gp_lineage_dotplot(lineage_proportions_mat,
+                                 lineage_medians_mat,
+                                 log_size = TRUE,
+                                 border_color = "black",
+                                 lineage_order = sort(lineages),
+                                 gp_order = colnames(lineage_proportions_mat)[heatmap_lineage_active_all$tree_col$order], 
+                                 min_lineages = 2)
+ggsave(p_dot, filename = "gp_lineage_dotplot_log.pdf", width = 11, height = 7)
+
+p_dot <- plot_gp_lineage_dotplot(lineage_proportions_mat,
+                                 lineage_medians_mat,
+                                 log_size = FALSE,
+                                 border_color = "black",
+                                 lineage_order = sort(lineages),
+                                 gp_order = colnames(lineage_proportions_mat)[heatmap_lineage_active_all$tree_col$order], 
+                                 min_lineages = 2)
+ggsave(p_dot, filename = "gp_lineage_dotplot.pdf", width = 11, height = 7)
+```
+
+
+
+Produce a table:
+
+```{r}
+library(dplyr)
+library(tidyr)
+
+tabulate_gp_shared_occupancy <- function(lineage_proportions_mat,
+                                         threshold_vec = c(0.01, 0.05, 0.1, 0.15, 0.2, 0.3),
+                                         min_lineages_vec = c(1, 2, 3)) {
+  
+  mat <- as.matrix(lineage_proportions_mat)
+  n_total_gps <- ncol(mat)
+  
+  # Helper to calculate counts for a single threshold
+  get_counts <- function(t) {
+    # Count how many lineages each GP appears in at threshold t
+    appear_counts <- colSums(mat >= t, na.rm = TRUE)
+    
+    # Calculate counts for each 'at least X lineages' requirement
+    counts <- sapply(min_lineages_vec, function(m) sum(appear_counts >= m))
+    names(counts) <- paste0("Shared_\u2265", min_lineages_vec)
+    
+    # Add metadata
+    return(c(Threshold = t, Total_GPs = n_total_gps, counts))
+  }
+  
+  # Run for all thresholds and convert to a clean data frame
+  res_list <- lapply(threshold_vec, get_counts)
+  res_df <- as.data.frame(do.call(rbind, res_list))
+  
+  # Add a percentage column for the first shared requirement (usually >= 2)
+  # to show how much of the library you are retaining
+  if (ncol(res_df) > 3) {
+    main_col <- names(res_df)[4] # Usually Shared_>=2
+    res_df$Percent_Retained <- round((res_df[[main_col]] / n_total_gps) * 100, 1)
+  }
+  
+  return(res_df)
+}
+
+# Generate the table
+thresh_table <- tabulate_gp_shared_occupancy(
+  lineage_proportions_mat,
+  threshold_vec = c(0.001, 0.01, 0.05, 0.1, 0.15, 0.2, 0.5),
+  min_lineages_vec = c(2:7) # Specific sharedness levels you care about
+)
+
+# View the table
+print(thresh_table)
+```
+
+
+
+Scatter plot showing the threshold and number of GPs that are shared (>=2 lineages)
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(scales)
+
+plot_gp_shared_occupancy <- function(lineage_proportions_mat,
+                                     min_lineages = 2,
+                                     threshold_range = seq(0, 0.5, by = 0.005),
+                                     highlight_threshold = NULL, # New argument
+                                     loading_fixed = 0.1,
+                                     base_size = 12,
+                                     log_y = FALSE) {
+  
+  mat <- as.matrix(lineage_proportions_mat)
+  
+  # 1. Calculate occupancy for each threshold in the range
+  df_shared <- data.frame(
+    threshold = threshold_range,
+    count = sapply(threshold_range, function(t) {
+      appear_counts <- colSums(mat >= t, na.rm = TRUE)
+      sum(appear_counts >= min_lineages)
+    })
+  )
+
+  # 2. Build the Plot
+  p <- ggplot(df_shared, aes(x = threshold, y = count)) +
+    geom_line(color = "firebrick", linewidth = 1.2) +
+    geom_area(fill = "firebrick", alpha = 0.1) +
+    labs(
+      title = paste0("Shared GP Occupancy (\u2265 ", min_lineages, " Lineages)"),
+      subtitle = paste0("Fixed Loading Thresh: ", loading_fixed),
+      x = "Proportion Threshold (percent_threshold)",
+      y = paste("Number of GPs shared across \u2265", min_lineages, "lineages")
+    ) +
+    theme_minimal(base_size = base_size) +
+    theme(
+      plot.title = element_text(face = "bold", hjust = 0.5),
+      plot.subtitle = element_text(hjust = 0.5),
+      panel.grid.minor = element_blank()
+    )
+
+  # 3. Handle Highlight Threshold
+  if (!is.null(highlight_threshold)) {
+    # Calculate count at the specific highlight point
+    h_count <- sum(colSums(mat >= highlight_threshold, na.rm = TRUE) >= min_lineages)
+    
+    p <- p + 
+      geom_vline(xintercept = highlight_threshold, linetype = "dashed", color = "black") +
+      # Add a point at the intersection
+      geom_point(aes(x = highlight_threshold, y = h_count), color = "black", size = 3) +
+      # Add the label
+      annotate("text", x = highlight_threshold, y = h_count, 
+               label = paste0("Thresh: ", highlight_threshold, "\nGPs: ", h_count),
+               vjust = -1, hjust = -0.1, fontface = "bold", size = (base_size/3))
+  }
+
+  # 4. Handle Log Scale
+  if (log_y) {
+    p <- p + scale_y_log10(labels = scales::label_log(), breaks = scales::breaks_log())
+  } else {
+    p <- p + expand_limits(y = 0)
+  }
+
+  return(p)
+}
+
+# See how many GPs are shared by at least 2 lineages from 0% to 40% threshold
+p_occupancy <- plot_gp_shared_occupancy(
+  lineage_proportions_mat, 
+  min_lineages = 2, 
+  highlight_threshold = 0.1,
+  threshold_range = seq(0, 0.4, by = 0.002),
+  log_y = FALSE
+)
+
+print(p_occupancy)
+ggsave(filename = "gp_shared_occupancy.pdf", plot = p_occupancy, width = 6, height = 4)
+```
+
+
+Barplot:
+
+```{r}
+library(ggplot2)
+plot_gp_lineage_hist <- function(lineage_proportions_mat,
+                                 percent_threshold = 0.1,
+                                 loading_threshold = 0.1,
+                                 lineages = NULL,
+                                 main = NULL,
+                                 show_counts = TRUE) {
+  
+  # Validation and Matrix Conversion
+  stopifnot(is.matrix(lineage_proportions_mat) || is.data.frame(lineage_proportions_mat))
+  mat <- as.matrix(lineage_proportions_mat)
+  n_lineages <- nrow(mat)
+  
+  # Calculate how many lineages each GP appears in
+  appear_counts <- colSums(mat >= percent_threshold, na.rm = TRUE)
+  
+  # Create a frequency data frame for plotting
+  df_plot <- as.data.frame(table(factor(appear_counts, levels = 0:n_lineages)))
+  colnames(df_plot) <- c("n_lineages_count", "freq")
+  df_plot$n_lineages_count <- as.numeric(as.character(df_plot$n_lineages_count))
+
+  # Default Title
+  if (is.null(main)) {
+    main <- paste0("GPs appearing across lineages\n", 
+                   "(Prop \u2265 ", percent_threshold, "; Loading \u2265 ", loading_threshold, ")")
+  }
+
+  # Build the ggplot
+  p <- ggplot(df_plot, aes(x = n_lineages_count, y = freq)) +
+    geom_col(fill = "steelblue", color = "white", alpha = 0.8) +
+    scale_x_continuous(breaks = 0:n_lineages) +
+    labs(
+      title = main,
+      x = sprintf("Number of lineages (out of %d)", n_lineages),
+      y = "Number of GPs"
+    ) +
+    theme_minimal(base_size = 12) +
+    theme(
+      plot.title = element_text(hjust = 0.5, face = "bold"),
+      panel.grid.minor = element_blank()
+    )
+
+  # Add text labels if requested
+  if (show_counts) {
+    p <- p + geom_text(aes(label = freq), vjust = -0.5, size = 3.5) +
+             expand_limits(y = max(df_plot$freq) * 1.1) # Auto-adds headroom
+  }
+
+  print(p)
+
+  # Return data invisibly like the original
+  invisible(list(
+    freq = df_plot$freq,
+    appear_counts = appear_counts,
+    breaks = df_plot$n_lineages_count
+  ))
+}
+
+res <- plot_gp_lineage_hist(lineage_proportions_mat,
+                            percent_threshold = 0.1,
+                            loading_threshold = 0.1)
+
+ggsave(filename = "gp_lineage_histogram.pdf", plot = last_plot(), width = 6, height = 4)
+```
+
+
+Stacked barplot:
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+plot_gp_percent_sensitivity <- function(lineage_proportions_mat,
+                                        percent_vec = c(0.1, 0.15, 0.2),
+                                        loading_fixed = 0.1,
+                                        base_size = 12) {
+  
+  mat <- as.matrix(lineage_proportions_mat)
+  n_lineages <- nrow(mat)
+  
+  # Helper to generate frequency data for each percent threshold
+  df_p <- do.call(rbind, lapply(percent_vec, function(p) {
+    # Count how many lineages pass the threshold 'p' for each GP
+    appear_counts <- colSums(mat >= p, na.rm = TRUE)
+    
+    # Create frequency table for 0 to n_lineages
+    df <- as.data.frame(table(factor(appear_counts, levels = 0:n_lineages)))
+    colnames(df) <- c("n_shared", "count")
+    df$n_shared <- as.numeric(as.character(df$n_shared))
+    df$p_val <- p
+    return(df)
+  }))
+
+  # Create the plot
+  p <- ggplot(df_p, aes(x = n_shared, y = count, fill = factor(p_val))) +
+    geom_col(position = position_dodge(preserve = "single"), alpha = 0.8, color = "white") +
+    scale_x_continuous(breaks = 0:n_lineages) +
+    scale_fill_viridis_d(option = "viridis", name = "Percent Thresh") +
+    labs(
+      title = paste0("GP Sharedness Sensitivity (Loading Fixed at ", loading_fixed, ")"),
+      x = sprintf("Number of Lineages (out of %d)", n_lineages),
+      y = "Number of GPs"
+    ) +
+    theme_minimal(base_size = base_size) +
+    theme(
+      plot.title = element_text(hjust = 0.5, face = "bold"),
+      panel.grid.minor = element_blank(),
+      legend.position = "right"
+    )
+
+  return(p)
+}
+
+# Example call:
+p_sens <- plot_gp_percent_sensitivity(lineage_proportions_mat, 
+                                      percent_vec = c(1e-3, 0.01, 0.1, 0.15, 0.5),
+                                      loading_fixed = 0.1)
+print(p_sens)
+
+# Save the figure
+ggsave("gp_threshold_comparison.pdf", plot = p_sens, width = 8, height = 8)
+```
+
+Do a similar plot showing the lines:
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(scales) # Required for nice log labels
+
+plot_gp_percent_line_sensitivity <- function(lineage_proportions_mat,
+                                             percent_vec = c(0.1, 0.15, 0.2),
+                                             loading_fixed = 0.1,
+                                             base_size = 12,
+                                             log_y = FALSE) {
+  
+  mat <- as.matrix(lineage_proportions_mat)
+  n_lineages <- nrow(mat)
+  
+  # Generate frequency data
+  df_p <- do.call(rbind, lapply(percent_vec, function(p) {
+    appear_counts <- colSums(mat >= p, na.rm = TRUE)
+    df <- as.data.frame(table(factor(appear_counts, levels = 0:n_lineages)))
+    colnames(df) <- c("n_shared", "count")
+    df$n_shared <- as.numeric(as.character(df$n_shared))
+    df$p_val <- factor(p)
+    return(df)
+  }))
+
+  # Create the Plot
+  p <- ggplot(df_p, aes(x = n_shared, y = count, color = p_val, linetype = p_val, group = p_val)) +
+    geom_line(linewidth = 1) +
+    geom_point(size = 2) +
+    scale_x_continuous(breaks = 0:n_lineages) +
+    scale_color_viridis_d(option = "viridis", name = "Percent Thresh") +
+    scale_linetype_manual(values = rep(c("solid", "dashed", "dotted", "dotdash"), length.out = length(percent_vec)),
+                          name = "Percent Thresh") +
+    labs(
+      title = paste0("GP Sharedness Trend (Loading Fixed at ", loading_fixed, ")"),
+      x = sprintf("Number of Lineages (out of %d)", n_lineages),
+      y = "Number of GPs"
+    ) +
+    theme_minimal(base_size = base_size) +
+    theme(
+      plot.title = element_text(hjust = 0.5, face = "bold"),
+      panel.grid.minor = element_blank(),
+      legend.position = "right"
+    )
+
+  # Apply Log Scaling if requested
+  if (log_y) {
+    # We use log1p or add a small constant if there are 0 counts to avoid -Inf
+    p <- p + scale_y_log10(labels = scales::label_log(), 
+                           breaks = scales::breaks_log()) +
+         ylab("Number of GPs (Log10 Scale)")
+  }
+
+  return(p)
+}
+
+# Execution with Log Scale
+p_line_log <- plot_gp_percent_line_sensitivity(lineage_proportions_mat, 
+                                               percent_vec = c(1e-3, 0.01, 0.1, 0.15, 0.5),
+                                               loading_fixed = 0.1,
+                                               log_y = FALSE)
+
+print(p_line_log)
+
+# Save the figure
+ggsave("gp_threshold_line_comparison.pdf", plot = p_line_log, width = 8, height = 8)
+```
+
+
+Alluvial plot:
+
+```{r}
+colnames(F_pm_filtered) <- paste0("K", seq_len(ncol(F_pm_filtered)))
+# take out the most relevant genes for a selected GP
+find_gene_GP <- function(GP, top_n = 2){
+  if (!GP %in% colnames(F_pm_filtered)) {
+    stop("GP not found in the data.")
+  }
+  
+  gene_loadings <- F_pm_filtered[, GP]
+  top_genes <- names(sort(abs(gene_loadings), decreasing = TRUE))[1:top_n]
+  
+  # if it is positive add +, if negative add -
+  top_genes <- ifelse(gene_loadings[top_genes] >= 0, 
+                      paste0(top_genes, "+"),
+                      paste0(top_genes, "-"))
+  return(top_genes)
+}
+
+library(ggplot2)
+library(ggalluvial)
+library(dplyr)
+
+plot_gp_lineage_alluvial <- function(lineage_proportions_mat,
+                                     percent_threshold = 0.1,
+                                     loading_threshold = 0.1,
+                                     gp_names = NULL,
+                                     lineage_names = NULL,
+                                     shared_levels_to_show = 2:6, 
+                                     max_per_level = 100,
+                                     base_size = 12,
+                                     gp_text_size = 2,
+                                     lineage_text_size = 3.5, # Size for CD4, CD8, etc.
+                                     top_n_genes = 2,
+                                     title = NULL) {
+  
+  mat <- as.matrix(lineage_proportions_mat)
+  n_lineages <- nrow(mat)
+  
+  # 1. Custom Lineage Colors
+  my_lin_cols <- ZemmourLib::immgent_colors$level1
+
+  if (is.null(lineage_names)) lineage_names <- rownames(mat) %||% paste0("L", 1:n_lineages)
+  if (is.null(gp_names)) gp_names <- colnames(mat) %||% paste0("GP", 1:ncol(mat))
+  rownames(mat) <- lineage_names
+  colnames(mat) <- gp_names
+
+  # 2. Edge list and Thresholding
+  df <- as.data.frame(as.table(mat))
+  colnames(df) <- c("lineage", "gp", "prop")
+  df <- df %>% filter(prop >= percent_threshold)
+  
+  # 3. Calculate Sharedness and Filter
+  set.seed(42) 
+  gp_stats <- df %>%
+    group_by(gp) %>%
+    summarize(
+      n_shared = n(),
+      profile = paste(as.integer(lineage_names %in% lineage), collapse = "")
+    ) %>%
+    filter(n_shared %in% shared_levels_to_show) %>% 
+    group_by(n_shared) %>%
+    slice_sample(n = max_per_level) %>%
+    ungroup() %>%
+    arrange(desc(n_shared), desc(profile))
+
+  if (nrow(gp_stats) == 0) stop("No GPs found for the selected shared_levels_to_show.")
+
+  # 4. Append Leading Genes to GP Labels
+  gp_labels <- sapply(as.character(gp_stats$gp), function(x) {
+    genes <- find_gene_GP(x, top_n = top_n_genes)
+    paste0(x, ": ", paste(genes, collapse = ", "))
+  })
+  gp_stats$gp_annotated <- gp_labels[as.character(gp_stats$gp)]
+
+  # 5. Data Prep
+  df <- df %>%
+    filter(gp %in% gp_stats$gp) %>%
+    left_join(gp_stats, by = "gp") %>%
+    mutate(
+      gp = factor(gp_annotated, levels = gp_stats$gp_annotated),
+      lineage = factor(lineage, levels = lineage_names)
+    )
+
+  # 6. Color Mapping
+  shared_cols_ramp <- colorRampPalette(c("#DEEBF7", "#08306B"))(n_lineages)
+  gp_to_color <- setNames(shared_cols_ramp[gp_stats$n_shared], gp_stats$gp_annotated)
+  shared_num_to_color <- setNames(shared_cols_ramp, as.character(1:n_lineages))
+  all_colors <- c(my_lin_cols, shared_num_to_color, gp_to_color)
+
+  if (is.null(title)) title <- "GP Sharedness & Leading Genes"
+
+  # 7. Plotting
+  p <- ggplot(df, aes(axis1 = lineage, axis2 = gp, y = 1)) +
+    # Flows
+    geom_alluvium(aes(fill = lineage), width = 1/10, alpha = 0.4, knot.pos = 0.4) +
+    
+    # Stratum Boxes
+    geom_stratum(aes(fill = after_stat(stratum)), width = 1/6, color = "white") +
+    
+    # Unified Text Layer: Conditional Size
+    # after_stat(stratum) checks the label; if it's a lineage, use the bigger size
+    geom_text(stat = "stratum", aes(
+                label = after_stat(stratum),
+                size = after_stat(ifelse(stratum %in% lineage_names, 
+                                         lineage_text_size, 
+                                         gp_text_size))
+              )) +
+    
+    # Need to tell ggplot not to create a legend for the text sizes
+    scale_size_identity() + 
+    
+    scale_x_discrete(limits = c("Lineage", "GP"), expand = c(.1, .1)) +
+    scale_fill_manual(
+      values = all_colors,
+      breaks = as.character(shared_levels_to_show),
+      name = "Number of Lineages\nShared (1-6)",
+      guide = guide_legend(override.aes = list(alpha = 1, size = 5))
+    ) +
+    
+    labs(
+      title = title,
+      subtitle = paste0("Excluding GPs shared by all ", n_lineages, " lineages"),
+      x = NULL, y = NULL
+    ) +
+    theme_minimal(base_size = base_size) +
+    theme(
+      panel.grid = element_blank(),
+      axis.text.y = element_blank(),
+      axis.ticks.y = element_blank(),
+      plot.title = element_text(face = "bold", hjust = 0.5),
+      plot.subtitle = element_text(hjust = 0.5),
+      legend.position = "right",
+      legend.title = element_text(face = "bold")
+    )
+
+  return(p)
+}
+
+`%||%` <- function(a, b) if (!is.null(a)) a else b
+
+p_annotated <- plot_gp_lineage_alluvial(
+  lineage_proportions_mat, 
+  percent_threshold = 0.1,
+  top_n_genes = 2,
+  gp_text_size = 4,
+  lineage_text_size = 5,
+  shared_levels_to_show = 2:6, 
+  base_size = 14
+)
+
+ggsave("gp_alluvial_with_genes.pdf", plot = p_annotated, height = 16, width = 15)
+```
+
+
+
+## Network plot for the selected GPs and their top associated genes:
+
+```{r}
+GPs_of_interest <- paste0("K", c(25, 26, 10, 43, 12, 58, 171, 9, 79, 35, 72, 177, 161, 152, 162, 36, 56))
+
+top_genes <- apply(F_pm_filtered_norm_subset, 2, function(x) {
+  top_genes <- names(sort(abs(x), decreasing = TRUE))[1:5]
+  return(top_genes)
+})
+top_5_pos <- apply(F_pm_filtered_norm_subset,2,function(x) {
+  idx <- order(abs(x),decreasing=TRUE)[1:5]
+  idx <- idx[x[idx] > 0]
+  top_genes_pos <- names(x)[idx]
+  return(top_genes_pos)
+})
+top_5_neg <- apply(F_pm_filtered_norm_subset,2,function(x) {
+  idx <- order(abs(x),decreasing=TRUE)[1:5]
+  idx <- idx[x[idx] < 0]
+  top_genes_neg <- names(x)[idx]
+  return(top_genes_neg)
+})
+names(top_5_pos) <- GPs_of_interest
+names(top_5_neg) <- GPs_of_interest
+```
+
+```{r}
+library(tidyverse)
+library(tidygraph)
+library(ggraph)
+library(igraph)
+
+# 1. Prepare edges
+all_edges_sorted <- all_edges %>%
+  arrange(Type, GP, Gene) 
+
+# 2. Build graph and add node metadata
+graph <- as_tbl_graph(all_edges_sorted) %>%
+  activate(nodes) %>%
+  mutate(
+    NodeGroup = ifelse(name %in% all_edges$GP, "GP", "Gene"),
+    Importance = centrality_degree()
+  ) %>%
+  # Join quadrant info from label_df
+  left_join(
+    label_df %>% select(SYMBOL, lab_col, quad) %>% rename(name = SYMBOL),
+    by = "name"
+  ) %>%
+  # Now 'quad' and 'lab_col' exist within the nodes data frame
+  mutate(
+    QuadGroup = ifelse(NodeGroup == "GP", as.character(quad), "Gene"),
+    gp_label = ifelse(NodeGroup == "GP", name, "")
+  )
+
+# 3. Setup color scale for the legend
+quad_colors <- label_df %>% 
+  select(quad, lab_col) %>% 
+  distinct() %>% 
+  { setNames(.$lab_col, as.character(.$quad)) }
+
+all_colors <- c(quad_colors, "Gene" = "#666666")
+
+# 4. Plotting
+p_network <- ggraph(graph, layout = "nicely") +  
+  geom_edge_link(aes(color = Color), alpha = 0.4, width = 0.6) +
+  
+  # Gene nodes
+  geom_node_point(
+    aes(filter = (NodeGroup == "Gene"), color = QuadGroup),
+    shape = 16, size = 2, alpha = 0.8
+  ) +
+  
+  # GP nodes (Large squares)
+  geom_node_point(
+    aes(filter = (NodeGroup == "GP"), color = QuadGroup),
+    shape = 15, size = 12, alpha = 0.7
+  ) +
+  
+  # Labels
+  geom_node_text(
+    aes(filter = (NodeGroup == "GP"), label = gp_label),
+    color = "white", fontface = "bold", size = 3
+  ) +
+  geom_node_text(
+    aes(filter = (NodeGroup == "Gene"), label = name),
+    repel = TRUE, size = 2.5, color = "black", max.overlaps = 20
+  ) +
+  
+  # Scales
+  scale_edge_color_identity() + 
+  scale_color_manual(
+    name = "Quadrant Group",
+    values = all_colors,
+    breaks = names(quad_colors) # Hides 'Gene' from legend
+  ) +
+  
+  theme_void() +
+  labs(
+    title = "GP-Gene Signature Network",
+    subtitle = "Nodes colored by Quadrant classification",
+    caption = "Red: Positive | Blue: Negative"
+  ) +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_text(face = "bold"),
+    plot.margin = margin(10, 10, 10, 10)
+  ) +
+  guides(color = guide_legend(override.aes = list(size = 5, shape = 15)))
+
+# Save
+ggsave("GP_Gene_Network.pdf", plot = p_network, width = 8, height = 8)
+```
+
+
+## GSEA results for the selected GPs:
+
+```{r}
+library(readxl)
+gsea_NES_results <- read_excel("data/gsea_results.xlsx", 
+                           sheet = "NES")
+gsea_qval_results <- read_excel("data/gsea_results.xlsx", 
+                           sheet = "qval")
+gene_set_info <- read_excel("data/gsea_results.xlsx",
+                           sheet = "gene_set_info") 
+```
+
+```{r}
+# selected columns to be the considered GPs
+gsea_NES_results_selected <- gsea_NES_results[, c("gene_set", GPs_of_interest)]
+gsea_qval_results_selected <- gsea_qval_results[, c("gene_set", GPs_of_interest)]
+
+# remove rows with qval > 0.01 in all GPs
+gsea_qval_results_selected <- gsea_qval_results_selected %>%
+  filter(if_any(all_of(GPs_of_interest), ~ .x <= 0.01))
+
+gene_set_names_selected <- gene_set_info$name[match(gsea_qval_results_selected$gene_set, gene_set_info$id)]
+```
+
+```{r}
+library(stringr)
+
+keep_terms <- c(
+  "CD8", "CD4", "TCELL", "T_CELL", "TCONV", "TREG",
+  "T_HELPER", "TH1", "TH2", "TH17", "TFH", "T_FH",
+  "NAIVE_T", "MEMORY_T", "EFFECTOR_T", "CYTOTOXIC_T", "EXHAUSTED_T",
+  "GDT", "GAMMADELTA"
+)
+
+pattern <- regex(
+  paste0("(^|_)(", paste(keep_terms, collapse="|"), ")(_|$)"),
+  ignore_case = TRUE
+)
+
+gene_set_names_keep <- gene_set_names_selected[str_detect(gene_set_names_selected, pattern)]
+gene_set_names_keep
+```
+
+```{r}
+gsea_NES_results_selected_filtered <- gsea_NES_results_selected %>%
+  filter(gene_set %in% gsea_qval_results_selected$gene_set) %>%
+  filter(gene_set %in% gene_set_info$id[match(gene_set_names_keep, gene_set_info$name)])
+
+gsea_qval_results_selected_filtered <- gsea_qval_results_selected %>%
+  filter(gene_set %in% gsea_NES_results_selected_filtered$gene_set) 
+```
+
+```{r}
+top_n <- 5
+
+long <- gsea_qval_results_selected_filtered %>%
+  pivot_longer(-gene_set, names_to = "gp", values_to = "qval") %>%
+  left_join(
+    gsea_NES_results_selected_filtered %>%
+      pivot_longer(-gene_set, names_to = "gp", values_to = "NES"),
+    by = c("gene_set", "gp")
+  )
+
+gp_order <- setdiff(colnames(gsea_qval_results_selected_filtered), "gene_set")
+
+picked <- character(0)
+out_list <- vector("list", length(gp_order))
+
+for (i in seq_along(gp_order)) {
+  gp <- gp_order[i]
+
+  cand <- long %>%
+    filter(gp == !!gp, !gene_set %in% picked, !is.na(qval)) %>%
+    arrange(qval)
+
+  take <- cand %>% slice_head(n = top_n)
+
+  out_list[[i]] <- take %>% mutate(rank_within_gp = row_number())
+  picked <- c(picked, take$gene_set)
+}
+
+selected_long_unique <- bind_rows(out_list)
+
+stopifnot(n_distinct(selected_long_unique$gene_set) == nrow(selected_long_unique))
+
+selected_long_unique
+```
+
+```{r}
+map_df <- gene_set_info %>%
+  distinct(id, name)
+
+plot_df <- selected_long_unique %>%
+  left_join(map_df, by = c("gene_set" = "id")) %>%
+  mutate(name = ifelse(is.na(name), gene_set, name))  
+
+plot_df <- plot_df %>%
+  group_by(name) %>%
+  mutate(name_unique = if (n() == 1) name else paste0(name, " (", gene_set, ")")) %>%
+  ungroup()
+
+nes_mat <- plot_df %>%
+  select(name_unique, gp, NES) %>%
+  pivot_wider(names_from = gp, values_from = NES) %>%
+  column_to_rownames("name_unique") %>%
+  as.matrix()
+
+max_abs <- max(abs(nes_mat), na.rm = TRUE)
+bk <- seq(-max_abs, max_abs, length.out = 101)
+cols <- colorRampPalette(c("#4575B4", "white", "#D73027"))(100)
+
+# make NA zero
+nes_mat[is.na(nes_mat)] <- 0
+
+pheatmap(
+  nes_mat,
+  color = cols,
+  breaks = bk,
+  cluster_rows = TRUE,
+  cluster_cols = FALSE,
+  border_color = "grey70",   # grid lines
+  fontsize_row = 6,          # y-axis text smaller
+  fontsize_col = 9,          # optional
+  main = "Selected gene sets in each GP: NES",
+  filename = "DGE_CD4_vs_CD8_GPs_GSEA_heatmap.pdf",
+  width = 8,
+  height = 8
+)
+```
+
+## More GSEA results for the selected GPs:
+
+```{r}
+# read GSEA_signatures_select_toplot.csv
+df_sig = read.csv("data/GSEA_signatures_select_toplot.csv", header = T, sep = ",")
+
+# rename factor from Fx to Kx for consistency
+df_sig <- df_sig %>%
+  mutate(factor = str_replace(factor, "^F", "K"))
+
+library(ggplot2)
+library(dplyr)
+
+df_plot <- df_sig %>%
+  mutate(
+    pathway = factor(pathway, levels = unique(pathway)),
+    factor  = factor(factor,  levels = unique(factor)),
+    log10padj = -log10(padj)
+  )
+
+
+# 1. Prepare the color vector for the Y-axis (Factors)
+# Get the unique factors in the order they appear in df_plot
+y_factors <- levels(df_plot$factor)
+
+# Match colors from your previous label_df
+# Note: Ensure label_df$SYMBOL matches your factor names (e.g., "K26")
+y_colors <- label_df$lab_col[match(y_factors, label_df$SYMBOL)]
+y_colors[is.na(y_colors)] <- "black" # Default to black if not found
+
+# 2. Update the Plot
+ggplot(df_plot, aes(x = pathway, y = factor)) +
+  geom_point(aes(size = NES, color = log10padj)) +
+  scale_color_viridis_c(name = "-log10(p-adj)") +
+  scale_size(range = c(3, 10)) +
+  theme_bw() +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1),
+    # Apply the quadrant colors to Y-axis text
+    axis.text.y = element_text(color = y_colors, face = "bold")
+  ) +
+  labs(size = "NES", x = "Pathway", y = "Gene Program")
+
+ggsave("DGE_CD4_vs_CD8_GPs_GSEA_dotplot.pdf", width = 8, height = 10)
+
+```
+
+
+
+## Heatmap of the selected GPs across level-2 categories:
+
+Next, produce a heatmap of the selected GPs for some selected level-2 categories.
+
+```{r}
+L_pm_filtered_subset <- L_pm_filtered[c(CD4_cells, CD8_cells), GPs_of_interest, drop = FALSE]
+level_2_categories <- unique(seurat_meta_filtered$annotation_level2[match(rownames(L_pm_filtered_subset), seurat_meta_filtered$cellID)])
+global_median <- apply(L_pm_filtered_subset, 2, median, na.rm = TRUE)
+
+reference_median_loading <- matrix(
+  rep(global_median, each = length(level_2_categories)),
+  nrow = length(level_2_categories),
+  byrow = FALSE,
+  dimnames = list(level_2_categories, GPs_of_interest)
+)
+```
+
+
+```{r}
+# compute median loading for each level-2 category
+median_loading_matrix <- sapply(GPs_of_interest, function(gp) {
+  sapply(level_2_categories, function(cat) {
+    cells_in_cat <- seurat_meta_filtered$cellID[seurat_meta_filtered$annotation_level2 == cat]
+    median(L_pm_filtered_subset[cells_in_cat, gp], na.rm = TRUE)
+  })
+})
+rownames(median_loading_matrix) <- level_2_categories
+```
+
+```{r}
+log2fc_matrix <- log2((median_loading_matrix) / (reference_median_loading))
+
+log2fc_cap <- pmax(pmin(log2fc_matrix, 1), -1)
+factor_levels <- colnames(log2fc_cap)
+factor_levels <- factor_levels[order(as.numeric(sub("^K", "", factor_levels)))]
+level2_names <- rownames(log2fc_cap)
+level1_prefix <- sub("_.*$", "", level2_names)
+level2_levels <- level2_names[order(level1_prefix, level2_names)]
+df_long <- as.data.frame(log2fc_cap) |>
+  rownames_to_column(var = "Level2") |>
+  pivot_longer(
+    cols      = -Level2,
+    names_to  = "Factor",
+    values_to = "log2fc"
+  ) |>
+  mutate(
+    Factor = factor(Factor, levels = factor_levels),
+    Level2 = factor(Level2, levels = level2_levels)
+  )
+
+p <- ggplot(df_long, aes(x = Factor, y = Level2, fill = log2fc)) +
+  geom_tile(color = "grey30", size = 0.3) +
+  scale_fill_gradient2(
+    low = "#4575B4", mid = "white", high = "#D73027",
+    midpoint = 0, oob = scales::squish, name = "log2 FC"
+  ) +
+  scale_x_discrete(expand = c(0, 0)) +
+  scale_y_discrete(expand = c(0, 0)) +
+  labs(
+    title = "log2 fold-change (level-2 category median loading vs global median loading)",
+    x = "", y = ""
+  ) +
+  theme_minimal(base_size = 7) +
+  theme(
+    panel.grid  = element_blank(),
+    # axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 7),
+    axis.text.x = element_text(size = 7),
+    axis.text.y = element_text(size = 7),
+    plot.title  = element_text(hjust = 0.5, face = "bold"),
+    legend.title = element_text(size = 7),
+    legend.text  = element_text(size = 7),
+    axis.ticks   = element_blank()
+  )
+
+ggsave(p, filename = "DGE_CD4_vs_CD8_GPs_heatmap_level2.pdf", width = 6, height = 10)
+```
+
+Produce a structure plot for level-2 categories:
+
+```{r}
+library(fastTopics)
+library(ggplot2)
+library(stringr)
+library(colorspace)
+
+topics_global <- colnames(L_pm_filtered_subset)[order(colMeans(L_pm_filtered_subset))]
+k <- ncol(L_pm_filtered_subset)
+base_cols <- if (k <= 20) {
+  fastTopics:::kelly()[-1][1:k]        
+} else {
+  glasbey()[-1][1:k]
+}
+
+cols_global <- lighten(desaturate(base_cols, amount = 0.40), amount = 0.12)
+names(cols_global) <- colnames(L_pm_filtered_subset)
+
+# 0) cell_type: annotation_level2 aligned to L rows
+cell_type <- seurat_meta_filtered$annotation_level2[
+  match(rownames(L_pm_filtered_subset), seurat_meta_filtered$cellID)
+]
+
+# helper: balanced sampling per level2
+sample_cells_by_cluster <- function(cell_ids, cell_type_vec,
+                                    max_per_cluster = 3000,
+                                    small_keep_all = 300,
+                                    seed = 123) {
+  set.seed(seed)
+  unique_ct <- unique(cell_type_vec)
+
+  unlist(lapply(unique_ct, function(ct) {
+    cells_in_ct <- cell_ids[cell_type_vec == ct]
+    n <- length(cells_in_ct)
+
+    if (n <= small_keep_all) {
+      cells_in_ct
+    } else if (n > max_per_cluster) {
+      sample(cells_in_ct, max_per_cluster)
+    } else {
+      cells_in_ct
+    }
+  }), use.names = FALSE)
+}
+
+# 1) split to CD4 / CD8 by level2 name (adjust pattern if needed)
+cell_ids <- rownames(L_pm_filtered_subset)
+
+is_cd4 <- str_detect(cell_type, regex("CD4", ignore_case = TRUE))
+is_cd8 <- str_detect(cell_type, regex("CD8", ignore_case = TRUE))
+
+cd4_cells_all <- cell_ids[is_cd4 & !is.na(is_cd4)]
+cd8_cells_all <- cell_ids[is_cd8 & !is.na(is_cd8)]
+
+# 2) sample within each group, keeping tiny clusters intact
+cd4_type <- cell_type[match(cd4_cells_all, cell_ids)]
+cd8_type <- cell_type[match(cd8_cells_all, cell_ids)]
+
+cd4_cells <- sample_cells_by_cluster(
+  cd4_cells_all, cd4_type,
+  max_per_cluster = 10000, small_keep_all = 300, seed = 123
+)
+cd8_cells <- sample_cells_by_cluster(
+  cd8_cells_all, cd8_type,
+  max_per_cluster = 10000, small_keep_all = 300, seed = 123
+)
+
+cd4_type_s <- cd4_type[match(cd4_cells, cd4_cells_all)]
+# droplevels
+cd4_type_s <- factor(cd4_type_s, levels = unique(cd4_type_s))
+cd8_type_s <- cd8_type[match(cd8_cells, cd8_cells_all)]
+# droplevels
+cd8_type_s <- factor(cd8_type_s, levels = unique(cd8_type_s))
+
+# 3) two structure plots
+p_cd4 <- structure_plot(L_pm_filtered_subset[cd4_cells, , drop = FALSE],
+                        gap = 30, n = 5000,
+                        topics = topics_global,
+                        colors = cols_global,
+                        grouping = cd4_type_s) +
+  labs(title = "CD4", y = "membership", color = "", fill = "") +
+  theme(
+    legend.position = "bottom",
+    legend.direction = "horizontal",
+    legend.box = "horizontal",
+    axis.text.x = element_text(size = 9, angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 10),
+    plot.title = element_text(face = "bold")
+  ) +
+  guides(fill = guide_legend(nrow = 2), color = guide_legend(nrow = 2))
+
+p_cd8 <- structure_plot(L_pm_filtered_subset[cd8_cells, , drop = FALSE],
+                        gap = 30, n = 5000,
+                        topics = topics_global,
+                        colors = cols_global,
+                        grouping = cd8_type_s) +
+  labs(title = "CD8", y = "membership", color = "", fill = "") +
+  theme(
+    legend.position = "bottom",
+    legend.direction = "horizontal",
+    legend.box = "horizontal",
+    axis.text.x = element_text(size = 9, angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 10),
+    plot.title = element_text(face = "bold")
+  ) +
+  guides(fill = guide_legend(nrow = 2), color = guide_legend(nrow = 2))
+
+p_cd4
+p_cd8
+```
+
+
+```{r}
+# 0) cell_type: annotation_level2 aligned to L rows
+cell_type <- seurat_meta_filtered$annotation_level2[
+  match(rownames(L_pm_filtered_subset), seurat_meta_filtered$cellID)
+]
+cell_group <- seurat_meta_filtered$annotation_level2_group[
+  match(rownames(L_pm_filtered_subset), seurat_meta_filtered$cellID)
+]
+
+# 1) split to CD4 / CD8 by level2 name (adjust pattern if needed)
+cell_ids <- rownames(L_pm_filtered_subset)
+
+is_cd4 <- str_detect(cell_type, regex("CD4", ignore_case = TRUE))
+is_cd8 <- str_detect(cell_type, regex("CD8", ignore_case = TRUE))
+
+cd4_cells_all <- cell_ids[is_cd4 & !is.na(is_cd4)]
+cd8_cells_all <- cell_ids[is_cd8 & !is.na(is_cd8)]
+
+# 2) sample within each group, keeping tiny clusters intact
+cd4_group <- cell_group[match(cd4_cells_all, cell_ids)]
+cd8_group <- cell_group[match(cd8_cells_all, cell_ids)]
+
+cd4_group_s <- cd4_group[match(cd4_cells, cd4_cells_all)]
+# droplevels
+cd4_group_s <- factor(cd4_group_s, levels = unique(cd4_group_s))
+cd8_group_s <- cd8_group[match(cd8_cells, cd8_cells_all)]
+# droplevels
+cd8_group_s <- factor(cd8_group_s, levels = unique(cd8_group_s))
+
+# 3) two structure plots
+p_cd4_group <- structure_plot(L_pm_filtered_subset[cd4_cells, , drop = FALSE],
+                        gap = 30, n = 5000,
+                        topics = topics_global,
+                        colors = cols_global,
+                        grouping = cd4_group_s) +
+  labs(title = "CD4", y = "membership", color = "", fill = "") +
+  coord_cartesian(ylim = c(0,3)) +
+  theme(
+    legend.position = "bottom",
+    legend.direction = "horizontal",
+    legend.box = "horizontal",
+    axis.text.x = element_text(size = 9, angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 10),
+    plot.title = element_text(face = "bold")
+  ) +
+  guides(fill = guide_legend(nrow = 2), color = guide_legend(nrow = 2))
+
+p_cd8_group <- structure_plot(L_pm_filtered_subset[cd8_cells, , drop = FALSE],
+                        gap = 30, n = 5000,
+                        topics = topics_global,
+                        colors = cols_global,
+                        grouping = cd8_group_s) +
+  labs(title = "CD8", y = "membership", color = "", fill = "") +
+  coord_cartesian(ylim = c(0,3)) +
+  theme(
+    legend.position = "bottom",
+    legend.direction = "horizontal",
+    legend.box = "horizontal",
+    axis.text.x = element_text(size = 9, angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 10),
+    plot.title = element_text(face = "bold")
+  ) +
+  guides(fill = guide_legend(nrow = 2), color = guide_legend(nrow = 2))
+
+p_cd4_group
+ggsave(p_cd4_group, filename = "structure_plot_CD4_group.pdf", width = 8, height = 5)
+p_cd8_group
+ggsave(p_cd8_group, filename = "structure_plot_CD8_group.pdf", width = 8, height = 5)
+```
+
+
+## Cell-level heatmap for the selected GPs:
+
+Produce a cell-level heatmap of the selected GPs for CD4 and CD8 cells:
+
+```{r}
+library(dplyr)
+library(pheatmap)
+library(stringr)
+
+# ==========================================
+# 1. Initial Data Preparation & Alignment
+# ==========================================
+L <- L_pm_filtered_subset  # cells x GP matrix
+cell_ids <- rownames(L)
+
+# Match full metadata for the cells
+cell_type <- seurat_meta_filtered$annotation_level2[
+  match(cell_ids, seurat_meta_filtered$cellID)
+]
+
+# ==========================================
+# 2. Sampling Logic (with total budget)
+# ==========================================
+set.seed(123)
+total_budget     <- 8000
+small_keep_all   <- 150   # clusters <= this keep all cells
+min_per_cluster  <- 150   # clusters larger than small_keep_all get at least this many
+max_per_cluster  <- 600   # optional cap per cluster
+
+cells_by_ct <- split(cell_ids, cell_type)
+sizes <- sapply(cells_by_ct, length)
+
+# Initial allocation
+alloc <- ifelse(sizes <= small_keep_all, sizes, pmin(min_per_cluster, sizes))
+remaining <- total_budget - sum(alloc)
+
+# Distribute remaining budget proportionally
+if (remaining > 0) {
+  room <- pmax(pmin(sizes, max_per_cluster) - alloc, 0)
+  if (sum(room) > 0) {
+    extra <- floor(remaining * room / sum(room))
+    alloc <- alloc + extra
+    
+    # Fill greedily if there is leftover budget due to flooring
+    leftover <- total_budget - sum(alloc)
+    if (leftover > 0) {
+      idx <- order(room, decreasing = TRUE)
+      for (j in idx) {
+        if (leftover <= 0) break
+        addable <- pmin(room[j] - extra[j], leftover)
+        if (addable > 0) {
+          alloc[j] <- alloc[j] + addable
+          leftover <- leftover - addable
+        }
+      }
+    }
+  }
+}
+
+# Execute sampling based on final allocation
+sampled_cells <- unlist(mapply(function(v, m) {
+  if (length(v) <= m) v else sample(v, m)
+}, cells_by_ct, pmin(alloc, sizes), SIMPLIFY = FALSE), use.names = FALSE)
+
+# ==========================================
+# 3. Strict Data Cleaning 
+# ==========================================
+cell_group_s  <- seurat_meta_filtered$annotation_level2_group[match(sampled_cells, seurat_meta_filtered$cellID)]
+cell_level2_s <- seurat_meta_filtered$annotation_level2[match(sampled_cells, seurat_meta_filtered$cellID)]
+
+# Standardize strings
+cell_group_s  <- trimws(tolower(as.character(cell_group_s)))
+cell_level2_s <- trimws(as.character(cell_level2_s))
+
+# NEW: Extract Level 1 from Level 2
+cell_level1_s <- sapply(strsplit(cell_level2_s, "[_.]"), `[`, 1)
+
+# --- FILTER LOGIC ---
+# Identify cells where Level2 ends with ".w" followed by anything (e.g., .w1, .w2)
+# or simply contains ".w" as a suffix.
+is_w_cell <- grepl("\\.w", cell_level2_s) 
+
+# Find valid indices (added !is_w_cell condition)
+valid_idx <- which(
+  !is.na(cell_level2_s) & 
+  !tolower(cell_level2_s) %in% c("", "na", "nan") & 
+  cell_group_s %in% c("resting", "activated") &
+  !is_w_cell
+)
+
+final_cells  <- sampled_cells[valid_idx]
+final_group  <- cell_group_s[valid_idx]
+final_level1 <- cell_level1_s[valid_idx]
+final_level2 <- cell_level2_s[valid_idx]
+
+# ==========================================
+# 4. Reordering (Updated for Nested Sorting)
+# ==========================================
+# Sort by Group -> Level 1 -> Level 2 to keep the visual blocks clean
+col_order <- order(final_group, final_level1, final_level2)
+
+final_cells  <- final_cells[col_order]
+final_group  <- final_group[col_order]
+final_level1 <- final_level1[col_order]
+final_level2 <- final_level2[col_order]
+
+# ==========================================
+# 5. Calculate Log2FC Matrix
+# ==========================================
+# Subset the main matrix using the fully cleaned and sorted cell IDs
+L_sub <- L[final_cells, , drop = FALSE]
+M_raw <- t(L_sub)
+# Calculate median baseline and log2 fold-change
+mu <- apply(M_raw, 1, median, na.rm = TRUE)
+pc <- 1e-10
+M_fc <- log2((M_raw + pc) / (mu + pc))
+# Cap extreme values to improve visual contrast
+cap <- 2
+M_fc_cap <- pmax(pmin(M_fc, cap), -cap)
+
+# ==========================================
+# 6. Setup Legends & Annotations (Refined)
+# ==========================================
+# 1. Ensure columns are factors and ordered correctly for the plot stack
+# (Bottom to Top in data frame = Heatmap side to Outward side)
+ann_col <- data.frame(
+  Level2 = factor(final_level2),
+  Level1 = factor(final_level1),
+  Group  = factor(final_group, levels = c("resting", "activated"))
+)
+rownames(ann_col) <- colnames(M_fc_cap)
+
+# 2. Extract specific levels present in this sampled data
+present_level1 <- levels(ann_col$Level1)
+present_level2 <- levels(ann_col$Level2)
+
+# 3. Map Level 1 Colors (Standard lookup)
+level1_cols_used <- ZemmourLib::immgent_colors$level1
+level1_cols_used <- level1_cols_used[names(level1_cols_used) %in% present_level1]
+
+# 4. Map Level 2 Colors (Robust lookup)
+level2_cols_used <- ZemmourLib::immgent_colors$level2
+
+# CRITICAL FIX: Ensure we only take names that exist in our current final_level2
+# We filter the library to only include what is present in our current plot
+level2_cols_final <- level2_cols_used[names(level2_cols_used) %in% present_level2]
+
+# 5. Safety Check: If levels in data are not in the library, assign grey80
+missing_l2 <- setdiff(present_level2, names(level2_cols_final))
+if(length(missing_l2) > 0) {
+  # Add missing levels as grey
+  extra_grey <- setNames(rep("grey80", length(missing_l2)), missing_l2)
+  level2_cols_final <- c(level2_cols_final, extra_grey)
+}
+
+# 6. Consolidate all annotation colors
+ann_colors <- list(
+  Group  = c("resting" = "#08519C", "activated" = "#E53800"),
+  Level1 = level1_cols_used,
+  Level2 = level2_cols_final
+)
+
+# ==========================================
+# 7. Calculate Gaps and Plot
+# ==========================================
+# Add gaps between resting and activated
+rle_g <- rle(as.character(ann_col$Group))
+gaps_col <- cumsum(rle_g$lengths)
+gaps_col <- gaps_col[-length(gaps_col)]
+
+pheatmap(
+  M_fc_cap,
+  cluster_rows = TRUE,
+  cluster_cols = FALSE,
+  gaps_col = gaps_col,
+  color = colorRampPalette(c("#7A0177", "black", "#FFD700"))(101),
+  breaks = seq(-cap, cap, length.out = 102),
+  show_colnames = FALSE,
+  fontsize_row = 7,         # Adjusted for readability
+  fontface_row = "bold",    # Bold makes colors pop
+  border_color = NA,
+  annotation_col = ann_col, 
+  annotation_colors = ann_colors,
+  annotation_names_col = TRUE,
+  useRaster = TRUE,
+  main = "GP Log2FC: Nested Annotation (Group > Level1 > Level2)",
+  filename = "DGE_CD4_vs_CD8_GPs_heatmap_cell_level_nested.pdf",
+  width = 12, # Widened slightly to accommodate more legends
+  height = 10
+)
+```
+
+
+
+
+## Boxplot of the number of highly active GPs in activated/resting CD4 and CD8 cells:
+
+Boxplot showing the number of highly active GPs in activated/resting CD4 and CD8 cells:
+
+```{r}
+gp_active_cell_counts_Level1_Condition <- data.frame(
+  Level1 = seurat_meta_filtered$annotation_level1,
+  Condition = seurat_meta_filtered$annotation_level2_group,
+  Active_Cell_Counts = rowSums(L_pm_filtered > 1e-1)
+)
+
+# restrict to CD4 and CD8
+gp_active_cell_counts_Level1_Condition <- gp_active_cell_counts_Level1_Condition %>%
+  filter(Level1 %in% c("CD4", "CD8"))
+
+# restrict to activated and resting
+gp_active_cell_counts_Level1_Condition <- gp_active_cell_counts_Level1_Condition %>%
+  filter(Condition %in% c("activated", "resting"))
+
+# Put side by side boxplots
+p_boxplot <- ggplot(gp_active_cell_counts_Level1_Condition, aes(x = Condition, y = Active_Cell_Counts, fill = Condition)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.7) +
+  facet_wrap(~ Level1) +
+  labs(title = "Number of Active GPs by Condition and Cell Type", x = "Condition", y = "Number of Active GPs") +
+  theme_minimal() +
+  theme(legend.position = "none", plot.title = element_text(hjust = 0.5, face = "bold"))
+
+p_boxplot
+```
+
+
+
+
+
+## UMAP plots
+
+```{r}
+# Plot all UMAPs
+umap_result <- readRDS(paste0(data_path, "umap_result.rds"))
+colnames(umap_result) <- c("UMAP_1", "UMAP_2")
+umap_result <- umap_result[rownames(L_pm_filtered),]
+df_umap <- as.data.frame(umap_result)
+```
+
+```{r}
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(ggplot2)
+  library(scattermore)
+})
+
+set.seed(1)
+
+# 1) move rownames -> cellID
+df_umap2 <- df_umap %>%
+  tibble::rownames_to_column("cellID")
+
+# 2) join with metadata by cellID
+plot_df <- df_umap2 %>%
+  inner_join(
+    seurat_meta_filtered %>% select(cellID, annotation_level1),
+    by = "cellID"
+  )
+
+# 3) stratified subsample (keeps rare groups visible)
+max_total <- 1000000
+min_per_group <- 300
+cap_per_group <- 20000
+
+group_sizes <- plot_df %>% count(annotation_level1, name = "n")
+G <- nrow(group_sizes)
+base_per_group <- ceiling(max_total / max(G, 1))
+
+sample_plan <- group_sizes %>%
+  mutate(n_take = pmin(n, pmax(min_per_group, pmin(cap_per_group, base_per_group))))
+
+plot_df_sub <- plot_df %>%
+  group_by(annotation_level1) %>%
+  group_modify(~ dplyr::slice_sample(.x, n = sample_plan$n_take[sample_plan$annotation_level1 == .y$annotation_level1])) %>%
+  ungroup()
+
+# 4) fast plot
+p_umap_level1_group <- ggplot(plot_df_sub, aes(x = UMAP_1, y = UMAP_2)) +
+  # Using scattermore for high-performance plotting
+  scattermore::geom_scattermore(aes(color = annotation_level1), pointsize = 1.2) +
+  # Apply the specific color palette from your library
+  scale_color_manual(values = ZemmourLib::immgent_colors$level1) +
+  coord_equal() +
+  theme_classic() +
+  labs(
+    title = "UMAP: Annotation Level 1",
+    x = "UMAP 1", 
+    y = "UMAP 2", 
+    color = "Cell Type"
+  ) +
+  theme(
+    legend.text = element_text(size = 10),
+    # Make legend points larger so colors are easier to see
+    legend.key.size = unit(1.5, "lines")
+  ) +
+  # Override aesthetic for legend to make points visible/larger in the key
+  guides(color = guide_legend(override.aes = list(size = 4)))
+
+print(p_umap_level1_group)
+
+ggsave(p_umap_level1_group, filename = "UMAP_level1_group.pdf", width = 5, height = 5)
+```
+
+Let's only focus on gdT and CD8aa:
+
+```{r}
+# Filter to gdT and CD8aa
+plot_df_sub_focused <- plot_df_sub %>%
+  filter(annotation_level1 %in% c("gdT", "CD8aa"))
+
+plot_df_sub_focused$annotation_level2 <- seurat_meta_filtered$annotation_level2[
+  match(plot_df_sub_focused$cellID, seurat_meta_filtered$cellID)
+]
+
+p_umap_focused <- ggplot(plot_df_sub_focused, aes(x = UMAP_1, y = UMAP_2)) +
+  scattermore::geom_scattermore(aes(color = annotation_level2), pointsize = 1.2) +
+  coord_equal() +
+  theme_classic() +
+  labs(
+    title = "UMAP: Focused on gdT and CD8aa",
+    x = "UMAP 1", 
+    y = "UMAP 2", 
+    color = "Level 2 Clusters"
+  ) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.key.size = unit(1.5, "lines")
+  ) +
+  guides(color = guide_legend(override.aes = list(size = 4)))
+
+print(p_umap_focused)
+ggsave(p_umap_focused, filename = "UMAP_focused_gdT_CD8aa_level2.pdf", width = 7, height = 7)
+```
+
+```{r}
+plot_loadings_on_umap_v2 <- function(umap, loading, factor_num,
+                                     size = 0.25,
+                                     show_bg = TRUE,
+                                     bg_alpha = 0.05,
+                                     bg_color = "grey90",
+                                     clip_q = 0.99,
+                                     top_q = NULL,
+                                     viridis_option = "viridis",
+                                     viridis_direction = 1) {
+  stopifnot(is.matrix(umap) || is.data.frame(umap))
+  df <- as.data.frame(umap)
+  stopifnot(all(c("UMAP_1","UMAP_2") %in% colnames(df)))
+  stopifnot(nrow(df) == length(loading))
+
+  q_hi <- stats::quantile(loading, probs = clip_q, na.rm = TRUE)
+  loading_clip <- pmin(loading, q_hi)
+
+  if (!is.null(top_q)) {
+    stopifnot(top_q > 0 && top_q < 1)
+    thr <- stats::quantile(loading_clip, probs = top_q, na.rm = TRUE)
+    loading_plot <- ifelse(loading_clip >= thr, loading_clip, NA_real_)
+  } else {
+    loading_plot <- loading_clip
+  }
+
+  df$loading_plot <- loading_plot
+
+  p <- ggplot() +
+    # --- background layer (raster) ---
+    {
+      if (show_bg)
+        scattermore::geom_scattermore(
+          data = df,
+          mapping = aes(x = UMAP_1, y = UMAP_2),
+          pointsize = size,          # size in pixels
+          color = bg_color,
+          alpha = bg_alpha
+        )
+    } +
+    # --- colored loading layer (raster) ---
+    scattermore::geom_scattermore(
+      data = df,
+      mapping = aes(x = UMAP_1, y = UMAP_2, color = loading_plot),
+      pointsize = size*2,
+      alpha = 1,
+      na.rm = TRUE
+    ) +
+    scale_color_viridis_c(
+      option   = viridis_option,
+      direction = viridis_direction,
+      limits   = c(0, q_hi),
+      oob      = scales::squish,
+      breaks   = scales::pretty_breaks(4),
+      name     = paste0("K", factor_num, " loading")
+    ) +
+    coord_equal() +
+    labs(
+      title = paste0("Factor ", factor_num),
+      x = "", y = ""
+    ) +
+    theme_minimal() +
+    theme(panel.grid = element_blank())
+
+  p
+}
+```
+
+```{r}
+current_loadings <- L_pm_filtered[plot_df_sub_focused$cellID, 3]
+p_factor_loading <- plot_loadings_on_umap_v2(
+    umap       = plot_df_sub_focused,   # Use the dataframe created earlier
+    loading    = current_loadings,      # Vector of loading values for these cells
+    factor_num = 3,
+    size       = 0.4,
+    show_bg    = TRUE,
+    bg_alpha   = 0.06,
+    clip_q     = 0.99,
+    top_q      = NULL,
+    viridis_option = "viridis",
+    viridis_direction = 1
+  )
+
+ggsave(p_factor_loading, filename = "UMAP_factor3_loading_gdT_CD8aa.pdf", width = 5, height = 5)
+
+current_loadings <- L_pm_filtered[plot_df_sub_focused$cellID, 29]
+p_factor_loading <- plot_loadings_on_umap_v2(
+    umap       = plot_df_sub_focused,   # Use the dataframe created earlier
+    loading    = current_loadings,      # Vector of loading values for these cells
+    factor_num = 29,
+    size       = 0.4,
+    show_bg    = TRUE,
+    bg_alpha   = 0.06,
+    clip_q     = 0.99,
+    top_q      = NULL,
+    viridis_option = "viridis",
+    viridis_direction = 1
+  )
+
+ggsave(p_factor_loading, filename = "UMAP_factor29_loading_gdT_CD8aa.pdf", width = 5, height = 5)
+
+current_loadings <- L_pm_filtered[plot_df_sub_focused$cellID, 6]
+p_factor_loading <- plot_loadings_on_umap_v2(
+    umap       = plot_df_sub_focused,   # Use the dataframe created earlier
+    loading    = current_loadings,      # Vector of loading values for these cells
+    factor_num = 6,
+    size       = 0.4,
+    show_bg    = TRUE,
+    bg_alpha   = 0.06,
+    clip_q     = 0.99,
+    top_q      = NULL,
+    viridis_option = "viridis",
+    viridis_direction = 1
+  )
+
+ggsave(p_factor_loading, filename = "UMAP_factor6_loading_gdT_CD8aa.pdf", width = 5, height = 5)
+```
+
+
+
+
+
+
+# Relevance of TFs to GPs
+
+```{r}
+CD4_TF_list <- read.table(paste0(data_path, "/TF-list/CD4_tf_level2_AUC.txt"), header = TRUE)
+CD8_TF_list <- read.table(paste0(data_path, "/TF-list/CD8_tf_level2_AUC.txt"), header = TRUE)
+CD8aa_TF_list <- read.table(paste0(data_path, "/TF-list/CD8aa_tf_level2_AUC.txt"), header = TRUE)
+gdT_TF_list <- read.table(paste0(data_path, "/TF-list/gdT_tf_level2_AUC.txt"), header = TRUE)
+DN_TF_list <- read.table(paste0(data_path, "/TF-list/DN_tf_level2_AUC.txt"), header = TRUE)
+DP_TF_list <- read.table(paste0(data_path, "/TF-list/DP_tf_level2_AUC.txt"), header = TRUE)
+Treg_TF_list <- read.table(paste0(data_path, "/TF-list/Treg_tf_level2_AUC.txt"), header = TRUE)
+non_conv_TF_list <- read.table(paste0(data_path, "/TF-list/nonconv_tf_level2_AUC.txt"), header = TRUE)
+```
+
+```{r}
+threshold <- 0 # include all TFs
+TF_highlights <- c(CD4_TF_list$Gene[CD4_TF_list$auc >= threshold],
+                   CD8_TF_list$Gene[CD8_TF_list$auc >= threshold],
+                   CD8aa_TF_list$Gene[CD8aa_TF_list$auc >= threshold],
+                   gdT_TF_list$Gene[gdT_TF_list$auc >= threshold],
+                   DN_TF_list$Gene[DN_TF_list$auc >= threshold],
+                   DP_TF_list$Gene[DP_TF_list$auc >= threshold],
+                   non_conv_TF_list$Gene[non_conv_TF_list$auc >= threshold],
+                   Treg_TF_list$Gene[Treg_TF_list$auc >= threshold])
+
+TF_highlights <- unique(TF_highlights)
+```
+
+```{r}
+# find abs max in each column of F_pm_filtered
+Df <- apply(F_pm_filtered, 2, function(x) max(abs(x), na.rm = TRUE))
+F_pm_norm_col <- scale_cols(F_pm_filtered, 1/Df)
+colnames(F_pm_norm_col) <- paste0("K", 1:ncol(F_pm_norm_col))
+```
+
+This time just look at the TF factors:
+
+```{r}
+F_pm_TF <- F_pm_norm_col[rownames(F_pm_norm_col) %in% TF_highlights, ]
+
+# only include TFs with at least one factor > 0.4
+keep <- apply((F_pm_TF), 1, function(v) any(v > 0.4, na.rm = TRUE))
+F_pm_TF <- F_pm_TF[keep, , drop = FALSE]
+
+# only include GPs with at least one TF factor > 0.4
+keep_gp <- apply((F_pm_TF), 2, function(v) any(v > 0.4, na.rm = TRUE))
+F_pm_TF <- F_pm_TF[, keep_gp, drop = FALSE]
+
+pdf("TF_GP_heatmap.pdf", width = 12, height = 10)
+pheatmap(
+  (F_pm_TF),
+  cluster_rows = TRUE,
+  cluster_cols = TRUE,
+  color = colorRampPalette(rev(RColorBrewer::brewer.pal(n = 7, name = "RdBu")))(100),
+  breaks = seq(-1, 1, length.out = 101),
+  # add grey grid lines
+  border_color = "grey10",
+  fontsize_row = 6,
+  fontsize_col = 8,
+  main = "TF × GP loading heatmap (normalized; TFs only)",
+  legend = TRUE
+)
+dev.off()
+```
+
+
+```{r}
+compute_tf_rank_matrix <- function(
+  F,
+  TFs,
+  mode = c("positive", "abs", "raw"),
+  ties.method = "average",
+  verbose = TRUE
+) {
+  mode <- match.arg(mode)
+
+  if (is.null(rownames(F))) stop("F must have rownames (gene names).")
+  if (is.null(colnames(F))) colnames(F) <- paste0("K", seq_len(ncol(F)))
+
+  TFs_in <- intersect(TFs, rownames(F))
+  TFs_drop <- setdiff(TFs, TFs_in)
+
+  if (verbose && length(TFs_drop) > 0) {
+    message(sprintf(
+      "Dropping %d TFs not found in rownames(F). Example: %s",
+      length(TFs_drop),
+      paste(head(TFs_drop, 5), collapse = ", ")
+    ))
+  }
+  if (length(TFs_in) == 0) stop("None of the requested TFs are present in rownames(F).")
+
+  score_mat <- switch(
+    mode,
+    positive = pmax(F, 0),
+    abs      = abs(F),
+    raw      = F
+  )
+
+  # rank within each column (GP): higher score => smaller rank (1 = best)
+  rank_all <- apply(score_mat, 2, function(x) rank(-x, ties.method = ties.method, na.last = "keep"))
+
+  # subset rows to TFs
+  rank_tf <- rank_all[TFs_in, , drop = FALSE]
+
+  list(
+    rank = rank_tf,       # matrix: TF x GP
+    TFs_used = TFs_in,
+    TFs_dropped = TFs_drop
+  )
+}
+
+rk_obj <- compute_tf_rank_matrix(F_pm_norm_col, TF_highlights, mode = "pos")
+rank_tf <- rk_obj$rank
+
+library(pheatmap)
+rank_max <- 100
+rank_clip <- pmin(rank_tf, rank_max)
+keep <- apply(rank_clip, 1, function(v) any(v < rank_max, na.rm = TRUE))
+rank_clip <- rank_clip[keep, , drop = FALSE]
+pal <- colorRampPalette(c("red", "white"))(10)
+bk  <- c(1, seq(10, 100, by = 10))
+
+rank_filter <- 20
+
+# keep only GPs that have at least one TF with rank < rank_filter
+keep_gp <- apply(rank_clip, 2, function(v) any(v < rank_filter, na.rm = TRUE))
+rank_clip <- rank_clip[, keep_gp, drop = FALSE]
+
+# keep only TFs that have at least one GP with rank < rank_filter
+keep_tf <- apply(rank_clip, 1, function(v) any(v < rank_filter, na.rm = TRUE))
+rank_clip <- rank_clip[keep_tf, , drop = FALSE]
+
+pheatmap(
+  mat = rank_clip,
+  color = pal,
+  breaks = bk,
+  cluster_rows = TRUE,
+  cluster_cols = TRUE,          
+  show_colnames = TRUE,          
+  fontsize_row = 8,
+  fontface_row = "bold",
+  fontsize_col = 7,
+  main = sprintf("TF × GP rank heatmap (pos; ranks 1–%d)", rank_max),
+  # --- Try these adjustments ---
+  border_color = "grey80",     # Use a lighter grey for better visibility
+  # -----------------------------
+  legend_breaks = seq(1, rank_max, by = 10),
+  legend_labels = as.character(seq(1, rank_max, by = 10)),
+  filename = "TF_GP_rank_heatmap.pdf",
+  width = 14,
+  height = 12
+)
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(ggrepel)
+
+.compute_tf_rank_score <- function(F, tf, mode = c("positive", "abs", "raw")) {
+  mode <- match.arg(mode)
+
+  if (is.null(rownames(F))) stop("F must have rownames (gene names).")
+  if (!tf %in% rownames(F)) stop(sprintf("TF '%s' not found in rownames(F).", tf))
+
+  G <- ncol(F)
+  cols <- colnames(F)
+  if (is.null(cols)) cols <- paste0("K", seq_len(G))
+
+  score_mat <- switch(
+    mode,
+    positive = pmax(F, 0),
+    abs      = abs(F),
+    raw      = F
+  )
+
+  # Rank within each column: higher score -> smaller rank (rank=1 is best)
+  rank_mat <- apply(score_mat, 2, function(x) rank(-x, ties.method = "average", na.last = "keep"))
+  tf_rank <- as.numeric(rank_mat[tf, ])
+
+  data.frame(
+    GEP  = factor(cols, levels = cols),
+    rank = tf_rank,
+    tf   = tf,
+    stringsAsFactors = FALSE
+  )
+}
+
+plot_tf_rank_bars <- function(
+    F,
+    TFs,
+    mode = c("positive", "abs", "raw"),
+    rank_max = 100,
+    custom_x_breaks = NULL, 
+    x_label_every = 10,
+    facet = TRUE,
+    alpha = 0.9,
+    n_label_best = 1,
+    # 3. New: Take a custom color vector (named or unnamed)
+    tf_colors = NULL 
+) {
+  mode <- match.arg(mode)
+
+  # .compute_tf_rank_score helper assumed to exist
+  df <- do.call(rbind, lapply(TFs, function(tf) .compute_tf_rank_score(F, tf, mode = mode)))
+
+  # Ensure numeric rank; drop missing ranks
+  df$rank <- as.numeric(df$rank)
+  df <- df[is.finite(df$rank), , drop = FALSE]
+
+  # Update column name to GP
+  colnames(df)[colnames(df) == "GEP"] <- "GP"
+  levs <- levels(df$GP)
+  df$x <- as.integer(df$GP)
+
+  # "Skyscraper" logic
+  df$rank_clip <- pmin(df$rank, rank_max)
+  df$height <- rank_max - df$rank_clip
+
+  # --- X-axis Handling ---
+  if (!is.null(custom_x_breaks)) {
+    x_breaks <- which(levs %in% custom_x_breaks)
+    x_labels <- levs[x_breaks]
+  } else {
+    keep_idx <- seq(1, length(levs), by = x_label_every)
+    x_breaks <- keep_idx
+    x_labels <- levs[keep_idx]
+  }
+
+  # --- Y-axis Handling ---
+  y_breaks <- seq(0, rank_max, by = 25)
+  y_labels <- rank_max - y_breaks
+  y_labels[y_labels == 0] <- 1
+
+  p <- ggplot(df, aes(x = x, y = height, fill = tf)) +
+    geom_col(alpha = alpha, width = 0.9) +
+    scale_x_continuous(breaks = x_breaks, labels = x_labels) +
+    scale_y_continuous(
+      breaks = y_breaks,
+      labels = y_labels,
+      limits = c(0, rank_max * 1.2) 
+    ) +
+    labs(
+      title = sprintf("TF rank skyline across GPs (top %d)", rank_max),
+      x = "GP",
+      y = "Rank within each GP (1 = highest)"
+    ) +
+    theme_classic(base_size = 12) +
+    theme(
+      axis.text.x = element_text(angle = 45, hjust = 1),
+      legend.position = if (facet) "none" else "right",
+      strip.text = element_text(face = "bold", size = 14, color = "black"),
+      strip.background = element_rect(fill = "grey95", color = "black", linewidth = 0.5),
+      panel.spacing = unit(1, "lines") 
+    )
+
+  # --- Apply Custom Colors if provided ---
+  if (!is.null(tf_colors)) {
+    p <- p + scale_fill_manual(values = tf_colors)
+  }
+
+  if (facet) {
+    p <- p + facet_wrap(~tf, ncol = 1, scales = "fixed")
+  }
+
+  # --- Labeling logic with ggrepel ---
+  if (n_label_best > 0 && nrow(df) > 0) {
+    best_df <- df %>%
+      filter(rank <= rank_max) %>% 
+      group_by(tf) %>%
+      slice_min(order_by = rank, n = n_label_best, with_ties = FALSE) %>%
+      ungroup() %>%
+      mutate(label = as.character(GP))
+
+    p <- p + ggrepel::geom_text_repel(
+      data = best_df,
+      aes(x = x, y = height, label = label),
+      inherit.aes = FALSE,
+      vjust = -0.5, 
+      size = 3.5,
+      fontface = "bold",
+      box.padding = 0.3,
+      point.padding = 0.2,
+      direction = "y",
+      segment.color = "grey50"
+    )
+  }
+
+  return(p)
+}
+
+x_breaks <- paste0("K", seq(0, ncol(F_pm_norm_col), by = 10))
+x_breaks[1] <- "K1" # Ensure the first GP is labeled as K1
+
+p1 <- plot_tf_rank_bars(
+  F = F_pm_norm_col,
+  TFs = c("Tcf7", "Foxp3", "Sox13"),
+  mode = "pos",
+  rank_max = 100,
+  custom_x_breaks = x_breaks,
+  facet = TRUE,
+  n_label_best = 5,
+  tf_colors = c("#1b9e57", "#1b9e57", "#1b9e57")
+)
+
+p2 <- plot_tf_rank_bars(
+  F = F_pm_norm_col,
+  TFs = c("Runx3", "Gata3", "Foxn3"),
+  mode = "pos",
+  rank_max = 100,
+  custom_x_breaks = x_breaks,
+  facet = TRUE,
+  n_label_best = 5,
+  tf_colors = c("#1b9e57", "#1b9e57", "#1b9e57")
+)
+
+ggsave(p1, filename = "TF_rank_skyline_pos.pdf", width = 8, height = 10)
+ggsave(p2, filename = "TF_rank_skyline_pos_2.pdf", width = 8, height = 10)
+```
+
+## CITE-seq analysis
+
+Define a few set of markers by threshold logFC in each GP:
+
+```{r}
+# protein_flash_summary_lognorm <- readRDS(file = paste0(data_path, "protein_flash_selected_summary_lognorm.rds"))
+# D_lognorm <- diag(1 / apply(protein_flash_summary_lognorm$F_pm, 2, function(x) max(abs(x))))
+# Protein_F_pm <- protein_flash_summary_lognorm$F_pm %*% D_lognorm
+# factor.info <- read.csv(file = paste0(data_path, "factors_comments_updated.xlsx - factor_pve.csv"), header = TRUE, stringsAsFactors = FALSE)
+# factors_considered <- sort(factor.info$X[factor.info$strongly.replicated])
+# colnames(Protein_F_pm) <- paste0("K", factors_considered)
+
+Protein_F_pm <- readRDS(file = paste0(data_path, "protein_projection_OLS_lognorm.rds"))
+cells_citeseq <- seurat_meta_filtered$cellID[seurat_meta_filtered$cite_seq]
+```
+
+Take only good quality proteins and proteins with name starting with Isotype
+
+```{r}
+isotype_proteins <- grep("^Isotype", rownames(Protein_F_pm), value = TRUE)
+proteins_quality <- read.csv(paste0(data_path, "TableS4_citeseq_qc_20250513.csv"), header = TRUE, stringsAsFactors = FALSE, skip = 1)
+good_proteins <- proteins_quality$protein[proteins_quality$classification == "good"]
+# put some proteins of interest into good_proteins
+good_proteins <- c(good_proteins, "IL2RA.CD25", "ITB7", "CD69")
+Protein_F_pm <- Protein_F_pm[!rownames(Protein_F_pm) %in% c(isotype_proteins), ]
+Protein_F_pm <- Protein_F_pm[rownames(Protein_F_pm) %in% good_proteins, ]
+
+exclude_proteins <- c("CD19", "CD34", "CD45.1","CD45.2", "CD138", "TCRVA2", "TER119")
+Protein_F_pm <- Protein_F_pm[!rownames(Protein_F_pm) %in% exclude_proteins, ]
+
+thy11_proteins <- grep("THY1.1", rownames(Protein_F_pm), value = TRUE)
+Protein_F_pm <- Protein_F_pm[!rownames(Protein_F_pm) %in% thy11_proteins, ]
+
+# redo the normalization
+D_lognorm <- diag(1 / apply(Protein_F_pm, 2, function(x) max(abs(x))))
+Protein_F_pm <- Protein_F_pm %*% D_lognorm
+# colnames(Protein_F_pm) <- paste0("K", factors_considered)
+colnames(Protein_F_pm) <- paste0("K", 1:ncol(Protein_F_pm))
+```
+
+## Protein heatmap
+
+
+Produce a giant heatmap of everything
+
+```{r}
+library(pheatmap)
+bk <- seq(-1, 1, length.out = 101)
+cols <- colorRampPalette(c("#4575B4", "white", "#D73027"))(100)
+# this is a giant heatmap, we should make the size large 
+pdf("Protein_Programs_heatmap_all.pdf", width = 20, height = 40)
+pheatmap::pheatmap(
+  t(Protein_F_pm),
+  main = "Protein programs (normalized)",
+  # color scale, blue negative, white zero, red positive
+  color = cols,
+  breaks = bk,
+  border_color = "black"
+)
+dev.off()
+```
+
+
+
+Heatmap of GP of interest from the other figures:
+
+```{r}
+library(pheatmap)
+# make it sparse
+threshold_protein <- 0.2
+Protein_F_pm_sparse <- ifelse(
+  abs(Protein_F_pm) >= threshold_protein,
+  Protein_F_pm,
+  0
+)
+
+# make sure all proteins are at least strongly positively expressed in one GP
+all(apply(Protein_F_pm_sparse, 1, function(v) any(v >= 0.2, na.rm = TRUE)))
+# take out GPs of interest
+keep_gp_figure2 <- c(1,3,22,29,30,58,68)
+keep_gp_figure3 <- c(25, 26, 10, 43, 12, 58, 171, 9, 79, 35, 72, 177, 161, 152, 162, 36, 56)
+keep_gp <- unique(c(keep_gp_figure2, keep_gp_figure3))
+keep_gp <- sort(keep_gp)
+Protein_F_pm_sparse <- Protein_F_pm_sparse[, keep_gp, drop = FALSE]
+
+bk <- seq(-1, 1, length.out = 101)
+cols <- colorRampPalette(c("#4575B4", "white", "#D73027"))(100)
+
+pdf("Protein_Programs_heatmap_GP_of_interest.pdf", width = 12, height = 10)
+pheatmap::pheatmap(
+  # t(Protein_F_pm),
+  t(Protein_F_pm_sparse),
+  main = "Protein programs (normalized)",
+  # color scale, blue negative, white zero, red positive
+  color = cols,
+  breaks = bk
+)
+dev.off()
+
+jj <- pheatmap::pheatmap(
+  # t(Protein_F_pm),
+  t(Protein_F_pm_sparse),
+  main = "Protein programs (normalized)",
+  # color scale, blue negative, white zero, red positive
+  color = cols,
+  breaks = bk
+)
+```
+
+Other GPs highlighted:
+
+```{r}
+other_GPs <- c(63, 49, 175, 27, 8, 80, 35, 59, 25, 32, 50, 168, 40, 16, 174, 35, 57, 170, 152, 130, 110, 79, 159, 29, 63, 161, 166, 174, 177, 184, 199)
+other_GPs <- sort(unique(other_GPs))
+
+# take those not in the earlier set of GPs of interest
+other_GPs <- other_GPs[!other_GPs %in% keep_gp]
+
+library(pheatmap)
+threshold_protein <- 0.2
+Protein_F_pm_sparse <- ifelse(
+  abs(Protein_F_pm) >= threshold_protein,
+  Protein_F_pm,
+  0
+)
+Protein_F_pm_sparse <- Protein_F_pm_sparse[, other_GPs, drop = FALSE]
+bk <- seq(-1, 1, length.out = 101)
+cols <- colorRampPalette(c("#4575B4", "white", "#D73027"))(100)
+pdf("Protein_Programs_heatmap_other.pdf", width = 12, height = 10)
+pheatmap::pheatmap(
+  # t(Protein_F_pm),
+  t(Protein_F_pm_sparse)[, jj$tree_col$order, drop = FALSE],
+  cluster_cols = FALSE,
+  main = "Protein programs (normalized)",
+  # color scale, blue negative, white zero, red positive
+  color = cols,
+  breaks = bk
+)
+dev.off()
+```
+
+
+
+
+
+## CITE-seq volcano plot
+
+```{r}
+protein_mat_normalized_lognorm <- readRDS(file = paste0(data_path, "protein_mat_normalized_lognorm.rds"))
+
+# citeseq_F <- protein_flash_summary_lognorm$F_pm
+# colnames(citeseq_F) <- paste0("K", factors_considered)
+## keep only those in Protein_F_pm
+# citeseq_F <- citeseq_F[rownames(Protein_F_pm) , colnames(Protein_F_pm)]
+
+citeseq_F <- readRDS(file = paste0(data_path, "protein_projection_OLS_lognorm.rds"))
+colnames(citeseq_F) <- paste0("K", 1:ncol(citeseq_F))
+
+# keep only those in Protein_F_pm
+citeseq_F <- citeseq_F[rownames(Protein_F_pm) , colnames(Protein_F_pm)]
+
+# filter out cells that are not measured
+protein_mat_normalized_lognorm <- protein_mat_normalized_lognorm[seurat_meta$cellID[seurat_meta$cite_seq], ]
+
+protein_mat_normalized_lognorm <- protein_mat_normalized_lognorm[, rownames(Protein_F_pm)]
+mean_shifted_log_expr <- apply(protein_mat_normalized_lognorm, 2, function(x) mean(x))
+plot_scatterplot <- function(factor_index, n_higlight = 10) {
+  f_values <- citeseq_F[, factor_index]
+  
+  # normliaze f_values to have max absolute value 1
+  f_values <- f_values / max(abs(f_values))
+  
+  gene_names <- rownames(citeseq_F)
+  
+  df <- data.frame(
+    Gene = gene_names,
+    FactorValue = f_values,
+    MeanLogExpr = mean_shifted_log_expr[gene_names]
+  )
+  
+  # plot FactorValue (x) vs MeanLogExpr (y)
+  p <- ggplot(df, aes(x = FactorValue, y = MeanLogExpr))
+  p <- p + geom_point(alpha = 0.5)
+  p <- p + labs(
+    title = colnames(citeseq_F)[factor_index],
+    x = "Increase in Shifted Log Expression",
+    y = "Mean Shifted Log Expression"
+  ) +
+    theme_minimal(base_size = 13)
+  # highlight top n_higlight genes with highest absolute factor values
+  top_genes <- df %>%
+    slice_max(order_by = abs(FactorValue), n = n_higlight)
+  p <- p + geom_point(data = top_genes, aes(x = FactorValue, y = MeanLogExpr), color = "skyblue")
+  p <- p + geom_text_repel(
+    data = top_genes,
+    aes(label = Gene),
+    color = "skyblue",
+    box.padding = 0.35, point.padding = 0.15,
+    max.time = 1, max.iter = 5e3
+  )
+  return(p)
+}
+```
+
+```{r}
+# store all scatterplots in a list into one PDF
+pdf("CiteSeq_volcano_plots.pdf", width = 6, height = 6)
+for (i in 1:ncol(Protein_F_pm)) {
+  p <- plot_scatterplot(i, n_higlight = 10)
+  print(p)
+}
+dev.off()
+```
+
+## CITE-seq protein marker sets
+
+```{r}
+marker_threshold <- 0.25
+gp_marker_list <- list()
+gp_marker_sign_list <- list()
+for (i in 1:ncol(Protein_F_pm)) {
+  gp_name <- colnames(Protein_F_pm)[i]
+  marker_values <- Protein_F_pm[, i]
+  marker_genes <- rownames(Protein_F_pm)[which(abs(marker_values) >= marker_threshold)]
+  
+  if (length(marker_genes) > 5) {
+    top_indices <- order(-abs(marker_values[marker_genes]))[1:5]
+    marker_genes <- marker_genes[top_indices]
+  }
+  
+  gp_marker_list[[gp_name]] <- marker_genes
+  
+  marker_genes_pos <- marker_genes[which(marker_values[marker_genes] >= marker_threshold)]
+  marker_genes_neg <- marker_genes[which(marker_values[marker_genes] <= -marker_threshold)]
+  gp_marker_sign_list[[gp_name]] <- list(
+    pos = marker_genes_pos,
+    neg = marker_genes_neg
+  )
+}
+```
+
+
+Produce a table of marker set for each GP:
+
+```{r}
+# ---- Convert gp_marker_sign_list to a LaTeX-friendly table ----
+# gp_marker_sign_list: a named list like $Set_K2$pos / $Set_K2$neg
+# Each row = one set; columns = Positive markers / Negative markers
+marker_list_to_df <- function(gp_marker_sign_list, collapse = ", ") {
+  stopifnot(is.list(gp_marker_sign_list), length(gp_marker_sign_list) > 0)
+
+  sets <- names(gp_marker_sign_list)
+  if (is.null(sets)) stop("gp_marker_sign_list must have names, e.g. 'Set_K68'.")
+
+  df <- data.frame(
+    Set = sets,
+    Positive = vapply(gp_marker_sign_list, function(x) {
+      pos <- x$pos
+      if (length(pos) == 0) return("")
+      paste(pos, collapse = collapse)
+    }, character(1)),
+    Negative = vapply(gp_marker_sign_list, function(x) {
+      neg <- x$neg
+      if (length(neg) == 0) return("")
+      paste(neg, collapse = collapse)
+    }, character(1)),
+    stringsAsFactors = FALSE
+  )
+
+  df
+}
+
+# Build the table data
+df_markers <- marker_list_to_df(gp_marker_sign_list)
+
+# Optional: sort by set index (K2, K5, K6, ...)
+df_markers$K_idx <- as.integer(sub(".*_K", "", df_markers$Set))
+df_markers <- df_markers[order(df_markers$K_idx), c("Set", "Positive", "Negative")]
+
+# ---- Output as LaTeX ----
+# Option A: knitr::kable (simple and works well)
+library(knitr)
+df_markers <- df_markers[, c("Positive", "Negative")]
+# If you use booktabs in your LaTeX preamble, set booktabs=TRUE
+latex_code <- knitr::kable(
+  df_markers,
+  format = "latex",
+  booktabs = TRUE,
+  longtable = TRUE,     # good if the table is long
+  escape = TRUE,        # keep TRUE unless you intentionally add LaTeX in cells
+  caption = "Positive and negative protein markers for each marker set."
+)
+
+cat(latex_code)
+```
+
+```{r}
+library(kableExtra)
+tab <- knitr::kable(df_markers, format = "html", caption = "Positive and negative protein markers for each marker set.") |>
+  kableExtra::kable_styling(full_width = FALSE)
+
+html_file <- "tmp_table/table_preview.html"
+png_file  <- "tmp_table/table_preview.png"
+dir.create("tmp_table", showWarnings = FALSE)
+kableExtra::save_kable(tab, file = html_file)
+webshot2::webshot(html_file, file = png_file, zoom = 2)
+png_file
+```
+
+## CITE-seq protein marker sets after clustering programs
+
+```{r}
+cor_protein_programs <- cor(Protein_F_pm, method = "pearson")
+
+ph <- pheatmap(
+  cor_protein_programs,
+  main = "Correlation among protein programs"
+)
+
+hc_programs <- ph$tree_col
+prog_clusters <- cutree(hc_programs, h = 2)
+table(prog_clusters)
+```
+
+```{r}
+gp_marker_sign_list_clustered <- list()
+gp_marker_list_clustered <- list()
+included_progs <- list()
+for (clust_id in unique(prog_clusters)) {
+  prog_in_clust <- names(prog_clusters)[prog_clusters == clust_id]
+  avg_profile <- rowMeans(Protein_F_pm[, prog_in_clust, drop = FALSE])
+  included_progs[[paste0("Cluster_", clust_id)]] <- prog_in_clust
+  marker_genes <- names(avg_profile)[which(abs(avg_profile) >= marker_threshold)]
+  gp_marker_list_clustered[[paste0("Cluster_", clust_id)]] <- marker_genes
+  
+  marker_genes_pos <- marker_genes[which(avg_profile[marker_genes] >= marker_threshold)]
+  marker_genes_neg <- marker_genes[which(avg_profile[marker_genes] <= -marker_threshold)]
+  gp_marker_sign_list_clustered[[paste0("Cluster_", clust_id)]] <- list(
+    pos = marker_genes_pos,
+    neg = marker_genes_neg
+  )
+}
+```
+
+Redo the table for clustered set:
+
+```{r}
+# Build the table data
+df_markers_clustered <- marker_list_to_df(gp_marker_sign_list_clustered)
+df_markers_clustered <- df_markers_clustered[order(df_markers_clustered$Set), c("Set", "Positive", "Negative")]
+df_markers_clustered <- df_markers_clustered[, c("Positive", "Negative")]
+
+# include what program each cluster corresponds to
+df_markers_clustered$programs <- vapply(rownames(df_markers_clustered), function(clust_name) {
+  progs <- included_progs[[clust_name]]
+  paste(progs, collapse = ", ")
+}, character(1))
+```
+
+```{r}
+library(kableExtra)
+tab2 <- knitr::kable(df_markers_clustered, format = "html", caption = "Positive and negative protein markers for each marker set.") |>
+  kableExtra::kable_styling(full_width = FALSE)
+
+html_file <- "tmp_table/table_preview_clust.html"
+png_file  <- "tmp_table/table_preview_clust.png"
+dir.create("tmp_table", showWarnings = FALSE)
+kableExtra::save_kable(tab2, file = html_file)
+webshot2::webshot(html_file, file = png_file, zoom = 2)
+png_file
+```
+
+
+
+## UMAP examination of protein-activation
+
+```{r}
+MyFeatureScatter_df <- function(
+  x,
+  y,
+  highlight,
+  split = NULL,
+  feature1 = "feature1",
+  feature2 = "feature2",
+  raster = TRUE,
+  cols = rev(rainbow(10, end = 4/6)),
+  highlight_size = 1,
+  highlight_alpha = 1,
+  base_pixels = c(512, 512),
+  highlight_pixels = c(216, 216),
+  nbin = 500
+) {
+  requireNamespace("scattermore", quietly = TRUE)
+  requireNamespace("ggplot2", quietly = TRUE)
+
+  # ---- checks ----
+  if (missing(x) || missing(y) || missing(highlight)) {
+    stop("Please provide x, y, and highlight.")
+  }
+  if (length(x) != length(y) || length(x) != length(highlight)) {
+    stop("x, y, and highlight must have the same length.")
+  }
+  if (!is.null(split) && length(split) != length(x)) {
+    stop("split must have the same length as x/y.")
+  }
+
+  # coerce highlight to logical safely
+  highlight <- as.logical(highlight)
+
+  df <- data.frame(
+    feature1 = as.numeric(x),
+    feature2 = as.numeric(y),
+    highlight = highlight,
+    stringsAsFactors = FALSE
+  )
+  if (!is.null(split)) df$split <- split
+
+  # drop rows with NA in x/y (and split if present)
+  keep <- !is.na(df$feature1) & !is.na(df$feature2)
+  if (!is.null(split)) keep <- keep & !is.na(df$split)
+  df <- df[keep, , drop = FALSE]
+
+  df2 <- df[!is.na(df$highlight) & df$highlight, , drop = FALSE]
+
+  # If nothing to highlight, still return the base plot
+  p1 <- ggplot2::ggplot(df) +
+    scattermore::geom_scattermore(
+      ggplot2::aes(feature1, feature2),
+      color = "grey",
+      pixels = base_pixels
+    )
+
+  if (nrow(df2) > 0) {
+    df2$density_col <- grDevices::densCols(
+      df2$feature1, df2$feature2,
+      colramp = grDevices::colorRampPalette(cols),
+      nbin = nbin
+    )
+
+    if (isTRUE(raster)) {
+      p2 <- scattermore::geom_scattermore(
+        data = df2,
+        ggplot2::aes(feature1, feature2, color = density_col),
+        pointsize = highlight_size,
+        pixels = highlight_pixels
+      )
+    } else {
+      p2 <- ggplot2::geom_point(
+        data = df2,
+        ggplot2::aes(feature1, feature2, color = density_col),
+        size = highlight_size,
+        alpha = highlight_alpha
+      )
+    }
+  } else {
+    p2 <- NULL
+  }
+
+  p <- p1 + p2 +
+    ggplot2::xlab(feature1) + ggplot2::ylab(feature2) +
+    ggplot2::scale_colour_identity() +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      axis.text.x = ggplot2::element_text(size = 15),
+      axis.text.y = ggplot2::element_text(size = 15),
+      legend.text = ggplot2::element_text(size = 10),
+      axis.title.x = ggplot2::element_text(size = 20),
+      axis.title.y = ggplot2::element_text(size = 20),
+      legend.title = ggplot2::element_blank(),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank()
+    )
+
+  if (!is.null(split)) {
+    p <- p + ggplot2::facet_wrap(~split)
+  }
+
+  return(p)
+}
+
+MyDimPlotHighlightDensity_df <- function(
+  emb,                     # n x 2 matrix/data.frame: columns are dim1, dim2
+  highlight,               # length n logical (or coercible): which cells to highlight
+  split = NULL,            # optional length n vector for facet
+  dim_names = c("Dim1", "Dim2"),
+  raster = TRUE,
+  highlight_size = 0.5,
+  highlight_alpha = 0.5,
+  base_pixels = c(512, 512),
+  highlight_pixels = c(512, 512),
+  cols = rev(rainbow(10, end = 4/6)),
+  nbin = 500
+) {
+  requireNamespace("scattermore", quietly = TRUE)
+  requireNamespace("ggplot2", quietly = TRUE)
+
+  # ---- checks ----
+  if (missing(emb) || missing(highlight)) {
+    stop("Please provide emb (n x 2) and highlight.")
+  }
+
+  emb <- as.data.frame(emb)
+  if (ncol(emb) < 2) stop("emb must have at least 2 columns (dim1, dim2).")
+  emb <- emb[, 1:2, drop = FALSE]
+
+  n <- nrow(emb)
+  if (length(highlight) != n) stop("highlight must have length nrow(emb).")
+  if (!is.null(split) && length(split) != n) stop("split must have length nrow(emb).")
+
+  highlight <- as.logical(highlight)
+
+  df <- data.frame(
+    feature1 = as.numeric(emb[[1]]),
+    feature2 = as.numeric(emb[[2]]),
+    highlight = highlight,
+    stringsAsFactors = FALSE
+  )
+  if (!is.null(split)) df$split <- split
+
+  # drop NA coords (and split if present)
+  keep <- !is.na(df$feature1) & !is.na(df$feature2)
+  if (!is.null(split)) keep <- keep & !is.na(df$split)
+  df <- df[keep, , drop = FALSE]
+
+  df2 <- df[!is.na(df$highlight) & df$highlight, , drop = FALSE]
+
+  # ---- base plot (all cells in grey) ----
+  p1 <- ggplot2::ggplot(df) +
+    scattermore::geom_scattermore(
+      ggplot2::aes(feature1, feature2),
+      color = "grey",
+      pixels = base_pixels
+    )
+
+  # ---- highlight layer (density-colored) ----
+  if (nrow(df2) > 0) {
+    df2$density_col <- grDevices::densCols(
+      df2$feature1, df2$feature2,
+      colramp = grDevices::colorRampPalette(cols),
+      nbin = nbin
+    )
+
+    if (isTRUE(raster)) {
+      p2 <- scattermore::geom_scattermore(
+        data = df2,
+        ggplot2::aes(feature1, feature2, color = density_col),
+        pixels = highlight_pixels
+      )
+    } else {
+      p2 <- ggplot2::geom_point(
+        data = df2,
+        ggplot2::aes(feature1, feature2, color = density_col),
+        size = highlight_size,
+        alpha = highlight_alpha
+      )
+    }
+  } else {
+    p2 <- NULL
+  }
+
+  p <- p1 + p2 +
+    ggplot2::xlab(dim_names[1]) + ggplot2::ylab(dim_names[2]) +
+    ggplot2::scale_colour_identity() +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      axis.text.x = ggplot2::element_text(size = 15),
+      axis.text.y = ggplot2::element_text(size = 15),
+      legend.text = ggplot2::element_text(size = 10),
+      axis.title.x = ggplot2::element_text(size = 20),
+      axis.title.y = ggplot2::element_text(size = 20),
+      legend.title = ggplot2::element_blank(),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank()
+    )
+
+  if (!is.null(split)) {
+    p <- p + ggplot2::facet_wrap(~split)
+  }
+
+  return(p)
+}
+```
+
+
+```{r}
+threshold <- 0.1
+selected_GP <- "K58"; selected_protein <- "CD8B"
+selected_loading <- L_pm_filtered[,selected_GP]
+threshold_loading <- quantile(selected_loading[selected_loading >= 0.1], (1 - threshold), na.rm = TRUE)
+highlight_GP_loading <- L_pm_filtered[,selected_GP] >= threshold_loading
+
+highlight_protein <- protein_mat_normalized_lognorm[,selected_protein] >= quantile(protein_mat_normalized_lognorm[,selected_protein], (1 - threshold), na.rm = TRUE)
+
+p_k58 <- MyDimPlotHighlightDensity_df(
+  emb = umap_result[match(rownames(L_pm_filtered), rownames(umap_result)), ],
+  highlight = highlight_GP_loading,
+  dim_names = c("UMAP1", "UMAP2"),
+  cols = grDevices::colorRampPalette(c("#2c7bb6", "#ffffbf", "#d7191c"))(10)
+)
+p_CD8B <- MyDimPlotHighlightDensity_df(
+  emb = umap_result[match(rownames(protein_mat_normalized_lognorm), rownames(umap_result)), ],
+  highlight = highlight_protein,
+  dim_names = c("UMAP1", "UMAP2"),
+  cols = rev(rainbow(10, end = 4/6))
+)
+
+# save p_k58
+ggsave(p_k58, filename = "K58_highlight.pdf", width = 6, height = 5)
+```
+
+CD8A and CD8B predict K58, K6 and K3
+
+```{r}
+selected_GP <- "K58"
+selected_loading <- L_pm_filtered[,selected_GP]
+threshold_loading <- quantile(selected_loading[selected_loading >= 0.1], (1 - threshold), na.rm = TRUE)
+highlight_GP_loading <- L_pm_filtered[,selected_GP] >= threshold_loading
+highlight_GP_loading2 <- highlight_GP_loading[match(rownames(protein_mat_normalized_lognorm), rownames(L_pm_filtered))]
+plot_protein_k58 <- MyFeatureScatter_df(
+  x = protein_mat_normalized_lognorm[, "CD8A"],
+  y = protein_mat_normalized_lognorm[, "CD8B"],
+  highlight = highlight_GP_loading2,
+  cols = grDevices::colorRampPalette(c("#2c7bb6", "#ffffbf", "#d7191c"))(10)
+)
+# relabel x and y
+plot_protein_k58 <- plot_protein_k58 +
+  xlab("CD8A expression") +
+  ylab("CD8B expression") +
+  ggtitle(sprintf("Highlighting cells with high loading in %s", selected_GP))
+
+ggsave(plot_protein_k58, filename = "K58_protein_scatter.pdf", width = 6, height = 5)
+
+selected_GP <- "K3"
+selected_loading <- L_pm_filtered[,selected_GP]
+threshold_loading <- quantile(selected_loading[selected_loading >= 0.1], (1 - threshold), na.rm = TRUE)
+highlight_GP_loading <- L_pm_filtered[,selected_GP] >= threshold_loading
+highlight_GP_loading2 <- highlight_GP_loading[match(rownames(protein_mat_normalized_lognorm), rownames(L_pm_filtered))]
+plot_protein_k3 <- MyFeatureScatter_df(
+  x = protein_mat_normalized_lognorm[, "CD8A"],
+  y = protein_mat_normalized_lognorm[, "CD8B"],
+  highlight = highlight_GP_loading2,
+  cols = grDevices::colorRampPalette(c("#2c7bb6", "#ffffbf", "#d7191c"))(10)
+) +
+  xlab("CD8A expression") +
+  ylab("CD8B expression") +
+  ggtitle(sprintf("Highlighting cells with high loading in %s", selected_GP))
+
+ggsave(plot_protein_k3, filename = "K3_protein_scatter.pdf", width = 6, height = 5)
+
+selected_GP <- "K6"
+selected_loading <- L_pm_filtered[,selected_GP]
+threshold_loading <- quantile(selected_loading[selected_loading >= 0.1], (1 - threshold), na.rm = TRUE)
+highlight_GP_loading <- L_pm_filtered[,selected_GP] >= threshold_loading
+highlight_GP_loading2 <- highlight_GP_loading[match(rownames(protein_mat_normalized_lognorm), rownames(L_pm_filtered))]
+plot_protein_k6 <- MyFeatureScatter_df(
+  x = protein_mat_normalized_lognorm[, "CD8A"],
+  y = protein_mat_normalized_lognorm[, "CD8B"],
+  highlight = highlight_GP_loading2,
+  cols = grDevices::colorRampPalette(c("#2c7bb6", "#ffffbf", "#d7191c"))(10)
+) +
+  xlab("CD8A expression") +
+  ylab("CD8B expression") +
+  ggtitle(sprintf("Highlighting cells with high loading in %s", selected_GP))
+
+ggsave(plot_protein_k6, filename = "K6_protein_scatter.pdf", width = 6, height = 5)
+```
+
+FR4, GITR.CD357 predict high K68
+
+```{r}
+selected_GP <- "K68"
+highlight_GP_loading <- L_pm_filtered[,selected_GP] >= 0.3
+highlight_GP_loading2 <- highlight_GP_loading[match(rownames(protein_mat_normalized_lognorm), rownames(L_pm_filtered))]
+plot_protein_k68 <- MyFeatureScatter_df(
+  x = protein_mat_normalized_lognorm[, "FR4"],
+  y = protein_mat_normalized_lognorm[, "GITR.CD357"],
+  highlight = highlight_GP_loading2,
+  cols = grDevices::colorRampPalette(c("#2c7bb6", "#ffffbf", "#d7191c"))(10)
+)
+
+plot_protein_k68 <- plot_protein_k68 +
+  xlab("FR4 expression") +
+  ylab("GITR.CD357 expression") +
+  ggtitle(sprintf("Highlighting cells with high loading in %s", selected_GP))
+
+ggsave(plot_protein_k68, filename = "K68_protein_scatter.pdf", width = 6, height = 5)
+```
+
+
+```{r}
+threshold <- 0.1
+selected_GP <- "K68"; selected_protein <- "FR4"
+selected_loading <- L_pm_filtered[,selected_GP]
+threshold_loading <- quantile(selected_loading[selected_loading >= 0.1], (1 - threshold), na.rm = TRUE)
+highlight_GP_loading <- L_pm_filtered[,selected_GP] >= threshold_loading
+
+highlight_protein <- protein_mat_normalized_lognorm[,selected_protein] >= quantile(protein_mat_normalized_lognorm[,selected_protein], (1 - threshold), na.rm = TRUE)
+
+p_k68 <- MyDimPlotHighlightDensity_df(
+  emb = umap_result[match(rownames(L_pm_filtered), rownames(umap_result)), ],
+  highlight = highlight_GP_loading,
+  dim_names = c("UMAP1", "UMAP2"),
+  cols = grDevices::colorRampPalette(c("#2c7bb6", "#ffffbf", "#d7191c"))(10)
+)
+p_FR4 <- MyDimPlotHighlightDensity_df(
+  emb = umap_result[match(rownames(protein_mat_normalized_lognorm), rownames(umap_result)), ],
+  highlight = highlight_protein,
+  dim_names = c("UMAP1", "UMAP2"),
+  cols = rev(rainbow(10, end = 4/6))
+)
+
+ggsave(p_k68, filename = "K68_highlight.pdf", width = 6, height = 5)
+ggsave(p_FR4, filename = "FR4_highlight.pdf", width = 6, height = 5)
+```
+
+
+```{r}
+threshold <- 0.1
+selected_GP <- "K68"; 
+selected_loading <- L_pm_filtered[,selected_GP]
+threshold_loading <- quantile(selected_loading[selected_loading >= 0.1], (1 - threshold), na.rm = TRUE)
+highlight_GP_loading <- L_pm_filtered[,selected_GP] >= threshold_loading
+
+threshold_set <- 0.2
+cells_pos <- rownames(protein_mat_normalized_lognorm)
+market_set <- gp_marker_sign_list[[selected_GP]]
+for (protein in market_set$pos) {
+  cutoff <- quantile(protein_mat_normalized_lognorm[, protein],
+                     probs = 1 - threshold_set, na.rm = TRUE)
+  cells_pos_new <- rownames(protein_mat_normalized_lognorm)[
+    protein_mat_normalized_lognorm[, protein] >= cutoff
+  ]
+  cells_pos <- intersect(cells_pos, cells_pos_new)
+}
+cells_final <- cells_pos
+
+p_k68_set <- MyDimPlotHighlightDensity_df(
+  emb = umap_result[match(rownames(L_pm_filtered), rownames(umap_result)), ],
+  highlight = rownames(L_pm_filtered) %in% cells_final,
+  dim_names = c("UMAP1", "UMAP2"),
+  cols = rev(rainbow(10, end = 4/6))
+)
+
+ggsave(p_k68_set, filename = "K68_marker_set_highlight.pdf", width = 6, height = 5)
+```
+
+```{r}
+threshold <- 0.1
+selected_GP <- "K58"; 
+selected_loading <- L_pm_filtered[,selected_GP]
+threshold_loading <- quantile(selected_loading[selected_loading >= 0.1], (1 - threshold), na.rm = TRUE)
+highlight_GP_loading <- L_pm_filtered[,selected_GP] >= threshold_loading
+
+threshold_set <- 0.2
+cells_pos <- rownames(protein_mat_normalized_lognorm)
+market_set <- gp_marker_sign_list[[selected_GP]]
+for (protein in market_set$pos) {
+  cutoff <- quantile(protein_mat_normalized_lognorm[, protein],
+                     probs = 1 - threshold_set, na.rm = TRUE)
+  cells_pos_new <- rownames(protein_mat_normalized_lognorm)[
+    protein_mat_normalized_lognorm[, protein] >= cutoff
+  ]
+  cells_pos <- intersect(cells_pos, cells_pos_new)
+}
+cells_final <- cells_pos
+
+p_k58_set <- MyDimPlotHighlightDensity_df(
+  emb = umap_result[match(rownames(L_pm_filtered), rownames(umap_result)), ],
+  highlight = rownames(L_pm_filtered) %in% cells_final,
+  dim_names = c("UMAP1", "UMAP2"),
+  cols = rev(rainbow(10, end = 4/6))
+)
+
+ggsave(p_k58_set, filename = "K58_marker_set_highlight.pdf", width = 6, height = 5)
+```
+
+
+
+```{r}
+selected_GP <- "K27"
+selected_loading <- L_pm_filtered[, selected_GP]
+threshold_loading <- quantile(selected_loading[selected_loading >= 0.1], (1 - threshold), na.rm = TRUE)
+highlight_GP_loading <- L_pm_filtered[,selected_GP] >= threshold_loading
+highlight_GP_loading2 <- highlight_GP_loading[match(rownames(protein_mat_normalized_lognorm), rownames(L_pm_filtered))]
+plot_protein_k27 <- MyFeatureScatter_df(
+  x = protein_mat_normalized_lognorm[, "KLRG1"],
+  y = protein_mat_normalized_lognorm[, "CD69"],
+  highlight = highlight_GP_loading2,
+  cols = grDevices::colorRampPalette(c("#2c7bb6", "#ffffbf", "#d7191c"))(10)
+) +
+  ggtitle(sprintf("Highlighting cells with high loading in %s", selected_GP))
+plot_protein_k27 <- plot_protein_k27 +
+  xlab("KLRG1 expression") +
+  ylab("CD69 expression")
+ggsave(plot_protein_k27, filename = "K27_protein_scatter.pdf", width = 6, height = 5)
+
+
+selected_GP <- "K63"
+selected_loading <- L_pm_filtered[, selected_GP]
+threshold_loading <- quantile(selected_loading[selected_loading >= 0.1], (1 - threshold), na.rm = TRUE)
+highlight_GP_loading <- L_pm_filtered[,selected_GP] >= threshold_loading
+highlight_GP_loading2 <- highlight_GP_loading[match(rownames(protein_mat_normalized_lognorm), rownames(L_pm_filtered))]
+plot_protein_k63 <- MyFeatureScatter_df(
+  x = protein_mat_normalized_lognorm[, "KLRG1"],
+  y = protein_mat_normalized_lognorm[, "CD69"],
+  highlight = highlight_GP_loading2,
+  cols = grDevices::colorRampPalette(c("#2c7bb6", "#ffffbf", "#d7191c"))(10)
+) +
+  ggtitle(sprintf("Highlighting cells with high loading in %s", selected_GP))
+plot_protein_k63 <- plot_protein_k63 +
+  xlab("KLRG1 expression") +
+  ylab("CD69 expression")
+ggsave(plot_protein_k63, filename = "K63_protein_scatter.pdf", width = 6, height = 5)
+```
+
+```{r}
+threshold <- 0.1
+selected_GP <- "K63"; 
+selected_loading <- L_pm_filtered[,selected_GP]
+threshold_loading <- quantile(selected_loading[selected_loading >= 0.1], (1 - threshold), na.rm = TRUE)
+highlight_GP_loading <- L_pm_filtered[,selected_GP] >= threshold_loading
+
+threshold_set <- 0.2
+cells_pos <- rownames(protein_mat_normalized_lognorm)
+cells_neg <- rownames(protein_mat_normalized_lognorm)
+# market_set <- gp_marker_sign_list[[selected_GP]]
+market_set <- list(
+  pos = c("CD69", "ITB7"),
+  neg = c("KLRG1")
+)
+for (protein in market_set$pos) {
+  cutoff <- quantile(protein_mat_normalized_lognorm[, protein],
+                     probs = 1 - threshold_set, na.rm = TRUE)
+  cells_pos_new <- rownames(protein_mat_normalized_lognorm)[
+    protein_mat_normalized_lognorm[, protein] >= cutoff
+  ]
+  cells_pos <- intersect(cells_pos, cells_pos_new)
+}
+for (protein in market_set$neg) {
+  cutoff <- quantile(protein_mat_normalized_lognorm[, protein],
+                     probs = threshold_set, na.rm = TRUE)
+  cells_neg_new <- rownames(protein_mat_normalized_lognorm)[
+    protein_mat_normalized_lognorm[, protein] <= cutoff
+  ]
+  cells_neg <- intersect(cells_neg, cells_neg_new)
+}
+# cells_final <- cells_pos
+cells_final <- intersect(cells_pos, cells_neg)
+
+p_k63_set <- MyDimPlotHighlightDensity_df(
+  emb = umap_result[match(rownames(L_pm_filtered), rownames(umap_result)), ],
+  highlight = rownames(L_pm_filtered) %in% cells_final,
+  dim_names = c("UMAP1", "UMAP2"),
+  cols = rev(rainbow(10, end = 4/6))
+)
+ggsave(p_k63_set, filename = "K63_marker_set_highlight.pdf", width = 6, height = 5)
+
+
+p_k63 <- MyDimPlotHighlightDensity_df(
+  emb = umap_result[match(rownames(L_pm_filtered), rownames(umap_result)), ],
+  highlight = highlight_GP_loading,
+  dim_names = c("UMAP1", "UMAP2"),
+  cols = grDevices::colorRampPalette(c("#2c7bb6", "#ffffbf", "#d7191c"))(10)
+)
+ggsave(p_k63, filename = "K63_highlight.pdf", width = 6, height = 5)
+
+```
+
+
+```{r}
+threshold <- 0.1
+selected_GP <- "K27"; 
+selected_loading <- L_pm_filtered[,selected_GP]
+threshold_loading <- quantile(selected_loading[selected_loading >= 0.1], (1 - threshold), na.rm = TRUE)
+highlight_GP_loading <- L_pm_filtered[,selected_GP] >= threshold_loading
+
+threshold_set <- 0.2
+cells_pos <- rownames(protein_mat_normalized_lognorm)
+# market_set <- gp_marker_sign_list[[selected_GP]]
+market_set <- list(
+  pos = c("KLRG1", "CD69", "ITB7"),
+  neg = character(0)
+)
+for (protein in market_set$pos) {
+  cutoff <- quantile(protein_mat_normalized_lognorm[, protein],
+                     probs = 1 - threshold_set, na.rm = TRUE)
+  cells_pos_new <- rownames(protein_mat_normalized_lognorm)[
+    protein_mat_normalized_lognorm[, protein] >= cutoff
+  ]
+  cells_pos <- intersect(cells_pos, cells_pos_new)
+}
+cells_final <- cells_pos
+
+p_k27_set <- MyDimPlotHighlightDensity_df(
+  emb = umap_result[match(rownames(L_pm_filtered), rownames(umap_result)), ],
+  highlight = rownames(L_pm_filtered) %in% cells_final,
+  dim_names = c("UMAP1", "UMAP2"),
+  cols = rev(rainbow(10, end = 4/6))
+)
+ggsave(p_k27_set, filename = "K27_marker_set_highlight.pdf", width = 6, height = 5)
+
+p_k27 <- MyDimPlotHighlightDensity_df(
+  emb = umap_result[match(rownames(L_pm_filtered), rownames(umap_result)), ],
+  highlight = highlight_GP_loading,
+  dim_names = c("UMAP1", "UMAP2"),
+  cols = grDevices::colorRampPalette(c("#2c7bb6", "#ffffbf", "#d7191c"))(10)
+)
+ggsave(p_k27, filename = "K27_highlight.pdf", width = 6, height = 5)
+```

@@ -1,0 +1,367 @@
+---
+title: "Validating the EBMF result using halves of the data"
+author: "Ziang Zhang"
+date: "2025-10-16"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(fastTopics)
+library(qs)
+library(cowplot)
+library(ggrepel)
+# data_path <- "../data/"
+# code_path <- "../code/"
+data_path <- "data/"
+code_path <- "code/"
+seurat_meta <- readRDS(paste0(data_path, "seurat_meta.rds"))
+flashier_snmf_summary <- readRDS(paste0(data_path, "flashier_snmf_summary.rds"))
+flashier_snmf_summary1 <- qs::qread(paste0(data_path, "fit1_summary.qs"))
+flashier_snmf_summary2 <- qs::qread(paste0(data_path, "fit2_summary.qs"))
+```
+
+Define a function to compute cosine similarity:
+
+```{r}
+compute_cosine_sim_matrix <- function(L1, L2){
+  norms1 <- apply(L1, 2, function(x){sqrt(sum(x^2))})
+  norms1[norms1 == 0] <- Inf
+  
+  norms2 <- apply(L2, 2, function(x){sqrt(sum(x^2))})
+  norms2[norms2 == 0] <- Inf
+  
+  L1_normalized <- t(t(L1)/norms1)
+  L2_normalized <- t(t(L2)/norms2)
+  
+  #compute matrix of cosine similarities
+  cosine_sim_matrix <- crossprod(L1_normalized, L2_normalized)
+  
+  return(cosine_sim_matrix)
+}
+```
+
+(Optional: some function to nonlinearly scale the cosine similarity for better hungarian matching)
+```{r}
+# Base S(t): quartic with change-point at c (S(0)=0, S(1)=1, S'(0)=S'(1)=0, S(c)=c)
+S_quartic_cp <- function(t, c = 0.3){
+  A <- (2*c - 1)/(c^2 - c)
+  B <- (-2*c^2 - 2*c + 2)/(c^2 - c)
+  C <- (3*c^2 - c - 1)/(c^2 - c)
+  A*t^4 + B*t^3 + C*t^2
+}
+
+# baseline map: mix linear and S, then restore sign
+f_cubic_cp <- function(x, c = 0.3, lambda = 1) {
+  stopifnot(lambda >= 0, lambda <= 1, c > 0, c < 1)
+  t <- abs(x)
+  S <- S_quartic_cp(t, c)
+  sign(x) * ((1 - lambda)*t + lambda*S)
+}
+
+# --------------------------------
+# Amplifier A: relative-odds power
+# --------------------------------
+amplify_odds <- function(u, c = 0.3, q = 3){
+  oc <- c/(1 - c)               # odds(c)
+  r  <- (u/(1 - u)) / oc        # relative odds vs c
+  o2 <- oc * r^q                # powered odds
+  o2/(1 + o2)                   # back to [0,1]
+}
+
+f_strong_odds <- function(x, c = 0.3, lambda = 1, q = 3){
+  stopifnot(lambda >= 0, lambda <= 1, c > 0, c < 1, q > 0)
+  t  <- abs(x)
+  S  <- S_quartic_cp(t, c)
+  u  <- (1 - lambda)*t + lambda*S   # if you want max effect, set lambda=1
+  u2 <- amplify_odds(u, c = c, q = q)
+  sign(x) * u2
+}
+
+x <- seq(-1, 1, by = 0.01)
+plot(x, f_cubic_cp(x, c = 0.4, lambda = 1), type = "l", col = "blue", ylim = c(-1,1))
+lines(x, f_strong_odds(x, c = 0.4, lambda = 1, q = 2), col = "red")
+lines(x, f_strong_odds(x, c = 0.4, lambda = 1, q = 4), col = "purple")
+lines(x,x, col = "black", lty = 2)
+legend("topleft", legend = c("f_cubic_cp","f_strong_odds (q=2)","f_strong_odds (q=4)","identity"), col = c("blue","red","purple","black"), lty = c(1,1,1,2))
+
+```
+
+
+Normalize the factor matrices:
+
+```{r}
+F_all <- flashier_snmf_summary$F_pm
+F_1 <- flashier_snmf_summary1$F_pm
+F_2 <- flashier_snmf_summary2$F_pm
+
+L_all <- flashier_snmf_summary$L_pm
+L_1 <- flashier_snmf_summary1$L_pm
+L_2 <- flashier_snmf_summary2$L_pm
+```
+
+```{r}
+F_1 <- scale(F_1, center = FALSE, scale = TRUE)
+F_2 <- scale(F_2, center = FALSE, scale = TRUE)
+F_all <- scale(F_all, center = FALSE, scale = TRUE)
+```
+
+Now, let's match the factors from the whole data analysis (F_all) to the two halves (F_1 and F_2).
+This time, we will be using the Hungarian algorithm to find the optimal matching.
+
+```{r}
+# Subset to have the common set of genes
+common_genes_all_1 <- intersect(rownames(F_all), rownames(F_1))
+common_genes_all_2 <- intersect(rownames(F_all), rownames(F_2))
+common_genes_all <- intersect(common_genes_all_1, common_genes_all_2)
+F_all <- F_all[common_genes_all, ]
+F_1 <- F_1[common_genes_all, ]
+F_2 <- F_2[common_genes_all, ]
+```
+
+```{r}
+cos_1 <- compute_cosine_sim_matrix(F_all, F_1)
+# cos_1 <- cor(F_all, F_1)
+
+# optionally apply nonlinear scaling
+# cos_1_f <- f_cubic_cp(cos_1, c = 0.3, lambda = 1)
+# cos_1_f <- f_strong_odds(cos_1, c = 0.3, lambda = 1, q = 4)
+# assignment_problem_1 <- RcppHungarian::HungarianSolver(-1*cos_1_f)
+assignment_problem_1 <- RcppHungarian::HungarianSolver(-1*cos_1)
+
+cos_2 <- compute_cosine_sim_matrix(F_all, F_2)
+# cos_2 <- cor(F_all, F_2)
+
+# optionally apply nonlinear scaling
+# cos_2_f <- f_cubic_cp(cos_2, c = 0.3, lambda = 1)
+# cos_2_f <- f_strong_odds(cos_2, c = 0.3, lambda = 1, q = 4)
+# assignment_problem_2 <- RcppHungarian::HungarianSolver(-1*cos_2_f)
+assignment_problem_2 <- RcppHungarian::HungarianSolver(-1*cos_2)
+
+# summarize the results into a data frame
+match_results <- data.frame(
+  Factor_All = 1:ncol(F_all),
+  Best_Match_F1 = assignment_problem_1$pairs[,2],
+  Best_Match_F2 = assignment_problem_2$pairs[,2],
+  cosine_F1 = cos_1[assignment_problem_1$pairs],
+  cosine_F2 = cos_2[assignment_problem_2$pairs]
+)
+
+match_results[c(1,2,3,5,22,58, 68, 171), 1:5]
+match_results[1:10,1:5]
+```
+
+
+We should also take a look at the cosine similarity between the matched factors in F_1 and F_2.
+
+```{r}
+cos_f1_f2 <- compute_cosine_sim_matrix(F_1[, match_results$Best_Match_F1], F_2[, match_results$Best_Match_F2])
+match_results$cosine_F1_F2 <- diag(cos_f1_f2)
+
+match_results[c(1,2,3,5,22,58, 68, 171), c(2:6)]
+```
+
+
+This table should be a useful reference, let's save it as a csv file.
+
+```{r eval=FALSE}
+write.csv(match_results, file = paste0(data_path, "factor_matching_results.csv"), row.names = FALSE)
+```
+
+Take a look at the distribution of the similarities:
+
+```{r}
+par(mfrow=c(1,3))
+hist(match_results$cosine_F1, breaks = 50, main = "Cosine: F_all and F_1", xlab = "Cosine Similarity")
+hist(match_results$cosine_F2, breaks = 50, main = "Cosine: F_all and F_2", xlab = "Cosine Similarity")
+hist(match_results$cosine_F1_F2, breaks = 50, main = "Cosine: F_1 and F_2", xlab = "Cosine Similarity")
+par(mfrow=c(1,1))
+```
+
+Let's find the factors in F_all that have a good match (similarity > 0.5) in either F_1 or F_2.
+
+```{r}
+match_results$MaxCosine <- pmax(match_results$cosine_F1, match_results$cosine_F2)
+match_results$MinCosine <- pmin(match_results$cosine_F1, match_results$cosine_F2)
+
+# select factors with similarity > 0.5 and between F_1 and F_2 > 0.5
+selected_factors_F_all <- match_results %>%
+  filter(MinCosine > 0.5 & cosine_F1_F2 > 0.5)
+  # filter(MaxCorr > 0.5 & Correlation_F1_F2 > 0.5)
+nrow(selected_factors_F_all)
+```
+
+```{r eval=FALSE}
+# if MinCosine > 0.5 and cosine_F1_F2 > 0.5 then is strongly validated
+match_results$strongly_validated <- (match_results$MinCosine > 0.5)& (match_results$cosine_F1_F2 > 0.5)
+# if MinCosine > 0.4 and cosine_F1_F2 > 0.4 then is moderately validated
+match_results$moderately_validated <- (match_results$MinCosine > 0.4)& (match_results$cosine_F1_F2 > 0.4)
+# if MaxCosine > 0.4 then is weakly validated
+match_results$weakly_validated <- (match_results$MaxCosine > 0.4)
+
+# if the max cosine with either F_1 or F_2 > 0.4 for some factor then is eventually validated
+opt_F1 <- apply(cos_1, 1, which.max)
+opt_F2 <- apply(cos_2, 1, which.max)
+optimized_cos1 <- cos_1[cbind(1:nrow(cos_1), opt_F1)]; optimized_cos2 <- cos_2[cbind(1:nrow(cos_2), opt_F2)]
+optimized_max_cos <- pmax(optimized_cos1, optimized_cos2)
+match_results$eventually_validated <- optimized_max_cos > 0.4
+
+
+sum(match_results$strongly_validated)
+sum(match_results$moderately_validated)
+sum(match_results$weakly_validated)
+sum(match_results$eventually_validated)
+
+write.csv(match_results, file = paste0(data_path, "factor_matching_results_filtered.csv"), row.names = FALSE)
+```
+
+What are the final selected factors in F_all?
+
+```{r}
+selected_factors_F_all$Factor_All
+```
+
+
+Bar plot to visualize the similarity between the matched factors and each factor in F_all:
+
+```{r}
+plot_F1 <- ggplot(selected_factors_F_all, aes(x = Factor_All, y = cosine_F1)) +
+  geom_bar(stat = "identity") +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "red") +
+  labs(title = "Best Match Cosine Similarity for Each Factor in F_all vs F_1",
+       x = "Factor in F_all",
+       y = "Best Match Cosine Similarity with F_1") +
+  theme_minimal()
+
+plot_F2 <- ggplot(selected_factors_F_all, aes(x = Factor_All, y = cosine_F2)) +
+  geom_bar(stat = "identity") +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "red") +
+  labs(title = "Best Match Cosine Similarity for Each Factor in F_all vs F_2",
+       x = "Factor in F_all",
+       y = "Best Match Cosine Similarity with F_2") +
+  theme_minimal()
+
+gridExtra::grid.arrange(plot_F1, plot_F2, nrow = 2)
+```
+
+
+How many large pve factors are there in the whole data analysis?
+
+```{r}
+sum(which(flashier_snmf_summary$pve > 1e-4) %in% selected_factors_F_all$Factor_All)/sum(flashier_snmf_summary$pve > 1e-4)
+```
+
+
+Structure plot:
+
+```{r}
+filter_cells_by_total_membership <- function (L, max_val = 10, numiter = 10) {
+  n <- nrow(L)
+  rows <- 1:n
+  for (iter in 1:numiter) {
+    x <- rowSums(L)
+    cat(sprintf("%d. Filtered out %d cells.\n",iter,sum(x > max_val)))
+    i <- which(x <= max_val)
+    L <- L[i,]
+    rows <- rows[i]
+    d <- apply(L,2,max)
+    L <- scale_cols(L,1/d)
+  }
+  return(rows)
+}
+scale_cols <- function (A, b)
+  t(t(A) * b)
+```
+
+
+```{r}
+# Take out cells for visualization
+D_all <- diag(1 / apply(L_all, 2, function(x) max(x)))
+L_all <- L_all %*% D_all
+cells_all <- filter_cells_by_total_membership(L_all, numiter = 12)
+L_all <- L_all[cells_all,]
+d <- apply(L_all,2,max)
+L_all <- scale_cols(L_all,1/d)
+D_all <- d * D_all
+seurat_meta_all <- seurat_meta[match(rownames(L_all), seurat_meta$cellID),]
+
+D_1 <- diag(1 / apply(L_1, 2, function(x) max(x)))
+L_1 <- L_1 %*% D_1
+cells_1 <- filter_cells_by_total_membership(L_1, numiter = 12)
+L_1 <- L_1[cells_1,]
+d <- apply(L_1,2,max)
+L_1 <- scale_cols(L_1,1/d)
+D_1 <- d * D_1
+seurat_meta_1 <- seurat_meta[match(rownames(L_1), seurat_meta$cellID),]
+
+D_2 <- diag(1 / apply(L_2, 2, function(x) max(x)))
+L_2 <- L_2 %*% D_2
+cells_2 <- filter_cells_by_total_membership(L_2, numiter = 12)
+L_2 <- L_2[cells_2,]
+d <- apply(L_2,2,max)
+L_2 <- scale_cols(L_2,1/d)
+D_2 <- d * D_2
+seurat_meta_2 <- seurat_meta[match(rownames(L_2), seurat_meta$cellID),]
+```
+
+
+```{r, results="hide", message=FALSE}
+## structure plot for all the data
+set.seed(12345)
+annotation_sub <- seurat_meta_all$annotation_level1
+cells <- which(annotation_sub == "CD4" | annotation_sub == "CD8")
+cells <- sample(cells,1e5)
+cells <- sort(c(cells,which(annotation_sub != "CD4" & annotation_sub != "CD8")))
+selected_all_Factors <- c(7, 22, 30, 58, 68, 171)
+L_all_plot <- L_all[cells,selected_all_Factors]
+colnames(L_all_plot) <- paste0("K",selected_all_Factors)
+p_all <- structure_plot(L_all_plot, gap = 10, n = 6000,
+                      topics = paste0("K",selected_all_Factors),
+                    grouping = annotation_sub[cells]) +
+  labs(y = "membership",color = "",fill = "") +
+  # ylim(0,0.2) +
+  theme(legend.position = "bottom")
+
+## structure plot for the first half data
+selected_1_Factors <- match_results$Best_Match_F1[match(selected_all_Factors,match_results$Factor_All)]
+
+# Visually, the best matching for factor 7 seems to be factor 7 in the first half data...
+selected_1_Factors[1] <- which.max(cos_1[7,]);
+
+
+annotation_sub1 <- seurat_meta_1$annotation_level1
+cells1 <- which(annotation_sub1 == "CD4" | annotation_sub1 == "CD8")
+cells1 <- sample(cells1,5e4)
+cells1 <- sort(c(cells1,which(annotation_sub1 != "CD4" & annotation_sub1 != "CD8")))
+L_1_plot <- L_1[cells1, selected_1_Factors]
+colnames(L_1_plot) <- paste0("K",selected_1_Factors)
+p_1 <- structure_plot(L_1_plot, gap = 10, n = 6000,
+                      topics = paste0("K",selected_1_Factors),
+                    grouping = annotation_sub1[cells1]) +
+  labs(y = "membership",color = "",fill = "") +
+  # ylim(0,0.2) +
+  theme(legend.position = "bottom")
+                    
+## structure plot for the second half data
+selected_2_Factors <- match_results$Best_Match_F2[match(selected_all_Factors, match_results$Factor_All)]
+annotation_sub2 <- seurat_meta_2$annotation_level1
+cells2 <- which(annotation_sub2 == "CD4" | annotation_sub2 == "CD8")
+cells2 <- sample(cells2,5e4)
+cells2 <- sort(c(cells2,which(annotation_sub2 != "CD4" & annotation_sub2 !=  "CD8")))
+L_2_plot <- L_2[cells2, selected_2_Factors]
+colnames(L_2_plot) <- paste0("K",selected_2_Factors)
+p_2 <- structure_plot(L_2_plot, gap = 10, n = 6000,
+                      topics = paste0("K",selected_2_Factors),
+                    grouping = annotation_sub2[cells2]) +
+  labs(y = "membership",color = "",fill = "") +
+  # ylim(0,0.2) +
+  theme(legend.position = "bottom")
+```
+
+```{r, fig.width=10, fig.height=10}
+plot_grid(p_all, p_1, p_2, nrow = 3)
+```
+

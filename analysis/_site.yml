@@ -1,0 +1,21 @@
+name: immgenT-GP-analysis
+output_dir: ../docs
+navbar:
+  title: immgenT-GP-analysis
+  left:
+  - text: Overview
+    href: index.html
+output:
+  workflowr::wflow_html:
+    toc: yes
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    number_sections: false
+    toc_depth: 3
+    theme: readable
+    highlight: textmate
+    smart: true
+    lib_dir: site_libs
+    self_contained: no
+    css: custom.css

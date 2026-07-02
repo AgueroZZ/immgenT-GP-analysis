@@ -1,0 +1,36 @@
+---
+title: workflowr demo
+author: Peter Carbonetto
+output: workflowr::wflow_html
+---
+
+This is a short R Markdown to illustrate usage of workflowr.
+
+```{r knitr-opts, include=FALSE}
+knitr::opts_chunk$set(comment = "#",collapse = TRUE,results = "hold",
+                      fig.align = "center",dpi = 120)
+```
+
+Load ggplot2 and cowplot:
+
+```{r load-pkgs, message=FALSE}
+library(ggplot2)
+library(cowplot)
+```
+
+Loat the "diamonds" data set:
+
+```{r diamonds}
+data(diamonds)
+```
+
+Plot diamonds' weight (in carats) vs. price, colored by clarity:
+
+```{r diamonds-scatterplot, fig.height=2.5, fig.width=4}
+set.seed(3)
+n <- nrow(diamonds)
+diamonds <- diamonds[sample(n,1000),]
+ggplot(diamonds,aes(x = carat,y = price,color = clarity)) +
+  geom_point() +
+  theme_cowplot()
+```

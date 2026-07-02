@@ -1,0 +1,10 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.DS_Store
+
+# Symlinked to the immgen-t-factors project (not portable to another
+# machine); not tracked here, and the symlink itself is excluded too since
+# gitignore's directory-only "data/" pattern doesn't match a symlink.
+data

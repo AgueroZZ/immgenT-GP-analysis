@@ -1,0 +1,273 @@
+---
+title: "Linking GEPs to protein"
+author: "Ziang Zhang"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+From the analysis of scRNA data, we obtain the following matrix factorization:
+
+\[ \mathbf{X} = \mathbf{L}\mathbf{F}^T, \]
+where \(\mathbf{F}\) denotes the learned GEPs, and \(\mathbf{L}\) denotes the loading of these GEPs in each cell.
+
+
+In this analysis, we fix the loading matrix \(\mathbf{L}\), just try to obtain the factor matrix \(\mathbf{U}\) from the protein data \(\mathbf{Y}\):
+\[\mathbf{Y} = \mathbf{L}\mathbf{U}^T,\]
+where \(\mathbf{U}\) denotes the protein levels corresponding to each GEP.
+
+## Analysis
+
+
+```{r eval = FALSE}
+library(flashier)
+library(fastTopics)
+
+data_path <- "../data/"
+# data_path <- "data/"
+
+protein_mat_normalized <- readRDS(file = paste0(data_path, "protein_mat_normalized.rds"))
+scRNA_result <- readRDS(file = paste0(data_path, "flashier_snmf_summary.rds"))
+
+k <- ncol(scRNA_result$L_pm)
+factors_considered <- which(scRNA_result$pve > 1e-4)
+L_mat <- scRNA_result$L_pm[rownames(protein_mat_normalized), factors_considered, drop = FALSE]
+F_mat_int <- matrix(0, nrow = ncol(protein_mat_normalized), ncol = length(factors_considered))
+
+# remove rows that are entirely zero
+zero_rows <- which(rowSums(protein_mat_normalized) == 0)
+if(length(zero_rows) > 0){
+  protein_mat_normalized <- protein_mat_normalized[-zero_rows, , drop = FALSE]
+  L_mat <- L_mat[-zero_rows, , drop = FALSE]
+}
+
+# remove columns that are entirely zero
+zero_cols <- which(colSums(protein_mat_normalized) == 0)
+if(length(zero_cols) > 0){
+  protein_mat_normalized <- protein_mat_normalized[, -zero_cols, drop = FALSE]
+  F_mat_int <- F_mat_int[-zero_cols, , drop = FALSE]
+}
+
+
+# run flashier fixed loading
+flash_fixed_loading <- flash_init(protein_mat_normalized, var_type = 2) |>
+  flash_set_verbose(1) |>
+  flash_factors_init(list(L_mat,
+                          F_mat_int)) |>
+  flash_factors_fix(kset = 1:length(factors_considered),
+                    which_dim = "loadings") |>
+  flash_backfit()
+
+
+protein_flash_summary <- list(L_pm = flash_fixed_loading$L_pm,
+                              F_pm = flash_fixed_loading$F_pm,
+                              pve = flash_fixed_loading$pve,
+                              elbo = flash_fixed_loading$elbo,
+                              residuals_sd = flash_fixed_loading$residuals_sd)
+
+saveRDS(protein_flash_summary, file = paste0(data_path, "protein_flash_selected_summary.rds"))
+```
+
+
+```{r}
+library(fastTopics)
+library(cowplot)
+library(ggplot2)
+data_path <- "../data/"
+# data_path <- "data/"
+protein_flash_summary <- readRDS(file = paste0(data_path, "protein_flash_selected_summary.rds"))
+
+protein_flash_summary_lognorm <- readRDS(file = paste0(data_path, "protein_flash_selected_summary_lognorm.rds"))
+
+flashier_snmf_summary <- readRDS(paste0(data_path, "flashier_snmf_summary.rds"))
+```
+
+
+```{r}
+D <- diag(1 / apply(protein_flash_summary$F_pm, 2, function(x) (max(x) - min(x))))
+protein_flash_summary$F_pm <- protein_flash_summary$F_pm %*% D
+protein_flash_summary$L_pm <- protein_flash_summary$L_pm %*% solve(D)
+
+D_lognorm <- diag(1 / apply(protein_flash_summary_lognorm$F_pm, 2, function(x) (max(x) - min(x))))
+protein_flash_summary_lognorm$F_pm <- protein_flash_summary_lognorm$F_pm %*% D_lognorm
+protein_flash_summary_lognorm$L_pm <- protein_flash_summary_lognorm$L_pm %*% solve(D_lognorm)
+```
+
+### Cell-type-Level1 annotation
+
+Take a look at the protein expression corresponding to some selected GEPs that were annotated as cell-type level 1 related.
+
+```{r}
+annot_level1 <- readRDS(paste0(data_path, "annot_level1.rds"))
+plot(annot_level1$rank, annot_level1$stats, type = "o", xlab = "Rank", ylab = "R2", main = "Celltype Level1", ylim = c(0,1.1))
+text(annot_level1$rank, annot_level1$stats, labels = annot_level1$factor_original, pos = 3, cex = 0.5)
+abline(h = c(0.1,0.2,0.4), col = "red", lty = 2)
+threshold_R2 <- 0.2
+threshold_rows <- 10
+annot_level1_highlight <- annot_level1[annot_level1$stats >= threshold_R2, ]
+annot_level1_highlight <- annot_level1_highlight[1:threshold_rows, ]
+annot_level1_highlight <- na.omit(annot_level1_highlight)
+```
+
+```{r}
+F_pm <- protein_flash_summary$F_pm
+colnames(F_pm) <- paste0("F", 1:ncol(flashier_snmf_summary$F_pm))[ flashier_snmf_summary$pve > 1e-4]
+kset <- paste0("F", annot_level1_highlight$factor_original[1:5])
+F_pm <- F_pm[, kset]
+p1 <- annotation_heatmap(F_pm,n = 2,
+                         dim = kset,
+                         show_dims = kset,
+                         select_features = "largest",
+                         font_size = 9) +
+  labs(title = "select_features = \"largest\"") +
+  theme(plot.title = element_text(face = "plain",size = 9))
+p2 <- annotation_heatmap(F_pm,n = 2,
+                         dim = kset,
+                         show_dims = kset,
+                         select_features = "distinctive",
+                         compare_dims = kset,
+                         font_size = 9) +
+  labs(title = "select_features = \"distinctive\"") +
+  theme(plot.title = element_text(face = "plain",size = 9))
+plot_grid(p1,p2,nrow = 1,ncol = 2)
+```
+
+
+Focus on selected GEPs:
+
+```{r}
+F_pm <- protein_flash_summary$F_pm
+colnames(F_pm) <- paste0("F", 1:ncol(flashier_snmf_summary$F_pm))[ flashier_snmf_summary$pve > 1e-4]
+
+# F_pm <- protein_flash_nn_summary$F_pm
+# colnames(F_pm) <- paste0("F", 1:ncol(flashier_snmf_summary$F_pm))[flashier_snmf_summary$pve > 1e-4]
+# F_pm <- F_pm[, protein_flash_nn_summary$pve > 0]
+
+kset <- paste0("F", c(68,58,30,3,22,29))
+F_pm <- F_pm[, kset]
+
+annotation_heatmap(F_pm,n = 2,
+                         dim = kset,
+                         show_dims = kset,
+                         select_features = "largest",
+                         compare_dims = kset,
+                         font_size = 10) +
+  theme(plot.title = element_text(face = "plain",size = 10))
+
+# ggsave2("figures/protein_factor_selected_GEPs_largest.pdf", width = 6, height = 6)
+```
+
+```{r}
+# F_pm <- protein_flash_summary$F_pm
+# colnames(F_pm) <- paste0("F", 1:ncol(flashier_snmf_summary$F_pm))[ flashier_snmf_summary$pve > 1e-4]
+
+F_pm <- protein_flash_summary_lognorm$F_pm
+colnames(F_pm) <- paste0("F", 1:ncol(flashier_snmf_summary$F_pm))[flashier_snmf_summary$pve > 1e-4]
+F_pm <- F_pm[, protein_flash_summary_lognorm$pve > 0]
+
+kset <- paste0("F", c(68,58,30,3,22,29))
+F_pm <- F_pm[, kset]
+
+annotation_heatmap(F_pm,n = 2,
+                         dim = kset,
+                         show_dims = kset,
+                         select_features = "largest",
+                         compare_dims = kset,
+                         font_size = 10) +
+  theme(plot.title = element_text(face = "plain",size = 10))
+
+# ggsave2("figures/protein_factor_selected_GEPs_largest_lognorm.pdf", width = 6, height = 6)
+```
+
+
+
+
+### Cell-type-Level2 annotation
+
+Take a look at the protein expression corresponding to some selected GEPs that were annotated as cell-type level 2 related.
+
+
+```{r}
+annot_level2 <- readRDS(paste0(data_path, "annot_level2.rds"))
+plot(annot_level2$rank, annot_level2$stats, type = "o", xlab = "Rank", ylab = "R2", main = "Celltype Level1", ylim = c(0,1.1))
+text(annot_level2$rank, annot_level2$stats, labels = annot_level2$factor_original, pos = 3, cex = 0.5)
+abline(h = c(0.1,0.2,0.4), col = "red", lty = 2)
+threshold_R2 <- 0.2
+threshold_rows <- 10
+annot_level2_highlight <- annot_level2[annot_level2$stats >= threshold_R2, ]
+annot_level2_highlight <- annot_level2_highlight[1:threshold_rows, ]
+annot_level2_highlight <- na.omit(annot_level2_highlight)
+```
+
+
+```{r}
+F_pm <- protein_flash_summary$F_pm
+colnames(F_pm) <- paste0("F", 1:ncol(flashier_snmf_summary$F_pm))[ flashier_snmf_summary$pve > 1e-4]
+kset <- paste0("F", annot_level2_highlight$factor_original[1:5])
+F_pm <- F_pm[, kset]
+p1 <- annotation_heatmap(F_pm,n = 2,
+                         dim = kset,
+                         show_dims = kset,
+                         select_features = "largest",
+                         font_size = 9) +
+  labs(title = "select_features = \"largest\"") +
+  theme(plot.title = element_text(face = "plain",size = 9))
+p2 <- annotation_heatmap(F_pm,n = 2,
+                         dim = kset,
+                         show_dims = kset,
+                         select_features = "distinctive",
+                         compare_dims = kset,
+                         font_size = 9) +
+  labs(title = "select_features = \"distinctive\"") +
+  theme(plot.title = element_text(face = "plain",size = 9))
+plot_grid(p1,p2,nrow = 1,ncol = 2)
+```
+
+
+
+### Organ annotation
+
+Take a look at the protein expression corresponding to some selected GEPs that were annotated as organ related.
+
+```{r}
+organ <- readRDS(paste0(data_path, "organ.rds"))
+plot(organ$rank, organ$stats, type = "o", xlab = "Rank", ylab = "R2", main = "Organ", ylim = c(0,1.1))
+text(organ$rank, organ$stats, labels = organ$factor_original, pos = 3, cex = 0.5)
+abline(h = c(0.1,0.2,0.4), col = "red", lty = 2)
+threshold_R2 <- 0.2
+threshold_rows <- 10
+organ_highlight <- organ[organ$stats >= threshold_R2, ]
+organ_highlight <- organ_highlight[1:threshold_rows, ]
+organ_highlight <- na.omit(organ_highlight)
+```
+
+```{r}
+F_pm <- protein_flash_summary$F_pm
+colnames(F_pm) <- paste0("F", 1:ncol(flashier_snmf_summary$F_pm))[ flashier_snmf_summary$pve > 1e-4]
+kset <- paste0("F", organ_highlight$factor_original[1:5])
+F_pm <- F_pm[, kset]
+p1 <- annotation_heatmap(F_pm,n = 2,
+                         dim = kset,
+                         show_dims = kset,
+                         select_features = "largest",
+                         font_size = 9) +
+  labs(title = "select_features = \"largest\"") +
+  theme(plot.title = element_text(face = "plain",size = 9))
+p2 <- annotation_heatmap(F_pm,n = 2,
+                         dim = kset,
+                         show_dims = kset,
+                         select_features = "distinctive",
+                         compare_dims = kset,
+                         font_size = 9) +
+  labs(title = "select_features = \"distinctive\"") +
+  theme(plot.title = element_text(face = "plain",size = 9))
+plot_grid(p1,p2,nrow = 1,ncol = 2)
+```
+
+
+
+
+
+

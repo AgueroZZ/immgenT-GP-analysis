@@ -1,0 +1,254 @@
+---
+title: "conditional_analysis"
+author: "Ziang Zhang"
+date: "2025-10-20"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+
+```{r}
+library(ggplot2)
+library(fastTopics)
+library(dplyr)
+library(ggrepel)
+data_path <- "../data/"
+code_path <- "../code/"
+# data_path <- "data/"
+# code_path <- "code/"
+source(paste0(code_path, "ROC.R"))
+seurat_meta <- readRDS(paste0(data_path, "seurat_meta.rds"))
+flashier_snmf_summary <- readRDS(paste0(data_path, "flashier_snmf_summary.rds"))
+```
+
+
+Align the cells to remove the extra cells in the flashier result:
+
+```{r}
+cells_flashier <- rownames(flashier_snmf_summary$L_pm)
+cells_seurat <- seurat_meta$cellID
+which(!cells_flashier %in% cells_seurat)
+L_pm <- flashier_snmf_summary$L_pm[cells_flashier %in% cells_seurat, ]
+all(rownames(L_pm) == cells_seurat)
+```
+
+Focus on healthy cells:
+
+```{r}
+healthy_cells <- which(seurat_meta$condition_broad == "healthy")
+L_pm <- L_pm[healthy_cells, ]
+seurat_meta <- seurat_meta[healthy_cells, ]
+```
+
+Filter out organs and cell types with too few cells:
+
+```{r}
+selected_organ <- table(seurat_meta$organ)
+selected_organ <- names(selected_organ[selected_organ >= 500])
+selected_level2 <- table(seurat_meta$annotation_level2)
+selected_level2 <- names(selected_level2[selected_level2 >= 500])
+selected_cells <- which(seurat_meta$organ %in% selected_organ & seurat_meta$annotation_level2 %in% selected_level2)
+seurat_meta_selected <- seurat_meta[selected_cells, ]
+# redefine the levels
+seurat_meta_selected$organ <- factor(seurat_meta_selected$organ)
+seurat_meta_selected$annotation_level2 <- factor(seurat_meta_selected$annotation_level2)
+```
+
+```{r}
+# Run regression for a given factor
+factor_id <- 3
+Y <- L_pm[selected_cells, factor_id]
+organ <- seurat_meta_selected$organ
+level2 <- seurat_meta_selected$annotation_level2
+model_full <- lm(Y ~ organ + level2)
+```
+
+```{r}
+coefs <- coef(model_full)
+# Extract coefficients for organ
+organ_coefs <- coefs[grep("^organ", names(coefs))]
+# Extract coefficients for annotation_level2
+level2_coefs <- coefs[grep("^level2", names(coefs))]
+
+# Extract SE for organ
+organ_se <- summary(model_full)$coefficients[grep("^organ", rownames(summary(model_full)$coefficients)), "Std. Error"]
+# Extract SE for annotation_level2
+level2_se <- summary(model_full)$coefficients[grep("^level2", rownames(summary(model_full)$coefficients)), "Std. Error"]
+
+# Create data frames for plotting
+coef_df <- data.frame(
+  Category = c(rep("Organ", length(organ_coefs)), rep("Cell Type", length(level2_coefs))),
+  Name = c(names(organ_coefs), names(level2_coefs)),
+  Coefficient = c(organ_coefs, level2_coefs),
+  SE = c(organ_se, level2_se)
+)
+
+# rename the levels to more readable format
+coef_df$Name <- gsub("organ", "", coef_df$Name)
+coef_df$Name <- gsub("level2", "", coef_df$Name)
+
+# Add |coef| for ranking
+coef_df <- coef_df %>% mutate(AbsCoef = abs(Coefficient))
+
+top_k <- 15  # change as you like
+
+## A) Label overall top-|coef| across both categories
+top_overall <- coef_df %>% slice_max(AbsCoef, n = top_k, with_ties = FALSE)
+
+ggplot(coef_df, aes(x = Coefficient, y = SE, color = Category)) +
+  geom_point(alpha = 0.7) +
+  geom_text_repel(
+    data = top_overall,
+    aes(label = Name),
+    size = 3,
+    max.overlaps = Inf,
+    box.padding = 0.3,
+    point.padding = 0.2,
+    min.segment.length = 0
+  ) +
+  labs(
+    title = paste("Factor", factor_id, "Coefficient Estimates vs SE"),
+    x = "Coefficient Estimate",
+    y = "Standard Error"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "top")
+
+```
+
+Write a function that computes the coefficients of organ and cell type for each factor:
+
+```{r}
+compute_coef_per_factor <- function(factor_id){
+  Y <- L_pm[selected_cells, factor_id]
+  organ <- seurat_meta_selected$organ
+  level2 <- seurat_meta_selected$annotation_level2
+  model_full <- lm(Y ~ organ + level2)
+  coefs <- coef(model_full)
+  # Extract coefficients for organ
+  organ_coefs <- coefs[grep("^organ", names(coefs))]
+  # Extract coefficients for annotation_level2
+  level2_coefs <- coefs[grep("^level2", names(coefs))]
+  
+  return(
+    list(
+      factor_id = factor_id,
+      organ_coefs = organ_coefs,
+      level2_coefs = level2_coefs
+    )
+  )
+}
+```
+
+```{r eval=FALSE}
+factor_coef_list <- lapply(1:ncol(L_pm), compute_coef_per_factor)
+saveRDS(factor_coef_list, file = paste0(data_path, "conditional_analysis_factor.rds"))
+```
+
+
+Write a function that computes the mean/sd of organ and cell type coefficients for each factor:
+
+```{r}
+compute_coef_stats_per_factor <- function(factor_id){
+  Y <- L_pm[selected_cells, factor_id]
+  organ <- seurat_meta_selected$organ
+  level2 <- seurat_meta_selected$annotation_level2
+  model_full <- lm(Y ~ organ + level2)
+  coefs <- coef(model_full)
+  # Extract coefficients for organ
+  organ_coefs <- coefs[grep("^organ", names(coefs))]
+  # Extract coefficients for annotation_level2
+  level2_coefs <- coefs[grep("^level2", names(coefs))]
+  
+  organ_mean <- mean(organ_coefs)
+  organ_sd <- sd(organ_coefs)
+  level2_mean <- mean(level2_coefs)
+  level2_sd <- sd(level2_coefs)
+  
+  return(data.frame(
+    Factor = factor_id,
+    Organ_Mean = organ_mean,
+    Organ_SD = organ_sd,
+    CellType_Mean = level2_mean,
+    CellType_SD = level2_sd
+  ))
+}
+```
+
+Obtain the whole summary table:
+
+```{r eval=FALSE}
+factor_stats_list <- lapply(1:ncol(L_pm), compute_coef_stats_per_factor)
+factor_stats_df <- do.call(rbind, factor_stats_list)
+saveRDS(factor_stats_df, file = paste0(data_path, "conditional_analysis_factor_stats.rds"))
+```
+
+```{r}
+factor_stats_df <- readRDS(file = paste0(data_path, "conditional_analysis_factor_stats.rds"))
+
+plot_factor_mean_sd <- function(df, mean_col, sd_col,
+                                color = "blue",
+                                title = "",
+                                top_k = 10) {
+
+  df <- df %>%
+    mutate(
+      Mean = .data[[mean_col]],
+      SD = .data[[sd_col]],
+      AbsMean = abs(Mean)
+    )
+
+  # top_k by SD and |Mean|
+  top_sd <- df %>% slice_max(SD, n = top_k, with_ties = FALSE)
+  top_mean <- df %>% slice_max(AbsMean, n = top_k, with_ties = FALSE)
+  label_df <- bind_rows(top_sd, top_mean) %>% distinct(Factor, .keep_all = TRUE)
+
+  ggplot(df, aes(x = SD, y = Mean)) +
+    geom_point(alpha = 0.7, color = color) +
+    geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+    geom_text_repel(
+      data = label_df,
+      aes(label = Factor),
+      size = 3,
+      box.padding = 0.3,
+      point.padding = 0.2,
+      min.segment.length = 0,
+      max.overlaps = Inf
+    ) +
+    labs(
+      title = title,
+      x = "Standard Deviation",
+      y = "Mean"
+    ) +
+    theme_minimal(base_size = 12)
+}
+
+# --- Example usage ---
+p_org <- plot_factor_mean_sd(
+  factor_stats_df,
+  mean_col = "Organ_Mean",
+  sd_col   = "Organ_SD",
+  color = "blue",
+  title = "Organ Coefficient Mean vs SD",
+  top_k = 5
+)
+
+p_cell <- plot_factor_mean_sd(
+  factor_stats_df,
+  mean_col = "CellType_Mean",
+  sd_col   = "CellType_SD",
+  color = "green",
+  title = "Cell Type Coefficient Mean vs SD",
+  top_k = 5
+)
+
+p_org
+p_cell
+```
+
+
+
+
+
+

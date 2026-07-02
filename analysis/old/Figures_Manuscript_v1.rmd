@@ -1,0 +1,2005 @@
+---
+title: "Figures and tables for the manuscript"
+author: "Ziang Zhang"
+date: "2025-11-06"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+library(ggplot2)
+library(fastTopics)
+library(dplyr)
+library(ggrepel)
+library(tidyr)
+library(tibble)
+library(cowplot)
+library(ZemmourLib)
+library(patchwork)
+
+data_path <- "../data/"
+code_path <- "../code/"
+table_path <- "../tables/"
+data_path <- "data/"
+code_path <- "code/"
+table_path <- "tables/"
+source(paste0(code_path, "ROC.R"))
+seurat_meta <- readRDS(paste0(data_path, "seurat_meta.rds"))
+flashier_snmf_summary <- readRDS(paste0(data_path, "flashier_snmf_summary.rds"))
+```
+
+```{r}
+filter_cells_by_total_membership <- function (L, max_val = 10, numiter = 10) {
+  n <- nrow(L)
+  rows <- 1:n
+  for (iter in 1:numiter) {
+    x <- rowSums(L)
+    cat(sprintf("%d. Filtered out %d cells.\n",iter,sum(x > max_val)))
+    i <- which(x <= max_val)
+    L <- L[i,]
+    rows <- rows[i]
+    d <- apply(L,2,max)
+    L <- scale_cols(L,1/d)
+  }
+  return(rows)
+}
+scale_cols <- function (A, b)
+  t(t(A) * b)
+```
+
+Align the cells to remove the extra cells in the flashier result:
+
+```{r}
+cells_flashier <- rownames(flashier_snmf_summary$L_pm)
+cells_seurat <- seurat_meta$cellID
+L_pm <- flashier_snmf_summary$L_pm[cells_flashier %in% cells_seurat, ]
+colnames(L_pm) <- paste0("K", 1:ncol(L_pm))
+all(rownames(L_pm) == cells_seurat)
+```
+
+
+## Table: overview of GPs
+
+In this table, we want to show the maxAUC for each GP for level 1, level 2, organ, condition_detailed.
+
+When computing max AUC, we should remove thymocyte cells.
+The max of AUC should only be taken to categories that have at least 500 cells.
+
+```{r}
+cells_thymocyte <- which(seurat_meta$annotation_level1 == "thymocyte")
+L_pm_no_thymocytes <- L_pm[-cells_thymocyte, ]
+seurat_meta_no_thymocytes <- seurat_meta[-cells_thymocyte, ]
+```
+
+```{r eval=FALSE}
+level_1_AUC_list <- compute_auc_threshold_matrix(loading_mat = L_pm_no_thymocytes, group_info = seurat_meta_no_thymocytes$annotation_level1)
+rownames(level_1_AUC_list$auc) <- sort(unique(seurat_meta_no_thymocytes$annotation_level1))
+rownames(level_1_AUC_list$threshold) <- sort(unique(seurat_meta_no_thymocytes$annotation_level1))
+saveRDS(level_1_AUC_list, file = paste0(data_path, "level_1_AUC_list_figure.rds"))
+```
+
+```{r}
+level_1_AUC_list <- readRDS(paste0(data_path, "level_1_AUC_list_figure.rds"))
+level_1_AUC <- level_1_AUC_list$auc
+level_1_threshold <- level_1_AUC_list$threshold
+```
+
+```{r}
+level_1_AUC_fac_row <- t(level_1_AUC)
+
+level_1_AUC_fac_row_df <- as.data.frame(level_1_AUC_fac_row) |>
+  rownames_to_column(var = "Factor")  
+
+write.csv(level_1_AUC_fac_row_df, paste0(table_path,"level1_AUC_factor_rows.csv"), row.names = FALSE)
+```
+
+```{r eval=FALSE}
+level_2_AUC_list <- compute_auc_threshold_matrix(loading_mat = L_pm_no_thymocytes, group_info = seurat_meta_no_thymocytes$annotation_level2)
+rownames(level_2_AUC_list$auc) <- sort(unique(seurat_meta_no_thymocytes$annotation_level2))
+rownames(level_2_AUC_list$threshold) <- sort(unique(seurat_meta_no_thymocytes$annotation_level2))
+saveRDS(level_2_AUC_list, file = paste0(data_path, "level_2_AUC_list_figure.rds"))
+```
+
+```{r}
+level_2_AUC_list <- readRDS(paste0(data_path, "level_2_AUC_list_figure.rds"))
+level_2_AUC <- level_2_AUC_list$auc
+level_2_threshold <- level_2_AUC_list$threshold
+
+# filter out annotations with less than 500 cells
+which_less_500 <- sapply(rownames(level_2_AUC), function(x){
+  sum(seurat_meta$annotation_level2 == x) < 500
+})
+level_2_AUC <- level_2_AUC[!which_less_500, ]
+level_2_threshold <- level_2_threshold[!which_less_500, ]
+```
+
+```{r}
+level_2_AUC_fac_row <- t(level_2_AUC)
+
+level_2_AUC_fac_row_df <- as.data.frame(level_2_AUC_fac_row) |>
+  rownames_to_column(var = "Factor")  
+
+write.csv(level_2_AUC_fac_row_df, paste0(table_path,"level_2_AUC_factor_rows.csv"), row.names = FALSE)
+```
+
+```{r}
+level_2_within_level_1_AUC_list <- readRDS(paste0(data_path, "level_2_within_level_1_AUC_list_figure.rds"))
+level_2_AUC_within_level1 <- level_2_within_level_1_AUC_list$auc
+level_2_threshold_within_level1 <- level_2_within_level_1_AUC_list$threshold
+
+# filter out annotations with less than 500 cells
+which_less_500 <- sapply(rownames(level_2_AUC_within_level1), function(x){
+  sum(seurat_meta$annotation_level2 == x) < 500
+})
+level_2_AUC_within_level1 <- level_2_AUC_within_level1[!which_less_500, ]
+level_2_threshold_within_level1 <- level_2_threshold_within_level1[!which_less_500, ]
+```
+
+```{r}
+level_2_AUC_within_level1_fac_row <- t(level_2_AUC_within_level1)
+
+level_2_AUC_within_level1_fac_row <- as.data.frame(level_2_AUC_within_level1_fac_row) |>
+  rownames_to_column(var = "Factor")  
+
+write.csv(level_2_AUC_within_level1_fac_row, paste0(table_path,"level_2_AUC_within_level1_factor_rows.csv"), row.names = FALSE)
+```
+
+
+
+
+
+```{r eval=FALSE}
+condition_detailed_AUC_list <- compute_auc_threshold_matrix(loading_mat = L_pm_no_thymocytes, group_info = seurat_meta_no_thymocytes$condition_detailed)
+rownames(condition_detailed_AUC_list$auc) <- sort(unique(seurat_meta_no_thymocytes$condition_detailed))
+rownames(condition_detailed_AUC_list$threshold) <- sort(unique(seurat_meta_no_thymocytes$condition_detailed))
+saveRDS(condition_detailed_AUC_list, file = paste0(data_path, "condition_detailed_AUC_list_figure.rds"))
+```
+
+```{r}
+condition_detailed_AUC_list <- readRDS(paste0(data_path, "condition_detailed_AUC_list_figure.rds"))
+condition_detailed_AUC <- condition_detailed_AUC_list$auc
+condition_detailed_threshold <- condition_detailed_AUC_list$threshold
+
+# filter out annotations with less than 500 cells
+which_less_500 <- sapply(rownames(condition_detailed_AUC), function(x){
+  sum(seurat_meta$condition_detailed == x) < 500
+})
+condition_detailed_AUC <- condition_detailed_AUC[!which_less_500, ]
+condition_detailed_threshold <- condition_detailed_threshold[!which_less_500, ]
+
+condition_detailed_AUC_fac_row <- t(condition_detailed_AUC)
+condition_detailed_AUC_fac_row_df <- as.data.frame(condition_detailed_AUC_fac_row) |>
+  rownames_to_column(var = "Factor")  
+write.csv(condition_detailed_AUC_fac_row_df, paste0(table_path,"condition_detailed_AUC_factor_rows.csv"), row.names = FALSE)
+```
+
+```{r eval=FALSE}
+organ_AUC_list <- compute_auc_threshold_matrix(loading_mat = L_pm_no_thymocytes, group_info = seurat_meta_no_thymocytes$organ)
+rownames(organ_AUC_list$auc) <- sort(unique(seurat_meta_no_thymocytes$organ))
+rownames(organ_AUC_list$threshold) <- sort(unique(seurat_meta_no_thymocytes$organ))
+saveRDS(organ_AUC_list, file = paste0(data_path, "organ_AUC_list_figure.rds"))
+```
+
+```{r}
+organ_AUC_list <- readRDS(paste0(data_path, "organ_AUC_list_figure.rds"))
+organ_AUC <- organ_AUC_list$auc
+organ_threshold <- organ_AUC_list$threshold
+
+# filter out annotations with less than 500 cells
+which_less_500 <- sapply(rownames(organ_AUC), function(x){
+  sum(seurat_meta$organ == x) < 500
+})
+organ_AUC <- organ_AUC[!which_less_500, ]
+organ_threshold <- organ_threshold[!which_less_500, ]
+
+organ_AUC_fac_row <- t(organ_AUC)
+organ_AUC_fac_row_df <- as.data.frame(organ_AUC_fac_row) |>
+  rownames_to_column(var = "Factor")
+write.csv(organ_AUC_fac_row_df, paste0(table_path,"organ_AUC_factor_rows.csv"), row.names = FALSE)
+```
+
+
+```{r eval=FALSE}
+igt_AUC_list <- compute_auc_threshold_matrix(loading_mat = L_pm_no_thymocytes, group_info = seurat_meta_no_thymocytes$IGT)
+rownames(igt_AUC_list$auc) <- sort(unique(seurat_meta_no_thymocytes$IGT))
+rownames(igt_AUC_list$threshold) <- sort(unique(seurat_meta_no_thymocytes$IGT))
+saveRDS(igt_AUC_list, file = paste0(data_path, "igt_AUC_list_figure.rds"))
+```
+
+```{r}
+igt_AUC_list <- readRDS(paste0(data_path, "igt_AUC_list_figure.rds"))
+igt_AUC <- igt_AUC_list$auc
+igt_threshold <- igt_AUC_list$threshold
+# filter out annotations with less than 500 cells
+which_less_500 <- sapply(rownames(igt_AUC), function(x){
+  sum(seurat_meta$IGT == x) < 500
+})
+igt_AUC <- igt_AUC[!which_less_500, ]
+igt_threshold <- igt_threshold[!which_less_500, ]
+igt_AUC_fac_row <- t(igt_AUC)
+igt_AUC_fac_row_df <- as.data.frame(igt_AUC_fac_row) |>
+  rownames_to_column(var = "Factor")
+write.csv(igt_AUC_fac_row_df, paste0(table_path,"igt_AUC_factor_rows.csv"), row.names = FALSE)
+```
+
+
+
+## Figure: Heatmaps for each GP
+
+First, look for variation across level 1 annotations:
+
+Focus on GPs with max AUC > 0.65:
+
+```{r}
+## 1. select high-AUC factors by name
+max_AUC_level1 <- apply(level_1_AUC, 2, max)
+factors_high_AUC_level1 <- which(max_AUC_level1 > 0.65)
+factor_names_high <- colnames(level_1_AUC)[factors_high_AUC_level1]
+
+colnames(L_pm_no_thymocytes) <- paste0("K", 1:ncol(L_pm_no_thymocytes))
+L_pm_level1_high_AUC <- L_pm_no_thymocytes[, factor_names_high, drop = FALSE]
+annotations_level1 <- seurat_meta$annotation_level1[-cells_thymocyte]
+
+# Take out cells for visualization
+d <- apply(L_pm_no_thymocytes, 2, max)
+L_pm_no_thymocytes_normalized <- scale_cols(L_pm_no_thymocytes, 1/d)
+cells_all <- filter_cells_by_total_membership(L_pm_no_thymocytes_normalized, numiter = 15)
+L_pm_no_thymocytes_normalized <- L_pm_no_thymocytes_normalized[cells_all, ]
+d <- apply(L_pm_no_thymocytes_normalized, 2, max)
+L_pm_no_thymocytes_normalized <- scale_cols(L_pm_no_thymocytes_normalized, 1/d)
+L_pm_no_thymocytes_normalized_high_AUC <- L_pm_no_thymocytes_normalized[, factor_names_high, drop = FALSE]
+```
+
+```{r}
+compute_prop_above_threshold <- function(
+  loading_mat,
+  group_info,
+  threshold_mat,
+  remove_na = TRUE,
+  compare = c(">", ">=", "<", "<=")
+) {
+  compare <- match.arg(compare)
+
+  # Coerce to matrix
+  loading_mat <- as.matrix(loading_mat)
+
+  # Basic checks
+  if (nrow(loading_mat) != length(group_info)) {
+    stop("`loading_mat` rows must have same length as `group_info`.")
+  }
+  if (is.null(rownames(threshold_mat)) || is.null(colnames(threshold_mat))) {
+    stop("`threshold_mat` must have both rownames (groups) and colnames (loadings).")
+  }
+  if (is.null(colnames(loading_mat))) {
+    stop("`loading_mat` must have column names that match threshold_mat's colnames.")
+  }
+
+  # Align loadings with threshold columns
+  common_loadings <- intersect(colnames(loading_mat), colnames(threshold_mat))
+  if (length(common_loadings) == 0L) {
+    stop("No overlapping loading names between `loading_mat` and `threshold_mat`.")
+  }
+  loading_mat   <- loading_mat[, common_loadings, drop = FALSE]
+  threshold_mat <- threshold_mat[, common_loadings, drop = FALSE]
+
+  # Groups to use: intersection of group_info and threshold rownames
+  all_groups      <- unique(as.character(group_info))
+  threshold_groups <- rownames(threshold_mat)
+  use_groups      <- intersect(threshold_groups, all_groups)
+  if (length(use_groups) == 0L) {
+    stop("No overlapping groups between `group_info` and `rownames(threshold_mat)`.")
+  }
+
+  # Subset threshold_mat to the groups we actually have
+  threshold_mat <- threshold_mat[use_groups, , drop = FALSE]
+
+  # Prepare output
+  prop_mat <- matrix(
+    NA_real_,
+    nrow = nrow(threshold_mat),
+    ncol = ncol(threshold_mat),
+    dimnames = dimnames(threshold_mat)
+  )
+
+  # Helper for comparison
+  cmp_fun <- switch(
+    compare,
+    ">"  = function(x, thr) x >  thr,
+    ">=" = function(x, thr) x >= thr,
+    "<"  = function(x, thr) x <  thr,
+    "<=" = function(x, thr) x <= thr
+  )
+
+  # Loop over groups and loadings
+  for (g in use_groups) {
+    idx_g <- which(as.character(group_info) == g)
+
+    if (length(idx_g) == 0L) next
+
+    for (k in common_loadings) {
+      x <- loading_mat[idx_g, k]
+
+      if (remove_na) {
+        keep <- !is.na(x)
+        x    <- x[keep]
+      }
+
+      if (length(x) == 0L || is.na(threshold_mat[g, k])) {
+        prop_mat[g, k] <- NA_real_
+      } else {
+        thr <- threshold_mat[g, k]
+        prop_mat[g, k] <- mean(cmp_fun(x, thr))
+      }
+    }
+  }
+
+  prop_mat
+}
+```
+
+
+```{r}
+## 1. compute proportion of cells above threshold for each (level1, factor)
+prop_mat <- compute_prop_above_threshold(
+  loading_mat  = L_pm_level1_high_AUC,
+  group_info   = seurat_meta_no_thymocytes$annotation_level1,
+  threshold_mat = level_1_threshold[, factor_names_high, drop = FALSE],
+  compare      = ">"
+)
+
+## 2. compute median loading for each (level1, factor)
+median_loading_level1 <- sapply(
+  sort(unique(annotations_level1)),
+  function(x) {
+    apply(
+      L_pm_no_thymocytes_normalized_high_AUC[annotations_level1[cells_all] == x, , drop = FALSE],
+      2,
+      median
+    )
+  }
+)
+
+# median_loading_level1: rows = Factor, cols = Annotation_Level1
+median_loading_level1_df <- as.data.frame(median_loading_level1) |>
+  rownames_to_column(var = "Factor") |>
+  pivot_longer(
+    cols      = -Factor,
+    names_to  = "Annotation_Level1",
+    values_to = "Median_Loading"
+  )
+
+## 3. proportion of cells in each level1 annotation, based on prop_mat
+cell_prop_df <- data.frame(Annotation_Level1 = rownames(prop_mat)) |>
+  left_join(
+    as.data.frame(prop_mat) |>
+      rownames_to_column(var = "Annotation_Level1") |>
+      pivot_longer(
+        cols      = -Annotation_Level1,
+        names_to  = "Factor",
+        values_to = "prop_cells"
+      ),
+    by = c("Annotation_Level1")
+  )
+
+# by Factor and Annotation_Level1
+median_loading_level1_df <- median_loading_level1_df |>
+  left_join(cell_prop_df, by = c("Annotation_Level1", "Factor"))
+
+## 4. dot heatmap: y = Factor (rows), x = Level1 (columns)
+median_loading_level1_df <- median_loading_level1_df |>
+  mutate(
+    Factor_num = as.numeric(sub("K", "", Factor))
+  ) |>
+  arrange(Factor_num) |>
+  mutate(
+    Factor = factor(Factor, levels = unique(Factor))
+  )
+```
+
+```{r}
+ggplot(median_loading_level1_df,
+       aes(x = Annotation_Level1, y = Factor)) +
+  geom_point(aes(
+    size  = prop_cells,
+    color = Median_Loading,
+    alpha = Median_Loading
+  )) +
+  scale_color_gradient(
+    low  = "white",
+    high = "red"
+  ) +
+  scale_alpha_continuous(range = c(0, 5), guide = "none") +  
+  scale_size_continuous(range = c(2, 8)) +
+  theme_minimal() +
+  labs(
+    title = "Median Loadings for Level 1 Annotations",
+    x = "Level 1 Annotations",
+    y = "Factors",
+    size  = "Proportion of cells",
+    color = "Median loading"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggsave(
+  filename = "figures/Figures_Collection/Median_Loadings_Level1.png",
+  width = 8, height = 8, dpi = 300
+)
+
+```
+
+Create a similar heatplot for AUC:
+
+```{r}
+level_1_AUC_high_AUC <- level_1_AUC[, factors_high_AUC_level1, drop = FALSE]
+level_1_AUC_high_AUC_df <- as.data.frame(level_1_AUC_high_AUC) |>
+  rownames_to_column(var = "Annotation_Level1") |>
+  pivot_longer(
+    cols      = -Annotation_Level1,
+    names_to  = "Factor",
+    values_to = "AUC"
+  )
+level_1_AUC_high_AUC_df <- level_1_AUC_high_AUC_df |>
+  mutate(
+    Factor_num = as.numeric(sub("K", "", Factor))
+  ) |>
+  arrange(Factor_num) |>
+  mutate(
+    Factor = factor(Factor, levels = unique(Factor))
+  )
+
+# proportion of cells in each level1 annotation
+# join by Annotation_Level1 and Factor
+level_1_AUC_high_AUC_df <- level_1_AUC_high_AUC_df |>
+  left_join(cell_prop_df, by = c("Annotation_Level1", "Factor"))
+```
+
+```{r}
+ggplot(level_1_AUC_high_AUC_df,
+       aes(x = Annotation_Level1, y = Factor)) +
+  geom_point(aes(
+    size  = prop_cells,
+    color = AUC,
+    alpha = AUC
+  )) +
+  scale_color_gradient(
+    low  = "white",
+    high = "blue"
+  ) +
+  scale_alpha_continuous(range = c(0, 0.7), guide = "none") +  
+  scale_size_continuous(range = c(2, 8)) +
+  theme_minimal() +
+  labs(
+    title = "AUC for Level 1 Annotations",
+    x = "Level 1 Annotations",
+    y = "Factors",
+    size  = "Proportion of cells",
+    color = "AUC"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggsave(
+  filename = "figures/Figures_Collection/AUC_Level1.png",
+  width = 8, height = 8, dpi = 300
+)
+```
+
+
+Next, look for variation across level 2 annotations:
+
+Focus on GPs with max AUC > 0.95:
+
+```{r}
+max_AUC_level2 <- apply(level_2_AUC, 2, max)
+factors_high_AUC_level2 <- which(max_AUC_level2 > 0.95)
+factor_names_high <- colnames(level_1_AUC)[factors_high_AUC_level2]
+colnames(L_pm_no_thymocytes) <- paste0("K", 1:ncol(L_pm_no_thymocytes))
+L_pm_level2_high_AUC <- L_pm_no_thymocytes[, factor_names_high, drop = FALSE]
+annotations_level2 <- seurat_meta$annotation_level2[-cells_thymocyte]
+annotations_level2 <- as.character(annotations_level2)
+
+# Don't need to renormalize, just use previous normalized matrix
+L_pm_no_thymocytes_normalized_high_AUC <- L_pm_no_thymocytes_normalized[, factor_names_high, drop = FALSE]
+```
+
+```{r}
+median_loading_level2 <- sapply(
+  sort(unique(annotations_level2)),
+  function(x) {
+    apply(
+      L_pm_no_thymocytes_normalized_high_AUC[annotations_level2[cells_all] == x, , drop = FALSE],
+      2,
+      median
+    )
+  }
+)
+
+# median_loading_level2: rows = Factor, cols = Annotation_Level2
+median_loading_level2_df <- as.data.frame(median_loading_level2) |>
+  rownames_to_column(var = "Factor") |>
+  pivot_longer(
+    cols      = -Factor,
+    names_to  = "Annotation_Level2",
+    values_to = "Median_Loading"
+  )
+
+# compute based on level_2_threshold
+
+prop_mat <- compute_prop_above_threshold(
+  loading_mat  = L_pm_level2_high_AUC,
+  group_info   = seurat_meta_no_thymocytes$annotation_level2,
+  threshold_mat = level_2_threshold[, factor_names_high, drop = FALSE],
+  compare      = ">"
+)
+
+cell_prop_df <- data.frame(Annotation_Level2 = rownames(prop_mat)) |>
+  left_join(
+    as.data.frame(prop_mat) |>
+      rownames_to_column(var = "Annotation_Level2") |>
+      pivot_longer(
+        cols      = -Annotation_Level2,
+        names_to  = "Factor",
+        values_to = "prop_cells"
+      ),
+    by = c("Annotation_Level2")
+  )
+
+median_loading_level2_df <- median_loading_level2_df |>
+  left_join(cell_prop_df, by = c("Annotation_Level2", "Factor"))
+```
+
+To simplify plotting, only consider level 2 annotations that have at least a median loading > 0.4 in at least one of the selected factors:
+
+```{r}
+level2_to_keep <- median_loading_level2_df |>
+  group_by(Annotation_Level2) |>
+  summarize(max_median_loading = max(Median_Loading)) |>
+  filter(max_median_loading > 0.4) |>
+  pull(Annotation_Level2)
+
+median_loading_level2_df <- median_loading_level2_df |>
+  filter(Annotation_Level2 %in% level2_to_keep)
+```
+
+
+```{r}
+ggplot(median_loading_level2_df,
+       aes(x = Annotation_Level2, y = Factor)) +
+  geom_point(aes(
+    size  = prop_cells,
+    color = Median_Loading,
+    alpha = Median_Loading
+  )) +
+  scale_color_gradient(
+    low  = "white",
+    high = "red"
+  ) +
+  scale_alpha_continuous(range = c(0, 5), guide = "none") +  
+  scale_size_continuous(range = c(2, 8)) +
+  theme_minimal() +
+  labs(
+    title = "Median Loadings for Level 2 Annotations",
+    x = "Level 2 Annotations",
+    y = "Factors",
+    size  = "Proportion of cells",
+    color = "Median loading"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggsave(
+  filename = "figures/Figures_Collection/Median_Loadings_Level2.png",
+  width = 10, height = 10, dpi = 500
+)
+```
+
+```{r}
+level_2_AUC_high_AUC <- level_2_AUC[, factors_high_AUC_level2, drop = FALSE]
+level_2_AUC_high_AUC_df <- as.data.frame(level_2_AUC_high_AUC) |>
+  rownames_to_column(var = "Annotation_Level2") |>
+  pivot_longer(
+    cols      = -Annotation_Level2,
+    names_to  = "Factor",
+    values_to = "AUC"
+  )
+level_2_AUC_high_AUC_df <- level_2_AUC_high_AUC_df |>
+  mutate(
+    Factor_num = as.numeric(sub("K", "", Factor))
+  ) |>
+  arrange(Factor_num) |>
+  mutate(
+    Factor = factor(Factor, levels = unique(Factor))
+  )
+level_2_AUC_high_AUC_df <- level_2_AUC_high_AUC_df |>
+  left_join(cell_prop_df, by = c("Annotation_Level2", "Factor"))
+```
+
+Keep only level 2 annotations with AUC at least 0.95 in at least one of the selected factors:
+```{r}
+level2_to_keep_auc <- level_2_AUC_high_AUC_df |>
+  group_by(Annotation_Level2) |>
+  summarize(max_auc = max(AUC)) |>
+  filter(max_auc > 0.98) |>
+  pull(Annotation_Level2)
+
+level_2_AUC_high_AUC_df <- level_2_AUC_high_AUC_df |>
+  filter(Annotation_Level2 %in% level2_to_keep_auc)
+```
+
+
+```{r}
+ggplot(level_2_AUC_high_AUC_df,
+       aes(x = Annotation_Level2, y = Factor)) +
+  geom_point(aes(
+    size  = prop_cells,
+    color = AUC,
+    alpha = AUC
+  )) +
+  scale_color_gradient(
+    low  = "white",
+    high = "blue"
+  ) +
+  scale_alpha_continuous(range = c(0, 5), guide = "none") +  
+  scale_size_continuous(range = c(2, 8)) +
+  theme_minimal() +
+  labs(
+    title = "AUC for Level 2 Annotations",
+    x = "Level 2 Annotations",
+    y = "Factors",
+    size  = "Proportion of cells",
+    color = "AUC"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+ggsave(
+  filename = "figures/Figures_Collection/AUC_Level2.png",
+  width = 10, height = 10, dpi = 500
+)
+```
+
+Next, look for variation across organ annotations:
+
+Focus on GPs with max AUC > 0.9:
+
+```{r}
+max_AUC_organ <- apply(organ_AUC, 2, max)
+factors_high_AUC_organ <- which(max_AUC_organ > 0.9)
+factor_names_high <- colnames(level_1_AUC)[factors_high_AUC_organ]
+
+colnames(L_pm) <- paste0("K", 1:ncol(L_pm))
+L_pm_organ_high_AUC <- L_pm[, factor_names_high, drop = FALSE]
+annotations_organ <- seurat_meta$annotation_organ[-cells_thymocyte]
+
+# Take out cells for visualization
+d <- apply(L_pm, 2, max)
+L_pm_normalized <- scale_cols(L_pm, 1/d)
+cells_all <- filter_cells_by_total_membership(L_pm_normalized, numiter = 15)
+L_pm_normalized <- L_pm_normalized[cells_all, ]
+d <- apply(L_pm_normalized, 2, max)
+L_pm_normalized <- scale_cols(L_pm_normalized, 1/d)
+L_pm_normalized_high_AUC <- L_pm_normalized[, factor_names_high, drop = FALSE]
+```
+
+```{r}
+annotations_organ <- seurat_meta$organ
+median_loading_organ <- sapply(
+  sort(unique(annotations_organ)),
+  function(x) {
+    apply(
+      L_pm_normalized_high_AUC[annotations_organ[cells_all] == x, , drop = FALSE],
+      2,
+      median
+    )
+  }
+)
+
+median_loading_organ_df <- as.data.frame(median_loading_organ) |>
+  rownames_to_column(var = "Factor") |>
+  pivot_longer(
+    cols      = -Factor,
+    names_to  = "Annotation_organ",
+    values_to = "Median_Loading"
+  )
+
+cell_prop_df <- 
+
+median_loading_organ_df <- median_loading_organ_df |>
+  left_join(cell_prop_df, by = "Annotation_organ")
+
+
+median_loading_organ_df <- median_loading_organ_df |>
+  mutate(
+    Factor_num = as.numeric(sub("K", "", Factor))
+  ) |>
+  arrange(Factor_num) |>
+  mutate(
+    Factor = factor(Factor, levels = unique(Factor))
+  )
+```
+
+```{r}
+organ_AUC_high_AUC <- organ_AUC[, factors_high_AUC_organ, drop = FALSE]
+organ_AUC_high_AUC_df <- as.data.frame(organ_AUC_high_AUC) |>
+  rownames_to_column(var = "Annotation_organ") |>
+  pivot_longer(
+    cols      = -Annotation_organ,
+    names_to  = "Factor",
+    values_to = "AUC"
+  )
+organ_AUC_high_AUC_df <- organ_AUC_high_AUC_df |>
+  mutate(
+    Factor_num = as.numeric(sub("K", "", Factor))
+  ) |>
+  arrange(Factor_num) |>
+  mutate(
+    Factor = factor(Factor, levels = unique(Factor))
+  )
+
+organ_AUC_high_AUC_df <- organ_AUC_high_AUC_df |>
+  left_join(cell_prop_df, by = "Annotation_organ")
+```
+
+```{r}
+# plot median loading heatmap for organ
+ggplot(median_loading_organ_df,
+       aes(x = Annotation_organ, y = Factor)) +
+  geom_point(aes(
+    size  = prop_cells,
+    color = Median_Loading,
+    alpha = Median_Loading
+  )) +
+  scale_color_gradient(
+    low  = "white",
+    high = "red"
+  ) +
+  scale_alpha_continuous(range = c(0, 5), guide = "none") +  
+  scale_size_continuous(range = c(2, 5)) +
+  theme_minimal() +
+  labs(
+    x = "Organ",
+    y = "Factors",
+    size  = "Proportion of cells",
+    color = "Median loading"
+  ) +
+theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 2))
+
+ggsave(
+  filename = "figures/Figures_Collection/Median_Loadings_Organ.png",
+  width = 10, height = 10, dpi = 500
+)
+```
+
+```{r}
+ggplot(organ_AUC_high_AUC_df,
+       aes(x = Annotation_organ, y = Factor)) +
+  geom_point(aes(
+    size  = prop_cells,
+    color = AUC,
+    alpha = AUC
+  )) +
+  scale_color_gradient(
+    low  = "white",
+    high = "blue"
+  ) +
+  scale_alpha_continuous(range = c(0, 5), guide = "none") +  
+  scale_size_continuous(range = c(2, 5)) +
+  theme_minimal() +
+  labs(
+    title = "AUC for Organ Annotations",
+    x = "Organ Annotations",
+    y = "Factors",
+    size  = "Proportion of cells",
+    color = "AUC"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 2))
+
+ggsave(
+  filename = "figures/Figures_Collection/AUC_Organ.png",
+  width = 10, height = 10, dpi = 500
+)
+```
+
+
+Next, let's look at condition_detailed
+
+```{r}
+condition_detailed_AUC <- readRDS(paste0(data_path, "condition_detailed_AUC.rds"))
+
+# only consider condition_detailed with more than 500 cells
+annotations_condition <- seurat_meta$condition_detailed
+which_less_500_condition <- sapply(sort(unique(annotations_condition)), function(x){
+  sum(annotations_condition == x) < 500
+})
+
+condition_detailed_AUC_filtered <- condition_detailed_AUC[!which_less_500_condition, ]
+
+max_AUC_condition <- apply(condition_detailed_AUC_filtered, 2, max)
+factors_high_AUC_condition <- which(max_AUC_condition > 0.85)
+factor_names_high_condition <- colnames(condition_detailed_AUC)[factors_high_AUC_condition]
+```
+
+```{r}
+L_pm_normalized_high_AUC_condition <- L_pm_normalized[, factor_names_high_condition,
+                                                    drop = FALSE]
+```
+
+```{r}
+annotations_condition <- seurat_meta$condition_detailed
+# compute median loading for each (condition_detailed, factor)
+median_loading_condition <- sapply(
+  sort(unique(annotations_condition)),
+  function(x) {
+    apply(
+      L_pm_normalized_high_AUC_condition[annotations_condition[cells_all] == x, , drop = FALSE],
+      2,
+      median
+    )
+  }
+)
+# median_loading_condition: rows = Factor, cols = Annotation_condition
+median_loading_condition_df <- as.data.frame(median_loading_condition) |>
+  rownames_to_column(var = "Factor") |>
+  pivot_longer(
+    cols      = -Factor,
+    names_to  = "Annotation_condition",
+    values_to = "Median_Loading"
+  )
+# proportion of cells in each condition_detailed
+cell_prop_condition_df <- data.frame(Annotation_condition = annotations_condition) |>
+  count(Annotation_condition, name = "n_cells") |>
+  mutate(prop_cells = n_cells / sum(n_cells))
+median_loading_condition_df <- median_loading_condition_df |>
+  left_join(cell_prop_condition_df, by = "Annotation_condition")
+# dot heatmap: y = Factor (rows), x = condition_detailed (columns)
+median_loading_condition_df <- median_loading_condition_df |>
+  mutate(
+    Factor_num = as.numeric(sub("K", "", Factor))
+  ) |>
+  arrange(Factor_num) |>
+  mutate(
+    Factor = factor(Factor, levels = unique(Factor))
+  )
+```
+
+
+```{r}
+ggplot(median_loading_condition_df,
+       aes(x = Annotation_condition, y = Factor)) +
+  geom_point(aes(
+    size  = prop_cells,
+    color = Median_Loading,
+    alpha = Median_Loading    
+  )) +
+  scale_color_gradient(
+    low  = "white",
+    high = "red"
+  ) +
+  scale_alpha_continuous(range = c(0, 5), guide = "none") +  
+  scale_size_continuous(range = c(2, 5)) +
+  theme_minimal() +
+  labs(
+    x = "Condition Detailed",
+    y = "Factors",
+    size  = "Proportion of cells",
+    color = "Median loading"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 4))
+
+ggsave(
+  filename = "figures/Figures_Collection/Median_Loadings_Condition_Detailed.png",
+  width = 12, height = 14, dpi = 500
+)
+```
+
+```{r}
+# AUC for condition_detailed
+condition_detailed_AUC_high_AUC <- condition_detailed_AUC_filtered[, factors_high_AUC_condition, drop = FALSE]
+condition_detailed_AUC_high_AUC_df <- as.data.frame(condition_detailed_AUC_high_AUC) |>
+  rownames_to_column(var = "Annotation_condition_detailed") |>
+  pivot_longer(
+    cols      = -Annotation_condition_detailed,
+    names_to  = "Factor",
+    values_to = "AUC"
+  )
+condition_detailed_AUC_high_AUC_df <- condition_detailed_AUC_high_AUC_df |>
+  mutate(
+    Factor_num = as.numeric(sub("K", "", Factor))
+  ) |>
+  arrange(Factor_num) |>
+  mutate(
+    Factor = factor(Factor, levels = unique(Factor))
+  )
+condition_detailed_AUC_high_AUC_df$Annotation_condition <- condition_detailed_AUC_high_AUC_df$Annotation_condition_detailed
+condition_detailed_AUC_high_AUC_df <- condition_detailed_AUC_high_AUC_df |>
+  left_join(cell_prop_condition_df, by = "Annotation_condition")
+```
+
+```{r}
+ggplot(condition_detailed_AUC_high_AUC_df,
+       aes(x = Annotation_condition, y = Factor)) +
+  geom_point(aes(
+    size  = prop_cells,
+    color = AUC,
+    alpha = AUC
+  )) +
+  scale_color_gradient(
+    low  = "white",
+    high = "blue"
+  ) +
+  scale_alpha_continuous(range = c(0, 5), guide = "none") +  
+  scale_size_continuous(range = c(2, 5)) +
+  theme_minimal() +
+  labs(
+    title = "AUC for Condition Detailed",
+    x = "Condition Detailed",
+    y = "Factors",
+    size  = "Proportion of cells",
+    color = "AUC"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 4))
+
+ggsave(
+  filename = "figures/Figures_Collection/AUC_Condition_Detailed.png",
+  width = 12, height = 14, dpi = 500
+)
+```
+
+
+
+## Table: View GPs in terms of max_AUC
+
+We want to create table with rows denoting GPs, and columns denoting max_AUC in level-1, level-2, organ, and condition_detailed annotation.
+
+```{r}
+max_AUC_level1 <- apply(level_1_AUC, 2, max)
+max_AUC_level2 <- apply(level_2_AUC_within_level1, 2, max)
+max_AUC_organ <- apply(organ_AUC, 2, max)
+max_AUC_condition_detailed <- apply(condition_detailed_AUC, 2, max)
+gp_overview_df <- data.frame(
+  Factor = colnames(L_pm),
+  Max_AUC_Level1 = max_AUC_level1,
+  Max_AUC_Level2 = max_AUC_level2,
+  Max_AUC_Organ = max_AUC_organ,
+  Max_AUC_Condition_Detailed = max_AUC_condition_detailed
+)
+write.csv(gp_overview_df, paste0(table_path, "GPs_Max_AUC_Overview.csv"), row.names = FALSE)
+```
+
+We also want to produce a table that shows in what categories for each time of meta-information does each GP predict well in terms of AUC > 0.895:
+
+```{r}
+summarize_auc_hits <- function(auc_list, threshold = 0.895) {
+  # auc_list: list(level1 = level_1_AUC, level2 = level_2_AUC, ...)
+
+  all_factors <- Reduce(union, lapply(auc_list, colnames))
+  all_factors <- sort(all_factors)
+  
+  res <- data.frame(
+    factor = all_factors,
+    stringsAsFactors = FALSE
+  )
+  
+  for (meta_name in names(auc_list)) {
+    mat <- auc_list[[meta_name]]
+    
+    if (is.null(colnames(mat)) || is.null(rownames(mat))) {
+      stop("Matrix in auc_list[['", meta_name, "']] must have rownames and colnames.")
+    }
+    
+    meta_hits <- vapply(all_factors, function(k) {
+      if (!k %in% colnames(mat)) {
+        return(NA_character_)  
+      }
+      vals <- mat[, k]
+      ok  <- which(!is.na(vals) & vals >= threshold)
+      if (!length(ok)) {
+        return("")  
+      }
+      paste(rownames(mat)[ok], collapse = "; ")
+    }, character(1))
+    
+    res[[meta_name]] <- meta_hits
+  }
+  
+  res
+}
+auc_list <- list(
+  Level1 = level_1_AUC,
+  Level2 = level_2_AUC_within_level1,
+  Organ = organ_AUC,
+  Condition_Detailed = condition_detailed_AUC,
+  igt = igt_AUC
+)
+gp_auc_hits_df <- summarize_auc_hits(auc_list, threshold = 0.895)
+gp_auc_hits_df <- gp_auc_hits_df[
+  order(as.integer(sub("^K", "", gp_auc_hits_df$factor))),
+]
+# output to csv
+write.csv(gp_auc_hits_df, paste0(table_path, "GPs_AUC_Hits_Overview.csv"), row.names = FALSE)
+```
+
+
+
+## Figure: Structure Plot:
+
+Here we want to create a structure plot where each level-1 is matched to a GP that has the highest AUC for that level-1 annotation.
+
+```{r}
+match_category_to_factor <- function(auc_matrix) {
+  n_factors    <- ncol(auc_matrix)
+  n_categories <- nrow(auc_matrix)
+
+  category_to_factor <- rep(NA_character_, n_categories)
+  names(category_to_factor) <- rownames(auc_matrix)
+
+  factor_assigned <- rep(FALSE, n_factors)
+  names(factor_assigned) <- colnames(auc_matrix)
+
+  category_score <- apply(auc_matrix, 1, max)    
+  category_order <- order(category_score, decreasing = TRUE)
+  ordered_categories <- rownames(auc_matrix)[category_order]
+
+  for (cat in ordered_categories) {
+    aucs <- auc_matrix[cat, ]
+
+    aucs[factor_assigned] <- -Inf
+
+    best_factor_idx <- which.max(aucs)
+    best_factor_name <- names(aucs)[best_factor_idx]
+
+    category_to_factor[cat] <- best_factor_name
+    factor_assigned[best_factor_idx] <- TRUE
+  }
+
+  return(category_to_factor)
+}
+level1_category_to_factor <- match_category_to_factor(level_1_AUC)
+color_coding <- ZemmourLib::immgent_colors$level1
+```
+
+```{r}
+fit2 <- L_pm_no_thymocytes_normalized[, level1_category_to_factor, drop = FALSE]
+cell_type <- seurat_meta[rownames(fit2), "annotation_level1"]
+cells <- which(cell_type == "CD4" | cell_type == "CD8")
+cells <- sample(cells,1e5)
+cells <- sort(c(cells,which(cell_type != "CD4" & cell_type != "CD8")))
+
+structure_plot(fit2[cells,],gap = 20,n = 3000,
+               colors = color_coding[names(level1_category_to_factor)],
+               grouping = cell_type[cells]) +
+  labs(y = "membership",color = "",fill = "") +
+  guides(
+    fill = guide_legend(nrow = 1),
+    color = guide_legend(nrow = 1)
+  ) +
+  theme(
+    legend.position = "bottom",
+    legend.direction = "horizontal",
+    legend.box = "horizontal",
+    axis.text.x = element_text(size = 10, angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 12),
+    axis.title = element_text(size = 14, face = "bold"),
+    legend.text = element_text(size = 12),
+    legend.title = element_text(size = 13)
+  )
+
+ggsave(
+  filename = "figures/Figures_Collection/Structure_Plot_Level1.png",
+  width = 10, height = 6, dpi = 300
+)
+```
+
+
+
+
+
+
+
+
+## Figure: Scatterplot of level2 versus organ
+
+We will first load the result from healthy cells:
+
+```{r eval=FALSE}
+healthy_cells <- which(seurat_meta$condition_broad == "healthy")
+L_pm <- L_pm[healthy_cells, ]
+seurat_meta <- seurat_meta[healthy_cells, ]
+
+selected_organ <- table(seurat_meta$organ)
+selected_organ <- names(selected_organ[selected_organ >= 3000])
+selected_level2 <- table(seurat_meta$annotation_level2)
+selected_level2 <- names(selected_level2[selected_level2 >= 1000])
+selected_cells <- which(seurat_meta$organ %in% selected_organ & seurat_meta$annotation_level2 %in% selected_level2)
+seurat_meta_selected <- seurat_meta[selected_cells, ]
+seurat_meta_selected$organ <- factor(seurat_meta_selected$organ)
+seurat_meta_selected$annotation_level2 <- factor(seurat_meta_selected$annotation_level2)
+
+compute_coef_per_factor <- function(factor_id){
+  Y <- L_pm[selected_cells, factor_id]
+  organ <- seurat_meta_selected$organ
+  level2 <- seurat_meta_selected$annotation_level2
+  model_full <- lm(Y ~ organ + level2)
+  coefs <- coef(model_full)
+  # Extract coefficients for organ
+  organ_coefs <- coefs[grep("^organ", names(coefs))]
+  # Extract coefficients for annotation_level2
+  level2_coefs <- coefs[grep("^level2", names(coefs))]
+  
+  return(
+    list(
+      factor_id = factor_id,
+      organ_coefs = organ_coefs,
+      level2_coefs = level2_coefs
+    )
+  )
+}
+
+factor_coef_list <- lapply(1:ncol(L_pm), compute_coef_per_factor)
+saveRDS(factor_coef_list, file = paste0(data_path, "conditional_analysis_factor.rds"))
+```
+
+```{r}
+factor_coef_list <- readRDS(file = paste0(data_path, "conditional_analysis_factor.rds"))
+```
+
+```{r}
+max_coef_df <- data.frame(
+  Factor = integer(),
+  Max_Abs_Coefficient_Organ = numeric(),
+  Max_Abs_Coefficient_Level2 = numeric()
+)
+
+for (i in 1:length(factor_coef_list)) {
+  coef_df <- factor_coef_list[[i]]
+  max_abs_organ <- max(abs(coef_df$organ_coefs))
+  max_abs_level2 <- max(abs(coef_df$level2_coefs))
+  max_coef_df <- rbind(max_coef_df, data.frame(
+    Factor = i,
+    Max_Abs_Coefficient_Organ = max_abs_organ,
+    Max_Abs_Coefficient_Level2 = max_abs_level2
+  ))
+}
+```
+
+```{r}
+top_n <- 5  # how many points to annotate above and below y = x
+
+df <- max_coef_df %>%
+  mutate(
+    residual = Max_Abs_Coefficient_Level2 - Max_Abs_Coefficient_Organ, # >0: above y=x; <0: below
+    abs_res  = abs(residual)
+  )
+
+# --- Select top-N above and below y = x ---
+label_above <- df %>%
+  filter(is.finite(residual), residual > 0) %>%
+  slice_max(Max_Abs_Coefficient_Level2, n = top_n, with_ties = FALSE)
+
+label_below <- df %>%
+  filter(is.finite(residual), residual < 0) %>%
+  slice_min(-Max_Abs_Coefficient_Organ, n = top_n, with_ties = FALSE)
+
+# --- Base plot builder (no labels yet) ---
+base_plot <- ggplot(df, aes(x = Max_Abs_Coefficient_Organ, y = Max_Abs_Coefficient_Level2)) +
+  geom_point(alpha = 0.3, size = 1.8) +                                # background points
+  geom_point(data = label_above, color = "#1f78b4", alpha = 0.6, size = 1.8) +       # highlight above y=x
+  geom_point(data = label_below, color = "#e31a1c", alpha = 0.6, size = 1.8) +       # highlight below y=x
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
+  coord_cartesian(xlim = c(0, 0.6), ylim = c(0, 0.6), expand = TRUE) +  # keep your limits
+  labs(
+    x = "Max Absolute Coefficient (Organ)",
+    y = "Max Absolute Coefficient (Level-2)",
+    title = "Max Absolute Coefficient: Organ vs Level-2"
+  ) +
+  theme_minimal()
+
+# --- Combined plot: annotate both top-N above and below y = x ---
+p_all <- base_plot +
+  geom_text_repel(
+    data = label_above,
+    aes(label = paste0("Factor ", Factor)),
+    color = "#1f78b4", size = 3, max.overlaps = Inf,
+    box.padding = 0.3, point.padding = 0.2, min.segment.length = 0
+  ) +
+  geom_text_repel(
+    data = label_below,
+    aes(label = paste0("Factor ", Factor)),
+    color = "#e31a1c", size = 3, max.overlaps = Inf,
+    box.padding = 0.3, point.padding = 0.2, min.segment.length = 0
+  ) +
+  labs(subtitle = paste0("Annotating top ", top_n, " above (blue) and top ", top_n, " below (red) y = x"))
+
+p_all
+
+ggsave(
+  filename = "figures/Figures_Collection/Scatterplot_Organ_vs_Level2.png",
+  plot = p_all,
+  width = 7, height = 6, dpi = 300
+)
+```
+
+Produce some truncated boxplots for selected factors:
+
+```{r}
+healthy_cells <- which(seurat_meta$condition_broad == "healthy")
+L_pm_healthy <- L_pm[healthy_cells, ]
+seurat_meta_healthy <- seurat_meta[healthy_cells, ]
+
+# Take out cells for visualization
+d <- apply(L_pm_healthy, 2, max); L_pm_healthy_normalized <- scale_cols(L_pm_healthy, 1/d)
+cells_all <- filter_cells_by_total_membership(L_pm_healthy_normalized, numiter = 15)
+L_pm_healthy_normalized <- L_pm_healthy_normalized[cells_all, ]
+d <- apply(L_pm_healthy_normalized, 2, max); L_pm_healthy_normalized <- scale_cols(L_pm_healthy_normalized, 1/d)
+seurat_meta_healthy_normalized <- seurat_meta_healthy[rownames(L_pm_healthy_normalized), ]
+```
+
+For level 2:
+```{r}
+num_truncated <- 15
+factor_id_vec <- c(8, 13, 93, 107)
+p_list <- list()
+for (factor_id in factor_id_vec) {
+  df_boxplot <- data.frame(Loading = L_pm_healthy_normalized[, factor_id], Level2  = seurat_meta_healthy_normalized$annotation_level2)
+  
+  level2_stats <- df_boxplot %>%
+    group_by(Level2) %>%
+    summarise(median_loading = median(Loading, na.rm = TRUE),
+              .groups = "drop")
+  
+  top_level2 <- level2_stats %>%
+    slice_max(median_loading, n = num_truncated, with_ties = FALSE) %>%
+    arrange(desc(median_loading))
+  
+  df_boxplot_top <- df_boxplot %>%
+    filter(Level2 %in% top_level2$Level2) %>%
+    mutate(Level2 = factor(Level2, levels = top_level2$Level2))
+  
+  p_new <- ggplot(df_boxplot_top, aes(x = Level2, y = Loading)) +
+    geom_boxplot(outlier.shape = NA) +
+    coord_cartesian(ylim = c(0, 1)) +
+    labs(title = paste0("Factor ", factor_id),
+         x = "Level-2 Annotation",
+         y = "Normalized Loading") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  p_list[[as.character(factor_id)]] <- p_new
+}
+p_combined <- wrap_plots(p_list, ncol = 2)
+p_combined
+ggsave(
+  filename = "figures/Figures_Collection/Boxplots_Level2_Selected_Factors.png",
+  plot = p_combined,
+  width = 12, height = 12, dpi = 400
+)
+```
+
+For organ:
+```{r}
+factor_id_vec <- c(9, 37, 135, 177)
+p_list <- list()
+for (factor_id in factor_id_vec) {
+  df_boxplot <- data.frame(Loading = L_pm_healthy_normalized[, factor_id], Organ  = seurat_meta_healthy_normalized$organ)
+  
+  Organ_stats <- df_boxplot %>%
+    group_by(Organ) %>%
+    summarise(median_loading = median(Loading, na.rm = TRUE),
+              .groups = "drop")
+  
+  top_Organ <- Organ_stats %>%
+    slice_max(median_loading, n = num_truncated, with_ties = FALSE) %>%
+    arrange(desc(median_loading))
+  
+  df_boxplot_top <- df_boxplot %>%
+    filter(Organ %in% top_Organ$Organ) %>%
+    mutate(Organ = factor(Organ, levels = top_Organ$Organ))
+  
+  p_new <- ggplot(df_boxplot_top, aes(x = Organ, y = Loading)) +
+    geom_boxplot(outlier.shape = NA) +
+    coord_cartesian(ylim = c(0, 1)) +
+    labs(title = paste0("Factor ", factor_id),
+         x = "Organ Annotation",
+         y = "Normalized Loading") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  p_list[[as.character(factor_id)]] <- p_new
+}
+p_combined <- wrap_plots(p_list, ncol = 2)
+p_combined
+
+ggsave(
+  filename = "figures/Figures_Collection/Boxplots_Organ_Selected_Factors.png",
+  plot = p_combined,
+  width = 12, height = 12, dpi = 400
+)
+```
+
+
+## Figure: Structure plot for level2
+
+Within each level-1 category, we will produce a structure plot to visualize some highlighted factors across level-2 annotations.
+
+```{r}
+# load the AUC matrix for level2:
+level_2_AUC <- readRDS(paste0(data_path, "level_2_AUC_figure.rds"))
+
+# filter out annotations with less than 500 cells
+which_less_500 <- sapply(rownames(level_2_AUC), function(x){
+  sum(seurat_meta$annotation_level2 == x) < 500
+})
+level_2_AUC <- level_2_AUC[!which_less_500, ]
+
+colnames(L_pm_normalized) <- paste0("K", 1:ncol(L_pm_normalized))
+seurat_meta_filtered <- seurat_meta[rownames(L_pm_normalized), ]
+
+all_level1 <- unique(seurat_meta$annotation_level1)
+all_level1 <- all_level1[-which(all_level1 == "thymocyte")]
+for (level1_cat in all_level1) {
+  cells_in_cat <- which(seurat_meta_filtered$annotation_level1 == level1_cat)
+  L_pm_cat <- L_pm_normalized[cells_in_cat, ]
+  seurat_meta_cat <- seurat_meta_filtered[cells_in_cat, ]
+  
+  level2_in_cat <- unique(seurat_meta_cat$annotation_level2)
+  level2_in_cat <- level2_in_cat[order(level2_in_cat)]
+  
+  # match level2 categories to factors
+  selected_level2 <- grep(paste0(level1_cat, "_"), rownames(level_2_AUC), value = TRUE)
+  level2_category_to_factor <- match_category_to_factor(level_2_AUC[selected_level2, ])
+
+  # filter out cells in selected level2 categories
+  cells_selected_level2 <- which(seurat_meta_cat$annotation_level2 %in% selected_level2)
+  L_pm_cat <- L_pm_cat[cells_selected_level2, ]
+  seurat_meta_cat <- seurat_meta_cat[cells_selected_level2, ]
+  
+  fit_cat <- L_pm_cat[, level2_category_to_factor, drop = FALSE]
+  cell_type_cat <- seurat_meta_cat$annotation_level2
+  
+  # re-level cell_type_cat to remove unused levels
+  cell_type_cat <- factor(cell_type_cat, levels = (selected_level2))
+
+  # Make sure all the level2 categories have at least 500 cells
+  level2_counts <- table(cell_type_cat)
+  level2_selected <- names(level2_counts[level2_counts >= 500])
+  cells <- which(cell_type_cat %in% level2_selected)
+  
+  structure_plot(fit_cat[cells,], gap = 20,n = 5000,
+               grouping = cell_type_cat[cells]) +
+  labs(y = "membership",color = "",fill = "") +
+  guides(
+    fill = guide_legend(nrow = 1),
+    color = guide_legend(nrow = 1)
+  ) +
+  theme(
+    legend.position = "bottom",
+    legend.direction = "horizontal",
+    legend.box = "horizontal",
+    axis.text.x = element_text(size = 10, angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 12),
+    axis.title = element_text(size = 14, face = "bold"),
+    legend.text = element_text(size = 12),
+    legend.title = element_text(size = 13)
+  )
+
+ggsave(
+  filename = paste0("figures/Figures_Collection/Structure_Plot_", level1_cat, "_Level2.png"),
+  width = 15, height = 6, dpi = 300
+)
+}
+```
+
+
+
+
+## Figure: Correlation plot of GPs
+
+The correlation map of all GPs in all cells
+
+```{r}
+cor_matrix <- cor(L_pm, method = "pearson")
+colnames(L_pm) <- paste0("K", seq_len(ncol(L_pm)))
+colnames(cor_matrix) <- paste0("K", seq_len(ncol(cor_matrix)))
+rownames(cor_matrix) <- paste0("K", seq_len(nrow(cor_matrix)))
+```
+
+```{r}
+plot_gp_corr_by_level1 <- function(
+  cor_full,        # filtered full correlation matrix (e.g., after high_corr_indices)
+  L_pm,            # loading matrix: cells x GPs
+  seurat_meta,     # metadata with annotation_level1, same row order as L_pm
+  level1_type = c("all"),
+  clustering_method = "complete",
+  main_prefix = "Correlation map of GP loadings",
+  filename = NULL,
+  width = 8,
+  height = 8,
+  show_names = TRUE
+) {
+  # ---- Basic checks ----
+  if (nrow(L_pm) != nrow(seurat_meta)) {
+    stop("L_pm and seurat_meta must have the same number of rows (cells).")
+  }
+  if (is.null(seurat_meta$annotation_level1)) {
+    stop("seurat_meta must contain a column named 'annotation_level1'.")
+  }
+  if (is.null(colnames(cor_full)) || is.null(rownames(cor_full))) {
+    stop("cor_full must have rownames and colnames (GP names).")
+  }
+  if (is.null(colnames(L_pm))) {
+    stop("L_pm must have column names (GP names) to match cor_full.")
+  }
+  
+  # Make sure level1_type is scalar character
+  level1_type <- as.character(level1_type)[1]
+  
+  ## ------------------------------------------------------------
+  ## 1. Run pheatmap on full correlation ONCE to get the ordering
+  ##    (this uses clustering; plot is suppressed with silent=TRUE)
+  ## ------------------------------------------------------------
+  res_all <- pheatmap(
+    cor_full,
+    clustering_method = clustering_method,
+    show_rownames     = show_names,
+    show_colnames     = show_names,
+    color             = colorRampPalette(c("blue", "white", "red"))(100),
+    main              = paste0(main_prefix, " (all cells, for ordering)"),
+    treeheight_row    = 0,
+    treeheight_col    = 0,
+    silent            = TRUE        # don't actually draw this plot
+  )
+  
+  gp_order <- res_all$tree_row$order
+  gp_names <- rownames(cor_full)[gp_order]
+  
+  ## ------------------------------------------------------------
+  ## 2. Construct the correlation matrix to plot for this level1
+  ## ------------------------------------------------------------
+  if (identical(level1_type, "all")) {
+    # Just use the full correlation, reordered
+    cor_plot  <- cor_full[gp_names, gp_names, drop = FALSE]
+    main_title <- paste0(main_prefix, " (all cells)")
+  } else {
+    # Subset cells by level1_type
+    cell_idx <- which(seurat_meta$annotation_level1 == level1_type)
+    if (length(cell_idx) == 0) {
+      stop("No cells found with annotation_level1 == ", level1_type)
+    }
+    
+    L_sub <- L_pm[cell_idx, , drop = FALSE]
+    
+    # Keep the same GPs as in cor_full
+    common_gps <- intersect(colnames(cor_full), colnames(L_sub))
+    if (length(common_gps) == 0) {
+      stop("No overlapping GP names between cor_full and L_pm.")
+    }
+    # enforce same order as gp_names
+    common_gps <- gp_names[gp_names %in% common_gps]
+    L_sub <- L_sub[, common_gps, drop = FALSE]
+    
+    # Correlation for this subset of cells
+    cor_sub <- cor(L_sub, method = "pearson")
+    
+    # Reorder using the same gp_names ordering
+    cor_plot  <- cor_sub[gp_names, gp_names, drop = FALSE]
+    main_title <- paste0(main_prefix, " in ", level1_type, " cells")
+  }
+  
+  ## ------------------------------------------------------------
+  ## 3. Draw heatmap (no clustering here; we already fixed order)
+  ## ------------------------------------------------------------
+  if (is.null(filename)) {
+    res <- pheatmap(
+      cor_plot,
+      cluster_rows   = FALSE,
+      cluster_cols   = FALSE,
+      show_rownames  = show_names,
+      show_colnames  = show_names,
+      color          = colorRampPalette(c("blue", "white", "red"))(100),
+      main           = main_title,
+      treeheight_row = 0,
+      treeheight_col = 0
+    )
+  } else {
+    res <- pheatmap(
+      cor_plot,
+      cluster_rows   = FALSE,
+      cluster_cols   = FALSE,
+      show_rownames  = show_names,
+      show_colnames  = show_names,
+      color          = colorRampPalette(c("blue", "white", "red"))(100),
+      main           = main_title,
+      treeheight_row = 0,
+      treeheight_col = 0,
+      filename       = filename,
+      width          = width,
+      height         = height
+    )
+  }
+  
+  invisible(list(
+    cor_plot    = cor_plot,
+    gp_order    = gp_order,
+    gp_names    = gp_names,
+    level1_type = level1_type
+  ))
+}
+```
+
+
+```{r}
+# 1) All cells
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix,
+  L_pm        = L_pm,
+  seurat_meta = seurat_meta,
+  width = 25,
+  height = 25,
+  level1_type = "all",
+  filename    = "figures/Figures_Collection/Correlation_Map_All_GPs.png"
+)
+
+# 2) CD4
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix,
+  L_pm        = L_pm,
+  width = 25,
+  height = 25,
+  seurat_meta = seurat_meta,
+  level1_type = "CD4",
+  filename    = "figures/Figures_Collection/Correlation_Map_CD4_GPs.png"
+)
+
+# 3) CD8
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix,
+  L_pm        = L_pm,
+  seurat_meta = seurat_meta,
+  level1_type = "CD8",
+  width = 25,
+  height = 25,
+  filename    = "figures/Figures_Collection/Correlation_Map_CD8_GPs.png"
+)
+
+# 4) Treg
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix,
+  L_pm        = L_pm,
+  seurat_meta = seurat_meta,
+  level1_type = "Treg",
+  width = 25,
+  height = 25,
+  filename    = "figures/Figures_Collection/Correlation_Map_Treg_GPs.png"
+)
+
+# 5) DN
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix,
+  L_pm        = L_pm,
+  seurat_meta = seurat_meta,
+  level1_type = "DN",
+  width = 25,
+  height = 25,
+  filename    = "figures/Figures_Collection/Correlation_Map_DN_GPs.png"
+)
+
+# 6) DP
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix,
+  L_pm        = L_pm,
+  seurat_meta = seurat_meta,
+  level1_type = "DP",
+  width = 25,
+  height = 25,
+  filename    = "figures/Figures_Collection/Correlation_Map_DP_GPs.png"
+)
+
+# 7) nonconv
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix,
+  L_pm        = L_pm,
+  seurat_meta = seurat_meta,
+  level1_type = "nonconv",
+  width = 25,
+  height = 25,
+  filename    = "figures/Figures_Collection/Correlation_Map_nonconv_GPs.png"
+)
+
+# 8) gdT
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix,
+  L_pm        = L_pm,
+  seurat_meta = seurat_meta,
+  level1_type = "gdT",
+  width = 25,
+  height = 25,
+  filename    = "figures/Figures_Collection/Correlation_Map_gdT_GPs.png"
+)
+
+# 9) CD8aa
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix,
+  L_pm        = L_pm,
+  seurat_meta = seurat_meta,
+  level1_type = "CD8aa",
+  width = 25,
+  height = 25,
+  filename    = "figures/Figures_Collection/Correlation_Map_CD8aa_GPs.png"
+)
+```
+
+Let's redo the plot focusing on high-pve factors only:
+
+```{r}
+high_pve_factors <- paste0("K", which(flashier_snmf_summary$pve >= 1e-4))
+cor_matrix_high_pve <- cor_matrix[high_pve_factors, high_pve_factors]
+L_pm_high_pve <- L_pm[, high_pve_factors, drop = FALSE]
+```
+
+```{r}
+# 1) All cells
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix_high_pve,
+  L_pm        = L_pm_high_pve,
+  seurat_meta = seurat_meta,
+  width = 10,
+  height = 10,
+  level1_type = "all",
+  filename    = "figures/Figures_Collection/Correlation_Map_highPVE_GPs.png"
+)
+
+# 2) CD4
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix_high_pve,
+  L_pm        = L_pm_high_pve,
+  width = 10,
+  height = 10,
+  seurat_meta = seurat_meta,
+  level1_type = "CD4",
+  filename    = "figures/Figures_Collection/Correlation_Map_CD4_highPVE_GPs.png"
+)
+
+# 3) CD8
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix_high_pve,
+  L_pm        = L_pm_high_pve,
+  seurat_meta = seurat_meta,
+  level1_type = "CD8",
+  width = 10,
+  height = 10,
+  filename    = "figures/Figures_Collection/Correlation_Map_CD8_highPVE_GPs.png"
+)
+
+# 4) Treg
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix_high_pve,
+  L_pm        = L_pm_high_pve,
+  seurat_meta = seurat_meta,
+  level1_type = "Treg",
+  width = 10,
+  height = 10,
+  filename    = "figures/Figures_Collection/Correlation_Map_Treg_highPVE_GPs.png"
+)
+
+# 5) DN
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix_high_pve,
+  L_pm        = L_pm_high_pve,
+  seurat_meta = seurat_meta,
+  level1_type = "DN",
+  width = 10,
+  height = 10,
+  filename    = "figures/Figures_Collection/Correlation_Map_DN_highPVE_GPs.png"
+)
+
+# 6) DP
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix_high_pve,
+  L_pm        = L_pm_high_pve,
+  seurat_meta = seurat_meta,
+  level1_type = "DP",
+  width = 10,
+  height = 10,
+  filename    = "figures/Figures_Collection/Correlation_Map_DP_highPVE_GPs.png"
+)
+
+# 7) nonconv
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix_high_pve,
+  L_pm        = L_pm_high_pve,
+  seurat_meta = seurat_meta,
+  level1_type = "nonconv",
+  width = 10,
+  height = 10,
+  filename    = "figures/Figures_Collection/Correlation_Map_nonconv_highPVE_GPs.png"
+)
+
+# 8) gdT
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix_high_pve,
+  L_pm        = L_pm_high_pve,
+  seurat_meta = seurat_meta,
+  level1_type = "gdT",
+  width = 10,
+  height = 10,
+  filename = "figures/Figures_Collection/Correlation_Map_gdT_highPVE_GPs.png"
+)
+
+# 9) CD8aa
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix_high_pve,
+  L_pm        = L_pm_high_pve,
+  seurat_meta = seurat_meta,
+  level1_type = "CD8aa",
+  width = 10,
+  height = 10,
+  filename = "figures/Figures_Collection/Correlation_Map_CD8aa_highPVE_GPs.png"
+)
+```
+
+
+## Figure: Scatterplot of GP correlations across level1 categories
+
+We will compare the correlation between each pair of GPs in two different level-1 categories.
+
+```{r}
+library(ggplot2)
+library(ggrepel)
+
+# Compare pairwise GP correlations between two level-1 categories
+plot_gp_corr_scatter <- function(
+  level1_x,              # level-1 category for x-axis (e.g., "CD4")
+  level1_y,              # level-1 category for y-axis (e.g., "Treg")
+  L_pm,                  # loading matrix: cells x GPs
+  seurat_meta,           # metadata with annotation_level1
+  cor_full = NULL,       # optional: filtered full correlation to define GP set/order
+  diff_threshold = 0,    # keep only pairs with |corr_y - corr_x| >= diff_threshold
+  highlight_k = 0,       # number of most different pairs to label
+  xlim = c(-1, 1),
+  ylim = c(-1, 1),
+  point_alpha = 0.5,
+  title_prefix = "Pairwise GP correlations"
+) {
+  # Basic checks
+  if (nrow(L_pm) != nrow(seurat_meta)) {
+    stop("L_pm and seurat_meta must have the same number of rows (cells).")
+  }
+  if (is.null(seurat_meta$annotation_level1)) {
+    stop("seurat_meta must contain a column named 'annotation_level1'.")
+  }
+  if (is.null(colnames(L_pm))) {
+    stop("L_pm must have column names (GP names).")
+  }
+  
+  # Select cells for each level-1 category
+  idx_x <- which(seurat_meta$annotation_level1 == level1_x)
+  idx_y <- which(seurat_meta$annotation_level1 == level1_y)
+  if (length(idx_x) == 0) stop("No cells found with annotation_level1 == ", level1_x)
+  if (length(idx_y) == 0) stop("No cells found with annotation_level1 == ", level1_y)
+  
+  L_x <- L_pm[idx_x, , drop = FALSE]
+  L_y <- L_pm[idx_y, , drop = FALSE]
+  
+  # Correlation matrices in each category
+  cor_x <- cor(L_x, method = "pearson")
+  cor_y <- cor(L_y, method = "pearson")
+  
+  # Decide which GPs to keep
+  if (!is.null(cor_full)) {
+    gp_keep <- intersect(colnames(cor_full), intersect(colnames(cor_x), colnames(cor_y)))
+  } else {
+    gp_keep <- intersect(colnames(cor_x), colnames(cor_y))
+  }
+  if (length(gp_keep) < 2) stop("Not enough overlapping GPs to form pairs.")
+  
+  cor_x_sub <- cor_x[gp_keep, gp_keep, drop = FALSE]
+  cor_y_sub <- cor_y[gp_keep, gp_keep, drop = FALSE]
+  
+  # Flatten upper triangle (i < j) into a data frame of GP pairs
+  upper_idx <- which(upper.tri(cor_x_sub), arr.ind = TRUE)
+  cor_df <- data.frame(
+    GP1      = rownames(cor_x_sub)[upper_idx[, "row"]],
+    GP2      = colnames(cor_x_sub)[upper_idx[, "col"]],
+    cor_x    = cor_x_sub[upper_idx],
+    cor_y    = cor_y_sub[upper_idx],
+    stringsAsFactors = FALSE
+  )
+  
+  # Difference between correlations
+  cor_df$diff     <- cor_df$cor_y - cor_df$cor_x
+  cor_df$abs_diff <- abs(cor_df$diff)
+  
+  # Optional filter: keep only pairs with |Δcor| >= diff_threshold
+  if (!is.null(diff_threshold) && diff_threshold > 0) {
+    cor_df <- subset(cor_df, abs_diff >= diff_threshold)
+  }
+  
+  if (nrow(cor_df) == 0) {
+    stop("No GP pairs left after applying diff_threshold filter.")
+  }
+  
+  # Highlight the most different k pairs
+  cor_df$label <- ""
+  if (!is.null(highlight_k) && highlight_k > 0) {
+    highlight_k <- min(highlight_k, nrow(cor_df))
+    top_idx <- order(-cor_df$abs_diff)[seq_len(highlight_k)]
+    cor_df$label[top_idx] <- paste(cor_df$GP1[top_idx], cor_df$GP2[top_idx], sep = "--")
+  }
+  
+  # Build plot
+  p <- ggplot(cor_df, aes(x = cor_x, y = cor_y)) +
+    geom_point(alpha = point_alpha) +
+    geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
+    coord_equal(xlim = xlim, ylim = ylim) +
+    labs(
+      x = paste0("Correlation in ", level1_x, " cells"),
+      y = paste0("Correlation in ", level1_y, " cells")
+    ) +
+    theme_minimal()
+  
+  # Add labels for highlighted pairs
+  if (any(cor_df$label != "")) {
+    p <- p + 
+      ggrepel::geom_text_repel(
+        data = subset(cor_df, label != ""),
+        aes(label = label),
+        size = 3,
+        max.overlaps = Inf
+      )
+  }
+  
+  return(list(
+    plot   = p,
+    data   = cor_df,
+    x_name = level1_x,
+    y_name = level1_y
+  ))
+}
+```
+
+```{r}
+res_treg_cd4 <- plot_gp_corr_scatter(
+  level1_x      = "CD4",
+  level1_y      = "Treg",
+  L_pm          = L_pm_high_pve,
+  seurat_meta   = seurat_meta,
+  cor_full      = cor_matrix_high_pve,   
+  diff_threshold = 0,           
+  highlight_k    = 5           
+)
+
+res_treg_cd4$plot
+```
+
+```{r}
+res_treg_cd8 <- plot_gp_corr_scatter(
+  level1_x      = "CD8",
+  level1_y      = "Treg",
+  L_pm          = L_pm_high_pve,
+  seurat_meta   = seurat_meta,
+  cor_full      = cor_matrix_high_pve,   
+  diff_threshold = 0,           
+  highlight_k    = 5           
+)
+
+res_treg_cd8$plot
+```
+
+
+```{r}
+res_treg_DN <- plot_gp_corr_scatter(
+  level1_x      = "DN",
+  level1_y      = "Treg",
+  L_pm          = L_pm_high_pve,
+  seurat_meta   = seurat_meta,
+  cor_full      = cor_matrix_high_pve,   
+  diff_threshold = 0,           
+  highlight_k    = 5           
+)
+
+res_treg_DN$plot
+```
+
+
+```{r}
+res_treg_DP <- plot_gp_corr_scatter(
+  level1_x      = "DP",
+  level1_y      = "Treg",
+  L_pm          = L_pm_high_pve,
+  seurat_meta   = seurat_meta,
+  cor_full      = cor_matrix_high_pve,   
+  diff_threshold = 0,           
+  highlight_k    = 5           
+)
+
+res_treg_DP$plot
+```
+
+```{r}
+# produce a 4-panel figure
+p_combined <- wrap_plots(
+  res_treg_cd4$plot + labs(subtitle = "Treg vs CD4"),
+  res_treg_cd8$plot + labs(subtitle = "Treg vs CD8"),
+  res_treg_DN$plot + labs(subtitle = "Treg vs DN"),
+  res_treg_DP$plot + labs(subtitle = "Treg vs DP"),
+  ncol = 2
+)
+
+ggsave(
+  filename = "figures/Figures_Collection/Scatterplot_Treg_vs_Others.png",
+  plot = p_combined,
+  width = 12, height = 10, dpi = 300
+)
+```
+
+
+```{r}
+res_treg_CD8aa <- plot_gp_corr_scatter(
+  level1_x      = "CD8aa",
+  level1_y      = "Treg",
+  L_pm          = L_pm_high_pve,
+  seurat_meta   = seurat_meta,
+  cor_full      = cor_matrix_high_pve,   
+  diff_threshold = 0,           
+  highlight_k    = 5           
+)
+
+res_treg_CD8aa$plot
+```
+
+
+```{r}
+res_treg_nonconv <- plot_gp_corr_scatter(
+  level1_x      = "nonconv",
+  level1_y      = "Treg",
+  L_pm          = L_pm_high_pve,
+  seurat_meta   = seurat_meta,
+  cor_full      = cor_matrix_high_pve,   
+  diff_threshold = 0,           
+  highlight_k    = 5           
+)
+
+res_treg_nonconv$plot
+```
+
+```{r}
+res_treg_gdT <- plot_gp_corr_scatter(
+  level1_x      = "gdT",
+  level1_y      = "Treg",
+  L_pm          = L_pm_high_pve,
+  seurat_meta   = seurat_meta,
+  cor_full      = cor_matrix_high_pve,   
+  diff_threshold = 0,           
+  highlight_k    = 5           
+)
+res_treg_gdT$plot
+```
+
+```{r}
+# finally, also compare CD8aa vs gdT
+res_CD8aa_gdT <- plot_gp_corr_scatter(
+  level1_x      = "CD8aa",
+  level1_y      = "gdT",
+  L_pm          = L_pm_high_pve,
+  seurat_meta   = seurat_meta,
+  cor_full      = cor_matrix_high_pve,   
+  diff_threshold = 0,           
+  highlight_k    = 5           
+)
+res_CD8aa_gdT$plot
+```
+
+
+```{r}
+# produce a 4-panel figure
+p_combined_2 <- wrap_plots(
+  res_treg_CD8aa$plot + labs(subtitle = "Treg vs CD8aa"),
+  res_treg_nonconv$plot + labs(subtitle = "Treg vs nonconv"),
+  res_treg_gdT$plot + labs(subtitle = "Treg vs gdT"),
+  res_CD8aa_gdT$plot + labs(subtitle = "gdT vs CD8aa"),
+  ncol = 2
+)
+ggsave(
+  filename = "figures/Figures_Collection/Scatterplot_GP_cors_2.png",
+  plot = p_combined_2,
+  width = 12, height = 8, dpi = 300
+)
+```
+
+
+

@@ -1,0 +1,212 @@
+---
+title: Better Structure plot
+author: Peter Carbonetto
+output: workflowr::wflow_html
+---
+
+This is my attempt to make a better, more unified Structure plot from
+the semi-NMF model fit with $K = 200$.
+
+```{r knitr-opts, include=FALSE}
+knitr::opts_chunk$set(comment = "#",collapse = TRUE,results = "hold",
+                      fig.align = "center",dpi = 120)
+```
+
+Load the packages needed for this analysis:
+
+```{r load-pkgs, message=FALSE}
+library(Matrix)
+library(fastTopics)
+library(flashier)
+library(ggplot2)
+library(cowplot)
+```
+
+Load the meta-data and the semi-NMF results:
+
+```{r load-data}
+load("../data/flashier_snmf_ldf.RData")
+```
+
+This is a function implementing the iterative filtering procedure:
+
+```{r filter-cells-by-total-membership-function}
+filter_cells_by_total_membership <- function (L, max_val = 10, numiter = 10) {
+  n <- nrow(L)
+  rows <- 1:n
+  for (iter in 1:numiter) {
+    x <- rowSums(L)
+    cat(sprintf("%d. Filtered out %d cells.\n",iter,sum(x > max_val)))
+    i <- which(x <= max_val)
+    L <- L[i,]
+    rows <- rows[i]
+    d <- apply(L,2,max)
+    L <- scale_cols(L,1/d)
+  }
+  return(rows)
+}
+```
+
+Here is the missing function `scale_cols`:
+
+```{r scale-cols-function}
+scale_cols <- function (A, b)
+  t(t(A) * b)
+```
+
+Apply the iterative filtering procedure to the ${\bf L}$
+matrix from the semi-NMF fit:
+
+```{r filter-cells}
+L <- fl_snmf_ldf$L
+cells <- filter_cells_by_total_membership(L,numiter = 12)
+sample_info <- sample_info[cells,]
+L <- L[cells,]
+```
+
+And now renormalize the memberships:
+
+```{r renormalize-memberships}
+d <- apply(L,2,max)
+L <- scale_cols(L,1/d)
+```
+
+Remove "miniverse" and "proliferative" cells:
+
+```{r filter-cells-2}
+sample_info <-
+  transform(sample_info,
+    miniverse = grepl("miniverse",sample_info$annotation_level2,fixed = TRUE),
+    prolif    = grepl("prolif",sample_info$annotation_level2,fixed = TRUE))
+cells <- which(with(sample_info,!(miniverse | prolif)))
+sample_info <- sample_info[cells,]
+L <- L[cells,]
+```
+
+This is the number of cells per major T cell type:
+
+```{r major-cell-types}
+table(sample_info$annotation_level1)
+```
+
+Let's assign the cells to the different Structure plots:
+
+```{r assign-to-structure-plots}
+sample_info$structure_plot <- 4
+sample_info[sample_info$annotation_level1 == "CD4","structure_plot"]  <- 1
+sample_info[sample_info$annotation_level1 == "CD8","structure_plot"]  <- 1
+sample_info[sample_info$annotation_level1 == "Treg","structure_plot"] <- 2
+sample_info[sample_info$annotation_level1 == "gdT","structure_plot"]  <- 3
+```
+
+Find a more informative labeling:
+
+```{r annotation-for-structure-plots}
+sample_info$label <- as.character(sample_info$annotation_level2)
+sample_info[sample_info$annotation_level1 == "CD4","label"]     <- "CD4"
+sample_info[sample_info$annotation_level1 == "CD8","label"]     <- "CD8"
+sample_info[sample_info$annotation_level1 == "CD8aa","label"]   <- "CD8aa"
+sample_info[sample_info$annotation_level1 == "DN","label"]      <- "DN"
+sample_info[sample_info$annotation_level1 == "DP","label"]      <- "DP"
+sample_info[sample_info$annotation_level1 == "gdT","label"]     <- "gdT"
+sample_info[sample_info$annotation_level1 == "nonconv","label"] <- "nonconv"
+cells <- which(with(sample_info,
+                    annotation_level1 == "CD8" &
+					is.element(organ_simplified,c("CNS","lung","spleen",
+					                              "uterus")) &
+			        (grepl("LCMV",condition_detailed,fixed = TRUE) |
+			         grepl("dirty",condition_detailed,fixed = TRUE) |
+			         grepl("MCMV",condition_detailed,fixed = TRUE) |
+					 grepl("Toxo",condition_detailed,fixed = TRUE))))
+sample_info[cells,"label"] <- "CD8(L10)"
+cells <- which(with(sample_info,
+                    annotation_level1 == "gdT" &
+					is.element(organ_simplified,
+ 				  	  c("colon LP","colon epi","skin","small intestine LP",
+					    "small intestine epi"))))
+sample_info[cells,"label"] <- "gdT(L3)"
+cells <- which(with(sample_info,
+                    annotation_level1 == "CD8aa" &
+					is.element(organ_simplified,
+ 				  	  c("colon LP","colon epi","skin","small intestine LP",
+					    "small intestine epi"))))
+sample_info[cells,"label"] <- "CD8aa(L3)"
+cells <- which(with(sample_info,
+                    annotation_level1 == "gdT" &
+					condition_detailed == "baseline" &
+					organ_simplified == "skin"))
+sample_info[cells,"label"] <- "gdT(skin/b)"
+cells <- which(with(sample_info,
+                    annotation_level1 == "gdT" &
+					condition_detailed != "baseline" &
+					organ_simplified == "skin"))
+sample_info[cells,"label"] <- "gdT(skin/nb)"
+cells <- which(with(sample_info,
+                    annotation_level1 == "gdT" &
+					is.element(organ_simplified,
+					           c("lung","submandibular gland","LN"))))
+sample_info[cells,"label"] <- "gdT(lung)"
+cells <- which(with(sample_info,
+                    is.element(annotation_level1,c("CD4","Treg")) &
+			        (grepl("NP_OVA",condition_detailed,fixed = TRUE) |
+			         grepl("NOD",condition_detailed,fixed = TRUE) |
+			         grepl("LCMV",condition_detailed,fixed = TRUE))))
+sample_info[cells,"label"] <- "L12"
+sample_info <- transform(sample_info,label = factor(label))
+```
+
+Create the Structure plots:
+
+```{r create-structure-plots, results="hide", message=FALSE}
+set.seed(1)
+n <- 4
+clusters <- sample_info$label
+factor_colors <-
+  c("gainsboro","gold","magenta","red",
+    "darkred","deepskyblue","darkblue","forestgreen","cyan",
+	"#F6768E","#00538A","limegreen","darkmagenta","#FF8E00",
+	"olivedrab")
+names(factor_colors) <- c("k171","k3","k5","k7",
+                          "k8","k10","k13","k19","k22",
+                          "k30","k37","k58","k62","k68","k12")
+factors_to_show <- c("k171","k12","k58","k22","k13","k3",
+                     "k19","k37","k62","k68",
+					 "k5","k7","k8","k30","k10")
+structure_plots <- vector("list",5)
+names(structure_plots) <- paste0("p",1:n)
+for (i in 1:n) {
+  cells <- which(sample_info$structure_plot == i)
+  p <- structure_plot(L[cells,factors_to_show],
+                      gap = 5,n = 2000,
+                      topics = factors_to_show,
+					  colors = factor_colors[factors_to_show],
+                      grouping = factor(clusters[cells]),
+		              font.size = 7) +
+    labs(y = "membership",color = "",fill = "") +
+    theme(legend.position = "bottom",
+      	  plot.margin = unit(c(0,0,-0.75,0),"cm"),
+		  element_text(angle = 45,hjust = 1,size = 7))
+  if (i < n) {
+    p <- p +
+	  guides(fill = "none") +
+      theme(plot.margin = unit(c(0,0,-0.75,0),"cm"))
+  } else {
+    p <- p + theme(plot.margin = unit(c(0,0,0,0),"cm"))
+  }
+  structure_plots[[i]] <- p
+}
+```
+
+Here are the Structure plots:
+
+```{r structure-plots, fig.height=5.5, fig.width=7.25, results="hide", message=FALSE}
+plot_grid(structure_plots$p1,
+          structure_plots$p2,
+          structure_plots$p3,
+          structure_plots$p4,
+          nrow = 4,ncol = 1,
+		  rel_heights = c(2,2,2,4.5))
+```
+
+Factor 22 remains a factor that does not seem to align well with any
+of the annotations.

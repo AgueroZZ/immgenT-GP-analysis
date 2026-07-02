@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Ziang Zhang" />
+
+
+<title>Linking factors with UMAP</title>
+
+<script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">immgen-t factors</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Overview</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/stephenslab/immgen-t-factors">source</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Linking factors with UMAP</h1>
+<h4 class="author">Ziang Zhang</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2025-10-29
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>immgen-t-factors/analysis/</code>
+<span class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.2). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed1code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(1)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed1code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(1)</code> was run prior to running the
+code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabimmgentfactorstree843dcafd9ee20823ca72e20fc77f39a0cc183e8btargetblank843dcafa">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/stephenslab/immgen-t-factors/tree/843dcafd9ee20823ca72e20fc77f39a0cc183e8b" target="_blank">843dcaf</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabimmgentfactorstree843dcafd9ee20823ca72e20fc77f39a0cc183e8btargetblank843dcafa"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/stephenslab/immgen-t-factors/tree/843dcafd9ee20823ca72e20fc77f39a0cc183e8b" target="_blank">843dcaf</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/.Rhistory
+    Ignored:    analysis/site_libs/
+    Ignored:    code/.Rhistory
+    Ignored:    docs 2/
+
+Untracked files:
+    Untracked:  .DS_Store
+    Untracked:  .gitignore
+    Untracked:  analysis/.DS_Store
+    Untracked:  analysis/conditional_analysis.rmd
+    Untracked:  analysis/further_validation_f68.rmd
+    Untracked:  analysis/level2_organ.rmd
+    Untracked:  code/.DS_Store
+    Untracked:  code/Figure1.R
+    Untracked:  code/ROC.R
+    Untracked:  code/analyze_protein_selected.R
+    Untracked:  code/analyze_protein_selected.sbatch
+    Untracked:  code/analyze_protein_selected_lognorm.R
+    Untracked:  code/analyze_protein_selected_lognorm.sbatch
+    Untracked:  code/analyze_protein_selected_positive.R
+    Untracked:  code/analyze_protein_selected_positive.sbatch
+    Untracked:  code/compare_greedy_back.R
+    Untracked:  code/replicate_whole_data.sbatch
+    Untracked:  data/.DS_Store
+    Untracked:  data/annot_level1.rds
+    Untracked:  data/annot_level2.rds
+    Untracked:  data/condition_broad.rds
+    Untracked:  data/condition_broad_AUC.rds
+    Untracked:  data/condition_broad_AUC_CD8.rds
+    Untracked:  data/condition_detailed.rds
+    Untracked:  data/condition_detailed_AUC.rds
+    Untracked:  data/condition_detailed_AUC_CD8.rds
+    Untracked:  data/conditional_analysis_factor.rds
+    Untracked:  data/conditional_analysis_factor_stats.rds
+    Untracked:  data/factor_matching_results.csv
+    Untracked:  data/factor_matching_results_noback.csv
+    Untracked:  data/fit1_summary.qs
+    Untracked:  data/fit1_summary_noback.qs
+    Untracked:  data/fit2_summary.qs
+    Untracked:  data/fit2_summary_noback.qs
+    Untracked:  data/flash_fixed_F_pm.rds
+    Untracked:  data/flash_fixed_loading.rds
+    Untracked:  data/flashier_snmf_summary.rds
+    Untracked:  data/level_1_AUC.rds
+    Untracked:  data/moran_list_umap.rds
+    Untracked:  data/organ.rds
+    Untracked:  data/organ_AUC.rds
+    Untracked:  data/organ_AUC_healthy.rds
+    Untracked:  data/organ_healthy.rds
+    Untracked:  data/protein_flash_selected_summary.rds
+    Untracked:  data/protein_flash_selected_summary_lognorm.rds
+    Untracked:  data/protein_flash_selected_summary_pos.rds
+    Untracked:  data/protein_mat.rds
+    Untracked:  data/protein_mat_normalized.rds
+    Untracked:  data/protein_mat_normalized_lognorm.rds
+    Untracked:  data/replicate_whole_data.sbatch
+    Untracked:  data/seurat_meta.rds
+    Untracked:  data/umap_result.rds
+    Untracked:  figures/
+
+Unstaged changes:
+    Modified:   analysis/half_validation_hungarian.rmd
+    Modified:   analysis/half_validation_hungarian_noback.rmd
+    Deleted:    code/halves_validation.R
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/UMAP_factors.rmd</code>) and HTML
+(<code>docs/UMAP_factors.html</code>) files. If you’ve configured a
+remote Git repository (see <code>?wflow_git_remote</code>), click on the
+hyperlinks in the table below to view the files as they were in that
+past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/843dcafd9ee20823ca72e20fc77f39a0cc183e8b/analysis/UMAP_factors.rmd" target="_blank">843dcaf</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-29
+</td>
+<td>
+workflowr::wflow_publish("analysis/UMAP_factors.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/immgen-t-factors/7d56be1fb06631a186a1f5ea73ebfb231b19922e/docs/UMAP_factors.html" target="_blank">7d56be1</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-09
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/a0c6a660694cd286a21468958c488fd80d0b5201/analysis/UMAP_factors.rmd" target="_blank">a0c6a66</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-09
+</td>
+<td>
+workflowr::wflow_publish("analysis/UMAP_factors.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/immgen-t-factors/1e9568ca0d50c9c054b978ca3597b3b9db872e73/docs/UMAP_factors.html" target="_blank">1e9568c</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-09
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/629cdf32c6c53b9aeac09f96f573c70a5b4d979a/analysis/UMAP_factors.rmd" target="_blank">629cdf3</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-09
+</td>
+<td>
+workflowr::wflow_publish("analysis/UMAP_factors.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/immgen-t-factors/764235aabb9e9dd5799274b63c40b76d06774be7/docs/UMAP_factors.html" target="_blank">764235a</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-09
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/4db4de572a98b04ecc385c763a2efc5d929f7c08/analysis/UMAP_factors.rmd" target="_blank">4db4de5</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-09
+</td>
+<td>
+workflowr::wflow_publish("analysis/UMAP_factors.rmd")
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="process-data" class="section level2">
+<h2>Process data</h2>
+<pre class="r"><code>source(&quot;https://raw.githubusercontent.com/stephenslab/single-cell-jamboree/refs/heads/main/code/group_factors.R&quot;)
+source(&quot;https://raw.githubusercontent.com/stephenslab/single-cell-jamboree/refs/heads/main/code/plot_loadings_on_umap.R&quot;)
+library(Seurat)
+library(Matrix)
+library(data.table)
+library(flashier)
+library(ggplot2)
+library(patchwork)
+library(cowplot)
+library(RColorBrewer)
+library(Biobase)
+library(ggpubr)
+library(gridExtra)
+library(fastTopics)
+library(tidyverse)
+library(moranfast)
+data_path &lt;- &quot;../data/&quot;
+code_path &lt;- &quot;../code/&quot;
+# data_path &lt;- &quot;data/&quot;
+# code_path &lt;- &quot;code/&quot;
+source(paste0(code_path, &quot;ROC.R&quot;))
+umap_result &lt;- readRDS(paste0(data_path, &quot;umap_result.rds&quot;))
+colnames(umap_result) &lt;- c(&quot;UMAP_1&quot;, &quot;UMAP_2&quot;)
+seurat_meta &lt;- readRDS(paste0(data_path, &quot;seurat_meta.rds&quot;))
+flashier_snmf_summary &lt;- readRDS(paste0(data_path, &quot;flashier_snmf_summary.rds&quot;))
+colnames(flashier_snmf_summary$F_pm) &lt;- paste0(&quot;K&quot;, 1:ncol(flashier_snmf_summary$F_pm))</code></pre>
+<pre class="r"><code>plot_loadings_on_umap &lt;- function(umap, loading, factor_num, size = 3) {
+  gplot &lt;- ggplot(umap, aes(x = UMAP_1, y = UMAP_2)) +
+    geom_point(size = size, aes(alpha = loading, color = loading), 
+               show.legend = FALSE) +
+    labs(title = paste(&quot;factor &quot;, factor_num) , x = &quot;UMAP 1&quot;, y = &quot;UMAP 2&quot;) +
+    theme_minimal() +
+    scale_color_gradient2(low=&quot;#f0f0f0&quot;, mid=&quot;#bdbdbd&quot;, high= &quot;black&quot;) ##636363&quot;)
+  return(gplot)
+}</code></pre>
+<p>Normalization:</p>
+<pre class="r"><code># Normalize the L matrix based on 99 quantile
+D &lt;- diag(1 / apply(flashier_snmf_summary$L_pm, 2, function(x) quantile(x,0.99)))
+L_pm &lt;- flashier_snmf_summary$L_pm %*% D
+F_pm &lt;- flashier_snmf_summary$F_pm %*% solve(D)
+colnames(F_pm) &lt;- paste0(&quot;K&quot;, 1:ncol(F_pm))
+
+cells_flashier &lt;- rownames(flashier_snmf_summary$L_pm)
+cells_seurat &lt;- seurat_meta$cellID
+which(!cells_flashier %in% cells_seurat)</code></pre>
+<pre><code>[1] 140070 505759</code></pre>
+<pre class="r"><code>L_pm &lt;- L_pm[cells_flashier %in% cells_seurat, ]
+all(rownames(L_pm) == cells_seurat)</code></pre>
+<pre><code>[1] TRUE</code></pre>
+<pre class="r"><code>L_pm_old &lt;- L_pm
+colnames(L_pm_old) &lt;- paste0(&quot;K&quot;, 1:ncol(L_pm_old))
+L_pm &lt;- L_pm_old[, flashier_snmf_summary$pve &gt; 1e-4]</code></pre>
+</div>
+<div id="compute-the-spatial-correlation-of-each-factor"
+class="section level2">
+<h2>Compute the spatial correlation of each factor</h2>
+<pre class="r"><code>compute_moran &lt;- function(loading_index, sample_size = 10000){
+  sample_index &lt;- sample(1:nrow(L_pm_old), size = min(sample_size, nrow(L_pm_old)), replace = FALSE)
+  loading &lt;- L_pm_old[sample_index, loading_index]
+  # based on umap
+  moran &lt;- moranfast(x = loading, c1 = umap_result[sample_index,1], c2 = umap_result[sample_index,2])
+  return(moran)
+}
+
+moran_list &lt;- list()
+for (i in 1:ncol(L_pm_old)) {
+  # cat(&quot;Computing Moran&#39;s I for factor&quot;, i, &quot;\n&quot;)
+  moran &lt;- compute_moran(i)
+  moran_list[[i]] &lt;- moran
+}
+saveRDS(moran_list, file = paste0(data_path, &quot;moran_list_umap.rds&quot;))</code></pre>
+</div>
+<div id="plot-factors-on-umap" class="section level2">
+<h2>Plot factors on UMAP</h2>
+<p>Find the top factors with highest Moran’s I</p>
+<pre class="r"><code># read the saved moran list
+moran_list &lt;- readRDS(paste0(data_path, &quot;moran_list_umap.rds&quot;))
+moran_values &lt;- sapply(moran_list, function(x) x$observed)
+names(moran_values) &lt;- paste0(&quot;K&quot;, 1:length(moran_values))
+moran_values_sorted &lt;- order(moran_values, decreasing = TRUE)
+moran_values_sorted</code></pre>
+<pre><code>  [1]   3   7  58  62  93   8  46 171  29  14 100  30  13  10 150   2  68   6
+ [19]  12 154 162  22  76 127  11 107 181  80  53  63  72   1 153  25  21 170
+ [37] 121 151   5 177  35  18   9 163  20  34 124 118 174 134  27 161 101  36
+ [55] 197 159  77  49  15 176 166  56 149 110 188 119  41  99 130  28 120 109
+ [73]  16 186 135  26 126  57 182 152  39 199  81  96  61  65 112 180 183 192
+ [91]  51  83 145 117  98  74  43 133 187  79  37 111 173  85  54  50  32  60
+[109] 122  48  89 169 184 148 196  40  23  94  73  24 156  55   4 185  69  84
+[127] 200 115 142 125  90  67 167  44  78 147 155  88 108 168  17  31  42 132
+[145]  82 175 158  33 179  86 198 137 113 190 128 131 103  71 136  45 160 123
+[163] 141  87  92 104 105  70 116  95 146 193 164  38 129 195  75 194 191 139
+[181] 189  66 157  91  52  47 143 114  59  19 138 144 172 140 102  64 178 165
+[199]  97 106</code></pre>
+<p>Some representative factors with high Moran’s I:</p>
+<pre class="r"><code>selected_factors &lt;- c(7, 8, 14, 13) 
+plots &lt;- list()
+sample_n &lt;- 80000
+for (f in selected_factors) {
+  sample_index &lt;- sample(1:nrow(L_pm_old), size = min(sample_n, nrow(L_pm_old)), replace = FALSE)
+  loading &lt;- L_pm_old[sample_index, f]
+  
+  # # remove outliers defined by IQR
+  # Q1 &lt;- quantile(loading, 0.25)
+  # Q3 &lt;- quantile(loading, 0.75)
+  # IQR &lt;- Q3 - Q1
+  # outlier_index &lt;- which(loading &gt; (Q3 + 10 * IQR))
+  # sample_index &lt;- sample_index[-outlier_index]
+  # loading &lt;- loading[-outlier_index]
+  
+  # normalize by column max
+  loading &lt;- loading/max(na.omit(loading))
+  p &lt;- plot_loadings_on_umap(umap = umap_result[sample_index,], loading = loading, factor_num = f, size = 1)
+  plots[[length(plots) + 1]] &lt;- ggplotGrob(p)
+}
+
+# Combine the plots in a 2x2 grid
+combined_plot &lt;- wrap_plots(plots, ncol = 2, nrow = 2)
+
+# Display the combined plot
+print(combined_plot)</code></pre>
+<p><img src="figure/UMAP_factors.rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
+Past versions of unnamed-chunk-6-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/7d56be1fb06631a186a1f5ea73ebfb231b19922e/docs/figure/UMAP_factors.rmd/unnamed-chunk-6-1.png" target="_blank">7d56be1</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-09
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/764235aabb9e9dd5799274b63c40b76d06774be7/docs/figure/UMAP_factors.rmd/unnamed-chunk-6-1.png" target="_blank">764235a</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-09
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.5.1 (2025-06-13)
+Platform: aarch64-apple-darwin20
+Running under: macOS Sequoia 15.6.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: America/Toronto
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] moranfast_1.0       lubridate_1.9.4     forcats_1.0.1      
+ [4] stringr_1.5.2       dplyr_1.1.4         purrr_1.1.0        
+ [7] readr_2.1.5         tidyr_1.3.1         tibble_3.3.0       
+[10] tidyverse_2.0.0     fastTopics_0.7-25   gridExtra_2.3      
+[13] ggpubr_0.6.1        Biobase_2.68.0      BiocGenerics_0.54.1
+[16] generics_0.1.4      RColorBrewer_1.1-3  cowplot_1.2.0      
+[19] patchwork_1.3.2     ggplot2_4.0.0       flashier_1.0.7     
+[22] magrittr_2.0.4      ebnm_1.1-42         data.table_1.17.8  
+[25] Matrix_1.7-3        Seurat_5.3.0        SeuratObject_5.2.0 
+[28] sp_2.2-0           
+
+loaded via a namespace (and not attached):
+  [1] RcppAnnoy_0.0.22       splines_4.5.1          later_1.4.4           
+  [4] polyclip_1.10-7        fastDummies_1.7.5      lifecycle_1.0.4       
+  [7] mixsqp_0.3-54          rstatix_0.7.2          rprojroot_2.1.1       
+ [10] globals_0.18.0         lattice_0.22-7         MASS_7.3-65           
+ [13] backports_1.5.0        plotly_4.11.0          sass_0.4.10           
+ [16] rmarkdown_2.30         jquerylib_0.1.4        yaml_2.3.10           
+ [19] httpuv_1.6.16          sctransform_0.4.2      spam_2.11-1           
+ [22] spatstat.sparse_3.1-0  reticulate_1.43.0      pbapply_1.7-4         
+ [25] abind_1.4-8            Rtsne_0.17             quadprog_1.5-8        
+ [28] git2r_0.36.2           ggrepel_0.9.6          irlba_2.3.5.1         
+ [31] listenv_0.9.1          spatstat.utils_3.2-0   goftest_1.2-3         
+ [34] RSpectra_0.16-2        spatstat.random_3.4-2  fitdistrplus_1.2-4    
+ [37] parallelly_1.45.1      codetools_0.2-20       tidyselect_1.2.1      
+ [40] farver_2.1.2           matrixStats_1.5.0      spatstat.explore_3.5-3
+ [43] jsonlite_2.0.0         progressr_0.16.0       Formula_1.2-5         
+ [46] ggridges_0.5.7         survival_3.8-3         tools_4.5.1           
+ [49] progress_1.2.3         ica_1.0-3              Rcpp_1.1.0            
+ [52] glue_1.8.0             xfun_0.53              withr_3.0.2           
+ [55] fastmap_1.2.0          digest_0.6.37          truncnorm_1.0-9       
+ [58] timechange_0.3.0       R6_2.6.1               mime_0.13             
+ [61] colorspace_2.1-2       scattermore_1.2        gtools_3.9.5          
+ [64] tensor_1.5.1           dichromat_2.0-0.1      spatstat.data_3.1-8   
+ [67] RhpcBLASctl_0.23-42    prettyunits_1.2.0      httr_1.4.7            
+ [70] htmlwidgets_1.6.4      deconvolveR_1.2-1      whisker_0.4.1         
+ [73] uwot_0.2.3             pkgconfig_2.0.3        gtable_0.3.6          
+ [76] workflowr_1.7.2        lmtest_0.9-40          S7_0.2.0              
+ [79] htmltools_0.5.8.1      carData_3.0-5          dotCall64_1.2         
+ [82] scales_1.4.0           png_0.1-8              spatstat.univar_3.1-4 
+ [85] ashr_2.2-63            knitr_1.50             rstudioapi_0.17.1     
+ [88] tzdb_0.5.0             reshape2_1.4.4         nlme_3.1-168          
+ [91] cachem_1.1.0           zoo_1.8-14             KernSmooth_2.23-26    
+ [94] parallel_4.5.1         miniUI_0.1.2           softImpute_1.4-3      
+ [97] pillar_1.11.1          grid_4.5.1             vctrs_0.6.5           
+[100] RANN_2.6.2             promises_1.3.3         car_3.1-3             
+[103] xtable_1.8-4           cluster_2.1.8.1        evaluate_1.0.5        
+[106] invgamma_1.2           cli_3.6.5              compiler_4.5.1        
+[109] rlang_1.1.6            crayon_1.5.3           SQUAREM_2021.1        
+[112] future.apply_1.20.0    ggsignif_0.6.4         labeling_0.4.3        
+[115] plyr_1.8.9             fs_1.6.6               stringi_1.8.7         
+[118] viridisLite_0.4.2      deldir_2.0-4           lazyeval_0.2.2        
+[121] spatstat.geom_3.6-0    RcppHNSW_0.6.0         hms_1.1.3             
+[124] future_1.67.0          shiny_1.11.1           trust_0.1-8           
+[127] ROCR_1.0-11            igraph_2.2.0           broom_1.0.10          
+[130] RcppParallel_5.1.11-1  bslib_0.9.0           </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

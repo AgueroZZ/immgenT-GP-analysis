@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Ziang Zhang" />
+
+
+<title>Figure S1: GP reproducibility across IGTs</title>
+
+<script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="custom.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">immgenT-GP-analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Overview</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Figure S1: GP reproducibility across
+IGTs</h1>
+<h4 class="author">Ziang Zhang</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2026-07-02
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong>
+<code>immgenT-GP-analysis/analysis/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.2). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed1code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(1)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed1code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(1)</code> was run prior to running the
+code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongnoversioncontrol">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>Repository version:</strong> no
+version control </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongnoversioncontrol"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Tracking code development and connecting the code version to the
+results is critical for reproducibility. To start using Git, open the
+Terminal and type <code>git init</code> in your project directory.</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+This project is not being versioned with Git. To obtain the full
+reproducibility benefits of using workflowr, please see
+<code>?wflow_start</code>.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<p>All panels are produced by <a
+href="https://github.com/stephenslab/immgen-t-factors/blob/main/script-refactor/FigureS1.R"><code>script-refactor/FigureS1.R</code></a>.
+The code below is shown for reference (not re-executed on this page);
+the images are its pre-rendered output. Panels A/B reuse a cached
+per-IGT cosine-similarity score matrix
+(<code>data/igt_specific_cosine_scores.csv</code>); see
+<code>code-refactor/pipeline/05_igt_validation.R</code> for how that
+matrix itself is produced (a much heavier, cluster-scale
+computation).</p>
+<div id="setup" class="section level2">
+<h2>Setup</h2>
+<pre class="r"><code># Figure S1. GP reproducibility across IGTs.
+#
+# Panels produced (see figures/final-selected/bits/Figure S1/FigureS1_caption.md
+# for the full caption text):
+#   S1A  Cumulative number of GPs validated (cosine &gt;= threshold, thresholds
+#        0.2-0.8) as IGTs are added one at a time, in IGT index order.
+#   S1B  Number of GPs validated by at least X IGTs, vs X (log-log), for the
+#        same thresholds.
+#   S1C  Between-IGT variability: each GP&#39;s mean-of-per-IGT-mean-loading (x)
+#        vs. variance-of-per-IGT-mean-loading (y), spleen-standard subset.
+#   S1D  Heatmap of per-IGT mean loading for the 10 highest-variance GPs from
+#        S1C (IGTs with &gt;= 500 spleen-standard cells only).
+#
+# Source: S1A/S1B ported from script/Figure_Saturation.R; S1C/S1D from
+# script/Figure_batch.R (panels a/b only -- that script&#39;s `plot_gp_loading()`
+# helper is defined but never called for a saved output, so it&#39;s dropped).
+#
+# S1A/S1B reuse the per-IGT cosine-matching score matrix
+# (data/igt_specific_cosine_scores.csv) rather than recomputing it here --
+# recomputing requires Hungarian-matching each of the ~80 per-IGT
+# refactorizations in data/igt_specific/*.qs against the full model, which is
+# the job of code-refactor/pipeline/05_igt_validation.R (run once upstream).
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(pheatmap)
+
+data_path &lt;- &quot;data/&quot;
+figure_path &lt;- &quot;figure-refactor/Figure S1/&quot;
+gp_label &lt;- function(x) sub(&quot;^K(\\d+)$&quot;, &quot;GP\\1&quot;, x)</code></pre>
+<p>Panels A and B both use the cached per-IGT cosine score matrix:</p>
+<pre class="r"><code># ============================================================
+# S1A/S1B: load the cached per-IGT cosine score matrix
+# (GPs x IGTs; produced by code-refactor/pipeline/05_igt_validation.R)
+# ============================================================
+score_mat &lt;- as.matrix(read.csv(paste0(data_path, &quot;igt_specific_cosine_scores.csv&quot;), row.names = 1, check.names = FALSE))</code></pre>
+</div>
+<div id="figs1a" class="section level2">
+<h2>(A) Cumulative GPs validated as IGTs are added</h2>
+<pre class="r"><code># ============================================================
+# S1A: cumulative number of GPs validated as IGTs are added, in IGT-index order
+# ============================================================
+igt_idx &lt;- as.integer(gsub(&quot;^IGT&quot;, &quot;&quot;, colnames(score_mat)))
+o &lt;- order(igt_idx)
+score_mat_ord &lt;- score_mat[, o, drop = FALSE]
+
+cum_validated_counts &lt;- function(score_mat_ord, threshold) {
+  validated &lt;- score_mat_ord &gt;= threshold
+  ever_validated &lt;- t(apply(validated, 1, cummax)) # 200 x nIGT logical
+  colSums(ever_validated)
+}
+plot_df_a &lt;- lapply(thresholds, function(t) {
+  y &lt;- cum_validated_counts(score_mat_ord, t)
+  data.frame(n_IGTs_included = seq_along(y), validated_GPs = y, threshold = factor(t))
+}) %&gt;% bind_rows()
+
+p_S1A &lt;- ggplot(plot_df_a, aes(x = n_IGTs_included, y = validated_GPs, color = threshold)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 1) +
+  labs(x = &quot;Number of IGTs included (in IGT index order)&quot;, y = &quot;Number of validated GPs (cumulative union)&quot;, color = &quot;Threshold&quot;) +
+  theme_minimal() +
+  scale_color_brewer(palette = &quot;Set1&quot;) +
+  scale_x_continuous(breaks = seq(0, ncol(score_mat_ord), by = 5)) +
+  scale_y_continuous(breaks = seq(0, max(plot_df_a$validated_GPs), by = 20))
+ggsave(paste0(figure_path, &quot;S1A.pdf&quot;), plot = p_S1A, width = 6, height = 4)</code></pre>
+<p><img src="assets/FigureS1/S1A.png" width="49%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. S1A.</strong> GPs were tested for reproducibility in
+individual datasets (IGTs): for each IGT a dataset-specific EBMF
+factorization was computed and its factors were matched to the global
+GPs by Hungarian assignment on the cosine similarity of gene-score
+vectors (restricted to shared genes, with columns scaled), and a GP is
+counted as “validated” in an IGT when this cosine similarity reaches a
+given threshold. Adding IGTs one at a time in index order, the curves
+show the cumulative number of GPs (of 200) validated in at least one IGT
+included so far, for cosine thresholds of 0.2-0.8.</p>
+</div>
+</div>
+<div id="figs1b" class="section level2">
+<h2>(B) GPs validated by at least X IGTs</h2>
+<pre class="r"><code># ============================================================
+# S1B: number of GPs validated by at least X IGTs, vs X (log-log)
+# ============================================================
+thresholds &lt;- seq(0.2, 0.8, by = 0.1)
+X_grid &lt;- 1:50
+plot_df_b &lt;- tidyr::crossing(threshold = thresholds, X = X_grid) %&gt;%
+  mutate(n_GP = purrr::map2_int(threshold, X, \(t, x) {
+    rowSums(score_mat &gt;= t, na.rm = TRUE) |&gt; (\(v) sum(v &gt;= x))()
+  }))
+
+p_S1B &lt;- ggplot(plot_df_b, aes(x = X, y = n_GP, group = factor(threshold))) +
+  geom_line() +
+  geom_point(size = 1) +
+  scale_y_log10() +
+  scale_x_log10() +
+  labs(x = &quot;X (validated by at least X IGTs)&quot;, y = &quot;Number of GPs&quot;, color = &quot;Threshold&quot;) +
+  aes(color = factor(threshold)) +
+  theme_minimal() +
+  scale_color_brewer(palette = &quot;Set1&quot;)
+ggsave(paste0(figure_path, &quot;S1B.pdf&quot;), plot = p_S1B, width = 6, height = 4)</code></pre>
+<p><img src="assets/FigureS1/S1B.png" width="49%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. S1B.</strong> Using the same per-IGT cosine matching,
+the number of GPs validated by at least X IGTs as a function of X (both
+axes log-scaled), for thresholds of 0.2-0.8.</p>
+</div>
+</div>
+<div id="figs1c" class="section level2">
+<h2>(C) Between-IGT variability</h2>
+<pre class="r"><code># ============================================================
+# Load data for S1C/S1D
+# ============================================================
+L_pm_filtered &lt;- readRDS(paste0(data_path, &quot;L_pm_filtered.rds&quot;))
+seurat_meta &lt;- readRDS(paste0(data_path, &quot;igt1_96_withtotalvi20260206_clean_ADTonly.Rds&quot;))@meta.data
+seurat_meta_filtered &lt;- seurat_meta[rownames(L_pm_filtered), ]
+seurat_meta_filtered_spleen &lt;- seurat_meta_filtered %&gt;% filter(spleen_standard == TRUE)
+all_gps &lt;- paste0(&quot;K&quot;, 1:200)
+selected_igts &lt;- names(table(seurat_meta_filtered_spleen$IGT))[table(seurat_meta_filtered_spleen$IGT) &gt;= 500]</code></pre>
+<pre class="r"><code># ============================================================
+# S1C: GP mean-of-IGT-mean-loading vs. variance-of-IGT-mean-loading (spleen)
+# ============================================================
+common_cells_c &lt;- intersect(rownames(L_pm_filtered), rownames(seurat_meta_filtered_spleen))
+L_sub_c &lt;- L_pm_filtered[common_cells_c, ]
+igt_vec_c &lt;- seurat_meta_filtered_spleen[common_cells_c, &quot;IGT&quot;]
+igt_levels_c &lt;- unique(igt_vec_c)
+igt_mat_c &lt;- do.call(rbind, lapply(igt_levels_c, function(igt) colMeans(L_sub_c[igt_vec_c == igt, , drop = FALSE])))
+
+gp_igt_var &lt;- apply(igt_mat_c, 2, var)
+gp_overall &lt;- colMeans(igt_mat_c)
+gp_stats &lt;- data.frame(GP = colnames(L_sub_c), x = gp_overall, y = gp_igt_var) %&gt;%
+  arrange(desc(y)) %&gt;%
+  mutate(label = ifelse(row_number() &lt;= 10, gp_label(as.character(GP)), &quot;&quot;))
+
+p_S1C &lt;- ggplot(gp_stats, aes(x = x, y = y, label = label)) +
+  geom_point(size = 1.5, alpha = 0.7, color = &quot;steelblue&quot;) +
+  ggrepel::geom_text_repel(size = 3, box.padding = 0.4, max.overlaps = Inf, segment.color = &quot;grey50&quot;) +
+  cowplot::theme_cowplot() +
+  labs(
+    title = &quot;GP Mean of IGT Mean Loading vs. Between-IGT VAR&quot;,
+    x = &quot;Mean of IGT Mean Loading&quot;,
+    y = &quot;Variance of IGT Mean Loading&quot;
+  )
+ggsave(paste0(figure_path, &quot;S1C.pdf&quot;), plot = p_S1C, width = 6, height = 5, dpi = 300)</code></pre>
+<p><img src="assets/FigureS1/S1C.png" width="49%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. S1C.</strong> Between-IGT variability of GP loadings,
+computed on a standard spleen subset used for this purpose. Each GP’s
+mean loading is computed within every IGT; each point is a GP, plotting
+the mean across IGTs of these per-IGT mean loadings (x-axis) against
+their variance across IGTs (y-axis). The ten GPs with the highest
+between-IGT variance are labeled.</p>
+</div>
+</div>
+<div id="figs1d" class="section level2">
+<h2>(D) Top-variance GP heatmap</h2>
+<pre class="r"><code># ============================================================
+# S1D: heatmap of per-IGT mean loading for the top-10 variance GPs from S1C
+#      (IGTs with &gt;= 500 spleen-standard cells only)
+# ============================================================
+top10_var_gps &lt;- names(sort(gp_igt_var, decreasing = TRUE))[1:10]
+
+spleen_cells_act &lt;- intersect(rownames(L_pm_filtered), rownames(seurat_meta_filtered_spleen))
+igt_vec_act &lt;- seurat_meta_filtered_spleen[spleen_cells_act, &quot;IGT&quot;]
+igt_mean_mat_act &lt;- do.call(rbind, lapply(selected_igts, function(igt) {
+  cells_i &lt;- spleen_cells_act[igt_vec_act == igt]
+  colMeans(L_pm_filtered[cells_i, all_gps, drop = FALSE])
+}))
+rownames(igt_mean_mat_act) &lt;- selected_igts
+
+plot_mat &lt;- t(igt_mean_mat_act[, top10_var_gps, drop = FALSE])
+plot_mat[plot_mat &lt; 0] &lt;- 0
+rownames(plot_mat) &lt;- gp_label(rownames(plot_mat))
+
+pdf(paste0(figure_path, &quot;S1D.pdf&quot;), width = 5, height = 5)
+pheatmap(
+  plot_mat,
+  cluster_rows = TRUE,
+  cluster_cols = FALSE,
+  main = &quot;Top 10 GPs by Variance of IGT Mean Loading&quot;,
+  color = colorRampPalette(c(&quot;white&quot;, &quot;red&quot;))(100),
+  border_color = &quot;white&quot;,
+  fontsize_row = 8,
+  angle_col = 45
+)
+dev.off()</code></pre>
+<p><img src="assets/FigureS1/S1D.png" width="49%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. S1D.</strong> Heatmap of the per-IGT mean loading (same
+standard spleen subset, restricted to IGTs with &gt;= 500 cells) for the
+ten GPs with the highest between-IGT variance from (C). Rows (GPs) are
+hierarchically clustered; color runs from white (low) to red (high mean
+loading).</p>
+</div>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.5.1 (2025-06-13)
+Platform: aarch64-apple-darwin20
+Running under: macOS Sequoia 15.6.1
+
+Matrix products: default
+BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_CA/en_CA/en_CA/C/en_CA/en_CA
+
+time zone: Asia/Tokyo
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+ [1] vctrs_0.7.3     cli_3.6.6       knitr_1.50      rlang_1.2.0    
+ [5] xfun_0.55       stringi_1.8.7   otel_0.2.0      promises_1.5.0 
+ [9] jsonlite_2.0.0  workflowr_1.7.2 glue_1.8.1      rprojroot_2.1.1
+[13] git2r_0.36.2    htmltools_0.5.9 httpuv_1.6.16   sass_0.4.10    
+[17] rmarkdown_2.30  evaluate_1.0.5  jquerylib_0.1.4 tibble_3.3.0   
+[21] fastmap_1.2.0   yaml_2.3.12     lifecycle_1.0.5 stringr_1.6.0  
+[25] compiler_4.5.1  fs_1.6.6        Rcpp_1.1.1-1.1  pkgconfig_2.0.3
+[29] later_1.4.4     digest_0.6.39   R6_2.6.1        pillar_1.11.1  
+[33] magrittr_2.0.5  bslib_0.9.0     tools_4.5.1     cachem_1.1.0   </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Ziang Zhang" />
+
+
+<title>Figure S3: Characterizing activation GPs</title>
+
+<script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="custom.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">immgenT-GP-analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Overview</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Figure S3: Characterizing activation
+GPs</h1>
+<h4 class="author">Ziang Zhang</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2026-07-02
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong>
+<code>immgenT-GP-analysis/analysis/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.2). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed1code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(1)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed1code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(1)</code> was run prior to running the
+code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongnoversioncontrol">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>Repository version:</strong> no
+version control </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongnoversioncontrol"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Tracking code development and connecting the code version to the
+results is critical for reproducibility. To start using Git, open the
+Terminal and type <code>git init</code> in your project directory.</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+This project is not being versioned with Git. To obtain the full
+reproducibility benefits of using workflowr, please see
+<code>?wflow_start</code>.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<p>All panels are produced by <a
+href="https://github.com/stephenslab/immgen-t-factors/blob/main/script-refactor/FigureS3.R"><code>script-refactor/FigureS3.R</code></a>,
+which shares its curated GP set with <a href="Figure3.html">Figure 3</a>
+via <code>code-refactor/R/activation_shared_setup.R</code>. The code
+below is shown for reference (not re-executed on this page); the images
+are its pre-rendered output.</p>
+<div id="setup" class="section level2">
+<h2>Setup</h2>
+<pre class="r"><code># Figure S3. Characterizing activation GPs.
+#
+# Panels produced (see figures/final-selected/bits/Figure S3/FigureS3_caption.md
+# for the full caption text; captioned A-F there but the final files are
+# lettered s3c-s3h -- this script uses that final lettering):
+#   s3c  Fraction of cells per organ with GP26 loading &gt; 0.2, sorted descending.
+#   s3d  GSEA dot plot relating the activation GPs to curated gene sets.
+#   s3e  Fraction of activated CD4 cells with GP79 loading &gt; 0.1, by condition.
+#   s3f  Per-cell log2FC heatmap of activation GPs vs resting baseline.
+#   s3g  Fraction of activated CD8/CD4 cells with GP57 loading &gt; 0.1: cancer
+#        vs all other conditions.
+#   s3h  Bipartite TF-GP network for Gata3, Rorc, Tbx21.
+#
+# Source: ported from script/Figure_Activation.R (see Figure3.R for the main
+# Figure 3 panels from the same file). Shared curated-GP setup lives in
+# code-refactor/R/activation_shared_setup.R.
+#
+# Panel s3c has no corresponding block in the original script -- it is
+# reconstructed here following the same per-organ threshold-rate pattern
+# used for Figure 4b (script-refactor/Figure4.R), applied to GP26 at the
+# caption&#39;s stated 0.2 threshold.
+
+library(ggplot2)
+library(ggrepel)
+library(dplyr)
+library(stringr)
+library(pheatmap)
+library(scales)
+
+data_path &lt;- &quot;data/&quot;
+figure_path &lt;- &quot;figure-refactor/Figure S3/&quot;
+source(&quot;code-refactor/R/plot_utils.R&quot;) # scale_cols()
+source(&quot;code-refactor/R/tf_network.R&quot;) # optimize_bipartite_order(), plot_tf_gp_network_v2()
+
+# ============================================================
+# Load data
+# ============================================================
+L_pm_filtered &lt;- readRDS(paste0(data_path, &quot;L_pm_filtered.rds&quot;))
+colnames(L_pm_filtered) &lt;- paste0(&quot;GP&quot;, seq_len(ncol(L_pm_filtered)))
+F_pm_filtered &lt;- readRDS(paste0(data_path, &quot;F_pm_filtered.rds&quot;))
+colnames(F_pm_filtered) &lt;- paste0(&quot;GP&quot;, seq_len(ncol(F_pm_filtered)))
+seurat_meta &lt;- readRDS(paste0(data_path, &quot;igt1_96_withtotalvi20260206_clean_ADTonly.Rds&quot;))@meta.data
+seurat_meta_filtered &lt;- seurat_meta[rownames(L_pm_filtered), ]
+df_sig &lt;- read.csv(paste0(data_path, &quot;GSEA_signatures_select_toplot.csv&quot;), header = TRUE, sep = &quot;,&quot;)
+
+source(&quot;code-refactor/R/activation_shared_setup.R&quot;)</code></pre>
+</div>
+<div id="figs3c" class="section level2">
+<h2>(s3c) GP26+ rate by organ</h2>
+<pre class="r"><code># ============================================================
+# s3c: Fraction of cells per organ with GP26 loading &gt; 0.2
+# (reconstructed -- see header note)
+# ============================================================
+gp26_organ_df &lt;- data.frame(
+  organ = seurat_meta_filtered$organ_simplified,
+  gp26_high = L_pm_filtered[, &quot;GP26&quot;] &gt; 0.2,
+  stringsAsFactors = FALSE
+) %&gt;%
+  filter(!is.na(organ), organ != &quot;&quot;) %&gt;%
+  group_by(organ) %&gt;%
+  summarise(n_cells = n(), proportion_gp26_high = mean(gp26_high), .groups = &quot;drop&quot;) %&gt;%
+  arrange(desc(proportion_gp26_high)) %&gt;%
+  mutate(organ = factor(organ, levels = organ))
+
+p_s3c &lt;- ggplot(gp26_organ_df, aes(x = organ, y = proportion_gp26_high)) +
+  geom_col(fill = &quot;#4C72B0&quot;, color = &quot;grey20&quot;, width = 0.7, linewidth = 0.2) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1), expand = expansion(mult = c(0, 0.06))) +
+  labs(x = NULL, y = &quot;Proportion of cells with GP26 &gt; 0.2&quot;, title = &quot;GP26+ rate by organ&quot;) +
+  theme_classic(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), plot.title = element_text(face = &quot;bold&quot;, hjust = 0.5))
+ggsave(filename = paste0(figure_path, &quot;s3c.pdf&quot;), plot = p_s3c, width = 6, height = 4.5)</code></pre>
+<p><img src="assets/FigureS3/s3c.png" width="32%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. S3c.</strong> Bar plot of the fraction of cells in each
+organ (organ_simplified) with GP26 loading above 0.2, sorted from
+highest to lowest.</p>
+</div>
+</div>
+<div id="figs3d" class="section level2">
+<h2>(s3d) GSEA dot plot</h2>
+<pre class="r"><code># ============================================================
+# s3d: GSEA dot plot for the activation GPs
+# ============================================================
+df_sig &lt;- df_sig %&gt;% mutate(factor = str_replace(factor, &quot;^F&quot;, &quot;GP&quot;))
+present_GPs &lt;- intersect(ordered_GPs, unique(df_sig$factor))
+y_levels &lt;- rev(present_GPs) # first GP (GP56) appears at the top of the y-axis
+df_plot &lt;- df_sig %&gt;%
+  filter(factor %in% present_GPs) %&gt;%
+  mutate(pathway = factor(pathway, levels = unique(pathway)), factor = factor(factor, levels = y_levels), log10padj = -log10(padj))
+y_factors &lt;- levels(df_plot$factor)
+y_colors &lt;- highlight_colors[y_factors]
+
+p_s3d &lt;- ggplot(df_plot, aes(x = pathway, y = factor)) +
+  geom_point(aes(size = NES, color = log10padj)) +
+  scale_color_viridis_c(name = &quot;-log10(p-adj)&quot;) +
+  scale_size(range = c(3, 10)) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1), axis.text.y = element_text(color = y_colors, face = &quot;bold&quot;)) +
+  labs(size = &quot;NES&quot;, x = &quot;Pathway&quot;, y = &quot;Gene Program&quot;)
+ggsave(filename = paste0(figure_path, &quot;s3d.pdf&quot;), plot = p_s3d, width = 8, height = 10)</code></pre>
+<p><img src="assets/FigureS3/s3d.png" width="32%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. S3d.</strong> GSEA dot plot relating the activation GPs
+to curated immunologic signature gene sets. Each dot is a significant
+GP-gene-set association; color denotes -log10 adjusted p-value and size
+denotes the normalized enrichment score (NES). GP labels are colored by
+activation class.</p>
+</div>
+</div>
+<div id="figs3e" class="section level2">
+<h2>(s3e) GP79+ rate across conditions</h2>
+<pre class="r"><code># ============================================================
+# s3e: GP79 high-loading proportion across conditions, activated CD4 cells
+# ============================================================
+min_cells_gp79_condition &lt;- 50
+gp79_cd4_condition_df &lt;- data.frame(
+  condition_broad = as.character(seurat_meta_filtered$condition_broad),
+  condition_detailed_simplified = as.character(seurat_meta_filtered$condition_detailed_simplified),
+  lineage = seurat_meta_filtered$annotation_level1,
+  activation_group = seurat_meta_filtered$annotation_level2_group,
+  gp79_loading = L_pm_filtered[, &quot;GP79&quot;],
+  stringsAsFactors = FALSE
+) %&gt;%
+  filter(lineage == &quot;CD4&quot;, activation_group == &quot;activated&quot;, !is.na(condition_detailed_simplified), condition_detailed_simplified != &quot;&quot;) %&gt;%
+  mutate(gp79_high = gp79_loading &gt; 0.1)
+
+gp79_cd4_condition_summary &lt;- gp79_cd4_condition_df %&gt;%
+  group_by(condition_detailed_simplified) %&gt;%
+  summarise(
+    condition_broad = names(sort(table(condition_broad), decreasing = TRUE))[1],
+    n_cells = n(), n_gp79_high = sum(gp79_high), proportion_gp79_high = mean(gp79_high), .groups = &quot;drop&quot;
+  ) %&gt;%
+  mutate(included_in_plot = n_cells &gt;= min_cells_gp79_condition) %&gt;%
+  arrange(desc(proportion_gp79_high), condition_detailed_simplified)
+
+gp79_cd4_condition_plot_df &lt;- gp79_cd4_condition_summary %&gt;%
+  filter(included_in_plot) %&gt;%
+  arrange(proportion_gp79_high, condition_detailed_simplified) %&gt;%
+  mutate(condition_label = factor(condition_detailed_simplified, levels = condition_detailed_simplified))
+
+gp79_broad_levels &lt;- sort(unique(gp79_cd4_condition_plot_df$condition_broad))
+gp79_broad_colors &lt;- setNames(scales::hue_pal()(length(gp79_broad_levels)), gp79_broad_levels)
+gp79_xmax &lt;- max(gp79_cd4_condition_plot_df$proportion_gp79_high, na.rm = TRUE)
+gp79_xmax &lt;- ifelse(gp79_xmax &gt; 0, gp79_xmax, 0.05)
+gp79_label_pad &lt;- gp79_xmax * 0.015
+gp79_plot_height &lt;- max(7, 0.18 * nrow(gp79_cd4_condition_plot_df) + 2)
+
+p_s3e &lt;- ggplot(gp79_cd4_condition_plot_df, aes(x = proportion_gp79_high, y = condition_label, fill = condition_broad)) +
+  geom_col(width = 0.75, color = &quot;grey25&quot;, linewidth = 0.2) +
+  geom_text(aes(x = proportion_gp79_high + gp79_label_pad, label = scales::percent(proportion_gp79_high, accuracy = 1)), hjust = 0, size = 2.7) +
+  scale_x_continuous(labels = scales::percent_format(accuracy = 10), expand = expansion(mult = c(0, 0.02))) +
+  scale_fill_manual(values = gp79_broad_colors) +
+  coord_cartesian(xlim = c(0, gp79_xmax * 1.15), clip = &quot;off&quot;) +
+  labs(
+    x = &quot;Proportion of activated CD4 cells with GP79 loading &gt; 0.1&quot;, y = NULL, fill = &quot;Condition broad&quot;,
+    title = &quot;GP79-high fraction across activated CD4 conditions&quot;,
+    subtitle = paste0(&quot;condition_detailed_simplified categories with &gt;= &quot;, min_cells_gp79_condition, &quot; activated CD4 cells&quot;)
+  ) +
+  theme_classic(base_size = 11) +
+  theme(
+    legend.position = &quot;right&quot;, legend.title = element_text(face = &quot;bold&quot;),
+    plot.title = element_text(face = &quot;bold&quot;, hjust = 0.5), plot.subtitle = element_text(hjust = 0.5),
+    axis.text.y = element_text(size = 8), plot.margin = margin(10, 45, 10, 10)
+  )
+ggsave(filename = paste0(figure_path, &quot;s3e.pdf&quot;), plot = p_s3e, width = 9, height = gp79_plot_height, limitsize = FALSE)</code></pre>
+<p><img src="assets/FigureS3/s3e.png" width="49%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. S3e.</strong> Bar plot of the fraction of activated CD4
+cells with GP79 loading above 0.1, across condition categories
+(condition_detailed_simplified) that contain &gt;= 50 activated CD4
+cells, sorted from highest to lowest and colored by broad condition
+category.</p>
+</div>
+</div>
+<div id="figs3f" class="section level2">
+<h2>(s3f) Per-cell log2FC heatmap</h2>
+<pre class="r"><code># ============================================================
+# s3f: Per-cell log2FC heatmap of activation GPs (activated cells only),
+#      relative to each cell&#39;s own-lineage resting baseline
+# ============================================================
+L &lt;- L_pm_filtered[c(CD4_cells, CD8_cells), GPs_of_interest, drop = FALSE]
+cell_ids &lt;- rownames(L)
+cell_type &lt;- seurat_meta_filtered$annotation_level2[match(cell_ids, seurat_meta_filtered$cellID)]
+
+set.seed(123)
+total_budget &lt;- 8000
+small_keep_all &lt;- 150
+min_per_cluster &lt;- 150
+max_per_cluster &lt;- 600
+cells_by_ct &lt;- split(cell_ids, cell_type)
+sizes &lt;- sapply(cells_by_ct, length)
+alloc &lt;- ifelse(sizes &lt;= small_keep_all, sizes, pmin(min_per_cluster, sizes))
+remaining &lt;- total_budget - sum(alloc)
+if (remaining &gt; 0) {
+  room &lt;- pmax(pmin(sizes, max_per_cluster) - alloc, 0)
+  if (sum(room) &gt; 0) {
+    extra &lt;- floor(remaining * room / sum(room))
+    alloc &lt;- alloc + extra
+    leftover &lt;- total_budget - sum(alloc)
+    if (leftover &gt; 0) {
+      idx &lt;- order(room, decreasing = TRUE)
+      for (j in idx) {
+        if (leftover &lt;= 0) break
+        addable &lt;- pmin(room[j] - extra[j], leftover)
+        if (addable &gt; 0) {
+          alloc[j] &lt;- alloc[j] + addable
+          leftover &lt;- leftover - addable
+        }
+      }
+    }
+  }
+}
+sampled_cells &lt;- unlist(mapply(function(v, m) if (length(v) &lt;= m) v else sample(v, m), cells_by_ct, pmin(alloc, sizes), SIMPLIFY = FALSE), use.names = FALSE)
+
+cell_group_s &lt;- seurat_meta_filtered$annotation_level2_group[match(sampled_cells, seurat_meta_filtered$cellID)]
+cell_level2_s &lt;- seurat_meta_filtered$annotation_level2[match(sampled_cells, seurat_meta_filtered$cellID)]
+cell_group_s &lt;- trimws(tolower(as.character(cell_group_s)))
+cell_level2_s &lt;- trimws(as.character(cell_level2_s))
+cell_level1_s &lt;- sapply(strsplit(cell_level2_s, &quot;[_.]&quot;), `[`, 1)
+is_w_cell &lt;- grepl(&quot;\\.w&quot;, cell_level2_s)
+valid_idx &lt;- which(!is.na(cell_level2_s) &amp; !tolower(cell_level2_s) %in% c(&quot;&quot;, &quot;na&quot;, &quot;nan&quot;) &amp; cell_group_s %in% c(&quot;resting&quot;, &quot;activated&quot;) &amp; !is_w_cell)
+final_cells &lt;- sampled_cells[valid_idx]
+final_group &lt;- cell_group_s[valid_idx]
+final_level1 &lt;- cell_level1_s[valid_idx]
+final_level2 &lt;- cell_level2_s[valid_idx]
+col_order &lt;- order(final_group, final_level1, final_level2)
+final_cells &lt;- final_cells[col_order]
+final_group &lt;- final_group[col_order]
+final_level1 &lt;- final_level1[col_order]
+final_level2 &lt;- final_level2[col_order]
+
+pc &lt;- 1e-10
+cap &lt;- 2
+group_counts &lt;- sapply(
+  list(
+    c(&quot;GP56&quot;, &quot;GP162&quot;, &quot;GP36&quot;, &quot;GP152&quot;, &quot;GP161&quot;, &quot;GP177&quot;, &quot;GP79&quot;, &quot;GP12&quot;, &quot;GP13&quot;, &quot;GP159&quot;),
+    c(&quot;GP10&quot;, &quot;GP58&quot;, &quot;GP181&quot;, &quot;GP176&quot;),
+    c(&quot;GP25&quot;, &quot;GP26&quot;, &quot;GP35&quot;, &quot;GP32&quot;, &quot;GP80&quot;, &quot;GP57&quot;),
+    c(&quot;GP9&quot;, &quot;GP171&quot;, &quot;GP49&quot;, &quot;GP41&quot;, &quot;GP11&quot;)
+  ),
+  function(gp_group) sum(ordered_GPs %in% gp_group)
+)
+group_counts &lt;- group_counts[group_counts &gt; 0]
+gaps_row &lt;- cumsum(group_counts)[-length(group_counts)]
+
+act_idx &lt;- which(final_group == &quot;activated&quot;)
+act_cells &lt;- final_cells[act_idx]
+act_level1 &lt;- final_level1[act_idx]
+act_level2 &lt;- final_level2[act_idx]
+act_order &lt;- order(act_level1, act_level2)
+act_cells &lt;- act_cells[act_order]
+act_level1 &lt;- act_level1[act_order]
+act_level2 &lt;- act_level2[act_order]
+
+L_sub_act &lt;- L[act_cells, , drop = FALSE]
+M_raw_act &lt;- t(L_sub_act)
+
+# Per-lineage resting baseline: each activated cell&#39;s log2FC is computed
+# against the mean loading in resting cells of its own lineage.
+mu_resting_CD4 &lt;- colMeans(L_pm_filtered[CD4_resting_cells, GPs_of_interest, drop = FALSE])
+mu_resting_CD8 &lt;- colMeans(L_pm_filtered[CD8_resting_cells, GPs_of_interest, drop = FALSE])
+baseline_mat &lt;- matrix(NA_real_, nrow = nrow(M_raw_act), ncol = ncol(M_raw_act))
+rownames(baseline_mat) &lt;- rownames(M_raw_act)
+baseline_mat[, act_level1 == &quot;CD4&quot;] &lt;- mu_resting_CD4[rownames(M_raw_act)]
+baseline_mat[, act_level1 == &quot;CD8&quot;] &lt;- mu_resting_CD8[rownames(M_raw_act)]
+M_fc_act &lt;- log2((M_raw_act + pc) / (baseline_mat + pc))
+M_fc_act_cap &lt;- pmax(pmin(M_fc_act, cap), -cap)
+M_fc_act_cap &lt;- M_fc_act_cap[ordered_GPs, , drop = FALSE]
+
+ann_col_act &lt;- data.frame(Level2 = factor(act_level2), Level1 = factor(act_level1))
+rownames(ann_col_act) &lt;- colnames(M_fc_act_cap)
+present_level1_act &lt;- levels(ann_col_act$Level1)
+present_level2_act &lt;- levels(ann_col_act$Level2)
+level1_cols_act &lt;- ZemmourLib::immgent_colors$level1
+level1_cols_act &lt;- level1_cols_act[names(level1_cols_act) %in% present_level1_act]
+level2_cols_act &lt;- ZemmourLib::immgent_colors$level2
+level2_cols_act &lt;- level2_cols_act[names(level2_cols_act) %in% present_level2_act]
+missing_l2_act &lt;- setdiff(present_level2_act, names(level2_cols_act))
+if (length(missing_l2_act) &gt; 0) {
+  level2_cols_act &lt;- c(level2_cols_act, setNames(rep(&quot;grey80&quot;, length(missing_l2_act)), missing_l2_act))
+}
+ann_colors_act &lt;- list(Level1 = level1_cols_act, Level2 = level2_cols_act)
+
+rle_l1_act &lt;- rle(as.character(ann_col_act$Level1))
+gaps_col_act &lt;- cumsum(rle_l1_act$lengths)
+gaps_col_act &lt;- gaps_col_act[-length(gaps_col_act)]
+
+pheatmap(
+  M_fc_act_cap,
+  cluster_rows = FALSE, cluster_cols = FALSE,
+  gaps_row = gaps_row, gaps_col = gaps_col_act,
+  color = colorRampPalette(c(&quot;#7A0177&quot;, &quot;black&quot;, &quot;#FFD700&quot;))(101),
+  breaks = seq(-cap, cap, length.out = 102),
+  show_colnames = FALSE, fontsize_row = 7, fontface_row = &quot;bold&quot;, border_color = NA,
+  annotation_col = ann_col_act, annotation_colors = ann_colors_act, annotation_names_col = TRUE,
+  useRaster = TRUE,
+  main = &quot;GP Log2FC vs per-lineage RESTING baseline (CD4 cells vs CD4 resting; CD8 vs CD8 resting)&quot;,
+  filename = paste0(figure_path, &quot;s3f.pdf&quot;),
+  width = 12, height = 4
+)</code></pre>
+<p><img src="assets/FigureS3/s3f.png" width="100%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. S3f.</strong> Heatmap of per-cell log2 fold-change in GP
+loading relative to the resting baseline of the same lineage (each
+activated CD4 cell versus the CD4 resting mean; each activated CD8 cell
+versus the CD8 resting mean), capped at +-2. Rows are the activation GPs
+in semantic-group order; columns are individual activated cells grouped
+by sub-lineage (Level-2) within CD4 and CD8; color runs from purple
+(low) through black to gold (high).</p>
+</div>
+</div>
+<div id="figs3g" class="section level2">
+<h2>(s3g) GP57+ rate, cancer vs. other conditions</h2>
+<pre class="r"><code># ============================================================
+# s3g: GP57 high-loading proportion, cancer vs other conditions
+#      (activated CD4 and CD8)
+# ============================================================
+gp57_condition_df &lt;- data.frame(
+  lineage = seurat_meta_filtered$annotation_level1,
+  activation_group = seurat_meta_filtered$annotation_level2_group,
+  condition_broad = as.character(seurat_meta_filtered$condition_broad),
+  gp57_loading = L_pm_filtered[, &quot;GP57&quot;],
+  stringsAsFactors = FALSE
+) %&gt;%
+  filter(lineage %in% c(&quot;CD8&quot;, &quot;CD4&quot;), activation_group == &quot;activated&quot;) %&gt;%
+  mutate(
+    lineage = factor(lineage, levels = c(&quot;CD8&quot;, &quot;CD4&quot;)),
+    condition_group = if_else(condition_broad == &quot;cancer&quot;, &quot;Cancer&quot;, &quot;Other conditions&quot;),
+    condition_group = factor(condition_group, levels = c(&quot;Cancer&quot;, &quot;Other conditions&quot;)),
+    gp57_high = gp57_loading &gt; 0.1
+  )
+
+gp57_condition_summary &lt;- gp57_condition_df %&gt;%
+  group_by(lineage, condition_group) %&gt;%
+  summarise(n_cells = n(), n_gp57_high = sum(gp57_high), proportion_gp57_high = mean(gp57_high), .groups = &quot;drop&quot;)
+
+gp57_ymax &lt;- max(gp57_condition_summary$proportion_gp57_high, na.rm = TRUE)
+gp57_ymax &lt;- ifelse(gp57_ymax &gt; 0, gp57_ymax * 1.25, 0.05)
+
+p_s3g &lt;- ggplot(gp57_condition_summary, aes(x = lineage, y = proportion_gp57_high, fill = condition_group)) +
+  geom_col(position = position_dodge(width = 0.72), width = 0.62, color = &quot;grey20&quot;, linewidth = 0.25) +
+  geom_text(
+    aes(label = paste0(scales::percent(proportion_gp57_high, accuracy = 0.1), &quot;\n&quot;, n_gp57_high, &quot;/&quot;, n_cells)),
+    position = position_dodge(width = 0.72), vjust = -0.25, size = 3.4, lineheight = 0.9
+  ) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1), limits = c(0, gp57_ymax), expand = expansion(mult = c(0, 0.04))) +
+  scale_fill_manual(values = c(&quot;Cancer&quot; = &quot;#C44E52&quot;, &quot;Other conditions&quot; = &quot;#4C72B0&quot;)) +
+  labs(x = NULL, y = &quot;Proportion of activated cells&quot;, fill = &quot;Condition&quot;, title = &quot;GP57 loading &gt; 0.1 in activated CD8 and CD4 cells&quot;) +
+  theme_classic(base_size = 12) +
+  theme(legend.position = &quot;top&quot;, legend.title = element_text(face = &quot;bold&quot;), axis.text.x = element_text(face = &quot;bold&quot;), plot.title = element_text(face = &quot;bold&quot;, hjust = 0.5))
+ggsave(filename = paste0(figure_path, &quot;s3g.pdf&quot;), plot = p_s3g, width = 5.4, height = 4.2)</code></pre>
+<p><img src="assets/FigureS3/s3g.png" width="49%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. S3g.</strong> Fraction of activated CD8 and CD4 cells
+with GP57 loading above 0.1, comparing cancer conditions against all
+other conditions combined; bar labels give the percentage and the
+underlying cell counts.</p>
+</div>
+</div>
+<div id="figs3h" class="section level2">
+<h2>(s3h) TF-GP network for Gata3/Rorc/Tbx21</h2>
+<pre class="r"><code># ============================================================
+# s3h: Bipartite TF-GP network for Gata3, Rorc, Tbx21
+# ============================================================
+tf_focus &lt;- c(&quot;Gata3&quot;, &quot;Rorc&quot;, &quot;Tbx21&quot;)
+tf_focus_threshold &lt;- 0.1
+tf_focus_edges &lt;- do.call(rbind, lapply(tf_focus, function(tf_name) {
+  vals &lt;- setNames(as.numeric(F_pm_filtered_norm[tf_name, ]), colnames(F_pm_filtered_norm))
+  idx &lt;- which(is.finite(vals) &amp; abs(vals) &gt;= tf_focus_threshold)
+  data.frame(TF = tf_name, GP = names(vals)[idx], value = vals[idx], stringsAsFactors = FALSE)
+})) %&gt;%
+  mutate(
+    GP_number = as.numeric(sub(&quot;^GP&quot;, &quot;&quot;, GP)),
+    edge_sign = if_else(value &lt; 0, &quot;Negative&quot;, &quot;Positive&quot;),
+    abs_value = abs(value),
+    edge_label = sprintf(&quot;%+.2f&quot;, value)
+  ) %&gt;%
+  arrange(match(TF, tf_focus), GP_number)
+
+tf_focus_nodes &lt;- data.frame(name = tf_focus, x = c(0, 2.7, 1.65), y = c(0, -2.75, 2.35), node_type = &quot;TF&quot;, stringsAsFactors = FALSE)
+tf_focus_colors &lt;- c(Gata3 = &quot;#E41A1C&quot;, Rorc = &quot;#1F78B4&quot;, Tbx21 = &quot;#33A02C&quot;)
+
+gp_tf_membership &lt;- tf_focus_edges %&gt;%
+  group_by(GP) %&gt;%
+  summarise(tf_members = list(sort(unique(TF))), degree_tf = n_distinct(TF), .groups = &quot;drop&quot;)
+
+shared_gp_nodes &lt;- gp_tf_membership %&gt;%
+  filter(degree_tf &gt; 1) %&gt;%
+  rowwise() %&gt;%
+  mutate(
+    x = mean(tf_focus_nodes$x[match(tf_members, tf_focus_nodes$name)]),
+    y = mean(tf_focus_nodes$y[match(tf_members, tf_focus_nodes$name)])
+  ) %&gt;%
+  ungroup() %&gt;%
+  transmute(name = GP, x, y, node_type = &quot;GP&quot;)
+
+tf_arc_range &lt;- list(Gata3 = c(170, -105), Rorc = c(205, -20), Tbx21 = c(165, -15))
+tf_arc_radius &lt;- c(Gata3 = 1.65, Rorc = 1.35, Tbx21 = 1.30)
+make_tf_arc_nodes &lt;- function(tf_name, gp_names) {
+  if (length(gp_names) == 0) return(NULL)
+  center &lt;- tf_focus_nodes[tf_focus_nodes$name == tf_name, ]
+  angles &lt;- seq(tf_arc_range[[tf_name]][1], tf_arc_range[[tf_name]][2], length.out = length(gp_names)) * pi / 180
+  radius &lt;- tf_arc_radius[[tf_name]]
+  data.frame(name = gp_names, x = center$x + radius * cos(angles), y = center$y + radius * sin(angles), node_type = &quot;GP&quot;, stringsAsFactors = FALSE)
+}
+exclusive_gp_nodes &lt;- do.call(rbind, lapply(tf_focus, function(tf_name) {
+  gp_names &lt;- gp_tf_membership %&gt;%
+    filter(degree_tf == 1, vapply(tf_members, identical, logical(1), tf_name)) %&gt;%
+    pull(GP)
+  gp_names &lt;- gp_names[order(as.numeric(sub(&quot;^GP&quot;, &quot;&quot;, gp_names)))]
+  make_tf_arc_nodes(tf_name, gp_names)
+}))
+
+tf_focus_plot_nodes &lt;- bind_rows(tf_focus_nodes, shared_gp_nodes, exclusive_gp_nodes)
+tf_focus_plot_edges &lt;- tf_focus_edges %&gt;%
+  left_join(tf_focus_plot_nodes %&gt;% select(name, x, y) %&gt;% rename(x0 = x, y0 = y), by = c(&quot;TF&quot; = &quot;name&quot;)) %&gt;%
+  left_join(tf_focus_plot_nodes %&gt;% select(name, x, y) %&gt;% rename(x1 = x, y1 = y), by = c(&quot;GP&quot; = &quot;name&quot;)) %&gt;%
+  mutate(
+    label_x = x0 + 0.55 * (x1 - x0), label_y = y0 + 0.55 * (y1 - y0),
+    label_angle = atan2(y1 - y0, x1 - x0) * 180 / pi,
+    label_angle = case_when(label_angle &gt; 90 ~ label_angle - 180, label_angle &lt; -90 ~ label_angle + 180, TRUE ~ label_angle)
+  )
+
+p_s3h &lt;- ggplot() +
+  geom_segment(data = tf_focus_plot_edges, aes(x = x0, y = y0, xend = x1, yend = y1, color = edge_sign, linewidth = abs_value), alpha = 0.65, lineend = &quot;round&quot;) +
+  geom_text(data = tf_focus_plot_edges, aes(x = label_x, y = label_y, label = edge_label, angle = label_angle), size = 3.0, color = &quot;grey20&quot;) +
+  geom_point(data = tf_focus_plot_nodes %&gt;% filter(node_type == &quot;GP&quot;), aes(x = x, y = y), shape = 21, size = 4.0, fill = &quot;grey78&quot;, color = &quot;grey45&quot;, stroke = 0.5) +
+  ggrepel::geom_text_repel(
+    data = tf_focus_plot_nodes %&gt;% filter(node_type == &quot;GP&quot;), aes(x = x, y = y, label = name),
+    size = 3.4, color = &quot;grey20&quot;, max.overlaps = Inf, min.segment.length = Inf, box.padding = 0.2, point.padding = 0.25
+  ) +
+  geom_label(
+    data = tf_focus_plot_nodes %&gt;% filter(node_type == &quot;TF&quot;), aes(x = x, y = y, label = name, fill = name),
+    color = &quot;white&quot;, fontface = &quot;bold&quot;, size = 4.6, label.padding = unit(0.22, &quot;lines&quot;), label.r = unit(0.16, &quot;lines&quot;), linewidth = 0, show.legend = FALSE
+  ) +
+  scale_color_manual(values = c(Negative = &quot;#2B6CB0&quot;, Positive = &quot;#D62728&quot;), name = &quot;Edge sign&quot;) +
+  scale_fill_manual(values = tf_focus_colors) +
+  scale_linewidth_continuous(range = c(0.45, 3.2), guide = &quot;none&quot;) +
+  coord_equal(clip = &quot;off&quot;) +
+  labs(title = paste0(&quot;TF &lt;-&gt; GP network (&quot;, length(tf_focus), &quot; TFs, &quot;, nrow(tf_focus_edges), &quot; edges)&quot;)) +
+  theme_void(base_size = 12) +
+  theme(plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;, size = 15), legend.position = &quot;right&quot;, legend.title = element_text(face = &quot;bold&quot;), plot.margin = margin(15, 25, 15, 25))
+ggsave(filename = paste0(figure_path, &quot;s3h.pdf&quot;), plot = p_s3h, width = 10, height = 8.5)</code></pre>
+<p><img src="assets/FigureS3/s3h.png" width="49%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. S3h.</strong> Bipartite transcription factor (TF)-GP
+network for the lineage-defining TFs Gata3, Rorc, and Tbx21. An edge
+connects a TF to a GP when the TF’s per-GP-normalized gene score has
+magnitude &gt;= 0.1; edge color denotes sign (red, positive; blue,
+negative), width scales with magnitude, and labels give the signed
+score.</p>
+</div>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.5.1 (2025-06-13)
+Platform: aarch64-apple-darwin20
+Running under: macOS Sequoia 15.6.1
+
+Matrix products: default
+BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_CA/en_CA/en_CA/C/en_CA/en_CA
+
+time zone: Asia/Tokyo
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+ [1] vctrs_0.7.3     cli_3.6.6       knitr_1.50      rlang_1.2.0    
+ [5] xfun_0.55       stringi_1.8.7   otel_0.2.0      promises_1.5.0 
+ [9] jsonlite_2.0.0  workflowr_1.7.2 glue_1.8.1      rprojroot_2.1.1
+[13] git2r_0.36.2    htmltools_0.5.9 httpuv_1.6.16   sass_0.4.10    
+[17] rmarkdown_2.30  evaluate_1.0.5  jquerylib_0.1.4 tibble_3.3.0   
+[21] fastmap_1.2.0   yaml_2.3.12     lifecycle_1.0.5 stringr_1.6.0  
+[25] compiler_4.5.1  fs_1.6.6        Rcpp_1.1.1-1.1  pkgconfig_2.0.3
+[29] later_1.4.4     digest_0.6.39   R6_2.6.1        pillar_1.11.1  
+[33] magrittr_2.0.5  bslib_0.9.0     tools_4.5.1     cachem_1.1.0   </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

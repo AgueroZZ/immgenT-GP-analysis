@@ -1,0 +1,345 @@
+---
+title: "Validating the EBMF result using halves of the data"
+author: "Ziang Zhang"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Validation Analysis
+
+This time, we repeat the validation analysis using the halved-analysis without backfitting.
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(fastTopics)
+library(qs)
+library(cowplot)
+library(ggrepel)
+data_path <- "../data/"
+code_path <- "../code/"
+# data_path <- "data/"
+# code_path <- "code/"
+
+seurat_meta <- readRDS(paste0(data_path, "seurat_meta.rds"))
+flashier_snmf_summary <- readRDS(paste0(data_path, "flashier_snmf_summary.rds"))
+flashier_snmf_summary1 <- qs::qread(paste0(data_path, "fit1_summary_noback.qs"))
+flashier_snmf_summary2 <- qs::qread(paste0(data_path, "fit2_summary_noback.qs"))
+```
+
+
+Define a function to compute cosine similarity:
+
+```{r}
+compute_cosine_sim_matrix <- function(L1, L2){
+  norms1 <- apply(L1, 2, function(x){sqrt(sum(x^2))})
+  norms1[norms1 == 0] <- Inf
+  
+  norms2 <- apply(L2, 2, function(x){sqrt(sum(x^2))})
+  norms2[norms2 == 0] <- Inf
+  
+  L1_normalized <- t(t(L1)/norms1)
+  L2_normalized <- t(t(L2)/norms2)
+  
+  #compute matrix of cosine similarities
+  cosine_sim_matrix <- crossprod(L1_normalized, L2_normalized)
+  
+  return(cosine_sim_matrix)
+}
+```
+
+Normalize the factor matrices:
+
+```{r}
+F_all <- flashier_snmf_summary$F_pm
+F_1 <- flashier_snmf_summary1$F_pm
+F_2 <- flashier_snmf_summary2$F_pm
+
+L_all <- flashier_snmf_summary$L_pm
+L_1 <- flashier_snmf_summary1$L_pm
+L_2 <- flashier_snmf_summary2$L_pm
+```
+
+```{r}
+F_1 <- scale(F_1, center = FALSE, scale = TRUE)
+F_2 <- scale(F_2, center = FALSE, scale = TRUE)
+F_all <- scale(F_all, center = FALSE, scale = TRUE)
+```
+
+Now, let's match the factors from the whole data analysis (F_all) to the two halves (F_1 and F_2).
+This time, we will be using the Hungarian algorithm to find the optimal matching.
+
+```{r}
+# Subset to have the common set of genes
+common_genes_all_1 <- intersect(rownames(F_all), rownames(F_1))
+common_genes_all_2 <- intersect(rownames(F_all), rownames(F_2))
+common_genes_all <- intersect(common_genes_all_1, common_genes_all_2)
+F_all <- F_all[common_genes_all, ]
+F_1 <- F_1[common_genes_all, ]
+F_2 <- F_2[common_genes_all, ]
+```
+
+```{r}
+cos_1 <- compute_cosine_sim_matrix(F_all, F_1)
+assignment_problem_1 <- RcppHungarian::HungarianSolver(-1*cos_1)
+cos_2 <- compute_cosine_sim_matrix(F_all, F_2)
+assignment_problem_2 <- RcppHungarian::HungarianSolver(-1*cos_2)
+
+# summarize the results into a data frame
+match_results <- data.frame(
+  Factor_All = 1:ncol(F_all),
+  Best_Match_F1 = assignment_problem_1$pairs[,2],
+  Best_Match_F2 = assignment_problem_2$pairs[,2],
+  cosine_F1 = cos_1[assignment_problem_1$pairs],
+  cosine_F2 = cos_2[assignment_problem_2$pairs]
+)
+
+match_results[c(1,2,3,5,22,58, 68, 171), 1:5]
+```
+
+
+We should also take a look at the cosine similarity between the matched factors in F_1 and F_2.
+
+```{r}
+cos_f1_f1 <- compute_cosine_sim_matrix(F_1[, match_results$Best_Match_F1], F_2[, match_results$Best_Match_F2])
+match_results$cosine_F1_F2 <- diag(cos_f1_f1)
+
+match_results[c(1,2,3,5,22,58, 68, 171), c(2:6)]
+```
+
+Plot the scatterplot of the cosine similarities, and see how the similarities vary with PVE:
+
+```{r}
+match_results$PVE_All <- log10(flashier_snmf_summary$pve[match_results$Factor_All])
+```
+
+```{r}
+p1 <- ggplot(match_results, aes(x = cosine_F1, y = cosine_F2, color = PVE_All)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
+  labs(x = "Cosine Similarity (Whole Data vs 1st Half)", y = "Cosine Similarity (Whole Data vs 2nd Half)") +
+  theme_minimal()
+
+p2 <- ggplot(match_results, aes(x = cosine_F1, y = cosine_F1_F2, color = PVE_All)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
+  labs(x = "Cosine Similarity (Whole Data vs 1st Half)", y = "Cosine Similarity (1st Half vs 2nd Half)") +
+  theme_minimal()
+
+
+# Whole Data - 2nd Half against 1st Half - 2nd Half
+p3 <- ggplot(match_results, aes(x = cosine_F2, y = cosine_F1_F2, color = PVE_All)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
+  labs(x = "Cosine Similarity (Whole Data vs 2nd Half)", y = "Cosine Similarity (1st Half vs 2nd Half)") +
+  theme_minimal()
+
+plot_grid(p1, p2, p3, nrow = 2)
+```
+
+
+This table should be a useful reference, let's save it as a csv file.
+
+```{r eval=FALSE}
+write.csv(match_results, file = paste0(data_path, "factor_matching_results_noback.csv"), row.names = FALSE)
+```
+
+
+Let's find the factors in F_all that have a good match (similarity > 0.5) in either F_1 or F_2.
+
+```{r}
+# match_results$MaxCorr <- pmax(match_results$Correlation_F1, match_results$Correlation_F2)
+match_results$MaxCosine <- pmax(match_results$cosine_F1, match_results$cosine_F2)
+
+# select factors with similarity > 0.5 and between F_1 and F_2 > 0.5
+selected_factors_F_all <- match_results %>%
+  filter(MaxCosine > 0.5 & cosine_F1_F2 > 0.5)
+  # filter(MaxCorr > 0.5 & Correlation_F1_F2 > 0.5)
+nrow(selected_factors_F_all)
+```
+
+What are the final selected factors in F_all?
+
+```{r}
+selected_factors_F_all$Factor_All
+```
+
+Structure plot:
+
+```{r}
+filter_cells_by_total_membership <- function (L, max_val = 10, numiter = 10) {
+  n <- nrow(L)
+  rows <- 1:n
+  for (iter in 1:numiter) {
+    x <- rowSums(L)
+    cat(sprintf("%d. Filtered out %d cells.\n",iter,sum(x > max_val)))
+    i <- which(x <= max_val)
+    L <- L[i,]
+    rows <- rows[i]
+    d <- apply(L,2,max)
+    L <- scale_cols(L,1/d)
+  }
+  return(rows)
+}
+scale_cols <- function (A, b)
+  t(t(A) * b)
+```
+
+
+```{r}
+# Take out cells for visualization
+D_all <- diag(1 / apply(L_all, 2, function(x) max(x)))
+L_all <- L_all %*% D_all
+cells_all <- filter_cells_by_total_membership(L_all, numiter = 12)
+L_all <- L_all[cells_all,]
+d <- apply(L_all,2,max)
+L_all <- scale_cols(L_all,1/d)
+D_all <- d * D_all
+seurat_meta_all <- seurat_meta[match(rownames(L_all), seurat_meta$cellID),]
+
+D_1 <- diag(1 / apply(L_1, 2, function(x) max(x)))
+L_1 <- L_1 %*% D_1
+cells_1 <- filter_cells_by_total_membership(L_1, numiter = 12)
+L_1 <- L_1[cells_1,]
+d <- apply(L_1,2,max)
+L_1 <- scale_cols(L_1,1/d)
+D_1 <- d * D_1
+seurat_meta_1 <- seurat_meta[match(rownames(L_1), seurat_meta$cellID),]
+
+
+D_2 <- diag(1 / apply(L_2, 2, function(x) max(x)))
+L_2 <- L_2 %*% D_2
+cells_2 <- filter_cells_by_total_membership(L_2, numiter = 12)
+L_2 <- L_2[cells_2,]
+d <- apply(L_2,2,max)
+L_2 <- scale_cols(L_2,1/d)
+D_2 <- d * D_2
+seurat_meta_2 <- seurat_meta[match(rownames(L_2), seurat_meta$cellID),]
+```
+
+```{r, results="hide", message=FALSE}
+set.seed(12345)
+annotation_sub <- seurat_meta_all$annotation_level1
+cells <- which(annotation_sub == "CD4" | annotation_sub == "CD8")
+cells <- sample(cells,1e5)
+cells <- sort(c(cells,which(annotation_sub != "CD4" & annotation_sub != "CD8")))
+selected_all_Factors <- c(22, 30, 58, 68, 171)
+L_all_plot <- L_all[cells,selected_all_Factors]
+colnames(L_all_plot) <- paste0("K",selected_all_Factors)
+p_all <- structure_plot(L_all_plot, gap = 10, n = 6000,
+                      topics = paste0("K",selected_all_Factors),
+                    grouping = annotation_sub[cells]) +
+  labs(y = "membership",color = "",fill = "") +
+  theme(legend.position = "bottom")
+
+## structure plot for the first half data
+selected_1_Factors <- match_results$Best_Match_F1[match(selected_all_Factors,match_results$Factor_All)]
+annotation_sub1 <- seurat_meta_1$annotation_level1
+cells1 <- which(annotation_sub1 == "CD4" | annotation_sub1 == "CD8")
+cells1 <- sample(cells1,5e4)
+cells1 <- sort(c(cells1,which(annotation_sub1 != "CD4" & annotation_sub1 != "CD8")))
+L_1_plot <- L_1[cells1, selected_1_Factors]
+colnames(L_1_plot) <- paste0("K",selected_1_Factors)
+p_1 <- structure_plot(L_1_plot, gap = 10, n = 6000,
+                      topics = paste0("K",selected_1_Factors),
+                    grouping = annotation_sub1[cells1]) +
+  labs(y = "membership",color = "",fill = "") +
+  # ylim(0,0.2) +
+  theme(legend.position = "bottom")
+                    
+## structure plot for the second half data
+selected_2_Factors <- match_results$Best_Match_F2[match(selected_all_Factors, match_results$Factor_All)]
+annotation_sub2 <- seurat_meta_2$annotation_level1
+cells2 <- which(annotation_sub2 == "CD4" | annotation_sub2 == "CD8")
+cells2 <- sample(cells2,5e4)
+cells2 <- sort(c(cells2,which(annotation_sub2 != "CD4" & annotation_sub2 !=  "CD8")))
+L_2_plot <- L_2[cells2, selected_2_Factors]
+colnames(L_2_plot) <- paste0("K",selected_2_Factors)
+p_2 <- structure_plot(L_2_plot, gap = 10, n = 6000,
+                      topics = paste0("K",selected_2_Factors),
+                    grouping = annotation_sub2[cells2]) +
+  labs(y = "membership",color = "",fill = "") +
+  # ylim(0,0.2) +
+  theme(legend.position = "bottom")
+```
+
+```{r}
+plot_grid(p_all, p_1, p_2, nrow = 3)
+```
+
+
+## Outlier Analysis
+
+I am also interested to know whether the loading from each half analysis (without backfitting) produces similar outlier cells as the whole data analysis.
+
+To make the comparison clear, let's scale by median.
+
+```{r}
+L_all <- flashier_snmf_summary$L_pm
+d <- apply(L_all,2,median)
+L_all <- scale_cols(L_all,1/d)
+
+L_1 <- flashier_snmf_summary1$L_pm
+d <- apply(L_1,2,median)
+L_1 <- scale_cols(L_1,1/d)
+
+L_2 <- flashier_snmf_summary2$L_pm
+d <- apply(L_2,2,median)
+L_2 <- scale_cols(L_2,1/d)
+```
+
+Let's define outlier cells as those that have loading greater than median + 3 * IQR for each factor.
+
+```{r}
+find_outlier_cells <- function(L){
+  outlier_list <- list()
+  for (k in 1:ncol(L)){
+    loadings <- L[,k]
+    threshold <- median(loadings) + 3 * IQR(loadings)
+    outlier_cells <- which(loadings > threshold)
+    outlier_list[[k]] <- outlier_cells
+  }
+  return(outlier_list)
+}
+
+outliers_all <- find_outlier_cells(L_all)
+outliers_1 <- find_outlier_cells(L_1)
+outliers_2 <- find_outlier_cells(L_2)
+```
+
+Keep track of the number of outlier cells for each factor:
+
+```{r}
+num_outliers_all <- sapply(outliers_all, length)
+prop_outliers_all <- num_outliers_all / nrow(L_all)
+
+num_outliers_1 <- sapply(outliers_1, length)
+prop_outliers_1 <- num_outliers_1 / nrow(L_1)
+
+num_outliers_2 <- sapply(outliers_2, length)
+prop_outliers_2 <- num_outliers_2 / nrow(L_2)
+```
+
+
+Summarize the distribution of outlier proportions:
+
+```{r}
+summary(prop_outliers_all)
+summary(prop_outliers_1)
+summary(prop_outliers_2)
+```
+
+
+Turning off the backfitting does not decrease the number of outlier cells detected.
+Let's see if the extent of outlierness (loading values) are similar between the whole data and the halves.
+
+
+Take a look at the boxplot for some matched factors:
+
+```{r}
+par(mfrow = c(2,2))
+for (i in 1:4) {
+  boxplot(L_all[,selected_factors_F_all$Factor_All[i]], L_1[,selected_factors_F_all$Best_Match_F1[i]], L_2[,selected_factors_F_all$Best_Match_F2[i]], names = c("All","1st Half","2nd Half"), main = paste0("Factor ", selected_factors_F_all$Factor_All[i], " Loadings"))
+}
+```

@@ -1,0 +1,133 @@
+---
+title: "Figure 1: Overview"
+author: "Ziang Zhang"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+All panels except (B) are produced by
+[`script-refactor/Figure1.R`](https://github.com/stephenslab/immgen-t-factors/blob/main/script-refactor/Figure1.R).
+The code below is shown for reference (not re-executed on this page, since
+some steps such as the panel-C heatmap are slow); the images are its
+pre-rendered output.
+
+## Setup
+
+Data loading, shared across all panels below.
+
+```{r fig1-setup1, code=readLines("../script-refactor/Figure1.R")[31:57], eval=FALSE}
+```
+
+Panels C and E-I additionally restrict to non-thymocyte cells:
+
+```{r fig1-setup2, code=readLines("../script-refactor/Figure1.R")[91:96], eval=FALSE}
+```
+
+## (A) Global MDE by lineage {#fig1a}
+
+```{r fig1a-code, code=readLines("../script-refactor/Figure1.R")[59:87], eval=FALSE}
+```
+
+```{r fig1a-img, echo=FALSE, out.width="50%"}
+knitr::include_graphics("assets/Figure1/1A.png")
+```
+
+::: {.figcaption}
+**Fig. 1A.** Global MDE embedding of all non-thymocyte cells, colored by major lineage (cells subsampled per lineage for visualization).
+:::
+
+## (B) Study design schematic {#fig1b}
+
+This panel is a hand-drawn schematic, not generated from R -- there is no code or pre-rendered image to show here. See `figures/final-selected/bits/Figure 1/1B.pdf` for the published panel.
+
+## (C) GP loading heatmap {#fig1c}
+
+```{r fig1c-code, code=readLines("../script-refactor/Figure1.R")[98:172], eval=FALSE}
+```
+
+```{r fig1c-img, echo=FALSE, out.width="50%"}
+knitr::include_graphics("assets/Figure1/1C.png")
+```
+
+::: {.figcaption}
+**Fig. 1C.** Heatmap of all 200 GP loadings across a stratified sample of cells, ordered by lineage then organ; columns (GPs) are clustered by similarity.
+:::
+
+## (D) GP1 signature volcano {#fig1d}
+
+```{r fig1d-code, code=readLines("../script-refactor/Figure1.R")[259:269], eval=FALSE}
+```
+
+```{r fig1d-img, echo=FALSE, out.width="50%"}
+knitr::include_graphics("assets/Figure1/1D.png")
+```
+
+::: {.figcaption}
+**Fig. 1D.** "Signature volcano" plot for one example GP (GP1): each gene's normalized score (x-axis, max |score| = 1) versus its mean shifted-log expression (y-axis), with the top-scoring genes labeled.
+:::
+
+## (E) Active-cell proportion per GP {#fig1e}
+
+```{r fig1e-code, code=readLines("../script-refactor/Figure1.R")[183:193], eval=FALSE}
+```
+
+```{r fig1e-img, echo=FALSE, out.width="50%"}
+knitr::include_graphics("assets/Figure1/1E.png")
+```
+
+::: {.figcaption}
+**Fig. 1E.** Histogram of the proportion of cells with high loading (> 0.1) per GP, across all 200 GPs.
+:::
+
+## (F) Active-gene count per GP {#fig1f}
+
+```{r fig1f-code, code=readLines("../script-refactor/Figure1.R")[248:257], eval=FALSE}
+```
+
+```{r fig1f-img, echo=FALSE, out.width="50%"}
+knitr::include_graphics("assets/Figure1/1F.png")
+```
+
+::: {.figcaption}
+**Fig. 1F.** Histogram of the number of highly-active genes (|score| > 0.25 of that GP's max) per GP.
+:::
+
+## (G) Active-GP count by lineage {#fig1g}
+
+```{r fig1g-code, code=readLines("../script-refactor/Figure1.R")[213:232], eval=FALSE}
+```
+
+```{r fig1g-img, echo=FALSE, out.width="50%"}
+knitr::include_graphics("assets/Figure1/1G.png")
+```
+
+::: {.figcaption}
+**Fig. 1G.** Boxplot of the number of active GPs (loading > 0.1) per cell, grouped by major lineage.
+:::
+
+## (H) Active-GP count, activated vs. resting {#fig1h}
+
+```{r fig1h-code, code=readLines("../script-refactor/Figure1.R")[195:211], eval=FALSE}
+```
+
+```{r fig1h-img, echo=FALSE, out.width="50%"}
+knitr::include_graphics("assets/Figure1/1H.png")
+```
+
+::: {.figcaption}
+**Fig. 1H.** Boxplot of the number of active GPs per cell, comparing activated versus resting cells.
+:::
+
+## (I) CD44 vs. active-GP count {#fig1i}
+
+```{r fig1i-code, code=readLines("../script-refactor/Figure1.R")[234:246], eval=FALSE}
+```
+
+```{r fig1i-img, echo=FALSE, out.width="50%"}
+knitr::include_graphics("assets/Figure1/1I.png")
+```
+
+::: {.figcaption}
+**Fig. 1I.** Scatter plot of CD44 surface-protein level (log-normalized) against the number of active GPs per cell.
+:::

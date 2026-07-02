@@ -1,0 +1,27 @@
+---
+title: "Table S1: per-GP summary"
+author: "Ziang Zhang"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+Produced by
+[`script-refactor/TableS1.R`](https://github.com/stephenslab/immgen-t-factors/blob/main/script-refactor/TableS1.R):
+
+```{r table-s1-code, code=readLines("../script-refactor/TableS1.R"), eval=FALSE}
+```
+
+## Table {#tables1}
+
+Showing the first 20 rows (of 200); download the full table at
+[`figure-refactor/Supplementary_Table1_GP_summary.csv`](https://github.com/stephenslab/immgen-t-factors/blob/main/figure-refactor/Supplementary_Table1_GP_summary.csv).
+
+```{r table-s1-preview, echo=FALSE, message=FALSE}
+tab <- read.csv("../figure-refactor/Supplementary_Table1_GP_summary.csv", stringsAsFactors = FALSE)
+knitr::kable(head(tab, 20), row.names = FALSE)
+```
+
+::: {.figcaption}
+**Table S1.** One row per GP: which Level-1 (major lineage), Level-2 (sub-lineage), condition, and organ categories it predicts well (AUC > 0.8, driven by high loading), plus its top 5 positive and negative signature genes (|score| > 0.25).
+:::

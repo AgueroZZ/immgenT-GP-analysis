@@ -1,0 +1,80 @@
+---
+title: "Figure S1: GP reproducibility across IGTs"
+author: "Ziang Zhang"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+All panels are produced by
+[`script-refactor/FigureS1.R`](https://github.com/stephenslab/immgen-t-factors/blob/main/script-refactor/FigureS1.R).
+The code below is shown for reference (not re-executed on this page); the
+images are its pre-rendered output. Panels A/B reuse a cached per-IGT
+cosine-similarity score matrix (`data/igt_specific_cosine_scores.csv`); see
+`code-refactor/pipeline/05_igt_validation.R` for how that matrix itself is
+produced (a much heavier, cluster-scale computation).
+
+## Setup
+
+```{r figs1-setup, code=readLines("../script-refactor/FigureS1.R")[1:31], eval=FALSE}
+```
+
+Panels A and B both use the cached per-IGT cosine score matrix:
+
+```{r figs1-setup-ab, code=readLines("../script-refactor/FigureS1.R")[33:37], eval=FALSE}
+```
+
+## (A) Cumulative GPs validated as IGTs are added {#figs1a}
+
+```{r figs1a-code, code=readLines("../script-refactor/FigureS1.R")[60:85], eval=FALSE}
+```
+
+```{r figs1a-img, echo=FALSE, out.width="49%"}
+knitr::include_graphics("assets/FigureS1/S1A.png")
+```
+
+::: {.figcaption}
+**Fig. S1A.** GPs were tested for reproducibility in individual datasets (IGTs): for each IGT a dataset-specific EBMF factorization was computed and its factors were matched to the global GPs by Hungarian assignment on the cosine similarity of gene-score vectors (restricted to shared genes, with columns scaled), and a GP is counted as "validated" in an IGT when this cosine similarity reaches a given threshold. Adding IGTs one at a time in index order, the curves show the cumulative number of GPs (of 200) validated in at least one IGT included so far, for cosine thresholds of 0.2-0.8.
+:::
+
+## (B) GPs validated by at least X IGTs {#figs1b}
+
+```{r figs1b-code, code=readLines("../script-refactor/FigureS1.R")[39:58], eval=FALSE}
+```
+
+```{r figs1b-img, echo=FALSE, out.width="49%"}
+knitr::include_graphics("assets/FigureS1/S1B.png")
+```
+
+::: {.figcaption}
+**Fig. S1B.** Using the same per-IGT cosine matching, the number of GPs validated by at least X IGTs as a function of X (both axes log-scaled), for thresholds of 0.2-0.8.
+:::
+
+## (C) Between-IGT variability {#figs1c}
+
+```{r figs1c-setup, code=readLines("../script-refactor/FigureS1.R")[87:95], eval=FALSE}
+```
+
+```{r figs1c-code, code=readLines("../script-refactor/FigureS1.R")[97:121], eval=FALSE}
+```
+
+```{r figs1c-img, echo=FALSE, out.width="49%"}
+knitr::include_graphics("assets/FigureS1/S1C.png")
+```
+
+::: {.figcaption}
+**Fig. S1C.** Between-IGT variability of GP loadings, computed on a standard spleen subset used for this purpose. Each GP's mean loading is computed within every IGT; each point is a GP, plotting the mean across IGTs of these per-IGT mean loadings (x-axis) against their variance across IGTs (y-axis). The ten GPs with the highest between-IGT variance are labeled.
+:::
+
+## (D) Top-variance GP heatmap {#figs1d}
+
+```{r figs1d-code, code=readLines("../script-refactor/FigureS1.R")[123:152], eval=FALSE}
+```
+
+```{r figs1d-img, echo=FALSE, out.width="49%"}
+knitr::include_graphics("assets/FigureS1/S1D.png")
+```
+
+::: {.figcaption}
+**Fig. S1D.** Heatmap of the per-IGT mean loading (same standard spleen subset, restricted to IGTs with >= 500 cells) for the ten GPs with the highest between-IGT variance from (C). Rows (GPs) are hierarchically clustered; color runs from white (low) to red (high mean loading).
+:::

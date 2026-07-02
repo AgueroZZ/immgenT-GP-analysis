@@ -1,0 +1,151 @@
+---
+title: "TF_analysis"
+author: "Ziang Zhang"
+date: "2025-12-22"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+```{r}
+library(ggplot2)
+library(ggrepel)
+library(patchwork)
+library(cowplot)
+library(fastTopics)
+library(dplyr)
+library(pheatmap)
+library(scales)
+library(scattermore)
+
+data_path <- "../data/"
+code_path <- "../code/"
+# data_path <- "data/"
+# code_path <- "code/"
+seurat_meta <- readRDS(paste0(data_path, "seurat_meta.rds"))
+flashier_snmf_summary <- readRDS(paste0(data_path, "flashier_snmf_summary.rds"))
+cells_flashier <- rownames(flashier_snmf_summary$L_pm)
+cells_seurat <- seurat_meta$cellID
+which(!cells_flashier %in% cells_seurat)
+L_pm <- flashier_snmf_summary$L_pm[cells_flashier %in% cells_seurat, ]
+
+filter_cells_by_total_membership <- function (L, max_val = 10, numiter = 10) {
+  n <- nrow(L)
+  rows <- 1:n
+  for (iter in 1:numiter) {
+    x <- rowSums(L)
+    cat(sprintf("%d. Filtered out %d cells.\n",iter,sum(x > max_val)))
+    i <- which(x <= max_val)
+    L <- L[i,]
+    rows <- rows[i]
+    d <- apply(L,2,max)
+    L <- scale_cols(L,1/d)
+  }
+  return(rows)
+}
+scale_cols <- function (A, b) t(t(A) * b)
+```
+
+Read in the AUC result for various level-1 categories:
+
+```{r}
+CD4_TF_list <- read.table(paste0(data_path, "/TF-list/CD4_tf_level2_AUC.txt"), header = TRUE)
+
+CD8_TF_list <- read.table(paste0(data_path, "/TF-list/CD8_tf_level2_AUC.txt"), header = TRUE)
+
+CD8aa_TF_list <- read.table(paste0(data_path, "/TF-list/CD8aa_tf_level2_AUC.txt"), header = TRUE)
+
+gdT_TF_list <- read.table(paste0(data_path, "/TF-list/gdT_tf_level2_AUC.txt"), header = TRUE)
+
+DN_TF_list <- read.table(paste0(data_path, "/TF-list/DN_tf_level2_AUC.txt"), header = TRUE)
+
+DP_TF_list <- read.table(paste0(data_path, "/TF-list/DP_tf_level2_AUC.txt"), header = TRUE)
+
+Treg_TF_list <- read.table(paste0(data_path, "/TF-list/Treg_tf_level2_AUC.txt"), header = TRUE)
+```
+
+
+Only consider TF that have AUC >= threshold in some level-1 category:
+
+```{r}
+threshold <- 0.85
+TF_highlights <- c(CD4_TF_list$Gene[CD4_TF_list$auc >= threshold],
+                   CD8_TF_list$Gene[CD8_TF_list$auc >= threshold],
+                   CD8aa_TF_list$Gene[CD8aa_TF_list$auc >= threshold],
+                   gdT_TF_list$Gene[gdT_TF_list$auc >= threshold],
+                   DN_TF_list$Gene[DN_TF_list$auc >= threshold],
+                   DP_TF_list$Gene[DP_TF_list$auc >= threshold],
+                   Treg_TF_list$Gene[Treg_TF_list$auc >= threshold])
+
+TF_highlights <- unique(TF_highlights)
+```
+
+
+```{r}
+F_pm <- flashier_snmf_summary$F_pm
+F_pm_norm_col <- F_pm / matrix(apply(F_pm, 2, function(x) max(abs(x))), nrow = nrow(F_pm), ncol = ncol(F_pm), byrow = TRUE)
+```
+
+Produce a bar plot show the normalized factor value
+
+```{r}
+produce_barplot <- function(name, threshold = 0.8){
+  f_vec <- F_pm_norm_col[name, ]
+  highlighted_indices <- which(f_vec >= threshold)
+  barplot(f_vec, main = name, ylim = c(min(f_vec), 1.5))
+  text(x = highlighted_indices, y = 1.1, labels = paste0("K",highlighted_indices))
+}
+produce_barplot("Foxp3")
+```
+
+```{r}
+compute_le_effects_fix <- function (effects_matrix) 
+{
+    if (!(is.matrix(effects_matrix) & is.numeric(effects_matrix))) 
+        stop("Input \"effects_matrix\" should be a numeric matrix")
+    k <- ncol(effects_matrix)
+    if (k <= 1) 
+        return(effects_matrix)
+    out <- effects_matrix
+    for (j in 1:k) {
+        x <- effects_matrix[, j, drop = FALSE]
+        i <- which(x > 0)
+        if (length(i) > 0) {
+            y <- cbind(0, effects_matrix[i, -j, drop = FALSE])
+            out[i, j] <- pmax(0, x[i] - apply(y, 1, max))
+        }
+        i <- which(x < 0)
+        if (length(i) > 0) {
+            y <- cbind(0, effects_matrix[i, -j, drop = FALSE])
+            out[i, j] <- pmin(0, x[i] - apply(y, 1, min))
+        }
+    }
+    return(out)
+}
+
+F_pm_norm_col_le <- compute_le_effects_fix(F_pm_norm_col)
+
+produce_barplot_le <- function(name, threshold = 0.8){
+  f_vec <- F_pm_norm_col_le[name, ]
+  highlighted_indices <- which(f_vec >= threshold)
+  barplot(f_vec, 
+          names.arg	= 1:length(f_vec), 
+          main = name, 
+          ylim = c(min(f_vec), 1.5))
+  text(x = highlighted_indices, y = 1.1, labels = paste0("K",highlighted_indices))
+}
+
+# later, try to stack them together, since each l.e. is only non-zero at most for two GPs.
+```
+
+```{r}
+produce_barplot_le("Sox4")
+```
+
+
+
+
+
+

@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Ziang Zhang" />
+
+
+<title>Figure 2: GPs and lineages</title>
+
+<script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="custom.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">immgenT-GP-analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Overview</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Figure 2: GPs and lineages</h1>
+<h4 class="author">Ziang Zhang</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2026-07-02
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong>
+<code>immgenT-GP-analysis/analysis/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.2). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed1code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(1)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed1code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(1)</code> was run prior to running the
+code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongnoversioncontrol">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>Repository version:</strong> no
+version control </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongnoversioncontrol"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Tracking code development and connecting the code version to the
+results is critical for reproducibility. To start using Git, open the
+Terminal and type <code>git init</code> in your project directory.</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+This project is not being versioned with Git. To obtain the full
+reproducibility benefits of using workflowr, please see
+<code>?wflow_start</code>.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<p>All panels are produced by <a
+href="https://github.com/stephenslab/immgen-t-factors/blob/main/script-refactor/Figure2.R"><code>script-refactor/Figure2.R</code></a>.
+The code below is shown for reference (not re-executed on this page);
+the images are its pre-rendered output.</p>
+<div id="setup" class="section level2">
+<h2>Setup</h2>
+<p>Data loading, shared across all panels below.</p>
+<pre class="r"><code># Figure 2. GPs and lineages.
+#
+# Panels produced (see figures/final-selected/bits/Figure 2/Figure2_caption.md
+# for the full caption text):
+#   2A  Swarm plot of per-GP AUC (predicting major lineage), up-regulated
+#       GPs only, with GP3/22/29 force-highlighted.
+#   2B  Structure plot of 6 lineage-defining GPs across major lineages.
+#   2C,2E,2G  GP loading on the global MDE, for GP68, GP30, GP58.
+#   2D,2F,2H  Per-gene view (score vs. mean expression) for GP68, GP30, GP58.
+#   2I  MDE restricted to gdT/CD8aa/DN, colored by lineage.
+#   2J,2K,2L  GP loading on the gdT/CD8aa/DN MDE, for GP22, GP29, GP3.
+#   2M  Heatmap of top-30 gene scores for GP3, GP22, GP29.
+#
+# Source: ported from script/Figure_Lineage.R, which also produced the
+# Figure S2 panels (see FigureS2.R) from the same L_pm_filtered/MDE setup.
+#
+# Panels 2C/2E/2G (GP68/30/58 on the *global* MDE) have no direct
+# equivalent in the original script -- script/Figure_Lineage.R only plots
+# GP68/30/58-defined structure/boxplots, never their global-MDE loading.
+# Reconstructed here with the same plot_loadings_on_mde() styling used for
+# panels 2J/2K/2L (the closest in-script precedent).
+#
+# Panels 2D/2F/2H and 2M are NOT from script/ or code/ at all -- they&#39;re
+# generated by the separate &quot;immgen-signature&quot; Shiny app (see
+# code-refactor/R/volcano_helpers.R and code-refactor/R/cross_gp_helpers.R
+# headers for the full provenance notes).
+
+library(ggplot2)
+library(ggrepel)
+library(dplyr)
+library(tidyr)
+library(tibble)
+library(scattermore)
+library(pheatmap)
+library(fastTopics) # structure_plot()
+
+data_path &lt;- &quot;data/&quot;
+figure_path &lt;- &quot;figure-refactor/Figure 2/&quot;
+source(&quot;code-refactor/R/plot_utils.R&quot;) # lineage_colors()
+source(&quot;code-refactor/R/lineage_plots.R&quot;) # plot_gp_swarm(), plot_loadings_on_mde()
+source(&quot;code-refactor/R/volcano_helpers.R&quot;) # plot_gp_signature_volcano(), normalize_maxabs()
+source(&quot;code-refactor/R/cross_gp_helpers.R&quot;) # plot_cross_gp_heatmap()
+
+# ============================================================
+# Load data
+# ============================================================
+seurat_meta &lt;- readRDS(paste0(
+  data_path,
+  &quot;igt1_96_withtotalvi20260206_clean_ADTonly.Rds&quot;
+))@meta.data
+L_pm_filtered &lt;- readRDS(paste0(data_path, &quot;L_pm_filtered.rds&quot;))
+seurat_meta_filtered &lt;- seurat_meta[rownames(L_pm_filtered), ]
+mde_result &lt;- readRDS(paste0(data_path, &quot;umap_result.rds&quot;))
+colnames(mde_result) &lt;- c(&quot;MDE_1&quot;, &quot;MDE_2&quot;)
+mde_result &lt;- mde_result[rownames(L_pm_filtered), ]
+df_mde &lt;- as.data.frame(mde_result)
+level_1_AUC_list &lt;- readRDS(paste0(data_path, &quot;level_1_AUC_list_figure.rds&quot;))
+
+# Rename K## to GP## for display consistency
+colnames(L_pm_filtered) &lt;- gsub(&quot;^K&quot;, &quot;GP&quot;, colnames(L_pm_filtered))
+colnames(level_1_AUC_list$auc) &lt;- gsub(
+  &quot;^K&quot;,
+  &quot;GP&quot;,
+  colnames(level_1_AUC_list$auc)
+)</code></pre>
+</div>
+<div id="fig2a" class="section level2">
+<h2>(A) AUC swarm plot by lineage</h2>
+<pre class="r"><code># ============================================================
+# 2A: AUC swarm, up-regulated GPs only, GP3/22/29 forced highlight
+# ============================================================
+selected_lineage_in_order &lt;- c(&quot;CD8&quot;, &quot;CD4&quot;, &quot;Treg&quot;, &quot;gdT&quot;, &quot;CD8aa&quot;, &quot;Tz&quot;, &quot;DN&quot;)
+level_1_categories &lt;- as.character(unique(
+  seurat_meta_filtered$annotation_level1
+))
+
+mean_loading_matrix &lt;- t(sapply(level_1_categories, function(cat) {
+  cells_in_cat &lt;- which(seurat_meta_filtered$annotation_level1 == cat)
+  colMeans(L_pm_filtered[cells_in_cat, , drop = FALSE], na.rm = TRUE)
+}))
+mean_loading_matrix_selected &lt;- mean_loading_matrix[selected_lineage_in_order, ]
+
+non_thymocyte_cells &lt;- which(
+  seurat_meta_filtered$annotation_level1 != &quot;thymocyte&quot;
+)
+mean_loading_vec &lt;- colMeans(
+  L_pm_filtered[non_thymocyte_cells, , drop = FALSE],
+  na.rm = TRUE
+)
+
+AUC_mat_selected &lt;- level_1_AUC_list$auc[selected_lineage_in_order, ]
+
+p_2A &lt;- plot_gp_swarm(
+  AUC_mat_selected,
+  loading_mat = mean_loading_matrix,
+  overall_loading_vec = mean_loading_vec,
+  filter_positive = TRUE,
+  forced_highlights = list(
+    gdT = c(&quot;GP22&quot;, &quot;GP29&quot;, &quot;GP3&quot;),
+    CD8aa = c(&quot;GP22&quot;, &quot;GP29&quot;, &quot;GP3&quot;),
+    DN = c(&quot;GP22&quot;, &quot;GP29&quot;, &quot;GP3&quot;)
+  ),
+  top_k_labels = 1,
+  threshold_line = 0.5,
+  title = &quot;Up-regulated GP Predictive Performance (AUC)&quot;,
+  subtitle = &quot;Up-regulated GPs (Loading &gt;= Overall Mean); triangles mark forced highlights that are down-regulated&quot;,
+  y_label = &quot;Area Under the Curve (AUC)&quot;,
+  italic_subtitle = TRUE
+)
+ggsave(
+  filename = paste0(figure_path, &quot;2A.pdf&quot;),
+  plot = p_2A,
+  width = 10,
+  height = 6
+)</code></pre>
+<p><img src="assets/Figure2/2A.png" width="60%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 2A.</strong> Swarm plot of per-GP predictive performance
+(one-vs-rest AUC, computed on healthy non-thymocyte cells) across the
+seven major lineages (CD8, CD4, Treg, gdT, CD8aa, Tz, DN). Only
+up-regulated GPs (mean loading &gt;= the overall mean) are plotted as
+circles; triangles mark forced-highlight GPs (GP3, GP22, GP29) that are
+down-regulated in gdT, CD8aa, and DN; the dashed line marks AUC = 0.5,
+and the most predictive GP per lineage is labeled.</p>
+</div>
+</div>
+<div id="fig2b" class="section level2">
+<h2>(B) Structure plot of lineage-defining GPs</h2>
+<pre class="r"><code># ============================================================
+# 2B: Structure plot of 6 lineage-defining GPs
+# ============================================================
+set.seed(1234)
+color_coding &lt;- ZemmourLib::immgent_colors$level1
+level1_category_to_factor &lt;- c(
+  &quot;Treg&quot; = &quot;GP68&quot;,
+  &quot;CD8&quot; = &quot;GP58&quot;,
+  &quot;Tz&quot; = &quot;GP30&quot;,
+  &quot;DN&quot; = &quot;GP22&quot;,
+  &quot;CD8aa&quot; = &quot;GP29&quot;,
+  &quot;gdT&quot; = &quot;GP3&quot;
+)
+fit2 &lt;- L_pm_filtered[, level1_category_to_factor, drop = FALSE]
+cell_type &lt;- seurat_meta[rownames(fit2), &quot;annotation_level1&quot;]
+cells &lt;- which(cell_type == &quot;CD4&quot; | cell_type == &quot;CD8&quot;)
+cells &lt;- sample(cells, 1e5)
+cells &lt;- sort(c(
+  cells,
+  which(
+    cell_type != &quot;CD4&quot; &amp;
+      cell_type != &quot;CD8&quot; &amp;
+      cell_type != &quot;thymocyte&quot; &amp;
+      cell_type != &quot;DP&quot;
+  )
+))
+
+p_2B &lt;- structure_plot(
+  fit2[cells, ],
+  gap = 40,
+  n = 10000,
+  colors = color_coding[names(level1_category_to_factor)],
+  grouping = cell_type[cells]
+) +
+  labs(y = &quot;membership&quot;, color = &quot;&quot;, fill = &quot;&quot;) +
+  guides(fill = guide_legend(nrow = 1), color = guide_legend(nrow = 1)) +
+  theme(
+    legend.position = &quot;bottom&quot;,
+    legend.direction = &quot;horizontal&quot;,
+    legend.box = &quot;horizontal&quot;,
+    axis.text.x = element_text(size = 10, angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 12),
+    axis.title = element_text(size = 14, face = &quot;bold&quot;),
+    legend.text = element_text(size = 12),
+    legend.title = element_text(size = 13)
+  )
+ggsave(
+  filename = paste0(figure_path, &quot;2B.pdf&quot;),
+  plot = p_2B,
+  width = 10,
+  height = 6,
+  dpi = 300
+)</code></pre>
+<p><img src="assets/Figure2/2B.png" width="60%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 2B.</strong> Structure plot of the membership (GP
+loading) of six lineage-defining GPs (GP58, GP68, GP30, GP3, GP29, GP22)
+across cells grouped by major lineages (CD8, CD4, Treg, gdT, CD8aa, Tz,
+DN); CD4 and CD8 cells are subsampled for visualization.</p>
+</div>
+</div>
+<div id="fig2c" class="section level2">
+<h2>(C) GP68 loading on the global MDE</h2>
+<pre class="r"><code>p_2C &lt;- plot_loadings_on_mde(
+  mde = df_mde,
+  loading = L_pm_filtered[rownames(df_mde), &quot;GP68&quot;],
+  factor_num = 68,
+  size = 0.6,
+  bg_alpha = 0.1,
+  bg_color = &quot;grey90&quot;
+)
+ggsave(
+  filename = paste0(figure_path, &quot;2C.pdf&quot;),
+  plot = p_2C,
+  width = 5,
+  height = 4
+)</code></pre>
+<p><img src="assets/Figure2/2C.png" width="40%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 2C.</strong> GP68 loading projected onto the global MDE
+embedding; each point is a cell, colored by its loading for GP68.</p>
+</div>
+</div>
+<div id="fig2d" class="section level2">
+<h2>(D) GP68 signature volcano</h2>
+<pre class="r"><code>F_pm_filtered_2d &lt;- readRDS(paste0(data_path, &quot;F_pm_filtered.rds&quot;))
+colnames(F_pm_filtered_2d) &lt;- paste0(&quot;GP&quot;, seq_len(ncol(F_pm_filtered_2d)))
+F_pm_normalized_2d &lt;- normalize_maxabs(F_pm_filtered_2d)
+mean_shifted_log_expr &lt;- readRDS(paste0(data_path, &quot;mean_shifted_log_expr.rds&quot;))
+
+p_2D &lt;- plot_gp_signature_volcano(
+  &quot;GP68&quot;,
+  F_pm_normalized_2d,
+  mean_shifted_log_expr,
+  threshold = 0.1,
+  n_label = 100,
+  bg_alpha = 0.2
+)
+ggsave(
+  filename = paste0(figure_path, &quot;2D.pdf&quot;),
+  plot = p_2D,
+  width = 7,
+  height = 5.5
+)</code></pre>
+<p><img src="assets/Figure2/2D.png" width="40%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 2D.</strong> Per-gene view of GP68: each gene’s score in
+the GP (x-axis, scaled so the maximum |score| = 1) versus its mean
+shifted-log expression (y-axis); top genes are labeled.</p>
+</div>
+</div>
+<div id="fig2e" class="section level2">
+<h2>(E) GP30 loading on the global MDE</h2>
+<pre class="r"><code>p_2E &lt;- plot_loadings_on_mde(
+  mde = df_mde,
+  loading = L_pm_filtered[rownames(df_mde), &quot;GP30&quot;],
+  factor_num = 30,
+  size = 0.6,
+  bg_alpha = 0.1,
+  bg_color = &quot;grey90&quot;
+)
+ggsave(
+  filename = paste0(figure_path, &quot;2E.pdf&quot;),
+  plot = p_2E,
+  width = 5,
+  height = 4
+)</code></pre>
+<p><img src="assets/Figure2/2E.png" width="40%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 2E.</strong> GP30 loading projected onto the global MDE
+embedding; each point is a cell, colored by its loading for GP30.</p>
+</div>
+</div>
+<div id="fig2f" class="section level2">
+<h2>(F) GP30 signature volcano</h2>
+<pre class="r"><code>p_2F &lt;- plot_gp_signature_volcano(
+  &quot;GP30&quot;,
+  F_pm_normalized_2d,
+  mean_shifted_log_expr,
+  threshold = 0.1,
+  n_label = 100,
+  bg_alpha = 0.2
+)
+ggsave(
+  filename = paste0(figure_path, &quot;2F.pdf&quot;),
+  plot = p_2F,
+  width = 7,
+  height = 5.5
+)</code></pre>
+<p><img src="assets/Figure2/2F.png" width="40%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 2F.</strong> Per-gene view of GP30: each gene’s score in
+the GP (x-axis, scaled so the maximum |score| = 1) versus its mean
+shifted-log expression (y-axis); top genes are labeled.</p>
+</div>
+</div>
+<div id="fig2g" class="section level2">
+<h2>(G) GP58 loading on the global MDE</h2>
+<pre class="r"><code>p_2G &lt;- plot_loadings_on_mde(
+  mde = df_mde,
+  loading = L_pm_filtered[rownames(df_mde), &quot;GP58&quot;],
+  factor_num = 58,
+  size = 0.6,
+  bg_alpha = 0.1,
+  bg_color = &quot;grey90&quot;
+)
+ggsave(
+  filename = paste0(figure_path, &quot;2G.pdf&quot;),
+  plot = p_2G,
+  width = 5,
+  height = 4
+)</code></pre>
+<p><img src="assets/Figure2/2G.png" width="40%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 2G.</strong> GP58 loading projected onto the global MDE
+embedding; each point is a cell, colored by its loading for GP58.</p>
+</div>
+</div>
+<div id="fig2h" class="section level2">
+<h2>(H) GP58 signature volcano</h2>
+<pre class="r"><code>p_2H &lt;- plot_gp_signature_volcano(
+  &quot;GP58&quot;,
+  F_pm_normalized_2d,
+  mean_shifted_log_expr,
+  threshold = 0.1,
+  n_label = 83,
+  bg_alpha = 0.2
+)
+ggsave(
+  filename = paste0(figure_path, &quot;2H.pdf&quot;),
+  plot = p_2H,
+  width = 7,
+  height = 5.5
+)</code></pre>
+<p><img src="assets/Figure2/2H.png" width="40%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 2H.</strong> Per-gene view of GP58: each gene’s score in
+the GP (x-axis, scaled so the maximum |score| = 1) versus its mean
+shifted-log expression (y-axis); top genes are labeled.</p>
+</div>
+</div>
+<div id="fig2i" class="section level2">
+<h2>(I) gdT/CD8aa/DN MDE by lineage</h2>
+<pre class="r"><code>gcd_lineages &lt;- c(&quot;gdT&quot;, &quot;CD8aa&quot;, &quot;DN&quot;)
+gcd_cells &lt;- seurat_meta_filtered$cellID[
+  seurat_meta_filtered$annotation_level1 %in%
+    gcd_lineages &amp;
+    !(seurat_meta_filtered$annotation_level2_group %in%
+      c(&quot;proliferating&quot;, &quot;miniverse&quot;))
+]
+df_mde_gcd &lt;- df_mde[gcd_cells, ]
+df_mde_gcd$annotation_level1 &lt;- factor(
+  seurat_meta_filtered[gcd_cells, &quot;annotation_level1&quot;],
+  levels = gcd_lineages
+)
+
+p_2I &lt;- ggplot(df_mde_gcd, aes(x = MDE_1, y = MDE_2)) +
+  scattermore::geom_scattermore(
+    aes(color = annotation_level1),
+    pointsize = 1.2
+  ) +
+  scale_color_manual(values = lineage_colors()[gcd_lineages]) +
+  coord_equal() +
+  theme_classic() +
+  labs(
+    title = &quot;MDE: gdT / CD8aa / DN&quot;,
+    x = &quot;MDE 1&quot;,
+    y = &quot;MDE 2&quot;,
+    color = &quot;Cell Type&quot;
+  ) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.key.size = unit(1.5, &quot;lines&quot;)
+  ) +
+  guides(color = guide_legend(override.aes = list(size = 4)))
+ggsave(
+  filename = paste0(figure_path, &quot;2I.pdf&quot;),
+  plot = p_2I,
+  width = 5,
+  height = 5
+)</code></pre>
+<p><img src="assets/Figure2/2I.png" width="40%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 2I.</strong> MDE restricted to gdT, CD8aa, and DN cells
+(excluding proliferating and miniverse subsets), colored by lineage.</p>
+</div>
+</div>
+<div id="fig2jl" class="section level2">
+<h2>(J-L) GP22, GP29, GP3 loading on the gdT/CD8aa/DN MDE</h2>
+<pre class="r"><code>gp_letter &lt;- c(&quot;GP22&quot; = &quot;2J&quot;, &quot;GP29&quot; = &quot;2K&quot;, &quot;GP3&quot; = &quot;2L&quot;)
+for (gp_name in names(gp_letter)) {
+  gp_num &lt;- as.numeric(sub(&quot;^GP&quot;, &quot;&quot;, gp_name))
+  p_loading &lt;- plot_loadings_on_mde(
+    mde = df_mde_gcd[, c(&quot;MDE_1&quot;, &quot;MDE_2&quot;)],
+    loading = L_pm_filtered[gcd_cells, gp_name],
+    factor_num = gp_num,
+    size = 0.6,
+    bg_alpha = 0.1,
+    bg_color = &quot;grey90&quot;
+  )
+  ggsave(
+    filename = paste0(figure_path, gp_letter[gp_name], &quot;.pdf&quot;),
+    plot = p_loading,
+    width = 5,
+    height = 4
+  )
+}</code></pre>
+<p><img src="assets/Figure2/2J.png" width="30%" style="display: block; margin: auto;" /><img src="assets/Figure2/2K.png" width="30%" style="display: block; margin: auto;" /><img src="assets/Figure2/2L.png" width="30%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 2J-L.</strong> GP loading on the same gdT/CD8aa/DN MDE
+for GP22 (J), GP29 (K), and GP3 (L).</p>
+</div>
+</div>
+<div id="fig2m" class="section level2">
+<h2>(M) Top-30 gene score heatmap for GP3/GP29/GP22</h2>
+<pre class="r"><code>F_pm_filtered_2m &lt;- readRDS(paste0(data_path, &quot;F_pm_filtered.rds&quot;))
+colnames(F_pm_filtered_2m) &lt;- paste0(&quot;GP&quot;, seq_len(ncol(F_pm_filtered_2m)))
+F_pm_norm_2m &lt;- normalize_maxabs(F_pm_filtered_2m)
+common_genes_2m &lt;- intersect(rownames(F_pm_norm_2m), names(mean_shifted_log_expr))
+
+gps_2m &lt;- c(&quot;GP3&quot;, &quot;GP29&quot;, &quot;GP22&quot;)
+mat_2m &lt;- F_pm_norm_2m[common_genes_2m, gps_2m, drop = FALSE]
+
+p_2M &lt;- plot_cross_gp_heatmap(
+  mat_2m, gps_2m,
+  feat_label = &quot;Gene&quot;, n_genes = 30, direction = &quot;both&quot;,
+  threshold = 0.05, colorscheme = &quot;bwr&quot;, cluster_r = TRUE, cluster_c = FALSE,
+  pin_top = c(&quot;Fcer1g&quot;, &quot;Ccl5&quot;, &quot;Cd7&quot;)
+)
+ph_2m &lt;- max(4, 2 + 30 * 0.14)
+pw_2m &lt;- max(5, 3 + length(gps_2m) * 0.8)
+ggsave(filename = paste0(figure_path, &quot;2M.pdf&quot;), plot = p_2M, width = pw_2m, height = ph_2m)</code></pre>
+<p><img src="assets/Figure2/2M.png" width="40%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 2M.</strong> Heatmap of the top 30 gene scores across
+GP3, GP29, and GP22 (blue, negative; red, positive), with Fcer1g, Ccl5,
+and Cd7 pinned to the top rows.</p>
+</div>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.5.1 (2025-06-13)
+Platform: aarch64-apple-darwin20
+Running under: macOS Sequoia 15.6.1
+
+Matrix products: default
+BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_CA/en_CA/en_CA/C/en_CA/en_CA
+
+time zone: Asia/Tokyo
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+ [1] vctrs_0.7.3     cli_3.6.6       knitr_1.50      rlang_1.2.0    
+ [5] xfun_0.55       stringi_1.8.7   otel_0.2.0      promises_1.5.0 
+ [9] jsonlite_2.0.0  workflowr_1.7.2 glue_1.8.1      rprojroot_2.1.1
+[13] git2r_0.36.2    htmltools_0.5.9 httpuv_1.6.16   sass_0.4.10    
+[17] rmarkdown_2.30  evaluate_1.0.5  jquerylib_0.1.4 tibble_3.3.0   
+[21] fastmap_1.2.0   yaml_2.3.12     lifecycle_1.0.5 stringr_1.6.0  
+[25] compiler_4.5.1  fs_1.6.6        Rcpp_1.1.1-1.1  pkgconfig_2.0.3
+[29] later_1.4.4     digest_0.6.39   R6_2.6.1        pillar_1.11.1  
+[33] magrittr_2.0.5  bslib_0.9.0     tools_4.5.1     cachem_1.1.0   </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

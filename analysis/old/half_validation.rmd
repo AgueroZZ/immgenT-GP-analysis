@@ -1,0 +1,286 @@
+---
+title: "Validating the EBMF result using halves of the data"
+author: "Ziang Zhang"
+date: "2025-10-15"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+
+```{r}
+source("https://raw.githubusercontent.com/stephenslab/single-cell-jamboree/refs/heads/main/code/group_factors.R")
+library(ggplot2)
+library(dplyr)
+library(fastTopics)
+library(qs)
+library(cowplot)
+library(ggrepel)
+data_path <- "../data/"
+code_path <- "../code/"
+# data_path <- "data/"
+# code_path <- "code/"
+source(paste0(code_path, "ROC.R"))
+seurat_meta <- readRDS(paste0(data_path, "seurat_meta.rds"))
+# fit1_summary.qs
+flashier_snmf_summary <- readRDS(paste0(data_path, "flashier_snmf_summary.rds"))
+flashier_snmf_summary1 <- qs::qread(paste0(data_path, "fit1_summary.qs"))
+flashier_snmf_summary2 <- qs::qread(paste0(data_path, "fit2_summary.qs"))
+```
+
+```{r}
+F_all <- flashier_snmf_summary$F_pm
+F_1 <- flashier_snmf_summary1$F_pm
+F_2 <- flashier_snmf_summary2$F_pm
+
+L_all <- flashier_snmf_summary$L_pm
+L_1 <- flashier_snmf_summary1$L_pm
+L_2 <- flashier_snmf_summary2$L_pm
+```
+
+## Match the factors between the two havles
+
+To match factor in F_1 to F_2, we will compute the correlation between each pair of factors:
+
+```{r}
+# Normalize each column to have unit variance
+F_1 <- scale(F_1, center = FALSE, scale = TRUE)
+F_2 <- scale(F_2, center = FALSE, scale = TRUE)
+```
+
+```{r}
+# Subset to have the common set of genes
+common_genes <- intersect(rownames(F_1), rownames(F_2))
+F_1 <- F_1[common_genes, ]
+F_2 <- F_2[common_genes, ]
+```
+
+```{r}
+# compute column-wise correlation
+cor_F <- cor(F_1, F_2)
+# find the best match for each factor in F_1
+best_match_F <- apply(cor_F, 1, which.max)
+best_cor_F <- apply(cor_F, 1, max)
+# Create a data frame to store the results
+match_results_F <- data.frame(
+  Factor_F1 = 1:ncol(F_1),
+  Best_Match_F2 = best_match_F,
+  Correlation = best_cor_F
+)
+```
+
+```{r}
+hist(cor_F, breaks = 50, main = "Histogram of Correlations between F1 and F2", xlab = "Correlation")
+```
+
+```{r}
+image((cor_F)>0.5)
+```
+
+```{r}
+# Doing a bar plot to visualize the overlap of matched factors for each factor in F_1
+# correlation on y-axis and factor in F_1 on x-axis
+plot_F <- ggplot(match_results_F, aes(x = Factor_F1, y = Correlation)) +
+  geom_bar(stat = "identity") +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "red") +
+  labs(title = "Best Match Correlation for Each Factor in F_1",
+       x = "Factor in F_1",
+       y = "Best Match Correlation with F_2") +
+  theme_minimal()
+print(plot_F)
+```
+
+
+Let's focus on the non-overlapped matched factors:
+
+```{r}
+# if there exists overlap of matched F_2 factors, we will only keep the one with the highest correlation
+match_results_F_filtered <- match_results_F %>%
+  group_by(Best_Match_F2) %>%
+  slice_max(order_by = Correlation, n = 1, with_ties = FALSE) %>%
+  arrange(Factor_F1) %>%
+  ungroup()
+```
+
+We will only consider the factors with correlation > 0.5:
+
+```{r}
+selected_factors_F <- match_results_F_filtered %>%
+  filter(Correlation > 0.5)
+nrow(selected_factors_F)
+```
+
+```{r}
+plot_F_filtered <- ggplot(selected_factors_F, aes(x = Factor_F1, y = Correlation)) +
+  geom_bar(stat = "identity") +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "red") +
+  labs(title = "Best Match Correlation for Selected Factors in F_1",
+       x = "Factor in F_1",
+       y = "Best Match Correlation with F_2") +
+  theme_minimal()
+print(plot_F_filtered)
+```
+
+## Match the factor from the whole data analysis
+
+Now, let's match the factors from the whole data analysis (F_all) to the two halves (F_1 and F_2).
+
+```{r}
+# Normalize each column to have unit variance
+F_all <- scale(F_all, center = FALSE, scale = TRUE)
+```
+
+```{r}
+# Subset to have the common set of genes
+common_genes_all_1 <- intersect(rownames(F_all), rownames(F_1))
+common_genes_all_2 <- intersect(rownames(F_all), rownames(F_2))
+common_genes_all <- intersect(common_genes_all_1, common_genes_all_2)
+F_all <- F_all[common_genes_all, ]
+F_1 <- F_1[common_genes_all, ]
+F_2 <- F_2[common_genes_all, ]
+```
+
+```{r}
+# compute column-wise correlation
+cor_F_all_1 <- cor(F_all, F_1)
+cor_F_all_2 <- cor(F_all, F_2)
+
+# find the best match for each factor in F_all
+best_match_F_all_1 <- apply(cor_F_all_1, 1, which.max)
+best_cor_F_all_1 <- apply(cor_F_all_1, 1, max)
+best_match_F_all_2 <- apply(cor_F_all_2, 1, which.max)
+best_cor_F_all_2 <- apply(cor_F_all_2, 1, max)
+# Create a data frame to store the results
+match_results_F_all <- data.frame(
+  Factor_F_all = 1:ncol(F_all),
+  Best_Match_F1 = best_match_F_all_1,
+  Correlation_F1 = best_cor_F_all_1,
+  Best_Match_F2 = best_match_F_all_2,
+  Correlation_F2 = best_cor_F_all_2
+)
+match_results_F_all$MaxCorr <- pmax(match_results_F_all$Correlation_F1, match_results_F_all$Correlation_F2)
+match_results_F_all[c(1,2,3,5,22,58, 68, 171), 1:5]
+```
+
+
+```{r}
+par(mfrow=c(1,2))
+hist(cor_F_all_1, breaks = 50, main = "Corr: F_all and F_1", xlab = "Correlation")
+hist(cor_F_all_2, breaks = 50, main = "Corr: F_all and F_2", xlab = "Correlation")
+par(mfrow=c(1,1))
+```
+
+```{r}
+# select factors with correlation > 0.5
+selected_factors_F_all <- match_results_F_all %>%
+  filter(MaxCorr > 0.5)
+nrow(selected_factors_F_all)
+```
+
+We will only keep the non-overlapped matched factors with the highest correlation.
+If two factors from F_all are matched to the same factor in F_1 or F_2, we will only keep the one with the highest correlation.
+
+```{r}
+selected_factors_F_all_unique <- selected_factors_F_all %>%
+  arrange(desc(MaxCorr)) %>%
+  distinct(Best_Match_F1, .keep_all = TRUE) %>%  
+  distinct(Best_Match_F2, .keep_all = TRUE) %>%
+  arrange(Factor_F_all)
+nrow(selected_factors_F_all_unique)
+```
+
+Bar plot to visualize the correlation between the matched factors and each factor in F_all:
+
+```{r}
+plot_F1 <- ggplot(selected_factors_F_all_unique, aes(x = Factor_F_all, y = Correlation_F1)) +
+  geom_bar(stat = "identity") +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "red") +
+  labs(title = "Best Match Correlation for Each Factor in F_all vs F_1",
+       x = "Factor in F_all",
+       y = "Best Match Correlation with F_1") +
+  theme_minimal()
+
+plot_F2 <- ggplot(selected_factors_F_all_unique, aes(x = Factor_F_all, y = Correlation_F2)) +
+  geom_bar(stat = "identity") +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "red") +
+  labs(title = "Best Match Correlation for Each Factor in F_all vs F_2",
+       x = "Factor in F_all",
+       y = "Best Match Correlation with F_2") +
+  theme_minimal()
+
+gridExtra::grid.arrange(plot_F1, plot_F2, nrow = 2)
+```
+
+
+How many large pve factors are there in the whole data analysis?
+
+```{r}
+sum(which(flashier_snmf_summary$pve > 1e-4) %in% selected_factors_F_all$Factor_F_all)/sum(flashier_snmf_summary$pve > 1e-4)
+
+sum(which(flashier_snmf_summary$pve > 1e-4) %in% selected_factors_F_all_unique$Factor_F_all)/sum(flashier_snmf_summary$pve > 1e-4)
+```
+
+Structure plot:
+
+```{r}
+# normalize by the 99 percent quantile in each column
+D_all <- diag(1/apply(L_all, 2, function(x) quantile(x, 0.99)))
+L_all <- L_all %*% D_all
+D_1 <- diag(1/apply(L_1, 2, function(x) quantile(x, 0.99)))
+L_1 <- L_1 %*% D_1
+D_2 <- diag(1/apply(L_2, 2, function(x) quantile(x, 0.99)))
+L_2 <- L_2 %*% D_2
+```
+
+
+```{r, results="hide", message=FALSE}
+## structure plot for all the data
+set.seed(12345)
+annotation_sub <- seurat_meta$annotation_level1[match(rownames(L_all), seurat_meta$cellID)]
+cells <- which(annotation_sub == "CD4" | annotation_sub == "CD8")
+cells <- sample(cells,1e5)
+cells <- sort(c(cells,which(annotation_sub != "CD4" & annotation_sub != "CD8")))
+selected_all_Factors <- c(22, 29, 30, 58, 68, 171)
+L_all_plot <- L_all[cells,selected_all_Factors]
+colnames(L_all_plot) <- paste0("K",selected_all_Factors)
+p_all <- structure_plot(L_all_plot, gap = 10, n = 6000,
+                      topics = paste0("K",selected_all_Factors),
+                    grouping = annotation_sub[cells]) +
+  labs(y = "membership",color = "",fill = "") +
+  ylim(0,3) +
+  theme(legend.position = "bottom")
+
+## structure plot for the first half data
+selected_1_Factors <- selected_factors_F_all$Best_Match_F1[match(selected_all_Factors,selected_factors_F_all$Factor_F_all)]
+annotation_sub1 <- seurat_meta$annotation_level1[match(rownames(L_1), seurat_meta$cellID)]
+cells1 <- which(annotation_sub1 == "CD4" | annotation_sub1 == "CD8")
+cells1 <- sample(cells1,5e4)
+cells1 <- sort(c(cells1,which(annotation_sub1 != "CD4" & annotation_sub1 != "CD8")))
+L_1_plot <- L_1[cells1, selected_1_Factors]
+colnames(L_1_plot) <- paste0("K",selected_1_Factors)
+p_1 <- structure_plot(L_1_plot, gap = 10, n = 6000,
+                      topics = paste0("K",selected_1_Factors),
+                    grouping = annotation_sub1[cells1]) +
+  labs(y = "membership",color = "",fill = "") +
+  ylim(0,3) +
+  theme(legend.position = "bottom")
+                    
+## structure plot for the second half data
+selected_2_Factors <- selected_factors_F_all$Best_Match_F2[match(selected_all_Factors, selected_factors_F_all$Factor_F_all)]
+annotation_sub2 <- seurat_meta$annotation_level1[match(rownames(L_2), seurat_meta$cellID)]
+cells2 <- which(annotation_sub2 == "CD4" | annotation_sub2 == "CD8")
+cells2 <- sample(cells2,5e4)
+cells2 <- sort(c(cells2,which(annotation_sub2 != "CD4" & annotation_sub2 !=  "CD8")))
+L_2_plot <- L_2[cells2, selected_2_Factors]
+colnames(L_2_plot) <- paste0("K",selected_2_Factors)
+p_2 <- structure_plot(L_2_plot, gap = 10, n = 6000,
+                      topics = paste0("K",selected_2_Factors),
+                    grouping = annotation_sub2[cells2]) +
+  labs(y = "membership",color = "",fill = "") +
+  ylim(0,3) +
+  theme(legend.position = "bottom")
+```
+
+```{r, fig.width=10, fig.height=10}
+plot_grid(p_all, p_1, p_2, nrow = 3)
+```

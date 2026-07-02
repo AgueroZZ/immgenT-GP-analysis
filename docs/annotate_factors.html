@@ -1,0 +1,3555 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Ziang Zhang" />
+
+
+<title>Annotation of factors from scRNA analysis</title>
+
+<script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">immgen-t factors</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Overview</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/stephenslab/immgen-t-factors">source</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Annotation of factors from scRNA
+analysis</h1>
+<h4 class="author">Ziang Zhang</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2025-10-29
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>immgen-t-factors/analysis/</code>
+<span class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.2). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed1code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(1)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed1code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(1)</code> was run prior to running the
+code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabimmgentfactorstree06b93c586878c8131841238e89944e08660b066atargetblank06b93c5a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/stephenslab/immgen-t-factors/tree/06b93c586878c8131841238e89944e08660b066a" target="_blank">06b93c5</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabimmgentfactorstree06b93c586878c8131841238e89944e08660b066atargetblank06b93c5a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/stephenslab/immgen-t-factors/tree/06b93c586878c8131841238e89944e08660b066a" target="_blank">06b93c5</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/.Rhistory
+    Ignored:    code/.Rhistory
+
+Untracked files:
+    Untracked:  .DS_Store
+    Untracked:  .gitignore
+    Untracked:  analysis/.DS_Store
+    Untracked:  analysis/conditional_analysis.rmd
+    Untracked:  analysis/further_validation_f68.rmd
+    Untracked:  analysis/level2_organ.rmd
+    Untracked:  code/.DS_Store
+    Untracked:  code/Figure1.R
+    Untracked:  code/ROC.R
+    Untracked:  code/analyze_protein_selected.R
+    Untracked:  code/analyze_protein_selected.sbatch
+    Untracked:  code/analyze_protein_selected_lognorm.R
+    Untracked:  code/analyze_protein_selected_lognorm.sbatch
+    Untracked:  code/analyze_protein_selected_positive.R
+    Untracked:  code/analyze_protein_selected_positive.sbatch
+    Untracked:  code/compare_greedy_back.R
+    Untracked:  code/replicate_whole_data.sbatch
+    Untracked:  data/.DS_Store
+    Untracked:  data/annot_level1.rds
+    Untracked:  data/annot_level2.rds
+    Untracked:  data/condition_broad.rds
+    Untracked:  data/condition_broad_AUC.rds
+    Untracked:  data/condition_broad_AUC_CD8.rds
+    Untracked:  data/condition_detailed.rds
+    Untracked:  data/condition_detailed_AUC.rds
+    Untracked:  data/condition_detailed_AUC_CD8.rds
+    Untracked:  data/conditional_analysis_factor.rds
+    Untracked:  data/conditional_analysis_factor_stats.rds
+    Untracked:  data/factor_matching_results.csv
+    Untracked:  data/factor_matching_results_noback.csv
+    Untracked:  data/fit1_summary.qs
+    Untracked:  data/fit1_summary_noback.qs
+    Untracked:  data/fit2_summary.qs
+    Untracked:  data/fit2_summary_noback.qs
+    Untracked:  data/flash_fixed_F_pm.rds
+    Untracked:  data/flash_fixed_loading.rds
+    Untracked:  data/flashier_snmf_summary.rds
+    Untracked:  data/level_1_AUC.rds
+    Untracked:  data/moran_list_umap.rds
+    Untracked:  data/organ.rds
+    Untracked:  data/organ_AUC.rds
+    Untracked:  data/organ_AUC_healthy.rds
+    Untracked:  data/organ_healthy.rds
+    Untracked:  data/protein_flash_selected_summary.rds
+    Untracked:  data/protein_flash_selected_summary_lognorm.rds
+    Untracked:  data/protein_flash_selected_summary_pos.rds
+    Untracked:  data/protein_mat.rds
+    Untracked:  data/protein_mat_normalized.rds
+    Untracked:  data/protein_mat_normalized_lognorm.rds
+    Untracked:  data/replicate_whole_data.sbatch
+    Untracked:  data/seurat_meta.rds
+    Untracked:  data/umap_result.rds
+    Untracked:  figures/
+
+Unstaged changes:
+    Modified:   analysis/half_validation_hungarian.rmd
+    Modified:   analysis/half_validation_hungarian_noback.rmd
+    Modified:   analysis/protein_factor.rmd
+    Deleted:    code/halves_validation.R
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/annotate_factors.rmd</code>) and
+HTML (<code>docs/annotate_factors.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/06b93c586878c8131841238e89944e08660b066a/analysis/annotate_factors.rmd" target="_blank">06b93c5</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-29
+</td>
+<td>
+workflowr::wflow_publish("analysis/annotate_factors.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/immgen-t-factors/1e5cfa8f33541dfad8adb838104f35094862f7cc/docs/annotate_factors.html" target="_blank">1e5cfa8</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/82345b1d6b3b2280cd06b6f4b1125bd3be4846ce/analysis/annotate_factors.rmd" target="_blank">82345b1</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+<td>
+workflowr::wflow_publish("analysis/annotate_factors.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/immgen-t-factors/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/annotate_factors.html" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/c500402827748306078ec2f6dedf623abed19202/analysis/annotate_factors.rmd" target="_blank">c500402</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+<td>
+workflowr::wflow_publish("analysis/annotate_factors.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/immgen-t-factors/bd589efa6a0376cd73610abfc722abd9564ae401/docs/annotate_factors.html" target="_blank">bd589ef</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-14
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/f5348515f1cacf203b8dc538f35816800de6b913/analysis/annotate_factors.rmd" target="_blank">f534851</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-14
+</td>
+<td>
+workflowr::wflow_publish("analysis/annotate_factors.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/immgen-t-factors/80d0b9c767c0c1dd17eb847dcbe408d79bfbc091/docs/annotate_factors.html" target="_blank">80d0b9c</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-14
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/f68afab6cf9fb38c4c66e9ebac2f2fe7348178c8/analysis/annotate_factors.rmd" target="_blank">f68afab</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-14
+</td>
+<td>
+workflowr::wflow_publish("analysis/annotate_factors.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/immgen-t-factors/323bece8957af1b653cf2ad2e4a58ff556658511/docs/annotate_factors.html" target="_blank">323bece</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-13
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/cb2387a9f3cab84ef70449fd371c540ab570c766/analysis/annotate_factors.rmd" target="_blank">cb2387a</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-13
+</td>
+<td>
+workflowr::wflow_publish("analysis/annotate_factors.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/immgen-t-factors/87479b50e18b0aacc2cde292fc5f3a72d669c9ba/docs/annotate_factors.html" target="_blank">87479b5</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-13
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/aee7fd4e281490fcd7bf34d50e4d3da57875ce01/analysis/annotate_factors.rmd" target="_blank">aee7fd4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-13
+</td>
+<td>
+workflowr::wflow_publish("analysis/annotate_factors.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/immgen-t-factors/5ad0ceb82986e78be7247889d54e4bb0a50d0c12/docs/annotate_factors.html" target="_blank">5ad0ceb</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-06
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/3065019d6642d46803097a5ccddae4205dab7215/analysis/annotate_factors.rmd" target="_blank">3065019</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-06
+</td>
+<td>
+workflowr::wflow_publish("analysis/annotate_factors.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/immgen-t-factors/587bc1b81a15fa5be7797e3362eab7990cd41543/docs/annotate_factors.html" target="_blank">587bc1b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-06
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/c80365e1b325133d24d77544b5894787ccd61b98/analysis/annotate_factors.rmd" target="_blank">c80365e</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-06
+</td>
+<td>
+workflowr::wflow_publish("analysis/annotate_factors.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/immgen-t-factors/b4a6c9d8f97e30808fd8c7124a6f1680e592066e/docs/annotate_factors.html" target="_blank">b4a6c9d</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-09-28
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/62d827884db3a1bb4be122c574efaf8cd6e93fe3/analysis/annotate_factors.rmd" target="_blank">62d8278</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-09-28
+</td>
+<td>
+workflowr::wflow_publish("analysis/annotate_factors.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/immgen-t-factors/7bbce18d8cac0b1b23f03e8be1fd828941a12f1d/docs/annotate_factors.html" target="_blank">7bbce18</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-09-23
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/5afea6cf9f83ef0aad595d16d86f39b604499f48/analysis/annotate_factors.rmd" target="_blank">5afea6c</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-09-23
+</td>
+<td>
+workflowr::wflow_publish("analysis/annotate_factors.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/immgen-t-factors/da7c13604542402cee39d45092874fda1a1ebfda/docs/annotate_factors.html" target="_blank">da7c136</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-09-23
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/96eea9c23f6d1862a4f650d5e1b72ae2f8ba3e93/analysis/annotate_factors.rmd" target="_blank">96eea9c</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-09-23
+</td>
+<td>
+workflowr::wflow_publish("analysis/annotate_factors.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/immgen-t-factors/cdd1941bf4bbe208828e40a02f38a86b351961b7/docs/annotate_factors.html" target="_blank">cdd1941</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-09-20
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/28f8e39a4403cc5b49583ef768b79b46cf1e8d50/analysis/annotate_factors.rmd" target="_blank">28f8e39</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-09-20
+</td>
+<td>
+workflowr::wflow_publish("analysis/annotate_factors.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/immgen-t-factors/6e1769117f955d555112d0a5a9777e32450c8761/docs/annotate_factors.html" target="_blank">6e17691</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-09-20
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/72826ce3bcac0f5878f1ab8c84e856d4831b363e/analysis/annotate_factors.rmd" target="_blank">72826ce</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-09-20
+</td>
+<td>
+workflowr::wflow_publish("analysis/annotate_factors.rmd")
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="Data_Processing" class="section level2">
+<h2>Process the result</h2>
+<p>Use this function for plotting:</p>
+<pre class="r"><code>source(&quot;https://raw.githubusercontent.com/stephenslab/single-cell-jamboree/refs/heads/main/code/group_factors.R&quot;)
+library(ggplot2)
+library(fastTopics)</code></pre>
+<p>Read in the meta-information and the factorization result:</p>
+<pre class="r"><code>data_path &lt;- &quot;../data/&quot;
+code_path &lt;- &quot;../code/&quot;
+# data_path &lt;- &quot;data/&quot;
+# code_path &lt;- &quot;code/&quot;
+source(paste0(code_path, &quot;ROC.R&quot;))
+seurat_meta &lt;- readRDS(paste0(data_path, &quot;seurat_meta.rds&quot;))
+flashier_snmf_summary &lt;- readRDS(paste0(data_path, &quot;flashier_snmf_summary.rds&quot;))</code></pre>
+<p>Align the cells to remove the extra cells in the flashier result:</p>
+<pre class="r"><code>cells_flashier &lt;- rownames(flashier_snmf_summary$L_pm)
+cells_seurat &lt;- seurat_meta$cellID
+which(!cells_flashier %in% cells_seurat)</code></pre>
+<pre><code>[1] 140070 505759</code></pre>
+<pre class="r"><code>L_pm &lt;- flashier_snmf_summary$L_pm[cells_flashier %in% cells_seurat, ]
+all(rownames(L_pm) == cells_seurat)</code></pre>
+<pre><code>[1] TRUE</code></pre>
+<p>Let’s consider the normalization approach Peter suggested:</p>
+<pre class="r"><code>filter_cells_by_total_membership &lt;- function (L, max_val = 10, numiter = 10) {
+  n &lt;- nrow(L)
+  rows &lt;- 1:n
+  for (iter in 1:numiter) {
+    x &lt;- rowSums(L)
+    cat(sprintf(&quot;%d. Filtered out %d cells.\n&quot;,iter,sum(x &gt; max_val)))
+    i &lt;- which(x &lt;= max_val)
+    L &lt;- L[i,]
+    rows &lt;- rows[i]
+    d &lt;- apply(L,2,max)
+    L &lt;- scale_cols(L,1/d)
+  }
+  return(rows)
+}
+scale_cols &lt;- function (A, b)
+  t(t(A) * b)</code></pre>
+<pre class="r"><code>D &lt;- diag(1 / apply(L_pm, 2, function(x) max(x)))
+L &lt;- L_pm %*% D
+cells &lt;- filter_cells_by_total_membership(L,numiter = 12)</code></pre>
+<pre><code>1. Filtered out 69 cells.
+2. Filtered out 178 cells.
+3. Filtered out 157 cells.
+4. Filtered out 299 cells.
+5. Filtered out 232 cells.
+6. Filtered out 175 cells.
+7. Filtered out 193 cells.
+8. Filtered out 140 cells.
+9. Filtered out 46 cells.
+10. Filtered out 22 cells.
+11. Filtered out 1 cells.
+12. Filtered out 0 cells.</code></pre>
+<pre class="r"><code>seurat_meta &lt;- seurat_meta[cells,]
+L_pm &lt;- L_pm[cells,]</code></pre>
+<pre class="r"><code>d &lt;- apply(L_pm,2,max)
+L_pm &lt;- scale_cols(L_pm,1/d)
+D &lt;- d * D</code></pre>
+<p>Only keep factors with pve larger than <span
+class="math inline">\(10^{-4}\)</span>.</p>
+<pre class="r"><code>L_pm_old &lt;- L_pm
+L_pm &lt;- L_pm[, flashier_snmf_summary$pve &gt; 1e-4]
+colnames(L_pm) &lt;- paste0(&quot;K&quot;, which(flashier_snmf_summary$pve &gt; 1e-4))</code></pre>
+</div>
+<div id="annotate_factors" class="section level2">
+<h2>Annotate the factors</h2>
+<p>To annotate each factor with the meta-information, we will try two
+approaches: - : for each meta-variable (e.g., cell type, organ,
+condition), we will run ANOVA to see how much variation (measured in
+<span class="math inline">\(R^2\)</span>) in the factor is explained by
+each meta-variable. - : for each meta-variable (e.g., cell type, organ,
+condition), we will compute the AUC of each factor for predicting each
+group in the meta-variable, and keep the maximal AUC.</p>
+<div id="level_1_annotation" class="section level3">
+<h3>Cell-type Level1:</h3>
+<p>As discussed with David, all T-cells were differentiated from
+thymocytes, so we should remove the thymocytes from the analysis. Also,
+to avoid the complication, let’s also remove all unhealthy cells.</p>
+<pre class="r"><code>cells_thymocyte &lt;- which(seurat_meta$annotation_level1 == &quot;thymocyte&quot;)
+cells_unhealthy_thymocyte &lt;- which(seurat_meta$annotation_level1 == &quot;thymocyte&quot; | seurat_meta$condition_broad != &quot;healthy&quot;)
+L_pm_old_no_thymocytes &lt;- L_pm_old[-cells_thymocyte, ]
+L_pm_old_no_unhealthy_thymocytes &lt;- L_pm_old[-cells_unhealthy_thymocyte, ]
+L_pm_no_unhealthy_thymocytes &lt;- L_pm[-cells_unhealthy_thymocyte, ]</code></pre>
+<div id="Variance_Explained_level_1" class="section level4">
+<h4>Variance explained:</h4>
+<pre class="r"><code>annot_level1 &lt;- ANOVA_factors(L_pm_no_unhealthy_thymocytes, seurat_meta$annotation_level1[-cells_unhealthy_thymocyte])
+annot_level1$factor_original &lt;- which(flashier_snmf_summary$pve &gt; 1e-4)[annot_level1$factor]
+saveRDS(annot_level1, file = paste0(data_path, &quot;annot_level1.rds&quot;))</code></pre>
+<pre class="r"><code>annot_level1 &lt;- readRDS(paste0(data_path, &quot;annot_level1.rds&quot;))
+plot(annot_level1$rank, annot_level1$stats, type = &quot;o&quot;, xlab = &quot;Rank&quot;, ylab = &quot;R2&quot;, main = &quot;Celltype Level1&quot;, ylim = c(0,1.1))
+text(annot_level1$rank, annot_level1$stats, labels = annot_level1$factor_original, pos = 3, cex = 0.5)
+abline(h = c(0.1,0.2,0.4), col = &quot;red&quot;, lty = 2)</code></pre>
+<p><img src="figure/annotate_factors.rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
+Past versions of unnamed-chunk-10-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/figure/annotate_factors.rmd/unnamed-chunk-10-1.png" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/87479b50e18b0aacc2cde292fc5f3a72d669c9ba/docs/figure/annotate_factors.rmd/unnamed-chunk-10-1.png" target="_blank">87479b5</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-13
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/587bc1b81a15fa5be7797e3362eab7990cd41543/docs/figure/annotate_factors.rmd/unnamed-chunk-10-1.png" target="_blank">587bc1b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-06
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/b4a6c9d8f97e30808fd8c7124a6f1680e592066e/docs/figure/annotate_factors.rmd/unnamed-chunk-10-1.png" target="_blank">b4a6c9d</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-09-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/6e1769117f955d555112d0a5a9777e32450c8761/docs/figure/annotate_factors.rmd/unnamed-chunk-10-1.png" target="_blank">6e17691</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-09-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="Maximal_AUC_level_1" class="section level4">
+<h4>Maximal AUC:</h4>
+<pre class="r"><code>level_1_AUC &lt;- compute_auc_matrix(loading_mat = L_pm_old_no_unhealthy_thymocytes, group_info = seurat_meta$annotation_level1[-cells_unhealthy_thymocyte])
+rownames(level_1_AUC) &lt;- sort(unique(seurat_meta$annotation_level1[-cells_unhealthy_thymocyte]))
+saveRDS(level_1_AUC, file = paste0(data_path, &quot;level_1_AUC.rds&quot;))</code></pre>
+<p>As discussed with David, Treg should really be thought as a subset of
+CD4 cells. Therefore, let’s define a new category “all_CD4” which
+includes both “CD4” and “Treg”, and recompute the AUC:</p>
+<pre class="r"><code>annotation_level1_all_CD4 &lt;- as.character(seurat_meta$annotation_level1[-cells_unhealthy_thymocyte])
+annotation_level1_all_CD4[annotation_level1_all_CD4 == &quot;Treg&quot;] &lt;- &quot;CD4&quot;
+annotation_level1_all_CD4[annotation_level1_all_CD4 != &quot;CD4&quot;] &lt;- &quot;other&quot;
+level_1_AUC_all_CD4 &lt;- compute_auc_matrix(loading_mat = L_pm_old_no_unhealthy_thymocytes,
+                                          group_info = annotation_level1_all_CD4)
+level_1_AUC &lt;- readRDS(paste0(data_path, &quot;level_1_AUC.rds&quot;))
+level_1_AUC &lt;- rbind(level_1_AUC, level_1_AUC_all_CD4[1, , drop = FALSE])
+rownames(level_1_AUC)[nrow(level_1_AUC)] &lt;- &quot;all_CD4&quot;
+saveRDS(level_1_AUC, file = paste0(data_path, &quot;level_1_AUC.rds&quot;))</code></pre>
+<p>Furthermore, some of the gdT cells (gdT_cl2, 4, 11, 12, 38, 25)
+should be viewed as CD8aa.</p>
+<pre class="r"><code>annotation_level1_all_CD8aa &lt;- as.character(seurat_meta$annotation_level1[-cells_unhealthy_thymocyte])
+annotation_level2_all_CD8aa &lt;- as.character(seurat_meta$annotation_level2[-cells_unhealthy_thymocyte])
+# if level 2 is gdT_cl2, 4, 11, 12, 38, 25, then change level 1 to CD8aa
+annotation_level1_all_CD8aa[annotation_level2_all_CD8aa %in% paste0(&quot;gdT_cl&quot;, c(2,4,11,12,25,38))] &lt;- &quot;CD8aa&quot;
+annotation_level1_all_CD8aa[annotation_level1_all_CD8aa != &quot;CD8aa&quot;] &lt;- &quot;other&quot;
+level_1_AUC_all_CD8aa &lt;- compute_auc_matrix(loading_mat = L_pm_old_no_unhealthy_thymocytes,
+                                            group_info = annotation_level1_all_CD8aa)
+level_1_AUC &lt;- readRDS(paste0(data_path, &quot;level_1_AUC.rds&quot;))
+level_1_AUC &lt;- rbind(level_1_AUC, level_1_AUC_all_CD8aa[1, , drop = FALSE])
+rownames(level_1_AUC)[nrow(level_1_AUC)] &lt;- &quot;all_CD8aa&quot;
+saveRDS(level_1_AUC, file = paste0(data_path, &quot;level_1_AUC.rds&quot;))</code></pre>
+<pre class="r"><code>annotation_level1_all_CD4 &lt;- as.character(seurat_meta$annotation_level1)[-cells_unhealthy_thymocyte]
+annotation_level1_all_CD4[annotation_level1_all_CD4 == &quot;Treg&quot;] &lt;- &quot;CD4&quot;
+annotation_level1_all_CD4[annotation_level1_all_CD4 != &quot;CD4&quot;] &lt;- &quot;other&quot;
+
+# boxplot of K58 on all_CD4
+boxplot(L_pm_old_no_unhealthy_thymocytes[, 58] ~ annotation_level1_all_CD4, main
+ = &quot;K58&quot;, ylab = &quot;membership&quot;, outline = FALSE)</code></pre>
+<p><img src="figure/annotate_factors.rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-1">
+Past versions of unnamed-chunk-14-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-14-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/figure/annotate_factors.rmd/unnamed-chunk-14-1.png" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/87479b50e18b0aacc2cde292fc5f3a72d669c9ba/docs/figure/annotate_factors.rmd/unnamed-chunk-14-1.png" target="_blank">87479b5</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-13
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/587bc1b81a15fa5be7797e3362eab7990cd41543/docs/figure/annotate_factors.rmd/unnamed-chunk-14-1.png" target="_blank">587bc1b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code># boxplot of K29 on all_CD4
+boxplot(L_pm_old_no_unhealthy_thymocytes[, 29] ~ annotation_level1_all_CD4, main =
+ &quot;K29&quot;, ylab = &quot;membership&quot;, outline = FALSE)</code></pre>
+<p><img src="figure/annotate_factors.rmd/unnamed-chunk-14-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-2">
+Past versions of unnamed-chunk-14-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-14-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/figure/annotate_factors.rmd/unnamed-chunk-14-2.png" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>annotation_level1_all_CD8aa &lt;- as.character(seurat_meta$annotation_level1[-cells_unhealthy_thymocyte])
+annotation_level2_all_CD8aa &lt;- as.character(seurat_meta$annotation_level2[-cells_unhealthy_thymocyte])
+# if level 2 is gdT_cl2, 4, 11, 12, 38, 25, then change level 1 to CD8aa
+annotation_level1_all_CD8aa[annotation_level2_all_CD8aa %in% paste0(&quot;gdT_cl&quot;, c(2,4,11,12,25,38))] &lt;- &quot;CD8aa&quot;
+annotation_level1_all_CD8aa[annotation_level1_all_CD8aa != &quot;CD8aa&quot;] &lt;- &quot;other&quot;
+
+# boxplot of K3 on all_CD8aa
+boxplot(L_pm_old_no_unhealthy_thymocytes[, 3] ~ annotation_level1_all_CD8aa, main = &quot;K3&quot;, ylab = &quot;membership&quot;, outline = FALSE)</code></pre>
+<p><img src="figure/annotate_factors.rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-15-1">
+Past versions of unnamed-chunk-15-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-15-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/figure/annotate_factors.rmd/unnamed-chunk-15-1.png" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/87479b50e18b0aacc2cde292fc5f3a72d669c9ba/docs/figure/annotate_factors.rmd/unnamed-chunk-15-1.png" target="_blank">87479b5</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-13
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/587bc1b81a15fa5be7797e3362eab7990cd41543/docs/figure/annotate_factors.rmd/unnamed-chunk-15-1.png" target="_blank">587bc1b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-06
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/b4a6c9d8f97e30808fd8c7124a6f1680e592066e/docs/figure/annotate_factors.rmd/unnamed-chunk-15-1.png" target="_blank">b4a6c9d</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-09-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code># boxplot of K171 on all_CD8aa
+boxplot(L_pm_old_no_unhealthy_thymocytes[, 171] ~ annotation_level1_all_CD8aa, main = &quot;K171&quot;, ylab = &quot;membership&quot;, outline = FALSE)</code></pre>
+<p><img src="figure/annotate_factors.rmd/unnamed-chunk-15-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-15-2">
+Past versions of unnamed-chunk-15-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-15-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/figure/annotate_factors.rmd/unnamed-chunk-15-2.png" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>level_1_AUC &lt;- readRDS(paste0(data_path, &quot;level_1_AUC.rds&quot;))
+level_1_AUC_max &lt;- apply(level_1_AUC, 2, max)
+level_1_AUC_max_name &lt;- apply(level_1_AUC, 2, function(x) rownames(level_1_AUC)[which.max(x)])
+o &lt;- order(level_1_AUC_max, decreasing = TRUE)
+table_level_1_AUC &lt;- data.frame(
+  Factor = colnames(level_1_AUC)[o],
+  Max_AUC = level_1_AUC_max[o],
+  Annotation = level_1_AUC_max_name[o]
+)
+# keep rows that are at least 0.8
+knitr::kable(table_level_1_AUC[level_1_AUC_max[o] &gt;= 0.8, ])</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">Factor</th>
+<th align="right">Max_AUC</th>
+<th align="left">Annotation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">K58</td>
+<td align="left">K58</td>
+<td align="right">0.9702403</td>
+<td align="left">CD8</td>
+</tr>
+<tr class="even">
+<td align="left">K30</td>
+<td align="left">K30</td>
+<td align="right">0.9515158</td>
+<td align="left">nonconv</td>
+</tr>
+<tr class="odd">
+<td align="left">K68</td>
+<td align="left">K68</td>
+<td align="right">0.9474083</td>
+<td align="left">Treg</td>
+</tr>
+<tr class="even">
+<td align="left">K127</td>
+<td align="left">K127</td>
+<td align="right">0.8821697</td>
+<td align="left">DN</td>
+</tr>
+<tr class="odd">
+<td align="left">K171</td>
+<td align="left">K171</td>
+<td align="right">0.8795632</td>
+<td align="left">all_CD8aa</td>
+</tr>
+<tr class="even">
+<td align="left">K3</td>
+<td align="left">K3</td>
+<td align="right">0.8790626</td>
+<td align="left">all_CD8aa</td>
+</tr>
+<tr class="odd">
+<td align="left">K22</td>
+<td align="left">K22</td>
+<td align="right">0.8752785</td>
+<td align="left">DN</td>
+</tr>
+<tr class="even">
+<td align="left">K29</td>
+<td align="left">K29</td>
+<td align="right">0.8660306</td>
+<td align="left">CD8aa</td>
+</tr>
+<tr class="odd">
+<td align="left">K80</td>
+<td align="left">K80</td>
+<td align="right">0.8247000</td>
+<td align="left">DN</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>table_level_1_AUC_pve &lt;- table_level_1_AUC[table_level_1_AUC$Factor %in% colnames(L_pm),]
+# color by table_level_1_AUC_pve$Annotation
+colors &lt;- RColorBrewer::brewer.pal(length(unique(table_level_1_AUC_pve$Annotation)), &quot;Set1&quot;)
+names(colors) &lt;- unique(table_level_1_AUC_pve$Annotation)
+
+table_level_1_AUC_pve &lt;- table_level_1_AUC[table_level_1_AUC$Factor %in% colnames(L_pm),]
+plot(1:nrow(table_level_1_AUC_pve), table_level_1_AUC_pve$Max_AUC, type = &quot;o&quot;, xlab = &quot;Rank by max AUC&quot;, ylab = &quot;Max AUC&quot;, main = &quot;Celltype Level1&quot;, col = colors[table_level_1_AUC_pve$Annotation], pch = 16)
+text(1:nrow(table_level_1_AUC_pve), table_level_1_AUC_pve$Max_AUC, labels = gsub(&quot;K&quot;, &quot;&quot;, table_level_1_AUC_pve$Factor), pos = 3, cex = 0.45, col = colors[table_level_1_AUC_pve$Annotation])
+legend(&quot;topright&quot;, legend = names(colors), col = colors, pch = 16, cex = 1)</code></pre>
+<p><img src="figure/annotate_factors.rmd/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-17-1">
+Past versions of unnamed-chunk-17-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-17-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/figure/annotate_factors.rmd/unnamed-chunk-17-1.png" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/87479b50e18b0aacc2cde292fc5f3a72d669c9ba/docs/figure/annotate_factors.rmd/unnamed-chunk-17-1.png" target="_blank">87479b5</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-13
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/587bc1b81a15fa5be7797e3362eab7990cd41543/docs/figure/annotate_factors.rmd/unnamed-chunk-17-1.png" target="_blank">587bc1b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-06
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/b4a6c9d8f97e30808fd8c7124a6f1680e592066e/docs/figure/annotate_factors.rmd/unnamed-chunk-17-1.png" target="_blank">b4a6c9d</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-09-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/cdd1941bf4bbe208828e40a02f38a86b351961b7/docs/figure/annotate_factors.rmd/unnamed-chunk-17-1.png" target="_blank">cdd1941</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-09-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Highlight factors with maximal AUC at least <span
+class="math inline">\(0.8\)</span>:</p>
+<pre class="r"><code>highlights &lt;- data.frame(
+  AUC = level_1_AUC_max[level_1_AUC_max &gt;= 0.80],
+  Annotation = level_1_AUC_max_name[level_1_AUC_max &gt;= 0.80]
+)
+
+# Arranging by AUC value
+highlights &lt;- highlights[order(highlights$AUC, decreasing = TRUE), ]
+knitr::kable(highlights)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">AUC</th>
+<th align="left">Annotation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">K58</td>
+<td align="right">0.9702403</td>
+<td align="left">CD8</td>
+</tr>
+<tr class="even">
+<td align="left">K30</td>
+<td align="right">0.9515158</td>
+<td align="left">nonconv</td>
+</tr>
+<tr class="odd">
+<td align="left">K68</td>
+<td align="right">0.9474083</td>
+<td align="left">Treg</td>
+</tr>
+<tr class="even">
+<td align="left">K127</td>
+<td align="right">0.8821697</td>
+<td align="left">DN</td>
+</tr>
+<tr class="odd">
+<td align="left">K171</td>
+<td align="right">0.8795632</td>
+<td align="left">all_CD8aa</td>
+</tr>
+<tr class="even">
+<td align="left">K3</td>
+<td align="right">0.8790626</td>
+<td align="left">all_CD8aa</td>
+</tr>
+<tr class="odd">
+<td align="left">K22</td>
+<td align="right">0.8752785</td>
+<td align="left">DN</td>
+</tr>
+<tr class="even">
+<td align="left">K29</td>
+<td align="right">0.8660306</td>
+<td align="left">CD8aa</td>
+</tr>
+<tr class="odd">
+<td align="left">K80</td>
+<td align="right">0.8247000</td>
+<td align="left">DN</td>
+</tr>
+</tbody>
+</table>
+<p>Structure plot of the highlighted factors:</p>
+<pre class="r"><code>set.seed(12345)
+cell_type_factors &lt;- as.numeric(gsub(&quot;K&quot;, rownames(highlights), replacement = &quot;&quot;))
+fit2 &lt;- L_pm_old_no_unhealthy_thymocytes[, cell_type_factors, drop = FALSE]
+colnames(fit2) &lt;- paste0(&quot;k&quot;, cell_type_factors)
+
+cell_type &lt;- seurat_meta$annotation_level1[-cells_unhealthy_thymocyte]
+cells &lt;- which(cell_type == &quot;CD4&quot; | cell_type == &quot;CD8&quot;)
+cells &lt;- sample(cells,1e5)
+cells &lt;- sort(c(cells,which(cell_type != &quot;CD4&quot; &amp; cell_type != &quot;CD8&quot;)))
+
+structure_plot(fit2[cells,],gap = 10,n = 3000,
+                    grouping = cell_type[cells]) +
+  labs(y = &quot;membership&quot;,color = &quot;&quot;,fill = &quot;&quot;) +
+  ylim(0,2) +
+  theme(legend.position = &quot;bottom&quot;)</code></pre>
+<pre><code>Warning: `aes_string()` was deprecated in ggplot2 3.0.0.
+ℹ Please use tidy evaluation idioms with `aes()`.
+ℹ See also `vignette(&quot;ggplot2-in-packages&quot;)` for more information.
+ℹ The deprecated feature was likely used in the fastTopics package.
+  Please report the issue at
+  &lt;https://github.com/stephenslab/fastTopics/issues&gt;.
+This warning is displayed once every 8 hours.
+Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+generated.</code></pre>
+<p><img src="figure/annotate_factors.rmd/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-19-1">
+Past versions of unnamed-chunk-19-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-19-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/figure/annotate_factors.rmd/unnamed-chunk-19-1.png" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/87479b50e18b0aacc2cde292fc5f3a72d669c9ba/docs/figure/annotate_factors.rmd/unnamed-chunk-19-1.png" target="_blank">87479b5</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-13
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/587bc1b81a15fa5be7797e3362eab7990cd41543/docs/figure/annotate_factors.rmd/unnamed-chunk-19-1.png" target="_blank">587bc1b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-06
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/b4a6c9d8f97e30808fd8c7124a6f1680e592066e/docs/figure/annotate_factors.rmd/unnamed-chunk-19-1.png" target="_blank">b4a6c9d</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-09-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/cdd1941bf4bbe208828e40a02f38a86b351961b7/docs/figure/annotate_factors.rmd/unnamed-chunk-19-1.png" target="_blank">cdd1941</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-09-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="organ_annotation" class="section level3">
+<h3>Organ:</h3>
+<p>Again, as discussed with David, we will focus on healthy cells:</p>
+<pre class="r"><code>cells_unhealthy &lt;- which(seurat_meta$condition_broad != &quot;healthy&quot;)
+L_pm_old_no_unhealthy &lt;- L_pm_old[-cells_unhealthy, ]
+L_pm_no_unhealthy &lt;- L_pm[-cells_unhealthy, ]</code></pre>
+<div id="variance-explained" class="section level4">
+<h4>Variance explained:</h4>
+<pre class="r"><code>organ &lt;- ANOVA_factors(L_pm_no_unhealthy, seurat_meta$organ_simplified[-cells_unhealthy])
+organ$factor_original &lt;- which(flashier_snmf_summary$pve &gt; 1e-4)[organ$factor]
+saveRDS(organ, file = paste0(data_path, &quot;organ.rds&quot;))</code></pre>
+<pre class="r"><code>organ &lt;- readRDS(paste0(data_path, &quot;organ.rds&quot;))
+plot(organ$rank, organ$stats, type = &quot;o&quot;, xlab = &quot;Rank&quot;, ylab = &quot;R2&quot;, main = &quot;organ&quot;, ylim = c(0,1.1))
+text(organ$rank, organ$stats, labels = organ$factor_original, pos = 3, cex = 0.5)
+abline(h = c(0.1,0.2,0.4), col = &quot;red&quot;, lty = 2)</code></pre>
+<p><img src="figure/annotate_factors.rmd/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-22-1">
+Past versions of unnamed-chunk-22-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-22-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/figure/annotate_factors.rmd/unnamed-chunk-22-1.png" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/587bc1b81a15fa5be7797e3362eab7990cd41543/docs/figure/annotate_factors.rmd/unnamed-chunk-22-1.png" target="_blank">587bc1b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-06
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/b4a6c9d8f97e30808fd8c7124a6f1680e592066e/docs/figure/annotate_factors.rmd/unnamed-chunk-22-1.png" target="_blank">b4a6c9d</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-09-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/7bbce18d8cac0b1b23f03e8be1fd828941a12f1d/docs/figure/annotate_factors.rmd/unnamed-chunk-22-1.png" target="_blank">7bbce18</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-09-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/da7c13604542402cee39d45092874fda1a1ebfda/docs/figure/annotate_factors.rmd/unnamed-chunk-22-1.png" target="_blank">da7c136</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-09-23
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="Maximal_AUC_organ" class="section level4">
+<h4>Maximal AUC:</h4>
+<pre class="r"><code>organ_AUC &lt;- compute_auc_matrix(loading_mat = L_pm_old_no_unhealthy, group_info = seurat_meta$organ_simplified[-cells_unhealthy])
+rownames(organ_AUC) &lt;- sort(unique(seurat_meta$organ_simplified[-cells_unhealthy]))
+saveRDS(organ_AUC, file = paste0(data_path, &quot;organ_AUC.rds&quot;))</code></pre>
+<pre class="r"><code>organ_AUC &lt;- readRDS(paste0(data_path, &quot;organ_AUC.rds&quot;))
+organ_AUC_max &lt;- apply(organ_AUC, 2, max)
+organ_AUC_max_name &lt;- apply(organ_AUC, 2, function(x) rownames(organ_AUC)[which.max(x)])
+o &lt;- order(organ_AUC_max, decreasing = TRUE)
+table_organ_AUC &lt;- data.frame(
+  Max_AUC = organ_AUC_max[o],
+  Annotation = organ_AUC_max_name[o]
+)</code></pre>
+<pre class="r"><code>table_organ_AUC_pve &lt;- table_organ_AUC[rownames(table_level_1_AUC) %in% colnames(L_pm), ]
+annotations &lt;- unique(table_organ_AUC_pve$Annotation)
+colors &lt;- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, &quot;Set3&quot;))(length(annotations))
+names(colors) &lt;- annotations
+plot(1:nrow(table_organ_AUC_pve), table_organ_AUC_pve$Max_AUC, type = &quot;o&quot;, xlab = &quot;Rank by max AUC&quot;, ylab = &quot;Max AUC&quot;, main = &quot;Organ&quot;, col = colors[table_organ_AUC_pve$Annotation], pch = 16)
+text(1:nrow(table_organ_AUC_pve), table_organ_AUC_pve$Max_AUC, labels = gsub(&quot;K&quot;, &quot;&quot;, rownames(table_organ_AUC_pve)), pos = 3, cex = 0.5, col = colors[table_organ_AUC_pve$Annotation])
+legend(&quot;topright&quot;, legend = names(colors), col = colors, pch = 16, cex = 1)</code></pre>
+<p><img src="figure/annotate_factors.rmd/unnamed-chunk-25-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-25-1">
+Past versions of unnamed-chunk-25-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-25-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/figure/annotate_factors.rmd/unnamed-chunk-25-1.png" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/87479b50e18b0aacc2cde292fc5f3a72d669c9ba/docs/figure/annotate_factors.rmd/unnamed-chunk-25-1.png" target="_blank">87479b5</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-13
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/587bc1b81a15fa5be7797e3362eab7990cd41543/docs/figure/annotate_factors.rmd/unnamed-chunk-25-1.png" target="_blank">587bc1b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Keep factors with maximal AUC at least <span
+class="math inline">\(0.85\)</span>, and remove factors that correspond
+to synovial fluid or CNS:</p>
+<pre class="r"><code>highlights &lt;- table_organ_AUC[organ_AUC_max[o] &gt;= 0.85, ]
+highlights &lt;- highlights[!grepl(&quot;synovial&quot;, highlights$Annotation), ]
+highlights &lt;- highlights[!grepl(&quot;CNS&quot;, highlights$Annotation), ]
+# produce a table
+knitr::kable(highlights)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Max_AUC</th>
+<th align="left">Annotation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">K37</td>
+<td align="right">0.9921963</td>
+<td align="left">mammary gland</td>
+</tr>
+<tr class="even">
+<td align="left">K6</td>
+<td align="right">0.9524086</td>
+<td align="left">skin</td>
+</tr>
+<tr class="odd">
+<td align="left">K29</td>
+<td align="right">0.9416526</td>
+<td align="left">colon epi</td>
+</tr>
+<tr class="even">
+<td align="left">K26</td>
+<td align="right">0.9260136</td>
+<td align="left">submandibular gland</td>
+</tr>
+<tr class="odd">
+<td align="left">K11</td>
+<td align="right">0.9130902</td>
+<td align="left">placenta</td>
+</tr>
+<tr class="even">
+<td align="left">K177</td>
+<td align="right">0.9118635</td>
+<td align="left">skin</td>
+</tr>
+<tr class="odd">
+<td align="left">K3</td>
+<td align="right">0.9033973</td>
+<td align="left">small intestine epi</td>
+</tr>
+<tr class="even">
+<td align="left">K171</td>
+<td align="right">0.8785031</td>
+<td align="left">small intestine epi</td>
+</tr>
+<tr class="odd">
+<td align="left">K35</td>
+<td align="right">0.8758019</td>
+<td align="left">submandibular gland</td>
+</tr>
+<tr class="even">
+<td align="left">K8</td>
+<td align="right">0.8586702</td>
+<td align="left">skin</td>
+</tr>
+<tr class="odd">
+<td align="left">K30</td>
+<td align="right">0.8583527</td>
+<td align="left">submandibular gland</td>
+</tr>
+</tbody>
+</table>
+<p>Structure plot:</p>
+<pre class="r"><code>set.seed(12345)
+organ_factors &lt;- as.numeric(gsub(&quot;K&quot;, rownames(highlights), replacement = &quot;&quot;))
+fit2 &lt;- L_pm_old_no_unhealthy[, organ_factors, drop = FALSE]
+colnames(fit2) &lt;- paste0(&quot;K&quot;, organ_factors)
+organ &lt;- seurat_meta$organ_simplified[-cells_unhealthy]
+cells &lt;- sort(c(sample(which(organ == &quot;spleen&quot;),1e4),
+                sample(which(organ == &quot;LN&quot;),1e4),
+                sample(which(organ == &quot;thymus&quot;),3e3),
+                which(organ != &quot;spleen&quot; &amp; organ != &quot;LN&quot; &amp; organ != &quot;thymus&quot;)))
+structure_plot(fit2[cells,],gap = 5,n = 3000,
+                    grouping = organ[cells]) +
+  labs(y = &quot;membership&quot;,color = &quot;&quot;,fill = &quot;&quot;) +
+  ylim(0,2) +
+  theme(legend.position = &quot;bottom&quot;)</code></pre>
+<pre><code>Warning: Removed 11 rows containing missing values or values outside the scale range
+(`geom_col()`).</code></pre>
+<p><img src="figure/annotate_factors.rmd/unnamed-chunk-27-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-27-1">
+Past versions of unnamed-chunk-27-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-27-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/1e5cfa8f33541dfad8adb838104f35094862f7cc/docs/figure/annotate_factors.rmd/unnamed-chunk-27-1.png" target="_blank">1e5cfa8</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/figure/annotate_factors.rmd/unnamed-chunk-27-1.png" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/87479b50e18b0aacc2cde292fc5f3a72d669c9ba/docs/figure/annotate_factors.rmd/unnamed-chunk-27-1.png" target="_blank">87479b5</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-13
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/587bc1b81a15fa5be7797e3362eab7990cd41543/docs/figure/annotate_factors.rmd/unnamed-chunk-27-1.png" target="_blank">587bc1b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="Stratified_Analysis_organ" class="section level4">
+<h4>Stratified Analysis</h4>
+<p>Look at the boxplot for K37 (mammary gland specific) and K6 (skin
+specific):</p>
+<pre class="r"><code>data_boxplot &lt;- fit2[,c(&quot;K6&quot;, &quot;K37&quot;)]
+is_mammary &lt;- seurat_meta$organ_simplified[-cells_unhealthy] == &quot;mammary gland&quot;
+is_skin &lt;- seurat_meta$organ_simplified[-cells_unhealthy] == &quot;skin&quot;
+boxplot(data_boxplot[,1] ~ is_skin, main = &quot;K6&quot;, ylab = &quot;membership&quot;, outline = FALSE, names = c(&quot;other&quot;,&quot;skin&quot;))</code></pre>
+<p><img src="figure/annotate_factors.rmd/unnamed-chunk-28-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-28-1">
+Past versions of unnamed-chunk-28-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-28-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/figure/annotate_factors.rmd/unnamed-chunk-28-1.png" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/87479b50e18b0aacc2cde292fc5f3a72d669c9ba/docs/figure/annotate_factors.rmd/unnamed-chunk-28-1.png" target="_blank">87479b5</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>boxplot(data_boxplot[,2] ~ is_mammary, main = &quot;K37&quot;, ylab = &quot;membership&quot;, outline = FALSE, names = c(&quot;other&quot;,&quot;mammary gland&quot;))</code></pre>
+<p><img src="figure/annotate_factors.rmd/unnamed-chunk-28-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-28-2">
+Past versions of unnamed-chunk-28-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-28-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/figure/annotate_factors.rmd/unnamed-chunk-28-2.png" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/87479b50e18b0aacc2cde292fc5f3a72d669c9ba/docs/figure/annotate_factors.rmd/unnamed-chunk-28-2.png" target="_blank">87479b5</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>A more detailed boxplot for each:</p>
+<pre class="r"><code>cells_organ_healthy &lt;- seurat_meta$organ_simplified[-cells_unhealthy]
+boxplot(data_boxplot[,1] ~ cells_organ_healthy, 
+        main = &quot;K6&quot;, ylab = &quot;membership&quot;, outline = FALSE, las = 2,
+        xlab = &quot;&quot;, cex.axis = 0.7
+        )</code></pre>
+<p><img src="figure/annotate_factors.rmd/unnamed-chunk-29-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-29-1">
+Past versions of unnamed-chunk-29-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-29-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/figure/annotate_factors.rmd/unnamed-chunk-29-1.png" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>boxplot(data_boxplot[,2] ~ cells_organ_healthy, 
+        main = &quot;K37&quot;, ylab = &quot;membership&quot;, outline = FALSE, las = 2,
+        xlab = &quot;&quot;, cex.axis = 0.7
+        )</code></pre>
+<p><img src="figure/annotate_factors.rmd/unnamed-chunk-29-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-29-2">
+Past versions of unnamed-chunk-29-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-29-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/figure/annotate_factors.rmd/unnamed-chunk-29-2.png" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>What if we further condition on a specific level 2 annotation?</p>
+<pre class="r"><code>subset_cells &lt;- which(seurat_meta$annotation_level2[-cells_unhealthy] == &quot;Treg_cl4&quot;)
+
+boxplot(data_boxplot[subset_cells,1] ~ cells_organ_healthy[subset_cells], 
+        main = &quot;K6 (subset_cells)&quot;, ylab = &quot;membership&quot;, outline = FALSE, las = 2,
+        xlab = &quot;&quot;, cex.axis = 0.7
+)</code></pre>
+<p><img src="figure/annotate_factors.rmd/unnamed-chunk-30-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-30-1">
+Past versions of unnamed-chunk-30-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-30-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/figure/annotate_factors.rmd/unnamed-chunk-30-1.png" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/87479b50e18b0aacc2cde292fc5f3a72d669c9ba/docs/figure/annotate_factors.rmd/unnamed-chunk-30-1.png" target="_blank">87479b5</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-13
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/587bc1b81a15fa5be7797e3362eab7990cd41543/docs/figure/annotate_factors.rmd/unnamed-chunk-30-1.png" target="_blank">587bc1b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>boxplot(data_boxplot[subset_cells,2] ~ cells_organ_healthy[subset_cells], 
+        main = &quot;K37 (subset_cells)&quot;, ylab = &quot;membership&quot;, outline = FALSE, las = 2,
+        xlab = &quot;&quot;, cex.axis = 0.7
+)</code></pre>
+<p><img src="figure/annotate_factors.rmd/unnamed-chunk-30-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-30-2">
+Past versions of unnamed-chunk-30-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-30-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/figure/annotate_factors.rmd/unnamed-chunk-30-2.png" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="condition_annotation" class="section level3">
+<h3>Condition:</h3>
+<div id="Variance_Explained_condition" class="section level4">
+<h4>Variance explained:</h4>
+<pre class="r"><code>condition_broad &lt;- ANOVA_factors(L_pm, seurat_meta$condition_broad)
+condition_broad$factor_original &lt;- which(flashier_snmf_summary$pve &gt; 1e-4)[condition_broad$factor]
+saveRDS(condition_broad, file = paste0(data_path, &quot;condition_broad.rds&quot;))</code></pre>
+<pre class="r"><code>condition_broad &lt;- readRDS(paste0(data_path, &quot;condition_broad.rds&quot;))
+plot(condition_broad$rank, condition_broad$stats, type = &quot;o&quot;, xlab = &quot;Rank&quot;, ylab = &quot;R2&quot;, main = &quot;condition_broad&quot;, ylim = c(0,1.1))
+text(condition_broad$rank, condition_broad$stats, labels = condition_broad$factor_original, pos = 3, cex = 0.5)
+abline(h = c(0.1,0.2,0.4), col = &quot;red&quot;, lty = 2)</code></pre>
+<p><img src="figure/annotate_factors.rmd/unnamed-chunk-32-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-32-1">
+Past versions of unnamed-chunk-32-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-32-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/figure/annotate_factors.rmd/unnamed-chunk-32-1.png" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="Maximal_AUC_condition" class="section level4">
+<h4>Maximal AUC:</h4>
+<pre class="r"><code>condition_broad_AUC &lt;- compute_auc_matrix(loading_mat = L_pm_old, group_info = seurat_meta$condition_broad)
+rownames(condition_broad_AUC) &lt;- sort(unique(seurat_meta$condition_broad))
+saveRDS(condition_broad_AUC, file = paste0(data_path, &quot;condition_broad_AUC.rds&quot;))</code></pre>
+<pre class="r"><code>condition_broad_AUC &lt;- readRDS(paste0(data_path, &quot;condition_broad_AUC.rds&quot;))
+condition_broad_AUC_max &lt;- apply(condition_broad_AUC, 2, max)
+condition_broad_AUC_max_name &lt;- apply(condition_broad_AUC, 2, function(x) rownames(condition_broad_AUC)[which.max(x)])</code></pre>
+<pre class="r"><code>o &lt;- order(condition_broad_AUC_max, decreasing = TRUE)
+table_condition_broad_AUC &lt;- data.frame(
+  Max_AUC = condition_broad_AUC_max[o],
+  Annotation = condition_broad_AUC_max_name[o]
+)</code></pre>
+<pre class="r"><code>table_condition_broad_AUC_pve &lt;- table_condition_broad_AUC[rownames(table_condition_broad_AUC) %in% colnames(L_pm), ]
+annotations &lt;- unique(table_condition_broad_AUC_pve$Annotation)
+colors &lt;- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, &quot;Set3&quot;))(length(annotations))
+names(colors) &lt;- annotations
+plot(1:nrow(table_condition_broad_AUC_pve), table_condition_broad_AUC_pve$Max_AUC, type = &quot;o&quot;, xlab = &quot;Rank by max AUC&quot;, ylab = &quot;Max AUC&quot;, main = &quot;Condition Broad&quot;, col = colors[table_condition_broad_AUC_pve$Annotation], pch = 16)
+text(1:nrow(table_condition_broad_AUC_pve), table_condition_broad_AUC_pve$Max_AUC, labels = gsub(&quot;K&quot;, &quot;&quot;, rownames(table_condition_broad_AUC_pve)), pos = 3, cex = 0.5, col = colors[table_condition_broad_AUC_pve$Annotation])
+legend(&quot;topright&quot;, legend = names(colors), col = colors, pch = 16, cex = 1)</code></pre>
+<p><img src="figure/annotate_factors.rmd/unnamed-chunk-36-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-36-1">
+Past versions of unnamed-chunk-36-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-36-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/figure/annotate_factors.rmd/unnamed-chunk-36-1.png" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/87479b50e18b0aacc2cde292fc5f3a72d669c9ba/docs/figure/annotate_factors.rmd/unnamed-chunk-36-1.png" target="_blank">87479b5</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Highlight factors with maximal AUC at least <span
+class="math inline">\(0.85\)</span>:</p>
+<pre class="r"><code>highlights &lt;- table_condition_broad_AUC[condition_broad_AUC_max[o] &gt;= 0.85, ]
+# produce a table
+knitr::kable(highlights)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Max_AUC</th>
+<th align="left">Annotation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">K12</td>
+<td align="right">0.9886326</td>
+<td align="left">immunization</td>
+</tr>
+<tr class="even">
+<td align="left">K166</td>
+<td align="right">0.9508352</td>
+<td align="left">autoimmunity</td>
+</tr>
+<tr class="odd">
+<td align="left">K35</td>
+<td align="right">0.9391670</td>
+<td align="left">allotransplant</td>
+</tr>
+<tr class="even">
+<td align="left">K4</td>
+<td align="right">0.9149378</td>
+<td align="left">mutiinfection</td>
+</tr>
+<tr class="odd">
+<td align="left">K43</td>
+<td align="right">0.9000082</td>
+<td align="left">mutiinfection</td>
+</tr>
+</tbody>
+</table>
+<p>Structure plot:</p>
+<pre class="r"><code>set.seed(12345)
+condition_broad_factors &lt;- as.numeric(gsub(&quot;K&quot;, rownames(highlights), replacement = &quot;&quot;))
+fit2 &lt;- L_pm_old[, condition_broad_factors, drop = FALSE]
+colnames(fit2) &lt;- paste0(&quot;K&quot;, condition_broad_factors)
+condition_broad &lt;- seurat_meta$condition_broad
+cells &lt;- sort(c(sample(which(condition_broad == &quot;healthy&quot;),5e4),
+                which(condition_broad != &quot;healthy&quot;)))
+structure_plot(fit2[cells, , drop = FALSE],gap = 5,n = 3000,
+                    grouping = condition_broad[cells]) +
+  labs(y = &quot;membership&quot;,color = &quot;&quot;,fill = &quot;&quot;) +
+  ylim(0,2) +
+  theme(legend.position = &quot;bottom&quot;)</code></pre>
+<p><img src="figure/annotate_factors.rmd/unnamed-chunk-38-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-38-1">
+Past versions of unnamed-chunk-38-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-38-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/1e5cfa8f33541dfad8adb838104f35094862f7cc/docs/figure/annotate_factors.rmd/unnamed-chunk-38-1.png" target="_blank">1e5cfa8</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/figure/annotate_factors.rmd/unnamed-chunk-38-1.png" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="Further_conditioning" class="section level4">
+<h4>Further conditioning</h4>
+<p>We will redo the AUC analysis when we condition on CD8 cells
+only:</p>
+<pre class="r"><code>cells_CD8 &lt;- which(seurat_meta$annotation_level1 == &quot;CD8&quot;)
+L_pm_old_CD8 &lt;- L_pm_old[cells_CD8, ]
+L_pm_CD8 &lt;- L_pm[cells_CD8, ]
+condition_broad_CD8 &lt;- seurat_meta$condition_broad[cells_CD8]</code></pre>
+<pre class="r"><code>condition_broad_AUC_CD8 &lt;- compute_auc_matrix(loading_mat = L_pm_old_CD8, 
+                                              group_info = condition_broad_CD8)
+rownames(condition_broad_AUC_CD8) &lt;- sort(unique(condition_broad_CD8))
+saveRDS(condition_broad_AUC_CD8, file = paste0(data_path, &quot;condition_broad_AUC_CD8.rds&quot;))</code></pre>
+<pre class="r"><code>condition_broad_AUC_CD8 &lt;- readRDS(paste0(data_path, &quot;condition_broad_AUC_CD8.rds&quot;))
+condition_broad_AUC_CD8_max &lt;- apply(condition_broad_AUC_CD8, 2, max)
+condition_broad_AUC_CD8_max_name &lt;- apply(condition_broad_AUC_CD8, 2, function(x)
+  rownames(condition_broad_AUC_CD8)[which.max(x)])
+o &lt;- order(condition_broad_AUC_CD8_max, decreasing = TRUE)
+table_condition_broad_AUC_CD8 &lt;- data.frame(Max_AUC = condition_broad_AUC_CD8_max[o], Annotation = condition_broad_AUC_CD8_max_name[o])</code></pre>
+<pre class="r"><code>table_condition_broad_AUC_CD8_pve &lt;- table_condition_broad_AUC_CD8
+table_condition_broad_AUC_CD8_pve &lt;- table_condition_broad_AUC_CD8_pve[rownames(table_condition_broad_AUC_CD8_pve) %in% colnames(L_pm), ]
+annotations &lt;- unique(table_condition_broad_AUC_CD8_pve$Annotation)
+colors &lt;- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9,&quot;Set3&quot;))(length(annotations))
+names(colors) &lt;- annotations
+plot(
+  1:nrow(table_condition_broad_AUC_CD8_pve),
+  table_condition_broad_AUC_CD8_pve$Max_AUC,
+  type = &quot;o&quot;,
+  xlab = &quot;Rank by max AUC&quot;,
+  ylab = &quot;Max AUC&quot;,
+  main = &quot;Condition Broad (CD8)&quot;,
+  col = colors[table_condition_broad_AUC_CD8_pve$Annotation],
+  pch = 16
+)
+text(
+  1:nrow(table_condition_broad_AUC_CD8_pve),
+  table_condition_broad_AUC_CD8_pve$Max_AUC,
+  labels = gsub(&quot;K&quot;, &quot;&quot;, rownames(table_condition_broad_AUC_CD8_pve)),
+  pos = 3,
+  cex = 0.5,
+  col = colors[table_condition_broad_AUC_CD8_pve$Annotation]
+)
+legend(
+  &quot;topright&quot;,
+  legend = names(colors),
+  col = colors,
+  pch = 16
+  ,
+  cex = 1
+)</code></pre>
+<p><img src="figure/annotate_factors.rmd/unnamed-chunk-42-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-42-1">
+Past versions of unnamed-chunk-42-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-42-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/figure/annotate_factors.rmd/unnamed-chunk-42-1.png" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/87479b50e18b0aacc2cde292fc5f3a72d669c9ba/docs/figure/annotate_factors.rmd/unnamed-chunk-42-1.png" target="_blank">87479b5</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>highlights &lt;- table_condition_broad_AUC_CD8[condition_broad_AUC_CD8_max[o] &gt;= 0.85, ]
+# produce a table
+knitr::kable(highlights)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Max_AUC</th>
+<th align="left">Annotation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">K12</td>
+<td align="right">0.9774405</td>
+<td align="left">immunization</td>
+</tr>
+<tr class="even">
+<td align="left">K35</td>
+<td align="right">0.9562598</td>
+<td align="left">allotransplant</td>
+</tr>
+<tr class="odd">
+<td align="left">K166</td>
+<td align="right">0.9478660</td>
+<td align="left">autoimmunity</td>
+</tr>
+<tr class="even">
+<td align="left">K4</td>
+<td align="right">0.9015382</td>
+<td align="left">mutiinfection</td>
+</tr>
+<tr class="odd">
+<td align="left">K43</td>
+<td align="right">0.8971193</td>
+<td align="left">mutiinfection</td>
+</tr>
+<tr class="even">
+<td align="left">K153</td>
+<td align="right">0.8530041</td>
+<td align="left">allotransplant</td>
+</tr>
+</tbody>
+</table>
+<p>Structure plot:</p>
+<pre class="r"><code>set.seed(12345)
+condition_broad_CD8_factors &lt;- as.numeric(gsub(&quot;K&quot;, rownames(highlights), replacement = &quot;&quot;))
+fit2 &lt;- L_pm_old_CD8[, condition_broad_CD8_factors, drop = FALSE]
+colnames(fit2) &lt;- paste0(&quot;K&quot;, condition_broad_CD8_factors)
+cells &lt;- sort(c(sample(which(condition_broad_CD8 == &quot;healthy&quot;),1e3),
+                sample(which(condition_broad_CD8 == &quot;virus&quot;),1e3),
+                sample(which(condition_broad_CD8 == &quot;bacteria&quot;),1e3),
+                sample(which(condition_broad_CD8 == &quot;autoimmune&quot;),1e3),
+                sample(which(condition_broad_CD8 == &quot;cancer&quot;),1e3),
+                sample(which(condition_broad_CD8 == &quot;mutiinfection&quot;),1e3),
+                which(condition_broad_CD8 != &quot;healthy&quot; &amp; condition_broad_CD8 != &quot;virus&quot; &amp; condition_broad_CD8 != &quot;bacteria&quot; &amp; condition_broad_CD8 != &quot;autoimmune&quot; &amp; condition_broad_CD8 != &quot;cancer&quot; &amp; condition_broad_CD8 != &quot;mutiinfection&quot;)))
+structure_plot(fit2[cells, , drop = FALSE], gap = 5,n = 3000,
+                    grouping = condition_broad_CD8[cells]) +
+  labs(y = &quot;membership&quot;,color = &quot;&quot;,fill = &quot;&quot;) +
+  ylim(0,2) +
+  theme(legend.position = &quot;bottom&quot;)</code></pre>
+<p><img src="figure/annotate_factors.rmd/unnamed-chunk-44-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-44-1">
+Past versions of unnamed-chunk-44-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-44-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/1e5cfa8f33541dfad8adb838104f35094862f7cc/docs/figure/annotate_factors.rmd/unnamed-chunk-44-1.png" target="_blank">1e5cfa8</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/figure/annotate_factors.rmd/unnamed-chunk-44-1.png" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="condition_detailed_annotation" class="section level3">
+<h3>Condition_detailed:</h3>
+<div id="Variance_Explained_condition_detailed" class="section level4">
+<h4>Variance explained:</h4>
+<pre class="r"><code># Focus on group with at least 3000 cells
+selected_conditions &lt;- names(which(table(seurat_meta$condition_detailed) &gt;= 3000))
+selected_cells &lt;- which(seurat_meta$condition_detailed %in% selected_conditions)</code></pre>
+<pre class="r"><code>condition_detailed &lt;- ANOVA_factors(L_pm[selected_cells, ], seurat_meta$condition_detailed[selected_cells])
+condition_detailed$factor_original &lt;- which(flashier_snmf_summary$pve &gt; 1e-4)[condition_detailed$factor]
+saveRDS(condition_detailed, file = paste0(data_path, &quot;condition_detailed.rds&quot;))</code></pre>
+<pre class="r"><code>condition_detailed &lt;- readRDS(paste0(data_path, &quot;condition_detailed.rds&quot;))
+plot(condition_detailed$rank, condition_detailed$stats, type = &quot;o&quot;, xlab = &quot;Rank&quot;, ylab = &quot;R2&quot;, main = &quot;condition_detailed&quot;, ylim = c(0,1.1))
+text(condition_detailed$rank, condition_detailed$stats, labels = condition_detailed$factor_original, pos = 3, cex = 0.5)
+abline(h = c(0.1,0.2,0.4), col = &quot;red&quot;, lty = 2)</code></pre>
+<p><img src="figure/annotate_factors.rmd/unnamed-chunk-47-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-47-1">
+Past versions of unnamed-chunk-47-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-47-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/figure/annotate_factors.rmd/unnamed-chunk-47-1.png" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="Maximal_AUC_condition_detailed" class="section level4">
+<h4>Maximal AUC:</h4>
+<pre class="r"><code>condition_detailed_AUC &lt;- compute_auc_matrix(loading_mat = L_pm_old, group_info = seurat_meta$condition_detailed)
+
+rownames(condition_detailed_AUC) &lt;- sort(unique(seurat_meta$condition_detailed))
+
+saveRDS(condition_detailed_AUC, file = paste0(data_path, &quot;condition_detailed_AUC.rds&quot;))</code></pre>
+<pre class="r"><code>condition_detailed_AUC &lt;- readRDS(paste0(data_path, &quot;condition_detailed_AUC.rds&quot;))
+condition_detailed_AUC_max &lt;- apply(condition_detailed_AUC, 2, max)
+condition_detailed_AUC_max_name &lt;- apply(condition_detailed_AUC, 2, function(x) rownames(condition_detailed_AUC)[which.max(x)])
+o &lt;- order(condition_detailed_AUC_max, decreasing = TRUE)
+table_condition_detailed_AUC &lt;- data.frame(
+  Max_AUC = condition_detailed_AUC_max[o],
+  Annotation = condition_detailed_AUC_max_name[o]
+)</code></pre>
+<pre class="r"><code>table_condition_detailed_AUC_pve &lt;- table_condition_detailed_AUC[rownames(table_condition_detailed_AUC) %in% colnames(L_pm), ]
+
+# Only focus on conditions with at least 3000 cells
+table_condition_detailed_AUC_pve &lt;- table_condition_detailed_AUC_pve[table_condition_detailed_AUC_pve$Annotation %in% selected_conditions, ]
+
+annotations &lt;- unique(table_condition_detailed_AUC_pve$Annotation)
+colors &lt;- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, &quot;Set3&quot;))(length(annotations))
+names(colors) &lt;- annotations
+plot(1:nrow(table_condition_detailed_AUC_pve), table_condition_detailed_AUC_pve$Max_AUC, type = &quot;o&quot;, xlab = &quot;Rank by max AUC&quot;, ylab = &quot;Max AUC&quot;, main = &quot;Condition Detailed&quot;, col = colors[table_condition_detailed_AUC_pve$Annotation], pch = 16)
+text(1:nrow(table_condition_detailed_AUC_pve), table_condition_detailed_AUC_pve$Max_AUC, labels = gsub(&quot;K&quot;, &quot;&quot;, rownames(table_condition_detailed_AUC_pve)), pos = 3, cex = 0.7, col = colors[table_condition_detailed_AUC_pve$Annotation])
+legend(&quot;topright&quot;, legend = names(colors), col = colors, pch = 16, cex = 0.85)</code></pre>
+<p><img src="figure/annotate_factors.rmd/unnamed-chunk-50-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-50-1">
+Past versions of unnamed-chunk-50-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-50-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/figure/annotate_factors.rmd/unnamed-chunk-50-1.png" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/87479b50e18b0aacc2cde292fc5f3a72d669c9ba/docs/figure/annotate_factors.rmd/unnamed-chunk-50-1.png" target="_blank">87479b5</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Highlight factors with maximal AUC at least <span
+class="math inline">\(0.85\)</span>:</p>
+<pre class="r"><code>highlights &lt;- table_condition_detailed_AUC_pve[table_condition_detailed_AUC_pve$Max_AUC &gt;= 0.85, ]
+# produce a table
+knitr::kable(highlights)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Max_AUC</th>
+<th align="left">Annotation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">K43</td>
+<td align="right">0.9877118</td>
+<td align="left">LCMVarm_D60</td>
+</tr>
+<tr class="even">
+<td align="left">K12</td>
+<td align="right">0.9838970</td>
+<td align="left">NP_OVA_D21</td>
+</tr>
+<tr class="odd">
+<td align="left">K61</td>
+<td align="right">0.9648360</td>
+<td align="left">NOD</td>
+</tr>
+<tr class="even">
+<td align="left">K25</td>
+<td align="right">0.9551671</td>
+<td align="left">Crodentium</td>
+</tr>
+<tr class="odd">
+<td align="left">K101</td>
+<td align="right">0.9518438</td>
+<td align="left">PosSelected</td>
+</tr>
+<tr class="even">
+<td align="left">K26</td>
+<td align="right">0.9434789</td>
+<td align="left">PD1KO</td>
+</tr>
+<tr class="odd">
+<td align="left">K171</td>
+<td align="right">0.9303409</td>
+<td align="left">CeDtg</td>
+</tr>
+<tr class="even">
+<td align="left">K4</td>
+<td align="right">0.9154747</td>
+<td align="left">dirty_2w</td>
+</tr>
+<tr class="odd">
+<td align="left">K63</td>
+<td align="right">0.9099382</td>
+<td align="left">DSS</td>
+</tr>
+<tr class="even">
+<td align="left">K3</td>
+<td align="right">0.8674076</td>
+<td align="left">CeDtg</td>
+</tr>
+<tr class="odd">
+<td align="left">K58</td>
+<td align="right">0.8507855</td>
+<td align="left">VV_D80</td>
+</tr>
+</tbody>
+</table>
+<p>structure plot:</p>
+<pre class="r"><code>set.seed(12345)
+condition_detailed_factors &lt;- as.numeric(gsub(&quot;K&quot;, rownames(highlights), replacement = &quot;&quot;))
+fit2 &lt;- L_pm_old[, condition_detailed_factors, drop = FALSE]
+colnames(fit2) &lt;- paste0(&quot;K&quot;, condition_detailed_factors)
+condition_detailed &lt;- seurat_meta$condition_detailed
+# subsample only 10000 baseline cells
+cells &lt;- sort(c(sample(which(condition_detailed == &quot;baseline&quot;),1e4),
+                which(condition_detailed != &quot;baseline&quot;)))
+structure_plot(fit2[cells, , drop = FALSE],gap = 5,n = 3000,
+               
+                    grouping = condition_detailed[cells]) +
+  labs(y = &quot;membership&quot;,color = &quot;&quot;,fill = &quot;&quot;) +
+  ylim(0,2) +
+  theme(legend.position = &quot;bottom&quot;)</code></pre>
+<pre><code>Warning: Removed 28 rows containing missing values or values outside the scale range
+(`geom_col()`).</code></pre>
+<p><img src="figure/annotate_factors.rmd/unnamed-chunk-52-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-52-1">
+Past versions of unnamed-chunk-52-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-52-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/1e5cfa8f33541dfad8adb838104f35094862f7cc/docs/figure/annotate_factors.rmd/unnamed-chunk-52-1.png" target="_blank">1e5cfa8</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/figure/annotate_factors.rmd/unnamed-chunk-52-1.png" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="Further_conditioning_condition_detailed"
+class="section level4">
+<h4>Further conditioning</h4>
+<p>We will redo the AUC analysis when we condition on CD8 cells
+only:</p>
+<pre class="r"><code>cells_CD8 &lt;- which(seurat_meta$annotation_level1 == &quot;CD8&quot;)
+L_pm_old_CD8 &lt;- L_pm_old[cells_CD8, ]
+L_pm_CD8 &lt;- L_pm[cells_CD8, ]
+condition_detailed_CD8 &lt;- seurat_meta$condition_detailed[cells_CD8]</code></pre>
+<pre class="r"><code>condition_detailed_AUC_CD8 &lt;- compute_auc_matrix(loading_mat = L_pm_old_CD8, 
+                                              group_info = condition_detailed_CD8)
+rownames(condition_detailed_AUC_CD8) &lt;- sort(unique(condition_detailed_CD8))
+saveRDS(condition_detailed_AUC_CD8, file = paste0(data_path, &quot;condition_detailed_AUC_CD8.rds&quot;))</code></pre>
+<pre class="r"><code>condition_detailed_AUC_CD8 &lt;- readRDS(paste0(data_path, &quot;condition_detailed_AUC_CD8.rds&quot;))
+condition_detailed_AUC_CD8_max &lt;- apply(condition_detailed_AUC_CD8, 2, max)
+condition_detailed_AUC_CD8_max_name &lt;- apply(condition_detailed_AUC_CD8, 2, function(x)
+  rownames(condition_detailed_AUC_CD8)[which.max(x)])
+o &lt;- order(condition_detailed_AUC_CD8_max, decreasing = TRUE)
+table_condition_detailed_AUC_CD8 &lt;- data.frame(Max_AUC = condition_detailed_AUC_CD8_max[o], Annotation = condition_detailed_AUC_CD8_max_name[o])</code></pre>
+<pre class="r"><code>table_condition_detailed_AUC_CD8_pve &lt;- table_condition_detailed_AUC_CD8
+table_condition_detailed_AUC_CD8_pve &lt;- table_condition_detailed_AUC_CD8_pve[rownames(table_condition_detailed_AUC_CD8_pve) %in% colnames(L_pm), ]
+annotations &lt;- unique(table_condition_detailed_AUC_CD8_pve$Annotation)
+colors &lt;- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9,&quot;Set3&quot;))(length(annotations))
+names(colors) &lt;- annotations
+plot(
+  1:nrow(table_condition_detailed_AUC_CD8_pve),
+  table_condition_detailed_AUC_CD8_pve$Max_AUC,
+  type = &quot;o&quot;,
+  xlab = &quot;Rank by max AUC&quot;,
+  ylab = &quot;Max AUC&quot;,
+  main = &quot;Condition Broad (CD8)&quot;,
+  col = colors[table_condition_detailed_AUC_CD8_pve$Annotation],
+  pch = 16
+)
+text(
+  1:nrow(table_condition_detailed_AUC_CD8_pve),
+  table_condition_detailed_AUC_CD8_pve$Max_AUC,
+  labels = gsub(&quot;K&quot;, &quot;&quot;, rownames(table_condition_detailed_AUC_CD8_pve)),
+  pos = 3,
+  cex = 0.5,
+  col = colors[table_condition_detailed_AUC_CD8_pve$Annotation]
+)
+legend(
+  &quot;topright&quot;,
+  legend = names(colors),
+  col = colors,
+  pch = 16
+  ,
+  cex = 1
+)</code></pre>
+<p><img src="figure/annotate_factors.rmd/unnamed-chunk-56-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-56-1">
+Past versions of unnamed-chunk-56-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-56-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/39126f4e80c6532f0c1203b71c1979a2a8b46b22/docs/figure/annotate_factors.rmd/unnamed-chunk-56-1.png" target="_blank">39126f4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>highlights &lt;- table_condition_detailed_AUC_CD8[condition_detailed_AUC_CD8_max[o] &gt;= 0.85, ]
+# Remove terms less than 100
+terms_less_100 &lt;- names(table(condition_detailed_CD8))[table(condition_detailed_CD8) &lt; 100]
+highlights &lt;- highlights[!highlights$Annotation %in% terms_less_100, ]
+# produce a table
+knitr::kable(highlights)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Max_AUC</th>
+<th align="left">Annotation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">K166</td>
+<td align="right">0.9985411</td>
+<td align="left">LCMVarm_intravascular</td>
+</tr>
+<tr class="even">
+<td align="left">K37</td>
+<td align="right">0.9937088</td>
+<td align="left">3dpp</td>
+</tr>
+<tr class="odd">
+<td align="left">K17</td>
+<td align="right">0.9917438</td>
+<td align="left">LCMVarm_intravascular</td>
+</tr>
+<tr class="even">
+<td align="left">K12</td>
+<td align="right">0.9834017</td>
+<td align="left">NP_OVA_D7</td>
+</tr>
+<tr class="odd">
+<td align="left">K149</td>
+<td align="right">0.9776592</td>
+<td align="left">LCMVarm_intravascular</td>
+</tr>
+<tr class="even">
+<td align="left">K35</td>
+<td align="right">0.9734850</td>
+<td align="left">HeartTransplant_tolerance_D30</td>
+</tr>
+<tr class="odd">
+<td align="left">K26</td>
+<td align="right">0.9583934</td>
+<td align="left">PD1KO</td>
+</tr>
+<tr class="even">
+<td align="left">K61</td>
+<td align="right">0.9552585</td>
+<td align="left">NOD</td>
+</tr>
+<tr class="odd">
+<td align="left">K23</td>
+<td align="right">0.9543627</td>
+<td align="left">LCMVarm_intravascular</td>
+</tr>
+<tr class="even">
+<td align="left">K25</td>
+<td align="right">0.9518277</td>
+<td align="left">LCMVarm_intravascular</td>
+</tr>
+<tr class="odd">
+<td align="left">K11</td>
+<td align="right">0.9443327</td>
+<td align="left">E18.5</td>
+</tr>
+<tr class="even">
+<td align="left">K108</td>
+<td align="right">0.9414908</td>
+<td align="left">LCMVarm_intravascular</td>
+</tr>
+<tr class="odd">
+<td align="left">K56</td>
+<td align="right">0.9405230</td>
+<td align="left">LCMVarm_intravascular</td>
+</tr>
+<tr class="even">
+<td align="left">K55</td>
+<td align="right">0.9384343</td>
+<td align="left">LCMVarm_intravascular</td>
+</tr>
+<tr class="odd">
+<td align="left">K45</td>
+<td align="right">0.9381218</td>
+<td align="left">VV_D63_AntigenExperienced</td>
+</tr>
+<tr class="even">
+<td align="left">K124</td>
+<td align="right">0.9347367</td>
+<td align="left">LCMVarm_intravascular</td>
+</tr>
+<tr class="odd">
+<td align="left">K63</td>
+<td align="right">0.9342436</td>
+<td align="left">DSS</td>
+</tr>
+<tr class="even">
+<td align="left">K173</td>
+<td align="right">0.9291197</td>
+<td align="left">LCMVarm_intravascular</td>
+</tr>
+<tr class="odd">
+<td align="left">K182</td>
+<td align="right">0.9265536</td>
+<td align="left">LCMVarm_intravascular</td>
+</tr>
+<tr class="even">
+<td align="left">K54</td>
+<td align="right">0.9259396</td>
+<td align="left">VV_D63_AntigenExperienced</td>
+</tr>
+<tr class="odd">
+<td align="left">K93</td>
+<td align="right">0.9258996</td>
+<td align="left">LCMVarm_intravascular</td>
+</tr>
+<tr class="even">
+<td align="left">K115</td>
+<td align="right">0.9243724</td>
+<td align="left">D3</td>
+</tr>
+<tr class="odd">
+<td align="left">K186</td>
+<td align="right">0.9228613</td>
+<td align="left">D3</td>
+</tr>
+<tr class="even">
+<td align="left">K180</td>
+<td align="right">0.9210084</td>
+<td align="left">MTB_49w</td>
+</tr>
+<tr class="odd">
+<td align="left">K130</td>
+<td align="right">0.9202104</td>
+<td align="left">LCMVarm_intravascular</td>
+</tr>
+<tr class="even">
+<td align="left">K87</td>
+<td align="right">0.9187878</td>
+<td align="left">LCMVarm_intravascular</td>
+</tr>
+<tr class="odd">
+<td align="left">K146</td>
+<td align="right">0.9157924</td>
+<td align="left">LCMVarm_intravascular</td>
+</tr>
+<tr class="even">
+<td align="left">K29</td>
+<td align="right">0.8996210</td>
+<td align="left">PD1KO</td>
+</tr>
+<tr class="odd">
+<td align="left">K185</td>
+<td align="right">0.8947312</td>
+<td align="left">LCMVarm_intravascular</td>
+</tr>
+<tr class="even">
+<td align="left">K20</td>
+<td align="right">0.8783802</td>
+<td align="left">LCMVarm_intravascular</td>
+</tr>
+<tr class="odd">
+<td align="left">K118</td>
+<td align="right">0.8751865</td>
+<td align="left">LCMVarm_intravascular</td>
+</tr>
+<tr class="even">
+<td align="left">K157</td>
+<td align="right">0.8729168</td>
+<td align="left">D3</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.5.1 (2025-06-13)
+Platform: aarch64-apple-darwin20
+Running under: macOS Sequoia 15.6.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: America/Toronto
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] fastTopics_0.7-25 ggplot2_4.0.0    
+
+loaded via a namespace (and not attached):
+ [1] gtable_0.3.6          xfun_0.53             bslib_0.9.0          
+ [4] htmlwidgets_1.6.4     ggrepel_0.9.6         lattice_0.22-7       
+ [7] quadprog_1.5-8        vctrs_0.6.5           tools_4.5.1          
+[10] generics_0.1.4        parallel_4.5.1        tibble_3.3.0         
+[13] pkgconfig_2.0.3       Matrix_1.7-3          data.table_1.17.8    
+[16] SQUAREM_2021.1        RColorBrewer_1.1-3    S7_0.2.0             
+[19] RcppParallel_5.1.11-1 lifecycle_1.0.4       truncnorm_1.0-9      
+[22] compiler_4.5.1        farver_2.1.2          stringr_1.5.2        
+[25] git2r_0.36.2          progress_1.2.3        RhpcBLASctl_0.23-42  
+[28] httpuv_1.6.16         htmltools_0.5.8.1     sass_0.4.10          
+[31] yaml_2.3.10           lazyeval_0.2.2        plotly_4.11.0        
+[34] crayon_1.5.3          later_1.4.4           pillar_1.11.1        
+[37] jquerylib_0.1.4       whisker_0.4.1         tidyr_1.3.1          
+[40] uwot_0.2.3            cachem_1.1.0          gtools_3.9.5         
+[43] tidyselect_1.2.1      digest_0.6.37         Rtsne_0.17           
+[46] stringi_1.8.7         reshape2_1.4.4        dplyr_1.1.4          
+[49] purrr_1.1.0           ashr_2.2-63           labeling_0.4.3       
+[52] cowplot_1.2.0         rprojroot_2.1.1       fastmap_1.2.0        
+[55] grid_4.5.1            cli_3.6.5             invgamma_1.2         
+[58] magrittr_2.0.4        dichromat_2.0-0.1     withr_3.0.2          
+[61] prettyunits_1.2.0     scales_1.4.0          promises_1.3.3       
+[64] rmarkdown_2.30        httr_1.4.7            workflowr_1.7.2      
+[67] hms_1.1.3             pbapply_1.7-4         evaluate_1.0.5       
+[70] knitr_1.50            irlba_2.3.5.1         viridisLite_0.4.2    
+[73] rlang_1.1.6           Rcpp_1.1.0            mixsqp_0.3-54        
+[76] glue_1.8.0            rstudioapi_0.17.1     jsonlite_2.0.0       
+[79] plyr_1.8.9            R6_2.6.1              fs_1.6.6             </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

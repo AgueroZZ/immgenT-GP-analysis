@@ -1,0 +1,713 @@
+---
+title: "Annotation of factors from scRNA analysis"
+author: "Ziang Zhang"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Process the result {#Data_Processing}
+
+Use this function for plotting:
+
+```{r}
+source("https://raw.githubusercontent.com/stephenslab/single-cell-jamboree/refs/heads/main/code/group_factors.R")
+library(ggplot2)
+library(fastTopics)
+```
+
+Read in the meta-information and the factorization result:
+
+```{r}
+data_path <- "../data/"
+code_path <- "../code/"
+# data_path <- "data/"
+# code_path <- "code/"
+source(paste0(code_path, "ROC.R"))
+seurat_meta <- readRDS(paste0(data_path, "seurat_meta.rds"))
+flashier_snmf_summary <- readRDS(paste0(data_path, "flashier_snmf_summary.rds"))
+```
+
+Align the cells to remove the extra cells in the flashier result:
+
+```{r}
+cells_flashier <- rownames(flashier_snmf_summary$L_pm)
+cells_seurat <- seurat_meta$cellID
+which(!cells_flashier %in% cells_seurat)
+L_pm <- flashier_snmf_summary$L_pm[cells_flashier %in% cells_seurat, ]
+all(rownames(L_pm) == cells_seurat)
+```
+
+Let's consider the normalization approach Peter suggested:
+
+```{r}
+filter_cells_by_total_membership <- function (L, max_val = 10, numiter = 10) {
+  n <- nrow(L)
+  rows <- 1:n
+  for (iter in 1:numiter) {
+    x <- rowSums(L)
+    cat(sprintf("%d. Filtered out %d cells.\n",iter,sum(x > max_val)))
+    i <- which(x <= max_val)
+    L <- L[i,]
+    rows <- rows[i]
+    d <- apply(L,2,max)
+    L <- scale_cols(L,1/d)
+  }
+  return(rows)
+}
+scale_cols <- function (A, b)
+  t(t(A) * b)
+```
+
+
+```{r}
+D <- diag(1 / apply(L_pm, 2, function(x) max(x)))
+L <- L_pm %*% D
+cells <- filter_cells_by_total_membership(L,numiter = 12)
+seurat_meta <- seurat_meta[cells,]
+L_pm <- L_pm[cells,]
+```
+
+
+```{r}
+d <- apply(L_pm,2,max)
+L_pm <- scale_cols(L_pm,1/d)
+D <- d * D
+```
+
+
+Only keep factors with pve larger than $10^{-4}$.
+
+```{r}
+L_pm_old <- L_pm
+L_pm <- L_pm[, flashier_snmf_summary$pve > 1e-4]
+colnames(L_pm) <- paste0("K", which(flashier_snmf_summary$pve > 1e-4))
+```
+
+
+
+## Annotate the factors {#annotate_factors}
+
+To annotate each factor with the meta-information, we will try two approaches:
+- \textbf{Variance explained}: for each meta-variable (e.g., cell type, organ, condition), we will run ANOVA to see how much variation (measured in $R^2$) in the factor is explained by each meta-variable.
+- \textbf{Maximal AUC}: for each meta-variable (e.g., cell type, organ, condition), we will compute the AUC of each factor for predicting each group in the meta-variable, and keep the maximal AUC.
+
+
+### Cell-type Level1: {#level_1_annotation}
+
+As discussed with David, all T-cells were differentiated from thymocytes, so we should remove the thymocytes from the analysis.
+Also, to avoid the complication, let's also remove all unhealthy cells.
+
+```{r}
+cells_thymocyte <- which(seurat_meta$annotation_level1 == "thymocyte")
+cells_unhealthy_thymocyte <- which(seurat_meta$annotation_level1 == "thymocyte" | seurat_meta$condition_broad != "healthy")
+L_pm_old_no_thymocytes <- L_pm_old[-cells_thymocyte, ]
+L_pm_old_no_unhealthy_thymocytes <- L_pm_old[-cells_unhealthy_thymocyte, ]
+L_pm_no_unhealthy_thymocytes <- L_pm[-cells_unhealthy_thymocyte, ]
+```
+
+
+#### Variance explained: {#Variance_Explained_level_1}
+
+```{r eval = FALSE}
+annot_level1 <- ANOVA_factors(L_pm_no_unhealthy_thymocytes, seurat_meta$annotation_level1[-cells_unhealthy_thymocyte])
+annot_level1$factor_original <- which(flashier_snmf_summary$pve > 1e-4)[annot_level1$factor]
+saveRDS(annot_level1, file = paste0(data_path, "annot_level1.rds"))
+```
+
+```{r}
+annot_level1 <- readRDS(paste0(data_path, "annot_level1.rds"))
+plot(annot_level1$rank, annot_level1$stats, type = "o", xlab = "Rank", ylab = "R2", main = "Celltype Level1", ylim = c(0,1.1))
+text(annot_level1$rank, annot_level1$stats, labels = annot_level1$factor_original, pos = 3, cex = 0.5)
+abline(h = c(0.1,0.2,0.4), col = "red", lty = 2)
+```
+
+
+#### Maximal AUC: {#Maximal_AUC_level_1}
+
+```{r eval = FALSE}
+level_1_AUC <- compute_auc_matrix(loading_mat = L_pm_old_no_unhealthy_thymocytes, group_info = seurat_meta$annotation_level1[-cells_unhealthy_thymocyte])
+rownames(level_1_AUC) <- sort(unique(seurat_meta$annotation_level1[-cells_unhealthy_thymocyte]))
+saveRDS(level_1_AUC, file = paste0(data_path, "level_1_AUC.rds"))
+```
+
+
+As discussed with David, Treg should really be thought as a subset of CD4 cells. 
+Therefore, let's define a new category "all_CD4" which includes both "CD4" and "Treg", and recompute the AUC:
+
+```{r eval = FALSE}
+annotation_level1_all_CD4 <- as.character(seurat_meta$annotation_level1[-cells_unhealthy_thymocyte])
+annotation_level1_all_CD4[annotation_level1_all_CD4 == "Treg"] <- "CD4"
+annotation_level1_all_CD4[annotation_level1_all_CD4 != "CD4"] <- "other"
+level_1_AUC_all_CD4 <- compute_auc_matrix(loading_mat = L_pm_old_no_unhealthy_thymocytes,
+                                          group_info = annotation_level1_all_CD4)
+level_1_AUC <- readRDS(paste0(data_path, "level_1_AUC.rds"))
+level_1_AUC <- rbind(level_1_AUC, level_1_AUC_all_CD4[1, , drop = FALSE])
+rownames(level_1_AUC)[nrow(level_1_AUC)] <- "all_CD4"
+saveRDS(level_1_AUC, file = paste0(data_path, "level_1_AUC.rds"))
+```
+
+
+Furthermore, some of the gdT cells (gdT_cl2, 4, 11, 12, 38, 25) should be viewed as CD8aa.
+
+```{r eval = FALSE}
+annotation_level1_all_CD8aa <- as.character(seurat_meta$annotation_level1[-cells_unhealthy_thymocyte])
+annotation_level2_all_CD8aa <- as.character(seurat_meta$annotation_level2[-cells_unhealthy_thymocyte])
+# if level 2 is gdT_cl2, 4, 11, 12, 38, 25, then change level 1 to CD8aa
+annotation_level1_all_CD8aa[annotation_level2_all_CD8aa %in% paste0("gdT_cl", c(2,4,11,12,25,38))] <- "CD8aa"
+annotation_level1_all_CD8aa[annotation_level1_all_CD8aa != "CD8aa"] <- "other"
+level_1_AUC_all_CD8aa <- compute_auc_matrix(loading_mat = L_pm_old_no_unhealthy_thymocytes,
+                                            group_info = annotation_level1_all_CD8aa)
+level_1_AUC <- readRDS(paste0(data_path, "level_1_AUC.rds"))
+level_1_AUC <- rbind(level_1_AUC, level_1_AUC_all_CD8aa[1, , drop = FALSE])
+rownames(level_1_AUC)[nrow(level_1_AUC)] <- "all_CD8aa"
+saveRDS(level_1_AUC, file = paste0(data_path, "level_1_AUC.rds"))
+```
+
+```{r}
+annotation_level1_all_CD4 <- as.character(seurat_meta$annotation_level1)[-cells_unhealthy_thymocyte]
+annotation_level1_all_CD4[annotation_level1_all_CD4 == "Treg"] <- "CD4"
+annotation_level1_all_CD4[annotation_level1_all_CD4 != "CD4"] <- "other"
+
+# boxplot of K58 on all_CD4
+boxplot(L_pm_old_no_unhealthy_thymocytes[, 58] ~ annotation_level1_all_CD4, main
+ = "K58", ylab = "membership", outline = FALSE)
+
+# boxplot of K29 on all_CD4
+boxplot(L_pm_old_no_unhealthy_thymocytes[, 29] ~ annotation_level1_all_CD4, main =
+ "K29", ylab = "membership", outline = FALSE)
+```
+
+```{r}
+annotation_level1_all_CD8aa <- as.character(seurat_meta$annotation_level1[-cells_unhealthy_thymocyte])
+annotation_level2_all_CD8aa <- as.character(seurat_meta$annotation_level2[-cells_unhealthy_thymocyte])
+# if level 2 is gdT_cl2, 4, 11, 12, 38, 25, then change level 1 to CD8aa
+annotation_level1_all_CD8aa[annotation_level2_all_CD8aa %in% paste0("gdT_cl", c(2,4,11,12,25,38))] <- "CD8aa"
+annotation_level1_all_CD8aa[annotation_level1_all_CD8aa != "CD8aa"] <- "other"
+
+# boxplot of K3 on all_CD8aa
+boxplot(L_pm_old_no_unhealthy_thymocytes[, 3] ~ annotation_level1_all_CD8aa, main = "K3", ylab = "membership", outline = FALSE)
+
+# boxplot of K171 on all_CD8aa
+boxplot(L_pm_old_no_unhealthy_thymocytes[, 171] ~ annotation_level1_all_CD8aa, main = "K171", ylab = "membership", outline = FALSE)
+```
+
+
+```{r}
+level_1_AUC <- readRDS(paste0(data_path, "level_1_AUC.rds"))
+level_1_AUC_max <- apply(level_1_AUC, 2, max)
+level_1_AUC_max_name <- apply(level_1_AUC, 2, function(x) rownames(level_1_AUC)[which.max(x)])
+o <- order(level_1_AUC_max, decreasing = TRUE)
+table_level_1_AUC <- data.frame(
+  Factor = colnames(level_1_AUC)[o],
+  Max_AUC = level_1_AUC_max[o],
+  Annotation = level_1_AUC_max_name[o]
+)
+# keep rows that are at least 0.8
+knitr::kable(table_level_1_AUC[level_1_AUC_max[o] >= 0.8, ])
+```
+
+
+```{r}
+table_level_1_AUC_pve <- table_level_1_AUC[table_level_1_AUC$Factor %in% colnames(L_pm),]
+# color by table_level_1_AUC_pve$Annotation
+colors <- RColorBrewer::brewer.pal(length(unique(table_level_1_AUC_pve$Annotation)), "Set1")
+names(colors) <- unique(table_level_1_AUC_pve$Annotation)
+
+table_level_1_AUC_pve <- table_level_1_AUC[table_level_1_AUC$Factor %in% colnames(L_pm),]
+plot(1:nrow(table_level_1_AUC_pve), table_level_1_AUC_pve$Max_AUC, type = "o", xlab = "Rank by max AUC", ylab = "Max AUC", main = "Celltype Level1", col = colors[table_level_1_AUC_pve$Annotation], pch = 16)
+text(1:nrow(table_level_1_AUC_pve), table_level_1_AUC_pve$Max_AUC, labels = gsub("K", "", table_level_1_AUC_pve$Factor), pos = 3, cex = 0.45, col = colors[table_level_1_AUC_pve$Annotation])
+legend("topright", legend = names(colors), col = colors, pch = 16, cex = 1)
+```
+
+Highlight factors with maximal AUC at least $0.8$:
+
+```{r}
+highlights <- data.frame(
+  AUC = level_1_AUC_max[level_1_AUC_max >= 0.80],
+  Annotation = level_1_AUC_max_name[level_1_AUC_max >= 0.80]
+)
+
+# Arranging by AUC value
+highlights <- highlights[order(highlights$AUC, decreasing = TRUE), ]
+knitr::kable(highlights)
+```
+
+Structure plot of the highlighted factors:
+
+```{r, results="hide", message=FALSE}
+set.seed(12345)
+cell_type_factors <- as.numeric(gsub("K", rownames(highlights), replacement = ""))
+fit2 <- L_pm_old_no_unhealthy_thymocytes[, cell_type_factors, drop = FALSE]
+colnames(fit2) <- paste0("k", cell_type_factors)
+
+cell_type <- seurat_meta$annotation_level1[-cells_unhealthy_thymocyte]
+cells <- which(cell_type == "CD4" | cell_type == "CD8")
+cells <- sample(cells,1e5)
+cells <- sort(c(cells,which(cell_type != "CD4" & cell_type != "CD8")))
+
+structure_plot(fit2[cells,],gap = 10,n = 3000,
+                    grouping = cell_type[cells]) +
+  labs(y = "membership",color = "",fill = "") +
+  ylim(0,2) +
+  theme(legend.position = "bottom")
+```
+
+
+
+### Organ: {#organ_annotation}
+
+Again, as discussed with David, we will focus on healthy cells:
+
+```{r}
+cells_unhealthy <- which(seurat_meta$condition_broad != "healthy")
+L_pm_old_no_unhealthy <- L_pm_old[-cells_unhealthy, ]
+L_pm_no_unhealthy <- L_pm[-cells_unhealthy, ]
+```
+
+
+#### Variance explained:
+
+```{r eval = FALSE}
+organ <- ANOVA_factors(L_pm_no_unhealthy, seurat_meta$organ_simplified[-cells_unhealthy])
+organ$factor_original <- which(flashier_snmf_summary$pve > 1e-4)[organ$factor]
+saveRDS(organ, file = paste0(data_path, "organ.rds"))
+```
+
+```{r}
+organ <- readRDS(paste0(data_path, "organ.rds"))
+plot(organ$rank, organ$stats, type = "o", xlab = "Rank", ylab = "R2", main = "organ", ylim = c(0,1.1))
+text(organ$rank, organ$stats, labels = organ$factor_original, pos = 3, cex = 0.5)
+abline(h = c(0.1,0.2,0.4), col = "red", lty = 2)
+```
+
+#### Maximal AUC: {#Maximal_AUC_organ}
+
+```{r eval = FALSE}
+organ_AUC <- compute_auc_matrix(loading_mat = L_pm_old_no_unhealthy, group_info = seurat_meta$organ_simplified[-cells_unhealthy])
+rownames(organ_AUC) <- sort(unique(seurat_meta$organ_simplified[-cells_unhealthy]))
+saveRDS(organ_AUC, file = paste0(data_path, "organ_AUC.rds"))
+```
+
+```{r}
+organ_AUC <- readRDS(paste0(data_path, "organ_AUC.rds"))
+organ_AUC_max <- apply(organ_AUC, 2, max)
+organ_AUC_max_name <- apply(organ_AUC, 2, function(x) rownames(organ_AUC)[which.max(x)])
+o <- order(organ_AUC_max, decreasing = TRUE)
+table_organ_AUC <- data.frame(
+  Max_AUC = organ_AUC_max[o],
+  Annotation = organ_AUC_max_name[o]
+)
+```
+
+```{r}
+table_organ_AUC_pve <- table_organ_AUC[rownames(table_level_1_AUC) %in% colnames(L_pm), ]
+annotations <- unique(table_organ_AUC_pve$Annotation)
+colors <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, "Set3"))(length(annotations))
+names(colors) <- annotations
+plot(1:nrow(table_organ_AUC_pve), table_organ_AUC_pve$Max_AUC, type = "o", xlab = "Rank by max AUC", ylab = "Max AUC", main = "Organ", col = colors[table_organ_AUC_pve$Annotation], pch = 16)
+text(1:nrow(table_organ_AUC_pve), table_organ_AUC_pve$Max_AUC, labels = gsub("K", "", rownames(table_organ_AUC_pve)), pos = 3, cex = 0.5, col = colors[table_organ_AUC_pve$Annotation])
+legend("topright", legend = names(colors), col = colors, pch = 16, cex = 1)
+```
+
+Keep factors with maximal AUC at least $0.85$, and remove factors that correspond to synovial fluid or CNS:
+
+```{r}
+highlights <- table_organ_AUC[organ_AUC_max[o] >= 0.85, ]
+highlights <- highlights[!grepl("synovial", highlights$Annotation), ]
+highlights <- highlights[!grepl("CNS", highlights$Annotation), ]
+# produce a table
+knitr::kable(highlights)
+```
+
+Structure plot:
+
+```{r, results="hide", message=FALSE}
+set.seed(12345)
+organ_factors <- as.numeric(gsub("K", rownames(highlights), replacement = ""))
+fit2 <- L_pm_old_no_unhealthy[, organ_factors, drop = FALSE]
+colnames(fit2) <- paste0("K", organ_factors)
+organ <- seurat_meta$organ_simplified[-cells_unhealthy]
+cells <- sort(c(sample(which(organ == "spleen"),1e4),
+                sample(which(organ == "LN"),1e4),
+                sample(which(organ == "thymus"),3e3),
+                which(organ != "spleen" & organ != "LN" & organ != "thymus")))
+structure_plot(fit2[cells,],gap = 5,n = 3000,
+                    grouping = organ[cells]) +
+  labs(y = "membership",color = "",fill = "") +
+  ylim(0,2) +
+  theme(legend.position = "bottom")
+```
+
+
+#### Stratified Analysis {#Stratified_Analysis_organ}
+
+Look at the boxplot for K37 (mammary gland specific) and K6 (skin specific):
+
+```{r}
+data_boxplot <- fit2[,c("K6", "K37")]
+is_mammary <- seurat_meta$organ_simplified[-cells_unhealthy] == "mammary gland"
+is_skin <- seurat_meta$organ_simplified[-cells_unhealthy] == "skin"
+boxplot(data_boxplot[,1] ~ is_skin, main = "K6", ylab = "membership", outline = FALSE, names = c("other","skin"))
+boxplot(data_boxplot[,2] ~ is_mammary, main = "K37", ylab = "membership", outline = FALSE, names = c("other","mammary gland"))
+```
+
+A more detailed boxplot for each:
+
+```{r}
+cells_organ_healthy <- seurat_meta$organ_simplified[-cells_unhealthy]
+boxplot(data_boxplot[,1] ~ cells_organ_healthy, 
+        main = "K6", ylab = "membership", outline = FALSE, las = 2,
+        xlab = "", cex.axis = 0.7
+        )
+boxplot(data_boxplot[,2] ~ cells_organ_healthy, 
+        main = "K37", ylab = "membership", outline = FALSE, las = 2,
+        xlab = "", cex.axis = 0.7
+        )
+```
+
+What if we further condition on a specific level 2 annotation?
+
+```{r}
+subset_cells <- which(seurat_meta$annotation_level2[-cells_unhealthy] == "Treg_cl4")
+
+boxplot(data_boxplot[subset_cells,1] ~ cells_organ_healthy[subset_cells], 
+        main = "K6 (subset_cells)", ylab = "membership", outline = FALSE, las = 2,
+        xlab = "", cex.axis = 0.7
+)
+
+boxplot(data_boxplot[subset_cells,2] ~ cells_organ_healthy[subset_cells], 
+        main = "K37 (subset_cells)", ylab = "membership", outline = FALSE, las = 2,
+        xlab = "", cex.axis = 0.7
+)
+```
+
+### Condition: {#condition_annotation}
+
+#### Variance explained: {#Variance_Explained_condition}
+
+```{r eval = FALSE}
+condition_broad <- ANOVA_factors(L_pm, seurat_meta$condition_broad)
+condition_broad$factor_original <- which(flashier_snmf_summary$pve > 1e-4)[condition_broad$factor]
+saveRDS(condition_broad, file = paste0(data_path, "condition_broad.rds"))
+```
+
+```{r}
+condition_broad <- readRDS(paste0(data_path, "condition_broad.rds"))
+plot(condition_broad$rank, condition_broad$stats, type = "o", xlab = "Rank", ylab = "R2", main = "condition_broad", ylim = c(0,1.1))
+text(condition_broad$rank, condition_broad$stats, labels = condition_broad$factor_original, pos = 3, cex = 0.5)
+abline(h = c(0.1,0.2,0.4), col = "red", lty = 2)
+```
+
+
+#### Maximal AUC: {#Maximal_AUC_condition}
+
+```{r eval = FALSE}
+condition_broad_AUC <- compute_auc_matrix(loading_mat = L_pm_old, group_info = seurat_meta$condition_broad)
+rownames(condition_broad_AUC) <- sort(unique(seurat_meta$condition_broad))
+saveRDS(condition_broad_AUC, file = paste0(data_path, "condition_broad_AUC.rds"))
+```
+
+```{r}
+condition_broad_AUC <- readRDS(paste0(data_path, "condition_broad_AUC.rds"))
+condition_broad_AUC_max <- apply(condition_broad_AUC, 2, max)
+condition_broad_AUC_max_name <- apply(condition_broad_AUC, 2, function(x) rownames(condition_broad_AUC)[which.max(x)])
+```
+
+```{r}
+o <- order(condition_broad_AUC_max, decreasing = TRUE)
+table_condition_broad_AUC <- data.frame(
+  Max_AUC = condition_broad_AUC_max[o],
+  Annotation = condition_broad_AUC_max_name[o]
+)
+```
+
+```{r}
+table_condition_broad_AUC_pve <- table_condition_broad_AUC[rownames(table_condition_broad_AUC) %in% colnames(L_pm), ]
+annotations <- unique(table_condition_broad_AUC_pve$Annotation)
+colors <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, "Set3"))(length(annotations))
+names(colors) <- annotations
+plot(1:nrow(table_condition_broad_AUC_pve), table_condition_broad_AUC_pve$Max_AUC, type = "o", xlab = "Rank by max AUC", ylab = "Max AUC", main = "Condition Broad", col = colors[table_condition_broad_AUC_pve$Annotation], pch = 16)
+text(1:nrow(table_condition_broad_AUC_pve), table_condition_broad_AUC_pve$Max_AUC, labels = gsub("K", "", rownames(table_condition_broad_AUC_pve)), pos = 3, cex = 0.5, col = colors[table_condition_broad_AUC_pve$Annotation])
+legend("topright", legend = names(colors), col = colors, pch = 16, cex = 1)
+```
+
+Highlight factors with maximal AUC at least $0.85$:
+
+```{r}
+highlights <- table_condition_broad_AUC[condition_broad_AUC_max[o] >= 0.85, ]
+# produce a table
+knitr::kable(highlights)
+```
+
+Structure plot:
+
+```{r, results="hide", message=FALSE}
+set.seed(12345)
+condition_broad_factors <- as.numeric(gsub("K", rownames(highlights), replacement = ""))
+fit2 <- L_pm_old[, condition_broad_factors, drop = FALSE]
+colnames(fit2) <- paste0("K", condition_broad_factors)
+condition_broad <- seurat_meta$condition_broad
+cells <- sort(c(sample(which(condition_broad == "healthy"),5e4),
+                which(condition_broad != "healthy")))
+structure_plot(fit2[cells, , drop = FALSE],gap = 5,n = 3000,
+                    grouping = condition_broad[cells]) +
+  labs(y = "membership",color = "",fill = "") +
+  ylim(0,2) +
+  theme(legend.position = "bottom")
+```
+
+
+
+#### Further conditioning {#Further_conditioning}
+
+We will redo the AUC analysis when we condition on CD8 cells only:
+
+```{r}
+cells_CD8 <- which(seurat_meta$annotation_level1 == "CD8")
+L_pm_old_CD8 <- L_pm_old[cells_CD8, ]
+L_pm_CD8 <- L_pm[cells_CD8, ]
+condition_broad_CD8 <- seurat_meta$condition_broad[cells_CD8]
+```
+
+```{r eval = FALSE}
+condition_broad_AUC_CD8 <- compute_auc_matrix(loading_mat = L_pm_old_CD8, 
+                                              group_info = condition_broad_CD8)
+rownames(condition_broad_AUC_CD8) <- sort(unique(condition_broad_CD8))
+saveRDS(condition_broad_AUC_CD8, file = paste0(data_path, "condition_broad_AUC_CD8.rds"))
+```
+
+```{r}
+condition_broad_AUC_CD8 <- readRDS(paste0(data_path, "condition_broad_AUC_CD8.rds"))
+condition_broad_AUC_CD8_max <- apply(condition_broad_AUC_CD8, 2, max)
+condition_broad_AUC_CD8_max_name <- apply(condition_broad_AUC_CD8, 2, function(x)
+  rownames(condition_broad_AUC_CD8)[which.max(x)])
+o <- order(condition_broad_AUC_CD8_max, decreasing = TRUE)
+table_condition_broad_AUC_CD8 <- data.frame(Max_AUC = condition_broad_AUC_CD8_max[o], Annotation = condition_broad_AUC_CD8_max_name[o])
+```
+                                                                                             
+```{r}
+table_condition_broad_AUC_CD8_pve <- table_condition_broad_AUC_CD8
+table_condition_broad_AUC_CD8_pve <- table_condition_broad_AUC_CD8_pve[rownames(table_condition_broad_AUC_CD8_pve) %in% colnames(L_pm), ]
+annotations <- unique(table_condition_broad_AUC_CD8_pve$Annotation)
+colors <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9,"Set3"))(length(annotations))
+names(colors) <- annotations
+plot(
+  1:nrow(table_condition_broad_AUC_CD8_pve),
+  table_condition_broad_AUC_CD8_pve$Max_AUC,
+  type = "o",
+  xlab = "Rank by max AUC",
+  ylab = "Max AUC",
+  main = "Condition Broad (CD8)",
+  col = colors[table_condition_broad_AUC_CD8_pve$Annotation],
+  pch = 16
+)
+text(
+  1:nrow(table_condition_broad_AUC_CD8_pve),
+  table_condition_broad_AUC_CD8_pve$Max_AUC,
+  labels = gsub("K", "", rownames(table_condition_broad_AUC_CD8_pve)),
+  pos = 3,
+  cex = 0.5,
+  col = colors[table_condition_broad_AUC_CD8_pve$Annotation]
+)
+legend(
+  "topright",
+  legend = names(colors),
+  col = colors,
+  pch = 16
+  ,
+  cex = 1
+)
+```
+
+```{r}
+highlights <- table_condition_broad_AUC_CD8[condition_broad_AUC_CD8_max[o] >= 0.85, ]
+# produce a table
+knitr::kable(highlights)
+```
+
+Structure plot:
+
+```{r, results="hide", message=FALSE}
+set.seed(12345)
+condition_broad_CD8_factors <- as.numeric(gsub("K", rownames(highlights), replacement = ""))
+fit2 <- L_pm_old_CD8[, condition_broad_CD8_factors, drop = FALSE]
+colnames(fit2) <- paste0("K", condition_broad_CD8_factors)
+cells <- sort(c(sample(which(condition_broad_CD8 == "healthy"),1e3),
+                sample(which(condition_broad_CD8 == "virus"),1e3),
+                sample(which(condition_broad_CD8 == "bacteria"),1e3),
+                sample(which(condition_broad_CD8 == "autoimmune"),1e3),
+                sample(which(condition_broad_CD8 == "cancer"),1e3),
+                sample(which(condition_broad_CD8 == "mutiinfection"),1e3),
+                which(condition_broad_CD8 != "healthy" & condition_broad_CD8 != "virus" & condition_broad_CD8 != "bacteria" & condition_broad_CD8 != "autoimmune" & condition_broad_CD8 != "cancer" & condition_broad_CD8 != "mutiinfection")))
+structure_plot(fit2[cells, , drop = FALSE], gap = 5,n = 3000,
+                    grouping = condition_broad_CD8[cells]) +
+  labs(y = "membership",color = "",fill = "") +
+  ylim(0,2) +
+  theme(legend.position = "bottom")
+```
+
+
+
+### Condition_detailed: {#condition_detailed_annotation}
+
+#### Variance explained: {#Variance_Explained_condition_detailed}
+
+```{r}
+# Focus on group with at least 3000 cells
+selected_conditions <- names(which(table(seurat_meta$condition_detailed) >= 3000))
+selected_cells <- which(seurat_meta$condition_detailed %in% selected_conditions)
+```
+
+
+```{r eval = FALSE}
+condition_detailed <- ANOVA_factors(L_pm[selected_cells, ], seurat_meta$condition_detailed[selected_cells])
+condition_detailed$factor_original <- which(flashier_snmf_summary$pve > 1e-4)[condition_detailed$factor]
+saveRDS(condition_detailed, file = paste0(data_path, "condition_detailed.rds"))
+```
+
+```{r}
+condition_detailed <- readRDS(paste0(data_path, "condition_detailed.rds"))
+plot(condition_detailed$rank, condition_detailed$stats, type = "o", xlab = "Rank", ylab = "R2", main = "condition_detailed", ylim = c(0,1.1))
+text(condition_detailed$rank, condition_detailed$stats, labels = condition_detailed$factor_original, pos = 3, cex = 0.5)
+abline(h = c(0.1,0.2,0.4), col = "red", lty = 2)
+```
+
+#### Maximal AUC: {#Maximal_AUC_condition_detailed}
+
+```{r eval = FALSE}
+condition_detailed_AUC <- compute_auc_matrix(loading_mat = L_pm_old, group_info = seurat_meta$condition_detailed)
+
+rownames(condition_detailed_AUC) <- sort(unique(seurat_meta$condition_detailed))
+
+saveRDS(condition_detailed_AUC, file = paste0(data_path, "condition_detailed_AUC.rds"))
+```
+
+
+```{r}
+condition_detailed_AUC <- readRDS(paste0(data_path, "condition_detailed_AUC.rds"))
+condition_detailed_AUC_max <- apply(condition_detailed_AUC, 2, max)
+condition_detailed_AUC_max_name <- apply(condition_detailed_AUC, 2, function(x) rownames(condition_detailed_AUC)[which.max(x)])
+o <- order(condition_detailed_AUC_max, decreasing = TRUE)
+table_condition_detailed_AUC <- data.frame(
+  Max_AUC = condition_detailed_AUC_max[o],
+  Annotation = condition_detailed_AUC_max_name[o]
+)
+```
+
+```{r}
+table_condition_detailed_AUC_pve <- table_condition_detailed_AUC[rownames(table_condition_detailed_AUC) %in% colnames(L_pm), ]
+
+# Only focus on conditions with at least 3000 cells
+table_condition_detailed_AUC_pve <- table_condition_detailed_AUC_pve[table_condition_detailed_AUC_pve$Annotation %in% selected_conditions, ]
+
+annotations <- unique(table_condition_detailed_AUC_pve$Annotation)
+colors <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, "Set3"))(length(annotations))
+names(colors) <- annotations
+plot(1:nrow(table_condition_detailed_AUC_pve), table_condition_detailed_AUC_pve$Max_AUC, type = "o", xlab = "Rank by max AUC", ylab = "Max AUC", main = "Condition Detailed", col = colors[table_condition_detailed_AUC_pve$Annotation], pch = 16)
+text(1:nrow(table_condition_detailed_AUC_pve), table_condition_detailed_AUC_pve$Max_AUC, labels = gsub("K", "", rownames(table_condition_detailed_AUC_pve)), pos = 3, cex = 0.7, col = colors[table_condition_detailed_AUC_pve$Annotation])
+legend("topright", legend = names(colors), col = colors, pch = 16, cex = 0.85)
+```
+
+Highlight factors with maximal AUC at least $0.85$:
+
+```{r}
+highlights <- table_condition_detailed_AUC_pve[table_condition_detailed_AUC_pve$Max_AUC >= 0.85, ]
+# produce a table
+knitr::kable(highlights)
+```
+
+structure plot:
+
+```{r, results="hide", message=FALSE}
+set.seed(12345)
+condition_detailed_factors <- as.numeric(gsub("K", rownames(highlights), replacement = ""))
+fit2 <- L_pm_old[, condition_detailed_factors, drop = FALSE]
+colnames(fit2) <- paste0("K", condition_detailed_factors)
+condition_detailed <- seurat_meta$condition_detailed
+# subsample only 10000 baseline cells
+cells <- sort(c(sample(which(condition_detailed == "baseline"),1e4),
+                which(condition_detailed != "baseline")))
+structure_plot(fit2[cells, , drop = FALSE],gap = 5,n = 3000,
+               
+                    grouping = condition_detailed[cells]) +
+  labs(y = "membership",color = "",fill = "") +
+  ylim(0,2) +
+  theme(legend.position = "bottom")
+```
+
+
+#### Further conditioning {#Further_conditioning_condition_detailed}
+
+We will redo the AUC analysis when we condition on CD8 cells only:
+
+```{r}
+cells_CD8 <- which(seurat_meta$annotation_level1 == "CD8")
+L_pm_old_CD8 <- L_pm_old[cells_CD8, ]
+L_pm_CD8 <- L_pm[cells_CD8, ]
+condition_detailed_CD8 <- seurat_meta$condition_detailed[cells_CD8]
+```
+
+```{r eval = FALSE}
+condition_detailed_AUC_CD8 <- compute_auc_matrix(loading_mat = L_pm_old_CD8, 
+                                              group_info = condition_detailed_CD8)
+rownames(condition_detailed_AUC_CD8) <- sort(unique(condition_detailed_CD8))
+saveRDS(condition_detailed_AUC_CD8, file = paste0(data_path, "condition_detailed_AUC_CD8.rds"))
+```
+
+```{r}
+condition_detailed_AUC_CD8 <- readRDS(paste0(data_path, "condition_detailed_AUC_CD8.rds"))
+condition_detailed_AUC_CD8_max <- apply(condition_detailed_AUC_CD8, 2, max)
+condition_detailed_AUC_CD8_max_name <- apply(condition_detailed_AUC_CD8, 2, function(x)
+  rownames(condition_detailed_AUC_CD8)[which.max(x)])
+o <- order(condition_detailed_AUC_CD8_max, decreasing = TRUE)
+table_condition_detailed_AUC_CD8 <- data.frame(Max_AUC = condition_detailed_AUC_CD8_max[o], Annotation = condition_detailed_AUC_CD8_max_name[o])
+```
+                                                                                             
+```{r}
+table_condition_detailed_AUC_CD8_pve <- table_condition_detailed_AUC_CD8
+table_condition_detailed_AUC_CD8_pve <- table_condition_detailed_AUC_CD8_pve[rownames(table_condition_detailed_AUC_CD8_pve) %in% colnames(L_pm), ]
+annotations <- unique(table_condition_detailed_AUC_CD8_pve$Annotation)
+colors <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9,"Set3"))(length(annotations))
+names(colors) <- annotations
+plot(
+  1:nrow(table_condition_detailed_AUC_CD8_pve),
+  table_condition_detailed_AUC_CD8_pve$Max_AUC,
+  type = "o",
+  xlab = "Rank by max AUC",
+  ylab = "Max AUC",
+  main = "Condition Broad (CD8)",
+  col = colors[table_condition_detailed_AUC_CD8_pve$Annotation],
+  pch = 16
+)
+text(
+  1:nrow(table_condition_detailed_AUC_CD8_pve),
+  table_condition_detailed_AUC_CD8_pve$Max_AUC,
+  labels = gsub("K", "", rownames(table_condition_detailed_AUC_CD8_pve)),
+  pos = 3,
+  cex = 0.5,
+  col = colors[table_condition_detailed_AUC_CD8_pve$Annotation]
+)
+legend(
+  "topright",
+  legend = names(colors),
+  col = colors,
+  pch = 16
+  ,
+  cex = 1
+)
+```
+
+```{r}
+highlights <- table_condition_detailed_AUC_CD8[condition_detailed_AUC_CD8_max[o] >= 0.85, ]
+# Remove terms less than 100
+terms_less_100 <- names(table(condition_detailed_CD8))[table(condition_detailed_CD8) < 100]
+highlights <- highlights[!highlights$Annotation %in% terms_less_100, ]
+# produce a table
+knitr::kable(highlights)
+```
+
+
+
+
+

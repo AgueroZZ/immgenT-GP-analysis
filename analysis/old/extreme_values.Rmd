@@ -1,0 +1,197 @@
+---
+title: Examining the "extreme values" in the semi-NMF with K=200
+author: Peter Carbonetto
+output: workflowr::wflow_html
+---
+
+There is a curious phenomenon in the $K = 200$ semi-NMF results which
+produces lopsided, or "extreme", values in the factors. As a point of
+comparison, the NMF results with $K = 20$ does not show this pattern.
+Here we expose this issue and suggest an extra step to filter out a
+small fraction of cells with these extreme values.
+
+```{r knitr-opts, include=FALSE}
+knitr::opts_chunk$set(comment = "#",collapse = TRUE,results = "hold",
+                      fig.align = "center",dpi = 120)
+```
+
+Load the packages needed for this analysis:
+
+```{r load-pkgs, message=FALSE}
+library(Matrix)
+library(fastTopics)
+library(flashier)
+library(ggplot2)
+library(cowplot)
+```
+
+Load the results of the flashier NMF analysis with $K = 20$:
+
+```{r load-nmf}
+load("../outputs/fl_nmf_k=20.RData")
+colnames(fl_nmf_ldf$L) <- paste0("k",1:20)
+colnames(fl_nmf_ldf$F) <- paste0("k",1:20)
+```
+
+In the LDF decomposition of the NMF (with "infinity-norm scaling"),
+this is the ${\bf D}$ matrix:
+
+```{r nmf-D-histogram, fig.height=2, fig.width=2}
+pdat <- data.frame(d = fl_nmf_ldf$D)
+ggplot(pdat,aes(x = d)) +
+  geom_histogram(bins = 12,color = "black",fill = "black") +
+  labs(x = "") +
+  theme_cowplot(font_size = 12)
+```
+
+This next histogram is simply a histogram of the "total memberships",
+i.e., the row sums of the ${\bf L}$ matrix in the LDF decomposition:
+
+```{r nmf-L-histogram, fig.height=2, fig.width=3}
+pdat <- data.frame(x = rowSums(fl_nmf_ldf$L))
+ggplot(pdat,aes(x = x)) +
+  geom_histogram(bins = 32,color = "black",fill = "black") +
+  labs(x = "") +
+  theme_cowplot(font_size = 12)
+```
+
+Notice that the peak of the distribution is hovering around 1 which is
+somewhat reassuring.
+
+Let's now compare these histograms to what we get from the LDF
+decomposition of the semi-NMF fit.
+
+```{r load-snmf}
+load("../data/flashier_snmf_ldf.RData")
+```
+The ${\bf D}$ matrix contains some very large values:
+
+```{r snmf-D-histogram, fig.height=2, fig.width=2.5}
+pdat <- data.frame(d = fl_snmf_ldf$D)
+ggplot(pdat,aes(x = d)) +
+  geom_histogram(bins = 24,color = "black",fill = "black") +
+  labs(x = "") +
+  theme_cowplot(font_size = 12)
+```
+
+And a small proportion of the cells have very large total memberships
+(e.g., >10):
+
+```{r snmf-L-histogram, fig.height=2, fig.width=3}
+pdat <- data.frame(x = rowSums(fl_snmf_ldf$L))
+ggplot(pdat,aes(x = x)) +
+  geom_histogram(bins = 32,color = "black",fill = "black") +
+  labs(x = "") +
+  theme_cowplot(font_size = 12)
+```
+
+This skewed distribution leads to unappealing Structure plots such as
+this:
+
+```{r structure-plot-by-cell-type, fig.height=2.5, fig.width=7.25, results="hide", message=FALSE}
+L <- fl_snmf_ldf$L
+set.seed(1)
+cell_type_factors <- c("k3","k7","k22","k27","k29","k30","k58","k68",
+                       "k101","k127")
+cell_type <- sample_info$annotation_level1
+cells <- which(cell_type == "CD4" | cell_type == "CD8")
+cells <- sample(cells,1e5)
+cells <- sort(c(cells,which(cell_type != "CD4" & cell_type != "CD8")))
+structure_plot(L[cells,cell_type_factors],gap = 10,n = 2000,
+                    grouping = cell_type[cells]) +
+  labs(y = "membership",color = "",fill = "") +
+  theme(legend.position = "bottom",legend.direction = "horizontal")
+```
+
+For example factor 58 which is corresponds quitely closely to CD8+
+cells is not well visualized in this Structure plot.
+
+To address this issue, I suggest an iterative process in which (i) a
+small proportion of cells are filtered out by their total memberships
+then (ii) the LDF factorization is adjusted accordingly. This is my
+procedure:
+
+```{r filter-cells-by-total-membership-function}
+filter_cells_by_total_membership <- function (L, max_val = 10, numiter = 10) {
+  n <- nrow(L)
+  rows <- 1:n
+  for (iter in 1:numiter) {
+    x <- rowSums(L)
+	cat(sprintf("%d. Filtered out %d cells.\n",iter,sum(x > max_val)))
+	i <- which(x <= max_val)
+	L <- L[i,]
+	rows <- rows[i]
+	d <- apply(L,2,max)
+	L <- scale_cols(L,1/d)
+  }
+  return(rows)
+}
+```
+
+Here is the missing function `scale_cols`:
+
+```{r scale-cols-function}
+scale_cols <- function (A, b)
+  t(t(A) * b)
+```
+
+Now let's apply this iterative filtering procedure to the ${\bf L}$
+matrix from the semi-NMF fit:
+
+```{r filter-cells}
+L <- fl_snmf_ldf$L
+D <- fl_snmf_ldf$D
+cells <- filter_cells_by_total_membership(L,numiter = 12)
+sample_info <- sample_info[cells,]
+L <- L[cells,]
+```
+
+Notice that this iterative filtering eventually "converged"; that is,
+no more cells were removed.
+
+And now renormalize the memberships:
+
+```{r renormalize-memberships}
+d <- apply(L,2,max)
+L <- scale_cols(L,1/d)
+fl_snmf_ldf$L <- L
+fl_snmf_ldf$D <- d * fl_snmf_ldf$D
+```
+
+With this filtering step, the new Structure plot is much more balanced:
+
+```{r structure-plot-by-cell-type-improved, fig.height=2.5, fig.width=7.25, results="hide", message=FALSE}
+set.seed(1)
+cell_type <- sample_info$annotation_level1
+cell_type_factors <- c("k127","k58","k3","k22","k29",
+                       "k68","k7","k30","k101","k27")
+cells <- which(cell_type == "CD4" | cell_type == "CD8")
+cells <- sample(cells,1e5)
+cells <- sort(c(cells,which(cell_type != "CD4" & cell_type != "CD8")))
+structure_plot(L[cells,cell_type_factors],gap = 10,n = 2000,
+                    grouping = cell_type[cells],
+					topics = 1:length(cell_type_factors)) +
+  labs(y = "membership",color = "",fill = "") +
+  theme(legend.position = "bottom",legend.direction = "horizontal")
+```
+
+Likewise, the ${\bf D}$ matrix is now considerably more balanced than
+before:
+
+```{r snmf-D-histogram-new, fig.height=2, fig.width=2.5}
+pdat <- data.frame(d = fl_snmf_ldf$D)
+ggplot(pdat,aes(x = d)) +
+  geom_histogram(bins = 24,color = "black",fill = "black") +
+  labs(x = "") +
+  theme_cowplot(font_size = 12)
+```
+
+And less surprisingly so are the "total memberships":
+
+```{r snmf-L-histogram-new, fig.height=2, fig.width=3}
+pdat <- data.frame(x = rowSums(fl_snmf_ldf$L))
+ggplot(pdat,aes(x = x)) +
+  geom_histogram(bins = 32,color = "black",fill = "black") +
+  labs(x = "") +
+  theme_cowplot(font_size = 12)
+```

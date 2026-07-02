@@ -1,0 +1,650 @@
+---
+title: "Figure 1 for the manuscript (version 1)"
+author: "Ziang Zhang"
+date: "2025-11-06"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+library(ggplot2)
+library(fastTopics)
+library(dplyr)
+library(ggrepel)
+data_path <- "../data/"
+code_path <- "../code/"
+data_path <- "data/"
+code_path <- "code/"
+source(paste0(code_path, "ROC.R"))
+seurat_meta <- readRDS(paste0(data_path, "seurat_meta.rds"))
+flashier_snmf_summary <- readRDS(paste0(data_path, "flashier_snmf_summary.rds"))
+```
+
+
+## Figure 1
+
+Part (A): Scatterplot of maximum absolute coefficients for level1 versus organ.
+
+Align the cells to remove the extra cells in the flashier result:
+
+```{r}
+cells_flashier <- rownames(flashier_snmf_summary$L_pm)
+cells_seurat <- seurat_meta$cellID
+which(!cells_flashier %in% cells_seurat)
+L_pm <- flashier_snmf_summary$L_pm[cells_flashier %in% cells_seurat, ]
+all(rownames(L_pm) == cells_seurat)
+```
+
+Focus on healthy cells that are not thymocytes:
+
+```{r}
+healthy_cells <- which(seurat_meta$condition_broad == "healthy")
+L_pm <- L_pm[healthy_cells, ]
+seurat_meta <- seurat_meta[healthy_cells, ]
+
+cells_thymocyte <- which(seurat_meta$annotation_level1 == "thymocyte")
+L_pm <- L_pm[-cells_thymocyte, ]
+seurat_meta <- seurat_meta[-cells_thymocyte, ]
+```
+
+Filter out organs and cell types with too few cells:
+
+```{r}
+selected_organ <- table(seurat_meta$organ)
+selected_organ <- names(selected_organ[selected_organ >= 3000])
+selected_level1 <- table(seurat_meta$annotation_level1)
+selected_level1 <- names(selected_level1[selected_level1 >= 1000])
+selected_cells <- which(seurat_meta$organ %in% selected_organ & seurat_meta$annotation_level1 %in% selected_level1)
+seurat_meta_selected <- seurat_meta[selected_cells, ]
+# redefine the levels
+seurat_meta_selected$organ <- factor(seurat_meta_selected$organ)
+seurat_meta_selected$annotation_level1 <- factor(seurat_meta_selected$annotation_level1)
+```
+
+Write a function that computes the coefficients of organ and cell type for each factor:
+
+```{r}
+compute_coef_per_factor <- function(factor_id){
+  Y <- L_pm[selected_cells, factor_id]
+  organ <- seurat_meta_selected$organ
+  level1 <- seurat_meta_selected$annotation_level1
+  model_full <- lm(Y ~ organ + level1)
+  coefs <- coef(model_full)
+  # Extract coefficients for organ
+  organ_coefs <- coefs[grep("^organ", names(coefs))]
+  # Extract coefficients for annotation_level1
+  level1_coefs <- coefs[grep("^level1", names(coefs))]
+  
+  return(
+    list(
+      factor_id = factor_id,
+      organ_coefs = organ_coefs,
+      level1_coefs = level1_coefs
+    )
+  )
+}
+```
+
+```{r eval=FALSE}
+factor_coef_list <- lapply(1:ncol(L_pm), compute_coef_per_factor)
+saveRDS(factor_coef_list, file = paste0(data_path, "conditional_analysis_factor_level1_organ.rds"))
+```
+
+
+Plot the maximum absolute coefficient for each factor:
+
+```{r}
+factor_coef_list <- readRDS(file = paste0(data_path, "conditional_analysis_factor_level1_organ.rds"))
+
+max_coef_df <- data.frame(
+  Factor = integer(),
+  Max_Abs_Coefficient_Organ = numeric(),
+  Max_Abs_Coefficient_Level1 = numeric()
+)
+
+for (i in 1:length(factor_coef_list)) {
+  coef_df <- factor_coef_list[[i]]
+  max_abs_organ <- max(abs(coef_df$organ_coefs))
+  max_abs_Level1 <- max(abs(coef_df$level1_coefs))
+  max_coef_df <- rbind(max_coef_df, data.frame(
+    Factor = i,
+    Max_Abs_Coefficient_Organ = max_abs_organ,
+    Max_Abs_Coefficient_Level1 = max_abs_Level1
+  ))
+}
+
+```
+
+
+```{r}
+top_n <- 10  # how many points to annotate above and below y = x
+
+df <- max_coef_df %>%
+  mutate(
+    residual = Max_Abs_Coefficient_Level1 - Max_Abs_Coefficient_Organ, # >0: above y=x; <0: below
+    abs_res  = abs(residual)
+  )
+
+# --- Select top-N above and below y = x ---
+label_above <- df %>%
+  filter(is.finite(residual), residual > 0) %>%
+  slice_max(residual, n = top_n, with_ties = FALSE)
+
+label_below <- df %>%
+  filter(is.finite(residual), residual < 0) %>%
+  slice_min(residual, n = top_n, with_ties = FALSE)
+
+# --- Base plot builder (no labels yet) ---
+base_plot <- ggplot(df, aes(x = Max_Abs_Coefficient_Organ, y = Max_Abs_Coefficient_Level1)) +
+  geom_point(alpha = 0.3, size = 1.8) +                                # background points
+  geom_point(data = label_above, color = "#1f78b4", alpha = 0.6, size = 1.8) +       # highlight above y=x
+  geom_point(data = label_below, color = "#e31a1c", alpha = 0.6, size = 1.8) +       # highlight below y=x
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
+  # # make both y and x axis on log scale
+  # scale_x_log10() +
+  # scale_y_log10() +
+  coord_cartesian(xlim = c(0, 0.4), ylim = c(0, 0.4), expand = TRUE) +  # keep your limits
+  labs(
+    x = "Max Absolute Coefficient (Organ)",
+    y = "Max Absolute Coefficient (Level-1)",
+    title = "Max Absolute Coefficient: Organ vs Level-1"
+  ) +
+  theme_minimal()
+
+# --- Combined plot: annotate both top-N above and below y = x ---
+p_all <- base_plot +
+  geom_text_repel(
+    data = label_above,
+    aes(label = paste0("Factor ", Factor)),
+    color = "#1f78b4", size = 3, max.overlaps = Inf,
+    box.padding = 0.3, point.padding = 0.2, min.segment.length = 0
+  ) +
+  geom_text_repel(
+    data = label_below,
+    aes(label = paste0("Factor ", Factor)),
+    color = "#e31a1c", size = 3, max.overlaps = Inf,
+    box.padding = 0.3, point.padding = 0.2, min.segment.length = 0
+  ) +
+  labs(subtitle = paste0("Annotating top ", top_n, " above (blue) and top ", top_n, " below (red) y = x"))
+
+p_all
+```
+
+
+Also do a similar scatterplot for max AUC:
+
+```{r}
+level_1_AUC <- readRDS(paste0(data_path, "level_1_AUC.rds"))
+level_1_AUC_max <- apply(level_1_AUC, 2, max)
+level_1_AUC_max_name <- apply(level_1_AUC, 2, function(x) rownames(level_1_AUC)[which.max(x)])
+o <- order(level_1_AUC_max, decreasing = TRUE)
+table_level_1_AUC <- data.frame(
+  Factor = colnames(level_1_AUC)[o],
+  Max_AUC = level_1_AUC_max[o],
+  Annotation = level_1_AUC_max_name[o]
+)
+
+organ_AUC <- readRDS(paste0(data_path, "organ_AUC.rds"))
+# remove CNS and synovial fluid from organ_AUC
+organ_AUC <- organ_AUC[!rownames(organ_AUC) %in% c("CNS","synovial fluid"), ]
+organ_AUC_max <- apply(organ_AUC, 2, max)
+organ_AUC_max_name <- apply(organ_AUC, 2, function(x) rownames(organ_AUC)[which.max(x)])
+o <- order(organ_AUC_max, decreasing = TRUE)
+table_organ_AUC <- data.frame(
+  Max_AUC = organ_AUC_max[o],
+  Annotation = organ_AUC_max_name[o]
+)
+
+# merge the two AUC tables by factor
+max_AUC_df <- data.frame(
+  Factor = table_level_1_AUC$Factor,
+  annotation_Level1 = table_level_1_AUC$Annotation,
+  annotation_Organ = organ_AUC_max_name[match(table_level_1_AUC$Factor, names(organ_AUC_max))],
+  Max_AUC_Organ = organ_AUC_max[match(table_level_1_AUC$Factor, names(organ_AUC_max))],
+  Max_AUC_Level1 = table_level_1_AUC$Max_AUC
+)
+```
+
+Scatterplot of max AUC for organ vs level1:
+
+```{r}
+top_n <- 8
+
+df <- max_AUC_df %>%
+  mutate(
+    residual = Max_AUC_Level1 - Max_AUC_Organ,
+    abs_res  = abs(residual)
+  )
+
+df$annotation_Level1 <- gsub("all_CD8aa", "CD8aa", df$annotation_Level1)
+
+label_above <- df %>%
+  filter(is.finite(residual), residual > 0) %>%
+  slice_max(Max_AUC_Level1, n = top_n, with_ties = FALSE) %>%
+  mutate(nudge_x = -0.035)
+
+label_below <- df %>%
+  filter(is.finite(residual), residual < 0) %>%
+  slice_min(-Max_AUC_Organ, n = top_n, with_ties = FALSE) %>%
+  mutate(nudge_x = 0.035)
+
+base_plot <- ggplot(df, aes(Max_AUC_Organ, Max_AUC_Level1)) +
+  geom_point(alpha = 0.3, size = 1.8) +
+  geom_point(data = label_above, color = "#1f78b4", alpha = 0.8, size = 1.8) +
+  geom_point(data = label_below, color = "#e31a1c", alpha = 0.8, size = 1.8) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black") +
+  coord_cartesian(xlim = c(0.46, 1.04), ylim = c(0.5, 1.02), expand = FALSE) +
+  labs(
+    x = "Max AUC (Organ)",
+    y = "Max AUC (Level-1)",
+    title = "Max AUC: Organ vs Level-1",
+    subtitle = sprintf("Annotating top %d above (blue) and top %d below (red) y = x", top_n, top_n)
+  ) +
+  theme_minimal(base_size = 13)
+
+p_all <- base_plot +
+  geom_text_repel(
+    data = label_above,
+    aes(label = paste0(Factor, ": ", annotation_Level1)),
+    color = "#1f78b4",
+    direction = "y",
+    nudge_x = label_above$nudge_x,
+    segment.color = "#1f78b4",
+    arrow = arrow(length = unit(0.008, "npc"), type = "closed", angle = 20),  # smaller arrow
+    force = 1.2, force_pull = 0.2,
+    box.padding = 0.35, point.padding = 0.15,
+    max.time = 2, max.iter = 5e3,
+    min.segment.length = 0.01,
+    segment.alpha = 0.7
+  ) +
+  geom_text_repel(
+    data = label_below,
+    aes(label = paste0(Factor, ": ", annotation_Organ)),
+    color = "#e31a1c",
+    direction = "y",
+    nudge_x = label_below$nudge_x,
+    segment.color = "#e31a1c",
+    arrow = arrow(length = unit(0.008, "npc"), type = "closed", angle = 20),  # smaller arrow
+    force = 1.2, force_pull = 0.2,
+    box.padding = 0.35, point.padding = 0.15,
+    max.time = 2, max.iter = 5e3,
+    min.segment.length = 0.01,
+    segment.alpha = 0.7
+  )
+
+p_all
+
+ggsave(
+  filename = "figures/Figure1/Figure1_MaxAUC_Organ_vs_Level1_arrow_small.png",
+  plot = p_all, width = 8, height = 8, dpi = 300
+)
+```
+
+Let's prepare a structure plot for the selected factors"
+
+```{r}
+### Filter cells with high total membership
+filter_cells_by_total_membership <- function (L, max_val = 10, numiter = 10) {
+  n <- nrow(L)
+  rows <- 1:n
+  for (iter in 1:numiter) {
+    x <- rowSums(L)
+    cat(sprintf("%d. Filtered out %d cells.\n",iter,sum(x > max_val)))
+    i <- which(x <= max_val)
+    L <- L[i,]
+    rows <- rows[i]
+    d <- apply(L,2,max)
+    L <- scale_cols(L,1/d)
+  }
+  return(rows)
+}
+scale_cols <- function (A, b) t(t(A) * b)
+D <- diag(1 / apply(L_pm, 2, function(x) max(x)))
+L <- L_pm %*% D
+cells <- filter_cells_by_total_membership(L,numiter = 12)
+seurat_meta_filtered <- seurat_meta[cells,]
+L_pm_filtered <- L_pm[cells,]
+
+### Normalizing loadings
+d <- apply(L_pm_filtered,2,max)
+L_pm_filtered <- scale_cols(L_pm_filtered,1/d)
+D <- (1/d) * D
+```
+
+```{r}
+### Highlighted cell types
+set.seed(12345)
+### These are all factors that passed the validation test.
+highlights <- c("K22","K30","K58","K68")
+color_coding <- ZemmourLib::immgent_colors$level1
+Level1_match <- c("DN", "nonconv", "CD8", "Treg")
+cell_type_factors <- as.numeric(gsub("K", highlights, replacement = ""))
+fit2 <- L_pm_filtered[, cell_type_factors, drop = FALSE]
+colnames(fit2) <- paste0("k", cell_type_factors)
+
+cell_type <- seurat_meta_filtered$annotation_level1
+# cells <- which(cell_type == "CD4" | cell_type == "CD8" | seurat_meta_filtered$organ_simplified == "spleen")
+cells <- which(cell_type == "CD4" | cell_type == "CD8")
+cells <- sample(cells,1e5)
+cells <- sort(c(cells,which(cell_type != "CD4" & cell_type != "CD8")))
+
+structure_plot(fit2[cells,],gap = 20,n = 3000,
+               colors = color_coding[Level1_match],
+               grouping = cell_type[cells]) +
+  labs(y = "membership",color = "",fill = "") +
+  guides(
+    fill = guide_legend(nrow = 1),
+    color = guide_legend(nrow = 1)
+  ) +
+  theme(
+    legend.position = "bottom",
+    legend.direction = "horizontal",
+    legend.box = "horizontal",
+    axis.text.x = element_text(size = 10, angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 12),
+    axis.title = element_text(size = 14, face = "bold"),
+    legend.text = element_text(size = 12),
+    legend.title = element_text(size = 13)
+  )
+
+ggsave(filename = "figures/Figure1/Figure1_StructurePlot_SelectedFactors.png",
+       width = 8, height = 5)
+```
+
+Showing some boxplot to highlight the loading differences:
+
+```{r}
+plot_factor_boxplot_level1 <- function(factor_id, 
+                                L_pm_filtered, 
+                                seurat_meta_filtered,
+                                outline = FALSE,
+                                log = FALSE,
+                                color_coding) {
+  df <- data.frame(
+    Loading = L_pm_filtered[, factor_id],
+    CellType = seurat_meta_filtered$annotation_level1
+  )
+  
+  median_order <- df %>%
+    group_by(CellType) %>%
+    summarize(med = median(Loading, na.rm = TRUE)) %>%
+    arrange(desc(med)) %>%        
+    pull(CellType)
+  
+  df$CellType <- factor(df$CellType, levels = median_order)
+  
+  p <- ggplot(df, aes(x = CellType, y = Loading, fill = CellType)) +
+    geom_boxplot(outliers = outline, outlier.size = 0.4, width = 0.6, alpha = 0.8, color = "gray40") +
+    scale_fill_manual(values = color_coding) +
+    # scale_y_log10() +
+    labs(
+      title = "",
+      x = "",
+      y = paste0("Loading K", factor_id)
+    ) +
+    theme_minimal(base_size = 12) +
+    theme(
+      plot.title = element_text(face = "bold", size = 13, hjust = 0.5),
+      axis.text.x = element_text(size = 10, angle = 45, hjust = 1, vjust = 1),
+      axis.text.y = element_text(size = 12),
+      axis.title = element_text(size = 14, face = "bold"),
+      legend.position = "none",
+      panel.grid.minor = element_blank(),
+      panel.grid.major.x = element_blank()
+    )
+  
+  if (log) {
+    p <- p + scale_y_log10()
+  }
+  
+  return(p)
+}
+
+p1 <- plot_factor_boxplot_level1(factor_id = 68, L_pm_filtered = L_pm_filtered, seurat_meta_filtered = seurat_meta_filtered, color_coding = color_coding)
+p2 <- plot_factor_boxplot_level1(factor_id = 58, L_pm_filtered = L_pm_filtered, seurat_meta_filtered = seurat_meta_filtered, color_coding = color_coding)
+p3 <- plot_factor_boxplot_level1(factor_id = 30, L_pm_filtered = L_pm_filtered, seurat_meta_filtered = seurat_meta_filtered, color_coding = color_coding)
+p4 <- plot_factor_boxplot_level1(factor_id = 22, L_pm_filtered = L_pm_filtered, seurat_meta_filtered = seurat_meta_filtered, color_coding = color_coding)
+p_combined <- gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2)
+ggsave(filename = "figures/Figure1/Figure1_Boxplot_SelectedFactors.png",
+       plot = p_combined,
+       width = 8, height = 8)
+```
+
+
+Showing an UMAP plot to highlight the loading differences:
+
+```{r}
+umap_result <- readRDS(paste0(data_path, "umap_result.rds"))
+colnames(umap_result) <- c("UMAP_1", "UMAP_2")
+umap_result <- umap_result[rownames(L_pm_filtered),]
+```
+
+```{r}
+df_umap <- as.data.frame(umap_result)
+df_umap$CellType <- seurat_meta_filtered$annotation_level1
+stopifnot(nrow(df_umap) == length(seurat_meta_filtered$annotation_level1))
+
+highlighted_type <- "nonconv"
+
+set.seed(1)
+bg_n <- 120000
+bg_idx <- if (nrow(df_umap) > bg_n) sample(seq_len(nrow(df_umap)), bg_n) else seq_len(nrow(df_umap))
+bg_df <- df_umap[bg_idx, ]
+
+type_df <- df_umap[df_umap$CellType == highlighted_type, , drop = FALSE]
+
+p_type <- ggplot(bg_df, aes(UMAP_1, UMAP_2)) +
+  geom_point(color = "grey85", size = 0.1, alpha = 0.05) +              
+  geom_point(data = type_df,
+             color = unname(color_coding[highlighted_type]),                   
+             size = 0.25, alpha = 0.7) +                                
+  coord_equal() +
+  labs(title = paste0(highlighted_type, " on UMAP"), x = "UMAP 1", y = "UMAP 2") +
+  theme_minimal() +
+  theme(panel.grid = element_blank())
+
+p_type
+```
+
+```{r}
+plot_loadings_on_umap <- function(umap, loading, factor_num, base_color, size = 0.5) {
+  df <- as.data.frame(umap)
+  stopifnot(nrow(df) == length(loading))
+  df$loading <- loading
+  
+  ggplot(df, aes(x = UMAP_1, y = UMAP_2)) +
+    geom_point(
+      aes(alpha = loading),
+      color = base_color,
+      size  = size,
+      show.legend = FALSE
+    ) +
+    scale_alpha(range = c(0, 0.1)) +
+    labs(
+      title = paste0("Factor ", factor_num),
+      x = "UMAP 1", y = "UMAP 2"
+    ) +
+    theme_minimal() +
+    theme(
+      panel.background = element_rect(fill = "white", color = NA),
+      panel.grid = element_blank()
+    )
+}
+
+factor_color_map <- c(
+  "22" = unname(color_coding["CD8"]),
+  "30" = unname(color_coding["nonconv"]),
+  "58" = unname(color_coding["CD4"]),
+  "68" = unname(color_coding["Treg"])
+)
+
+selected_factors <- c(22, 30, 58, 68) 
+plots <- list()
+sample_n <- 80000
+
+for (f in selected_factors) {
+  sample_index <- sample(
+    seq_len(nrow(L_pm_filtered)),
+    size    = min(sample_n, nrow(L_pm_filtered)),
+    replace = FALSE
+  )
+  
+  loading <- L_pm_filtered[sample_index, f]
+  base_col <- unname(factor_color_map[as.character(f)])
+  
+  p <- plot_loadings_on_umap(
+    umap       = umap_result[sample_index, ],
+    loading    = loading,
+    factor_num = f,
+    base_color = base_col,
+    size       = 0.1
+  )
+  
+  plots[[length(plots) + 1]] <- p
+}
+
+combined_plot <- patchwork::wrap_plots(plots, ncol = 2, nrow = 2)
+
+ggsave(
+  filename = "figures/Figure1/Figure1_UMAP_SelectedFactors.png",
+  plot     = combined_plot,
+  width    = 8,
+  height   = 8,
+  dpi      = 300
+)
+```
+
+
+```{r}
+plot_loadings_on_umap_v2 <- function(umap, loading, factor_num,
+                                     size = 0.25,
+                                     show_bg = TRUE,
+                                     bg_alpha = 0.05,
+                                     bg_color = "grey90",
+                                     clip_q = 0.99,         
+                                     top_q = NULL,          
+                                     viridis_option = "viridis",
+                                     viridis_direction = 1) {
+  stopifnot(is.matrix(umap) || is.data.frame(umap))
+  df <- as.data.frame(umap)
+  stopifnot(all(c("UMAP_1","UMAP_2") %in% colnames(df)))
+  stopifnot(nrow(df) == length(loading))
+
+  q_hi <- stats::quantile(loading, probs = clip_q, na.rm = TRUE)
+  loading_clip <- pmin(loading, q_hi)
+
+  if (!is.null(top_q)) {
+    stopifnot(top_q > 0 && top_q < 1)
+    thr <- stats::quantile(loading_clip, probs = top_q, na.rm = TRUE)
+    loading_plot <- ifelse(loading_clip >= thr, loading_clip, NA_real_)
+  } else {
+    loading_plot <- loading_clip
+  }
+
+  df$loading_plot <- loading_plot
+
+  p <- ggplot2::ggplot() +
+    {
+      if (show_bg) ggplot2::geom_point(
+        data = df, ggplot2::aes(UMAP_1, UMAP_2),
+        color = bg_color, size = size, alpha = bg_alpha
+      )
+    } +
+    ggplot2::geom_point(
+      data = df, ggplot2::aes(UMAP_1, UMAP_2, color = loading_plot),
+      size = size, alpha = 0.9, na.rm = TRUE   
+    ) +
+    ggplot2::scale_color_viridis_c(
+      option = viridis_option,
+      direction = viridis_direction,
+      limits = c(0, q_hi),
+      oob = scales::squish,
+      breaks = scales::pretty_breaks(4),
+      name = paste0("K", factor_num, " loading")
+    ) +
+    ggplot2::coord_equal() +
+    ggplot2::labs(
+      title = paste0("Factor ", factor_num),
+      x = "", y = ""
+    ) +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(
+      panel.grid = ggplot2::element_blank()
+    )
+
+  return(p)
+}
+
+selected_factors <- c(22, 30, 58, 68)
+sample_n <- 80000
+
+set.seed(1)
+sample_index <- sample(seq_len(nrow(L_pm_filtered)), size = min(sample_n, nrow(L_pm_filtered)))
+umap_sub <- umap_result[sample_index, , drop = FALSE]
+L_sub    <- L_pm_filtered[sample_index, selected_factors, drop = FALSE]
+
+plots <- lapply(seq_along(selected_factors), function(i){
+  f <- selected_factors[i]
+  plot_loadings_on_umap_v2(
+    umap    = umap_sub,
+    loading = L_sub[, i],
+    factor_num = f,
+    size = 0.1,
+    show_bg = TRUE,
+    bg_alpha = 0.06,
+    clip_q = 0.99,
+    top_q = NULL,             
+    viridis_option = "viridis",
+    viridis_direction = 1
+  )
+})
+
+combined <- patchwork::wrap_plots(plots, ncol = 2)
+ggsave(
+  filename = "figures/Figure1/Figure1_UMAP_SelectedFactors_v2.png",
+  plot     = combined,
+  width    = 8,
+  height   = 8,
+  dpi      = 300
+)
+```
+
+
+
+
+
+
+
+Protein annotation plot:
+
+```{r}
+protein_flash_summary_lognorm <- readRDS(file = paste0(data_path, "protein_flash_selected_summary_lognorm.rds"))
+
+D_lognorm <- diag(1 / apply(protein_flash_summary_lognorm$F_pm, 2, function(x) (max(x) - min(x))))
+protein_flash_summary_lognorm$F_pm <- protein_flash_summary_lognorm$F_pm %*% D_lognorm
+protein_flash_summary_lognorm$L_pm <- protein_flash_summary_lognorm$L_pm %*% solve(D_lognorm)
+F_pm <- protein_flash_summary_lognorm$F_pm
+colnames(F_pm) <- paste0("F", 1:ncol(flashier_snmf_summary$F_pm))[ flashier_snmf_summary$pve > 1e-4]
+```
+
+```{r}
+kset <- paste0("F", c(68, 58, 30, 22))
+F_pm <- F_pm[, kset]
+annotation_heatmap(F_pm,n = 3,
+                   dim = kset,
+                   show_dims = kset,
+                   select_features = "both",
+                   feature_sign = "both",
+                   zero_value = 0.1,
+                   compare_dims = kset,
+                   font_size = 15) +
+  theme(plot.title = element_text(face = "plain",size = 10))
+ggsave(filename = "figures/Figure1/Figure1_ProteinAnnotationPlot_SelectedFactors.png",
+       width = 6, height = 7)
+```
+
+
+
+
+

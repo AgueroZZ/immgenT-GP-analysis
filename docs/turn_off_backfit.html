@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Ziang Zhang" />
+
+
+<title>Turning off backfitting for semi-NMF</title>
+
+<script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">immgen-t factors</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Overview</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/stephenslab/immgen-t-factors">source</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Turning off backfitting for semi-NMF</h1>
+<h4 class="author">Ziang Zhang</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2025-11-03
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>immgen-t-factors/analysis/</code>
+<span class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.2). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed1code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(1)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed1code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(1)</code> was run prior to running the
+code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabimmgentfactorstreefeb4b4b8962699af30d72a8fb207c14cbc767154targetblankfeb4b4ba">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/stephenslab/immgen-t-factors/tree/feb4b4b8962699af30d72a8fb207c14cbc767154" target="_blank">feb4b4b</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabimmgentfactorstreefeb4b4b8962699af30d72a8fb207c14cbc767154targetblankfeb4b4ba"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/stephenslab/immgen-t-factors/tree/feb4b4b8962699af30d72a8fb207c14cbc767154" target="_blank">feb4b4b</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/.Rhistory
+    Ignored:    code/.Rhistory
+
+Untracked files:
+    Untracked:  .DS_Store
+    Untracked:  .gitignore
+    Untracked:  analysis/.DS_Store
+    Untracked:  analysis/conditional_analysis.rmd
+    Untracked:  analysis/further_validation_f68.rmd
+    Untracked:  analysis/level2_organ.rmd
+    Untracked:  code/.DS_Store
+    Untracked:  code/Figure1.R
+    Untracked:  code/ROC.R
+    Untracked:  code/analyze_protein_selected.R
+    Untracked:  code/analyze_protein_selected.sbatch
+    Untracked:  code/analyze_protein_selected_lognorm.R
+    Untracked:  code/analyze_protein_selected_lognorm.sbatch
+    Untracked:  code/analyze_protein_selected_positive.R
+    Untracked:  code/analyze_protein_selected_positive.sbatch
+    Untracked:  code/compare_greedy_back.R
+    Untracked:  code/replicate_whole_data.sbatch
+    Untracked:  data/.DS_Store
+    Untracked:  data/annot_level1.rds
+    Untracked:  data/annot_level2.rds
+    Untracked:  data/condition_broad.rds
+    Untracked:  data/condition_broad_AUC.rds
+    Untracked:  data/condition_broad_AUC_CD8.rds
+    Untracked:  data/condition_detailed.rds
+    Untracked:  data/condition_detailed_AUC.rds
+    Untracked:  data/condition_detailed_AUC_CD8.rds
+    Untracked:  data/conditional_analysis_factor.rds
+    Untracked:  data/conditional_analysis_factor_stats.rds
+    Untracked:  data/factor_matching_results.csv
+    Untracked:  data/factor_matching_results_filtered.csv
+    Untracked:  data/factor_matching_results_noback.csv
+    Untracked:  data/fit1_summary.qs
+    Untracked:  data/fit1_summary_noback.qs
+    Untracked:  data/fit2_summary.qs
+    Untracked:  data/fit2_summary_noback.qs
+    Untracked:  data/fit_replicate_summary_noback.qs
+    Untracked:  data/flash_fixed_F_pm.rds
+    Untracked:  data/flash_fixed_loading.rds
+    Untracked:  data/flashier_snmf_summary.rds
+    Untracked:  data/level_1_AUC.rds
+    Untracked:  data/moran_list_umap.rds
+    Untracked:  data/organ.rds
+    Untracked:  data/organ_AUC.rds
+    Untracked:  data/organ_AUC_healthy.rds
+    Untracked:  data/organ_healthy.rds
+    Untracked:  data/protein_flash_selected_summary.rds
+    Untracked:  data/protein_flash_selected_summary_lognorm.rds
+    Untracked:  data/protein_flash_selected_summary_pos.rds
+    Untracked:  data/protein_mat.rds
+    Untracked:  data/protein_mat_normalized.rds
+    Untracked:  data/protein_mat_normalized_lognorm.rds
+    Untracked:  data/replicate_whole_data.sbatch
+    Untracked:  data/seurat_meta.rds
+    Untracked:  data/umap_result.rds
+    Untracked:  figures/
+
+Unstaged changes:
+    Modified:   analysis/half_validation_hungarian.rmd
+    Deleted:    code/halves_validation.R
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/turn_off_backfit.rmd</code>) and
+HTML (<code>docs/turn_off_backfit.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/feb4b4b8962699af30d72a8fb207c14cbc767154/analysis/turn_off_backfit.rmd" target="_blank">feb4b4b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-11-03
+</td>
+<td>
+workflowr::wflow_publish("analysis/turn_off_backfit.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/immgen-t-factors/d66fb9febbd2893cfd525c9ccfc2cd2b0fd23b81/docs/turn_off_backfit.html" target="_blank">d66fb9f</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-11-03
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/1984e3aac63de8829810a0804befb75eff40d3d0/analysis/turn_off_backfit.rmd" target="_blank">1984e3a</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-11-03
+</td>
+<td>
+workflowr::wflow_publish("analysis/turn_off_backfit.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/immgen-t-factors/86081df73153190a2d267085db8aab2ba6390d5f/docs/turn_off_backfit.html" target="_blank">86081df</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-11-03
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/5724c4ac58f1ebee89e38b805e998ce07f24c71a/analysis/turn_off_backfit.rmd" target="_blank">5724c4a</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-11-03
+</td>
+<td>
+workflowr::wflow_publish("analysis/turn_off_backfit.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/immgen-t-factors/9da6d062730a7ff4d6d0282c188d1f149b76af3a/docs/turn_off_backfit.html" target="_blank">9da6d06</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-11-03
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/97b7deeb25b74fad7ae80575709fe37721c7f462/analysis/turn_off_backfit.rmd" target="_blank">97b7dee</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-11-03
+</td>
+<td>
+workflowr::wflow_publish("analysis/turn_off_backfit.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/immgen-t-factors/79fc9f99cbefa68c11e3c240f94f9a9004d7921d/docs/turn_off_backfit.html" target="_blank">79fc9f9</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-30
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/dd3d42e5a84779e65b0120cfb93dab47a0f0363c/analysis/turn_off_backfit.rmd" target="_blank">dd3d42e</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-30
+</td>
+<td>
+workflowr::wflow_publish("turn_off_backfit.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/immgen-t-factors/69a111175661d625d8cb1509503bb79bd44b4cb0/docs/turn_off_backfit.html" target="_blank">69a1111</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-30
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/17ebd2c910766af6aaf672069c7d763ad6258691/analysis/turn_off_backfit.rmd" target="_blank">17ebd2c</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-30
+</td>
+<td>
+workflowr::wflow_publish("turn_off_backfit.rmd")
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code>knitr::opts_chunk$set(
+  message = FALSE,   
+  warning = FALSE,   
+  results = &quot;hold&quot;   
+)</code></pre>
+<p>One conjecture we have so far is that the backfitting procedure may
+exacerbate the cancelling out effect in semi-nmf.</p>
+<p>To confirm this, we will take a look at the full analysis where we
+turn off backfitting.</p>
+<pre class="r"><code>library(ggplot2)
+library(dplyr)
+library(fastTopics)
+library(qs)
+library(cowplot)
+library(ggrepel)
+library(patchwork)
+
+data_path &lt;- &quot;../data/&quot;
+code_path &lt;- &quot;../code/&quot;
+# data_path &lt;- &quot;data/&quot;
+# code_path &lt;- &quot;code/&quot;
+
+seurat_meta &lt;- readRDS(paste0(data_path, &quot;seurat_meta.rds&quot;))
+flashier_snmf_summary &lt;- readRDS(paste0(data_path, &quot;flashier_snmf_summary.rds&quot;))
+flashier_snmf_summary_noback &lt;- qs::qread(paste0(data_path, &quot;fit_replicate_summary_noback.qs&quot;))</code></pre>
+<p>To make the comparison clear, we will use the same way to normalize
+the L matrix, by dividing each column by its maximum.</p>
+<pre class="r"><code>L_pm &lt;- flashier_snmf_summary$L_pm
+F_pm &lt;- flashier_snmf_summary$F_pm
+L_pm_noback &lt;- flashier_snmf_summary_noback$L_pm
+F_pm_noback &lt;- flashier_snmf_summary_noback$F_pm
+
+D &lt;- diag(1 / apply(L_pm, 2, function(x) max(x)))
+L_pm &lt;- L_pm %*% D
+F_pm &lt;- F_pm %*% solve(D)
+
+D_noback &lt;- diag(1 / apply(L_pm_noback, 2, function(x) max(x)))
+L_pm_noback &lt;- L_pm_noback %*% D_noback
+F_pm_noback &lt;- F_pm_noback %*% solve(D_noback)</code></pre>
+<p>Take the overlap of cells in the resulting L matrices.</p>
+<pre class="r"><code>common_cells &lt;- intersect(rownames(L_pm), rownames(L_pm_noback))
+L_pm &lt;- L_pm[common_cells, ]
+L_pm_noback &lt;- L_pm_noback[common_cells, ]</code></pre>
+<div id="comparing-the-factors-with-and-without-backfitting"
+class="section level2">
+<h2>Comparing the factors with and without backfitting</h2>
+<p>Next, let’s apply the hungarian algorithm to match the factors from
+the two analyses, based on the cosine similarity of the L matrices.</p>
+<pre class="r"><code>compute_cosine_sim_matrix &lt;- function(L1, L2){
+  norms1 &lt;- apply(L1, 2, function(x){sqrt(sum(x^2))})
+  norms1[norms1 == 0] &lt;- Inf
+  
+  norms2 &lt;- apply(L2, 2, function(x){sqrt(sum(x^2))})
+  norms2[norms2 == 0] &lt;- Inf
+  
+  L1_normalized &lt;- t(t(L1)/norms1)
+  L2_normalized &lt;- t(t(L2)/norms2)
+  
+  #compute matrix of cosine similarities
+  cosine_sim_matrix &lt;- crossprod(L1_normalized, L2_normalized)
+  
+  return(cosine_sim_matrix)
+}
+cos_sim &lt;- compute_cosine_sim_matrix(L_pm, L_pm_noback)
+assignment_problem &lt;- RcppHungarian::HungarianSolver(-1*cos_sim)</code></pre>
+<p>Out of curiosity, let’s see the factors that got matched to different
+factors after backfitting.</p>
+<pre class="r"><code>head(assignment_problem$pairs[assignment_problem$pairs[,1] != assignment_problem$pairs[,2], ])</code></pre>
+<pre><code>     [,1] [,2]
+[1,]    4   79
+[2,]   10  144
+[3,]   17  137
+[4,]   23  174
+[5,]   32  107
+[6,]   44  146</code></pre>
+<p>Most of the interesting factors got matched to the same factor
+index.</p>
+<pre class="r"><code>match_results &lt;- data.frame(
+  Factor_with_backfit = paste0(&quot;K&quot;, assignment_problem$pairs[,1]),
+  Factor_without_backfit = paste0(&quot;K&quot;, assignment_problem$pairs[,2]),
+  Cosine_Similarity = cos_sim[cbind(assignment_problem$pairs[,1], assignment_problem$pairs[,2])]
+)
+
+head(match_results)</code></pre>
+<pre><code>  Factor_with_backfit Factor_without_backfit Cosine_Similarity
+1                  K1                     K1         0.9811412
+2                  K2                     K2         0.8137226
+3                  K3                     K3         0.8134378
+4                  K4                    K79         0.2284856
+5                  K5                     K5         0.9140049
+6                  K6                     K6         0.7994288</code></pre>
+<p>To examine how severe the cancelling out effect is for each factor,
+we look at the histogram of the corresponding factors:</p>
+<pre class="r"><code>selected_cols &lt;- c(3, 58, 68, 171)
+plot_list &lt;- list()
+
+for(i in selected_cols){
+  j &lt;- assignment_problem$pairs[assignment_problem$pairs[,1] == i, 2]
+  df &lt;- data.frame(
+    value = c(F_pm[, i], F_pm_noback[, j]),
+    type = rep(c(&quot;With backfitting&quot;, &quot;Without backfitting&quot;),
+               each = nrow(F_pm))
+  )
+  p &lt;- ggplot(df, aes(x = value, fill = type)) +
+    geom_histogram(aes(y = after_stat(density)),
+                   position = &quot;identity&quot;, alpha = 0.4, bins = 100) +
+    scale_fill_manual(values = c(&quot;blue&quot;, &quot;darkgreen&quot;)) +
+    labs(title = paste0(&quot;Factor &quot;, i, &quot; vs &quot;, j),
+         x = &quot;F values&quot;, y = &quot;Density&quot;) +
+    theme_minimal() +
+    theme(legend.position = &quot;top&quot;,
+          plot.title = element_text(size = 12, face = &quot;bold&quot;))
+  plot_list[[i]] &lt;- p
+}
+
+wrap_plots(plot_list[selected_cols], ncol = 2)</code></pre>
+<p><img src="figure/turn_off_backfit.rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/d66fb9febbd2893cfd525c9ccfc2cd2b0fd23b81/docs/figure/turn_off_backfit.rmd/unnamed-chunk-8-1.png" target="_blank">d66fb9f</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-11-03
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/86081df73153190a2d267085db8aab2ba6390d5f/docs/figure/turn_off_backfit.rmd/unnamed-chunk-8-1.png" target="_blank">86081df</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-11-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Also visualize using boxplots:</p>
+<pre class="r"><code>selected_cols &lt;- c(1, 3, 58, 68)
+
+pair_dfs &lt;- lapply(selected_cols, function(i) {
+  # j: the matched factor index (no-backfitting)
+  j &lt;- assignment_problem$pairs[assignment_problem$pairs[, 1] == i, 2]
+  data.frame(
+    value = c(F_pm[, i], F_pm_noback[, j]),
+    type  = rep(c(&quot;With backfitting&quot;, &quot;Without backfitting&quot;), each = nrow(F_pm)),
+    panel = paste0(&quot;Factor &quot;, i, &quot; vs &quot;, j),
+    stringsAsFactors = FALSE
+  )
+})
+
+df_box &lt;- do.call(rbind, pair_dfs)
+
+p_box &lt;- ggplot(df_box, aes(x = type, y = value, fill = type)) +
+  geom_boxplot(width = 0.18, outlier.alpha = 0.3, notch = TRUE, outliers = TRUE) +
+  geom_hline(yintercept = 0, linetype = &quot;dashed&quot;) +
+  scale_fill_manual(values = c(&quot;With backfitting&quot; = &quot;blue&quot;,
+                               &quot;Without backfitting&quot; = &quot;darkgreen&quot;)) +
+  labs(x = NULL, y = &quot;F values&quot;, title = &quot;Factor distributions: backfitting vs no-backfitting&quot;) +
+  theme_minimal() +
+  theme(legend.position = &quot;none&quot;,
+        strip.text = element_text(face = &quot;bold&quot;),
+        axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+  facet_wrap(~ panel, ncol = 2, scales = &quot;free_y&quot;)   # free_y: ranges differ by factor
+
+p_box</code></pre>
+<p><img src="figure/turn_off_backfit.rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
+Past versions of unnamed-chunk-9-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/d66fb9febbd2893cfd525c9ccfc2cd2b0fd23b81/docs/figure/turn_off_backfit.rmd/unnamed-chunk-9-1.png" target="_blank">d66fb9f</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-11-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>I am also interested in seeing the how the maximum F values differ
+between the two analyses.</p>
+<pre class="r"><code># based on the hungarian matching
+max_df &lt;- data.frame(
+  Factor_with_backfit   = paste0(&quot;K&quot;, seq_len(ncol(F_pm))),
+  Factor_without_backfit= paste0(&quot;K&quot;, assignment_problem$pairs[, 2]),
+  Max_F_with_backfit    = apply(F_pm, 2, max, na.rm = TRUE),
+  Max_F_without_backfit = sapply(assignment_problem$pairs[, 2],
+                                 function(j) max(F_pm_noback[, j], na.rm = TRUE))
+)</code></pre>
+<pre class="r"><code># find the 5 factors with the largest Max_F_with_backfit
+top_extreme &lt;- max_df %&gt;%
+  dplyr::arrange(desc(Max_F_with_backfit)) %&gt;%
+  dplyr::slice_head(n = 5)
+
+ggplot(max_df, aes(x = Max_F_with_backfit, y = Max_F_without_backfit)) +
+  geom_point(color = &quot;darkorange&quot;, alpha = 0.6) +
+  geom_abline(slope = 1, intercept = 0, linetype = &quot;dashed&quot;, color = &quot;blue&quot;) +
+  geom_text_repel(
+    data = top_extreme,
+    aes(label = Factor_with_backfit),
+    size = 3.5, color = &quot;black&quot;,
+    box.padding = 0.3, max.overlaps = Inf
+  ) +
+  labs(
+    title = &quot;Max F values: with backfitting vs without backfitting&quot;,
+    x = &quot;Max F with backfitting&quot;,
+    y = &quot;Max F without backfitting&quot;
+  ) +
+  coord_cartesian(
+    xlim = c(0, max(c(max_df$Max_F_with_backfit, max_df$Max_F_without_backfit))),
+    ylim = c(0, max(c(max_df$Max_F_with_backfit, max_df$Max_F_without_backfit)))
+  ) +
+  theme_minimal()</code></pre>
+<p><img src="figure/turn_off_backfit.rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
+Past versions of unnamed-chunk-11-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-11-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/d66fb9febbd2893cfd525c9ccfc2cd2b0fd23b81/docs/figure/turn_off_backfit.rmd/unnamed-chunk-11-1.png" target="_blank">d66fb9f</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-11-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Also, take a look at the total membership:</p>
+<pre class="r"><code>pdat &lt;- data.frame(x = rowSums(L_pm))
+p1 &lt;- ggplot(pdat,aes(x = x)) +
+  geom_histogram(bins = 1000,color = &quot;black&quot;,fill = &quot;black&quot;) +
+  labs(x = &quot;&quot;) +
+  scale_x_log10() +
+  theme_cowplot(font_size = 12)
+
+pdat_noback &lt;- data.frame(x = rowSums(L_pm_noback))
+p2 &lt;- ggplot(pdat_noback,aes(x = x)) +
+  geom_histogram(bins = 1000,color = &quot;black&quot;,fill = &quot;black&quot;) +
+  labs(x = &quot;&quot;) +
+  scale_x_log10() +
+  theme_cowplot(font_size = 12)
+
+wrap_plots(p1 + labs(title = &quot;With backfitting&quot;),
+           p2 + labs(title = &quot;Without backfitting&quot;),
+           ncol = 2)</code></pre>
+<p><img src="figure/turn_off_backfit.rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>How many cells would be filtered out if we use Peter’s iterative
+approach:</p>
+<pre class="r"><code>filter_cells_by_total_membership &lt;- function (L, max_val = 10, numiter = 10) {
+  n &lt;- nrow(L)
+  rows &lt;- 1:n
+  for (iter in 1:numiter) {
+    x &lt;- rowSums(L)
+    cat(sprintf(&quot;%d. Filtered out %d cells.\n&quot;,iter,sum(x &gt; max_val)))
+    i &lt;- which(x &lt;= max_val)
+    L &lt;- L[i,]
+    rows &lt;- rows[i]
+    d &lt;- apply(L,2,max)
+    L &lt;- scale_cols(L,1/d)
+  }
+  return(rows)
+}
+
+scale_cols &lt;- function (A, b)
+  t(t(A) * b)
+
+cells &lt;- filter_cells_by_total_membership(L_pm,numiter = 12)
+cells_noback &lt;- filter_cells_by_total_membership(L_pm_noback,numiter = 12)</code></pre>
+<pre><code>1. Filtered out 69 cells.
+2. Filtered out 178 cells.
+3. Filtered out 157 cells.
+4. Filtered out 299 cells.
+5. Filtered out 232 cells.
+6. Filtered out 175 cells.
+7. Filtered out 193 cells.
+8. Filtered out 140 cells.
+9. Filtered out 46 cells.
+10. Filtered out 22 cells.
+11. Filtered out 1 cells.
+12. Filtered out 0 cells.
+1. Filtered out 61 cells.
+2. Filtered out 94 cells.
+3. Filtered out 66 cells.
+4. Filtered out 17 cells.
+5. Filtered out 3 cells.
+6. Filtered out 10 cells.
+7. Filtered out 0 cells.
+8. Filtered out 0 cells.
+9. Filtered out 0 cells.
+10. Filtered out 0 cells.
+11. Filtered out 0 cells.
+12. Filtered out 0 cells.</code></pre>
+<pre class="r"><code>nrow(L_pm) - length(cells)
+nrow(L_pm_noback) - length(cells_noback)</code></pre>
+<pre><code>[1] 1512
+[1] 251</code></pre>
+<p>Clearly the iterative filtering procedure removes more cells when
+backfitting is used.</p>
+</div>
+<div id="number-of-matched-factors-withwithout-backfitting"
+class="section level2">
+<h2>Number of matched factors with/without backfitting</h2>
+<p>Next, let’s see how many factors could be matched by the two halved
+analyses, with and without backfitting.</p>
+<pre class="r"><code>flashier_snmf_summary1 &lt;- qs::qread(paste0(data_path, &quot;fit1_summary.qs&quot;))
+flashier_snmf_summary1_noback &lt;- qs::qread(paste0(data_path, &quot;fit1_summary_noback.qs&quot;))
+
+flashier_snmf_summary2 &lt;- qs::qread(paste0(data_path, &quot;fit2_summary.qs&quot;))
+flashier_snmf_summary2_noback &lt;- qs::qread(paste0(data_path, &quot;fit2_summary_noback.qs&quot;))</code></pre>
+<pre class="r"><code>L_pm1 &lt;- flashier_snmf_summary1$L_pm
+F_pm1 &lt;- flashier_snmf_summary1$F_pm
+L_pm_noback1 &lt;- flashier_snmf_summary1_noback$L_pm
+F_pm_noback1 &lt;- flashier_snmf_summary1_noback$F_pm
+
+L_pm2 &lt;- flashier_snmf_summary2$L_pm
+F_pm2 &lt;- flashier_snmf_summary2$F_pm
+L_pm_noback2 &lt;- flashier_snmf_summary2_noback$L_pm
+F_pm_noback2 &lt;- flashier_snmf_summary2_noback$F_pm
+
+D1 &lt;- diag(1 / apply(L_pm1, 2, function(x) max(x)))
+L_pm1 &lt;- L_pm1 %*% D1
+F_pm1 &lt;- F_pm1 %*% solve(D1)
+
+D2 &lt;- diag(1 / apply(L_pm2, 2, function(x) max(x)))
+L_pm2 &lt;- L_pm2 %*% D2
+F_pm2 &lt;- F_pm2 %*% solve(D2)
+
+D_noback1 &lt;- diag(1 / apply(L_pm_noback1, 2, function(x) max(x)))
+L_pm_noback1 &lt;- L_pm_noback1 %*% D_noback1
+F_pm_noback1 &lt;- F_pm_noback1 %*% solve(D_noback1)
+
+D_noback2 &lt;- diag(1 / apply(L_pm_noback2, 2, function(x) max(x)))
+L_pm_noback2 &lt;- L_pm_noback2 %*% D_noback2
+F_pm_noback2 &lt;- F_pm_noback2 %*% solve(D_noback2)</code></pre>
+<p>To ensure fair comparison, we will only keep the genes that are
+common to both analyses.</p>
+<pre class="r"><code>common_genes &lt;- intersect(rownames(F_pm1), rownames(F_pm2))
+F_pm1 &lt;- F_pm1[common_genes, ]
+F_pm2 &lt;- F_pm2[common_genes, ]
+
+common_genes_noback &lt;- intersect(rownames(F_pm_noback1), rownames(F_pm_noback2))
+F_pm_noback1 &lt;- F_pm_noback1[common_genes_noback, ]
+F_pm_noback2 &lt;- F_pm_noback2[common_genes_noback, ]</code></pre>
+<p>Let’s see the matching results for the two analyses with backfitting,
+based on cosine similarity of the F matrices.</p>
+<pre class="r"><code>cos_sim_backfit &lt;- compute_cosine_sim_matrix(F_pm1, F_pm2)
+assignment_problem_backfit &lt;- RcppHungarian::HungarianSolver(-1 * cos_sim_backfit)
+match_results_backfit &lt;- data.frame(
+  Factor_in_fit1 = paste0(&quot;K&quot;, assignment_problem_backfit$pairs[,1]),
+  Factor_in_fit2 = paste0(&quot;K&quot;, assignment_problem_backfit$pairs[,2]),
+  Cosine_Similarity = cos_sim_backfit[cbind(assignment_problem_backfit$pairs[,1], assignment_problem_backfit$pairs[,2])]
+)
+# count number of matched factors with cosine similarity &gt; 0.5
+sum(match_results_backfit$Cosine_Similarity &gt; 0.5)</code></pre>
+<pre><code>[1] 87</code></pre>
+<p>Now, let’s see the matching results for the two analyses without
+backfitting.</p>
+<pre class="r"><code>cos_sim_noback &lt;- compute_cosine_sim_matrix(F_pm_noback1, F_pm_noback2)
+assignment_problem_noback &lt;- RcppHungarian::HungarianSolver(-1 * cos_sim_noback)
+match_results_noback &lt;- data.frame(
+  Factor_in_fit1 = paste0(&quot;K&quot;, assignment_problem_noback$pairs[,1]),
+  Factor_in_fit2 = paste0(&quot;K&quot;, assignment_problem_noback$pairs[,2]),
+  Cosine_Similarity = cos_sim_noback[cbind(assignment_problem_noback$pairs[,1], assignment_problem_noback$pairs[,2])]
+)
+# count number of matched factors with cosine similarity &gt; 0.5
+sum(match_results_noback$Cosine_Similarity &gt; 0.5)</code></pre>
+<pre><code>[1] 96</code></pre>
+<p>It seems like without backfitting, we are able to recover more
+matched factors between the two halved analyses.</p>
+<p>Just to confirm this is not due to Hungarian algorithm, let’s also
+try matching based on optimizing the cosine similarity of the L
+matrices.</p>
+<pre class="r"><code>match_results_backfit_opt &lt;- data.frame(
+  Factor_in_fit1 = paste0(&quot;K&quot;, 1:ncol(F_pm1)),
+  Factor_in_fit2 = apply(cos_sim_backfit, 1, function(x) paste0(&quot;K&quot;, which.max(x))),
+  Cosine_Similarity = apply(cos_sim_backfit, 1, max)
+)
+sum(match_results_backfit_opt$Cosine_Similarity &gt; 0.5)</code></pre>
+<pre><code>[1] 97</code></pre>
+<pre class="r"><code>match_results_no_backfit_opt &lt;- data.frame(
+  Factor_in_fit1 = paste0(&quot;K&quot;, 1:ncol(F_pm_noback1)),
+  Factor_in_fit2 = apply(cos_sim_noback, 1, function(x) paste0(&quot;K&quot;, which.max(x))),
+  Cosine_Similarity = apply(cos_sim_noback, 1, max)
+)
+sum(match_results_no_backfit_opt$Cosine_Similarity &gt; 0.5)</code></pre>
+<pre><code>[1] 102</code></pre>
+<p>Still, we see more matched factors without backfitting.</p>
+<p>Now, let’s make the validation more stringent: we first match the
+factors based on the full data analysis (with and without backfitting),
+and then see how many of these matched factors can be recovered in both
+the two halved analyses, and between the two halved analyses.</p>
+<p>Let’s first get the common genes among all F matrices.</p>
+<pre class="r"><code>common_genes &lt;- intersect(common_genes, rownames(F_pm))
+F_pm1 &lt;- F_pm1[common_genes, ]
+F_pm2 &lt;- F_pm2[common_genes, ]
+F_pm &lt;- F_pm[common_genes, ]
+
+common_genes_noback &lt;- intersect(common_genes_noback, rownames(F_pm_noback))
+F_pm_noback1 &lt;- F_pm_noback1[common_genes_noback, ]
+F_pm_noback2 &lt;- F_pm_noback2[common_genes_noback, ]
+F_pm_noback &lt;- F_pm_noback[common_genes_noback, ]</code></pre>
+<p>Now, get the matched factors based on the full data analyses.</p>
+<pre class="r"><code>cos_sim_full_1_backfit &lt;- compute_cosine_sim_matrix(F_pm, F_pm1)
+cos_sim_full_2_backfit &lt;- compute_cosine_sim_matrix(F_pm, F_pm2)
+cos_sim_1_2_backfit &lt;- compute_cosine_sim_matrix(F_pm1, F_pm2)
+assignment_problem_full_1_backfit &lt;- RcppHungarian::HungarianSolver(-1 * cos_sim_full_1_backfit)
+assignment_problem_full_2_backfit &lt;- RcppHungarian::HungarianSolver(-1 * cos_sim_full_2_backfit)
+assignment_problem_1_2_backfit &lt;- RcppHungarian::HungarianSolver(-1 * cos_sim_1_2_backfit)</code></pre>
+<p>Let’s see how many of these matched factors could be validated in the
+two halved analyses.</p>
+<pre class="r"><code>matched_factors_backfit &lt;- data.frame(
+  Factor_in_full = paste0(&quot;K&quot;, assignment_problem_full_1_backfit$pairs[,1]),
+  Factor_in_fit1 = paste0(&quot;K&quot;, assignment_problem_full_1_backfit$pairs[,2]),
+  Factor_in_fit2 = paste0(&quot;K&quot;, assignment_problem_full_2_backfit$pairs[assignment_problem_full_1_backfit$pairs[,1], 2])
+)
+
+matched_factors_backfit$cosine_F1 &lt;- cos_sim_full_1_backfit[assignment_problem_full_1_backfit$pairs]
+matched_factors_backfit$cosine_F2 &lt;- cos_sim_full_2_backfit[assignment_problem_full_2_backfit$pairs]
+matched_factors_backfit$cosine_F1_2 &lt;- cos_sim_1_2_backfit[assignment_problem_1_2_backfit$pairs]
+
+matched_factors_backfit$validated &lt;- (matched_factors_backfit$cosine_F1 &gt; 0.5) &amp;
+  (matched_factors_backfit$cosine_F2 &gt; 0.5) &amp;
+  (matched_factors_backfit$cosine_F1_2 &gt; 0.5)
+
+sum(matched_factors_backfit$validated)</code></pre>
+<pre><code>[1] 42</code></pre>
+<p>Now, do the same for the analyses without backfitting.</p>
+<pre class="r"><code>cos_sim_full_1_nobackfit &lt;- compute_cosine_sim_matrix(F_pm_noback, F_pm_noback1)
+cos_sim_full_2_nobackfit &lt;- compute_cosine_sim_matrix(F_pm_noback, F_pm_noback2)
+cos_sim_1_2_nobackfit &lt;- compute_cosine_sim_matrix(F_pm_noback1, F_pm_noback2)
+assignment_problem_full_1_nobackfit &lt;- RcppHungarian::HungarianSolver(-1 * cos_sim_full_1_nobackfit)
+assignment_problem_full_2_nobackfit &lt;- RcppHungarian::HungarianSolver(-1 * cos_sim_full_2_nobackfit)
+assignment_problem_1_2_nobackfit &lt;- RcppHungarian::HungarianSolver(-1 * cos_sim_1_2_nobackfit)</code></pre>
+<pre class="r"><code>matched_factors_nobackfit &lt;- data.frame(
+  Factor_in_full = paste0(&quot;K&quot;, assignment_problem_full_1_nobackfit$pairs[,1]),
+  Factor_in_fit1 = paste0(&quot;K&quot;, assignment_problem_full_1_nobackfit$pairs[,2]),
+  Factor_in_fit2 = paste0(&quot;K&quot;, assignment_problem_full_2_nobackfit$pairs[assignment_problem_full_1_nobackfit$pairs[,1], 2])
+)
+
+matched_factors_nobackfit$cosine_F1 &lt;- cos_sim_full_1_nobackfit[assignment_problem_full_1_nobackfit$pairs]
+matched_factors_nobackfit$cosine_F2 &lt;- cos_sim_full_2_nobackfit[assignment_problem_full_2_nobackfit$pairs]
+matched_factors_nobackfit$cosine_F1_2 &lt;- cos_sim_1_2_nobackfit[assignment_problem_1_2_nobackfit$pairs]
+
+matched_factors_nobackfit$validated &lt;- (matched_factors_nobackfit$cosine_F1 &gt; 0.5) &amp;
+  (matched_factors_nobackfit$cosine_F2 &gt; 0.5) &amp;
+  (matched_factors_nobackfit$cosine_F1_2 &gt; 0.5)
+
+sum(matched_factors_nobackfit$validated)</code></pre>
+<pre><code>[1] 56</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.5.1 (2025-06-13)
+Platform: aarch64-apple-darwin20
+Running under: macOS Sequoia 15.6.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: America/Chicago
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] patchwork_1.3.2   ggrepel_0.9.6     cowplot_1.2.0     qs_0.27.3        
+[5] fastTopics_0.7-25 dplyr_1.1.4       ggplot2_4.0.0    
+
+loaded via a namespace (and not attached):
+ [1] gtable_0.3.6          xfun_0.53             bslib_0.9.0          
+ [4] htmlwidgets_1.6.4     RApiSerialize_0.1.4   lattice_0.22-7       
+ [7] quadprog_1.5-8        vctrs_0.6.5           tools_4.5.1          
+[10] generics_0.1.4        parallel_4.5.1        tibble_3.3.0         
+[13] pkgconfig_2.0.3       Matrix_1.7-3          data.table_1.17.8    
+[16] SQUAREM_2021.1        RColorBrewer_1.1-3    S7_0.2.0             
+[19] RcppParallel_5.1.11-1 lifecycle_1.0.4       truncnorm_1.0-9      
+[22] compiler_4.5.1        farver_2.1.2          stringr_1.5.2        
+[25] git2r_0.36.2          progress_1.2.3        RhpcBLASctl_0.23-42  
+[28] httpuv_1.6.16         htmltools_0.5.8.1     sass_0.4.10          
+[31] yaml_2.3.10           lazyeval_0.2.2        plotly_4.11.0        
+[34] crayon_1.5.3          later_1.4.4           pillar_1.11.1        
+[37] jquerylib_0.1.4       whisker_0.4.1         tidyr_1.3.1          
+[40] uwot_0.2.3            cachem_1.1.0          gtools_3.9.5         
+[43] tidyselect_1.2.1      digest_0.6.37         Rtsne_0.17           
+[46] stringi_1.8.7         reshape2_1.4.4        purrr_1.1.0          
+[49] ashr_2.2-63           labeling_0.4.3        rprojroot_2.1.1      
+[52] fastmap_1.2.0         grid_4.5.1            cli_3.6.5            
+[55] invgamma_1.2          magrittr_2.0.4        dichromat_2.0-0.1    
+[58] withr_3.0.2           prettyunits_1.2.0     scales_1.4.0         
+[61] promises_1.3.3        rmarkdown_2.30        httr_1.4.7           
+[64] workflowr_1.7.2       hms_1.1.3             stringfish_0.17.0    
+[67] pbapply_1.7-4         evaluate_1.0.5        RcppHungarian_0.3    
+[70] knitr_1.50            irlba_2.3.5.1         viridisLite_0.4.2    
+[73] rlang_1.1.6           Rcpp_1.1.0            mixsqp_0.3-54        
+[76] glue_1.8.0            rstudioapi_0.17.1     jsonlite_2.0.0       
+[79] plyr_1.8.9            R6_2.6.1              fs_1.6.6             </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

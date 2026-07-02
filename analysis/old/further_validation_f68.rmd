@@ -1,0 +1,136 @@
+---
+title: "further_validation"
+author: "Ziang Zhang"
+date: "2025-10-27"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+Here, we perform further validation analysis.
+
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(fastTopics)
+library(qs)
+library(cowplot)
+library(ggrepel)
+data_path <- "../data/"
+code_path <- "../code/"
+# data_path <- "data/"
+# code_path <- "code/"
+
+seurat_meta <- readRDS(paste0(data_path, "seurat_meta.rds"))
+flashier_snmf_summary <- readRDS(paste0(data_path, "flashier_snmf_summary.rds"))
+flashier_snmf_summary1 <- qs::qread(paste0(data_path, "fit1_summary_noback.qs"))
+flashier_snmf_summary2 <- qs::qread(paste0(data_path, "fit2_summary_noback.qs"))
+```
+
+```{r}
+# normalize the factor
+F_all <- flashier_snmf_summary$F_pm
+F_1 <- flashier_snmf_summary1$F_pm
+F_2 <- flashier_snmf_summary2$F_pm
+
+F_1 <- scale(F_1, center = FALSE, scale = TRUE)
+F_2 <- scale(F_2, center = FALSE, scale = TRUE)
+F_all <- scale(F_all, center = FALSE, scale = TRUE)
+
+# Subset to have the common set of genes
+common_genes_all_1 <- intersect(rownames(F_all), rownames(F_1))
+common_genes_all_2 <- intersect(rownames(F_all), rownames(F_2))
+common_genes_all <- intersect(common_genes_all_1, common_genes_all_2)
+F_all <- F_all[common_genes_all, ]
+F_1 <- F_1[common_genes_all, ]
+F_2 <- F_2[common_genes_all, ]
+```
+
+We will start with the validation of the factor 68 identified in the full analysis.
+
+Visualize the factor 68 and its correspondence in the two subsets.
+
+```{r}
+plot_data <- data.frame(
+  F_all = F_all[, 68],
+  gene  = rownames(F_all)
+)
+
+# add F_1 and F_2
+F_1_match <- F_1[match(rownames(F_all), rownames(F_1)), 73]
+F_2_match <- F_2[match(rownames(F_all), rownames(F_2)), 97]
+
+plot_data$F_1 <- F_1_match
+plot_data$F_2 <- F_2_match
+
+make_panel <- function(df, x_col = "F_all", y_col, title, x_lab, y_lab, top_n = 15) {
+  df2 <- df %>%
+    dplyr::select(gene, !!rlang::sym(x_col), !!rlang::sym(y_col)) %>%
+    dplyr::rename(x = !!rlang::sym(x_col), y = !!rlang::sym(y_col)) %>%
+    dplyr::filter(is.finite(x), is.finite(y)) %>%
+    dplyr::mutate(
+      residual = y - x,
+      abs_res  = abs(residual)
+    )
+
+  lab_df <- df2 %>% dplyr::arrange(dplyr::desc(abs_res)) %>% dplyr::slice_head(n = top_n)
+
+  lim_min <- floor(min(c(df2$x, df2$y), na.rm = TRUE) * 1000) / 1000
+  lim_max <- ceiling(max(c(df2$x, df2$y), na.rm = TRUE) * 1000) / 1000
+
+  ggplot2::ggplot(df2, ggplot2::aes(x = x, y = y)) +
+    ggplot2::geom_point(alpha = 0.5, size = 1.5) +
+    ggplot2::geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+    ggrepel::geom_text_repel(
+      data = lab_df,
+      ggplot2::aes(label = gene),
+      size = 3, max.overlaps = Inf,
+      box.padding = 0.3, point.padding = 0.2, min.segment.length = 0
+    ) +
+    ggplot2::coord_equal(xlim = c(lim_min, lim_max), ylim = c(lim_min, lim_max), expand = TRUE) +
+    ggplot2::theme_minimal() +
+    ggplot2::labs(title = title, x = x_lab, y = y_lab) +
+    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
+}
+
+p1 <- make_panel(
+  plot_data,
+  y_col = "F_1",
+  title = "",
+  x_lab = "Factor 68 (Full Data)",
+  y_lab = "Factor 73 (First Half)",
+  top_n = 20   
+)
+
+p2 <- make_panel(
+  plot_data,
+  y_col = "F_2",
+  title = "",
+  x_lab = "Factor 68 (Full Data)",
+  y_lab = "Factor 97 (Second Half)",
+  top_n = 20
+)
+
+gridplot <- plot_grid(p1, p2, ncol = 2)
+print(gridplot)
+```
+
+
+Visualize the consistency between the two subsets.
+
+```{r}
+p12 <- make_panel(
+  plot_data,
+  y_col = "F_1",
+  x_col = "F_2",
+  title = "",
+  x_lab = "Factor 73 (First Half)",
+  y_lab = "Factor 97 (Second Half)",
+  top_n = 20   
+)
+p12
+```
+
+
+

@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Ziang Zhang" />
+
+<meta name="date" content="2025-10-16" />
+
+<title>Validating the EBMF result using halves of the data</title>
+
+<script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">immgen-t factors</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Overview</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/stephenslab/immgen-t-factors">source</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Validating the EBMF result using halves of
+the data</h1>
+<h4 class="author">Ziang Zhang</h4>
+<h4 class="date">2025-10-16</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2025-10-21
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>immgen-t-factors/analysis/</code>
+<span class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.2). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed1code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(1)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed1code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(1)</code> was run prior to running the
+code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabimmgentfactorstree6a870daffbbee6f06ed8ef591752610a5545ad3dtargetblank6a870daa">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/stephenslab/immgen-t-factors/tree/6a870daffbbee6f06ed8ef591752610a5545ad3d" target="_blank">6a870da</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabimmgentfactorstree6a870daffbbee6f06ed8ef591752610a5545ad3dtargetblank6a870daa"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/stephenslab/immgen-t-factors/tree/6a870daffbbee6f06ed8ef591752610a5545ad3d" target="_blank">6a870da</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/.Rhistory
+    Ignored:    code/.Rhistory
+
+Untracked files:
+    Untracked:  .DS_Store
+    Untracked:  .gitignore
+    Untracked:  analysis/.DS_Store
+    Untracked:  analysis/conditional_analysis.rmd
+    Untracked:  code/.DS_Store
+    Untracked:  code/ROC.R
+    Untracked:  code/analyze_protein_selected.R
+    Untracked:  code/analyze_protein_selected.sbatch
+    Untracked:  code/analyze_protein_selected_lognorm.R
+    Untracked:  code/analyze_protein_selected_lognorm.sbatch
+    Untracked:  code/analyze_protein_selected_positive.R
+    Untracked:  code/analyze_protein_selected_positive.sbatch
+    Untracked:  code/compare_greedy_back.R
+    Untracked:  code/halves_validation1.R
+    Untracked:  code/halves_validation2.R
+    Untracked:  code/replicate_whole_data.sbatch
+    Untracked:  data/.DS_Store
+    Untracked:  data/annot_level1.rds
+    Untracked:  data/annot_level2.rds
+    Untracked:  data/condition_broad.rds
+    Untracked:  data/condition_broad_AUC.rds
+    Untracked:  data/condition_broad_AUC_CD8.rds
+    Untracked:  data/condition_detailed.rds
+    Untracked:  data/condition_detailed_AUC.rds
+    Untracked:  data/condition_detailed_AUC_CD8.rds
+    Untracked:  data/conditional_analysis_factor_stats.rds
+    Untracked:  data/factor_matching_results.csv
+    Untracked:  data/factor_matching_results_noback.csv
+    Untracked:  data/fit1_summary.qs
+    Untracked:  data/fit1_summary_noback.qs
+    Untracked:  data/fit2_summary.qs
+    Untracked:  data/fit2_summary_noback.qs
+    Untracked:  data/flash_fixed_F_pm.rds
+    Untracked:  data/flash_fixed_loading.rds
+    Untracked:  data/flashier_snmf_summary.rds
+    Untracked:  data/level_1_AUC.rds
+    Untracked:  data/moran_list_umap.rds
+    Untracked:  data/organ.rds
+    Untracked:  data/organ_AUC.rds
+    Untracked:  data/organ_AUC_healthy.rds
+    Untracked:  data/organ_healthy.rds
+    Untracked:  data/protein_flash_selected_summary.rds
+    Untracked:  data/protein_flash_selected_summary_lognorm.rds
+    Untracked:  data/protein_flash_selected_summary_pos.rds
+    Untracked:  data/protein_mat.rds
+    Untracked:  data/protein_mat_normalized.rds
+    Untracked:  data/protein_mat_normalized_lognorm.rds
+    Untracked:  data/replicate_whole_data.sbatch
+    Untracked:  data/seurat_meta.rds
+    Untracked:  data/umap_result.rds
+    Untracked:  figures/
+
+Unstaged changes:
+    Modified:   analysis/half_validation_hungarian_noback.rmd
+    Modified:   analysis/protein_factor.rmd
+    Deleted:    code/halves_validation.R
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown
+(<code>analysis/half_validation_hungarian.rmd</code>) and HTML
+(<code>docs/half_validation_hungarian.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/6a870daffbbee6f06ed8ef591752610a5545ad3d/analysis/half_validation_hungarian.rmd" target="_blank">6a870da</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-21
+</td>
+<td>
+workflowr::wflow_publish("analysis/half_validation_hungarian.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/immgen-t-factors/05a0b5141993cc8b44dc78888423d92a73dae016/docs/half_validation_hungarian.html" target="_blank">05a0b51</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/e834d40412419a251541cf764794dfd6b57e0ba3/analysis/half_validation_hungarian.rmd" target="_blank">e834d40</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+<td>
+workflowr::wflow_publish("analysis/half_validation_hungarian.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/immgen-t-factors/b83ff6a6dfe6f5b01458e017726c1a00698ce6e8/docs/half_validation_hungarian.html" target="_blank">b83ff6a</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/79fe59fdfa5bad02244c8b40e2d75bc0233f7cb1/analysis/half_validation_hungarian.rmd" target="_blank">79fe59f</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+<td>
+workflowr::wflow_publish("analysis/half_validation_hungarian.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/immgen-t-factors/ec227d4a77c2674984cd4c9302d5af9eb4a0d6db/docs/half_validation_hungarian.html" target="_blank">ec227d4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-16
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/c3e9debd0d328ccdf01b2e7fd4e18c800adec739/analysis/half_validation_hungarian.rmd" target="_blank">c3e9deb</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-16
+</td>
+<td>
+workflowr::wflow_publish(files = "half_validation_hungarian.rmd")
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code>library(ggplot2)
+library(dplyr)</code></pre>
+<pre><code>
+Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>The following objects are masked from &#39;package:stats&#39;:
+
+    filter, lag</code></pre>
+<pre><code>The following objects are masked from &#39;package:base&#39;:
+
+    intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>library(fastTopics)
+library(qs)</code></pre>
+<pre><code>qs 0.27.3. Announcement: https://github.com/qsbase/qs/issues/103</code></pre>
+<pre class="r"><code>library(cowplot)
+library(ggrepel)
+data_path &lt;- &quot;../data/&quot;
+code_path &lt;- &quot;../code/&quot;
+# data_path &lt;- &quot;data/&quot;
+# code_path &lt;- &quot;code/&quot;
+seurat_meta &lt;- readRDS(paste0(data_path, &quot;seurat_meta.rds&quot;))
+flashier_snmf_summary &lt;- readRDS(paste0(data_path, &quot;flashier_snmf_summary.rds&quot;))
+flashier_snmf_summary1 &lt;- qs::qread(paste0(data_path, &quot;fit1_summary.qs&quot;))
+flashier_snmf_summary2 &lt;- qs::qread(paste0(data_path, &quot;fit2_summary.qs&quot;))</code></pre>
+<p>Define a function to compute cosine similarity:</p>
+<pre class="r"><code>compute_cosine_sim_matrix &lt;- function(L1, L2){
+  norms1 &lt;- apply(L1, 2, function(x){sqrt(sum(x^2))})
+  norms1[norms1 == 0] &lt;- Inf
+  
+  norms2 &lt;- apply(L2, 2, function(x){sqrt(sum(x^2))})
+  norms2[norms2 == 0] &lt;- Inf
+  
+  L1_normalized &lt;- t(t(L1)/norms1)
+  L2_normalized &lt;- t(t(L2)/norms2)
+  
+  #compute matrix of cosine similarities
+  cosine_sim_matrix &lt;- crossprod(L1_normalized, L2_normalized)
+  
+  return(cosine_sim_matrix)
+}</code></pre>
+<p>Normalize the factor matrices:</p>
+<pre class="r"><code>F_all &lt;- flashier_snmf_summary$F_pm
+F_1 &lt;- flashier_snmf_summary1$F_pm
+F_2 &lt;- flashier_snmf_summary2$F_pm
+
+L_all &lt;- flashier_snmf_summary$L_pm
+L_1 &lt;- flashier_snmf_summary1$L_pm
+L_2 &lt;- flashier_snmf_summary2$L_pm</code></pre>
+<pre class="r"><code>F_1 &lt;- scale(F_1, center = FALSE, scale = TRUE)
+F_2 &lt;- scale(F_2, center = FALSE, scale = TRUE)
+F_all &lt;- scale(F_all, center = FALSE, scale = TRUE)</code></pre>
+<p>Now, let’s match the factors from the whole data analysis (F_all) to
+the two halves (F_1 and F_2). This time, we will be using the Hungarian
+algorithm to find the optimal matching.</p>
+<pre class="r"><code># Subset to have the common set of genes
+common_genes_all_1 &lt;- intersect(rownames(F_all), rownames(F_1))
+common_genes_all_2 &lt;- intersect(rownames(F_all), rownames(F_2))
+common_genes_all &lt;- intersect(common_genes_all_1, common_genes_all_2)
+F_all &lt;- F_all[common_genes_all, ]
+F_1 &lt;- F_1[common_genes_all, ]
+F_2 &lt;- F_2[common_genes_all, ]</code></pre>
+<pre class="r"><code># cor_1 &lt;- cor(F_all, F_1)
+cos_1 &lt;- compute_cosine_sim_matrix(F_all, F_1)
+assignment_problem_1 &lt;- RcppHungarian::HungarianSolver(-1*cos_1)
+# cor_2 &lt;- cor(F_all, F_2)
+cos_2 &lt;- compute_cosine_sim_matrix(F_all, F_2)
+assignment_problem_2 &lt;- RcppHungarian::HungarianSolver(-1*cos_2)
+
+# summarize the results into a data frame
+match_results &lt;- data.frame(
+  Factor_All = 1:ncol(F_all),
+  Best_Match_F1 = assignment_problem_1$pairs[,2],
+  Best_Match_F2 = assignment_problem_2$pairs[,2],
+  cosine_F1 = cos_1[assignment_problem_1$pairs],
+  cosine_F2 = cos_2[assignment_problem_2$pairs]
+  # Correlation_F1 = cor_1[assignment_problem_1$pairs],
+  # Correlation_F2 = cor_2[assignment_problem_2$pairs]
+)
+
+match_results[c(1,2,3,5,22,58, 68, 171), 1:5]</code></pre>
+<pre><code>    Factor_All Best_Match_F1 Best_Match_F2 cosine_F1 cosine_F2
+1            1             1             1 0.9708444 0.9816073
+2            2             2             2 0.9735057 0.9793376
+3            3            28             3 0.7740220 0.6357485
+5            5             5             5 0.7900433 0.5578734
+22          22           142            21 0.5032923 0.6071300
+58          58            42            51 0.8975660 0.7398689
+68          68            73            97 0.8342534 0.8696009
+171        171            23            66 0.5364169 0.6768392</code></pre>
+<p>We should also take a look at the cosine similarity between the
+matched factors in F_1 and F_2.</p>
+<pre class="r"><code># cor_f1_f1 &lt;- cor(F_1[, match_results$Best_Match_F1], F_2[, match_results$Best_Match_F2])
+cos_f1_f1 &lt;- compute_cosine_sim_matrix(F_1[, match_results$Best_Match_F1], F_2[, match_results$Best_Match_F2])
+# match_results$Correlation_F1_F2 &lt;- diag(cor_f1_f1)
+match_results$cosine_F1_F2 &lt;- diag(cos_f1_f1)
+
+match_results[c(1,2,3,5,22,58, 68, 171), c(2:6)]</code></pre>
+<pre><code>    Best_Match_F1 Best_Match_F2 cosine_F1 cosine_F2 cosine_F1_F2
+1               1             1 0.9708444 0.9816073    0.9884429
+2               2             2 0.9735057 0.9793376    0.9890540
+3              28             3 0.7740220 0.6357485    0.8261260
+5               5             5 0.7900433 0.5578734    0.8082997
+22            142            21 0.5032923 0.6071300    0.5586649
+58             42            51 0.8975660 0.7398689    0.7730627
+68             73            97 0.8342534 0.8696009    0.6788258
+171            23            66 0.5364169 0.6768392    0.5553625</code></pre>
+<p>This table should be a useful reference, let’s save it as a csv
+file.</p>
+<pre class="r"><code>write.csv(match_results, file = paste0(data_path, &quot;factor_matching_results.csv&quot;), row.names = FALSE)</code></pre>
+<p>Take a look at the distribution of the similarities:</p>
+<pre class="r"><code>par(mfrow=c(1,3))
+# hist(match_results$Correlation_F1, breaks = 50, main = &quot;Corr: F_all and F_1&quot;, xlab = &quot;Correlation&quot;)
+# hist(match_results$Correlation_F2, breaks = 50, main = &quot;Corr: F_all and F_2&quot;, xlab = &quot;Correlation&quot;)
+hist(match_results$cosine_F1, breaks = 50, main = &quot;Cosine: F_all and F_1&quot;, xlab = &quot;Cosine Similarity&quot;)
+hist(match_results$cosine_F2, breaks = 50, main = &quot;Cosine: F_all and F_2&quot;, xlab = &quot;Cosine Similarity&quot;)
+hist(match_results$cosine_F1_F2, breaks = 50, main = &quot;Cosine: F_1 and F_2&quot;, xlab = &quot;Cosine Similarity&quot;)</code></pre>
+<p><img src="figure/half_validation_hungarian.rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
+Past versions of unnamed-chunk-9-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/b83ff6a6dfe6f5b01458e017726c1a00698ce6e8/docs/figure/half_validation_hungarian.rmd/unnamed-chunk-9-1.png" target="_blank">b83ff6a</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/ec227d4a77c2674984cd4c9302d5af9eb4a0d6db/docs/figure/half_validation_hungarian.rmd/unnamed-chunk-9-1.png" target="_blank">ec227d4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>par(mfrow=c(1,1))</code></pre>
+<p>Let’s find the factors in F_all that have a good match (similarity
+&gt; 0.5) in either F_1 or F_2.</p>
+<pre class="r"><code># match_results$MaxCorr &lt;- pmax(match_results$Correlation_F1, match_results$Correlation_F2)
+match_results$MaxCosine &lt;- pmax(match_results$cosine_F1, match_results$cosine_F2)
+
+# select factors with similarity &gt; 0.5 and between F_1 and F_2 &gt; 0.5
+selected_factors_F_all &lt;- match_results %&gt;%
+  filter(MaxCosine &gt; 0.5 &amp; cosine_F1_F2 &gt; 0.5)
+  # filter(MaxCorr &gt; 0.5 &amp; Correlation_F1_F2 &gt; 0.5)
+nrow(selected_factors_F_all)</code></pre>
+<pre><code>[1] 67</code></pre>
+<p>What are the final selected factors in F_all?</p>
+<pre class="r"><code>selected_factors_F_all$Factor_All</code></pre>
+<pre><code> [1]   1   2   3   4   5   6   8   9  10  11  12  13  14  15  16  17  18  21  22
+[20]  24  25  26  27  30  31  33  34  35  36  37  40  41  43  46  49  50  54  56
+[39]  58  60  62  63  66  68  72  74  76  77  80  84  89  96 107 118 120 122 123
+[58] 126 135 156 163 166 168 171 173 174 182</code></pre>
+<p>Bar plot to visualize the similarity between the matched factors and
+each factor in F_all:</p>
+<pre class="r"><code># plot_F1 &lt;- ggplot(selected_factors_F_all, aes(x = Factor_All, y = Correlation_F1)) +
+#   geom_bar(stat = &quot;identity&quot;) +
+#   geom_hline(yintercept = 0.5, linetype = &quot;dashed&quot;, color = &quot;red&quot;) +
+#   labs(title = &quot;Best Match Correlation for Each Factor in F_all vs F_1&quot;,
+#        x = &quot;Factor in F_all&quot;,
+#        y = &quot;Best Match Correlation with F_1&quot;) +
+#   theme_minimal()
+
+plot_F1 &lt;- ggplot(selected_factors_F_all, aes(x = Factor_All, y = cosine_F1)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  geom_hline(yintercept = 0.5, linetype = &quot;dashed&quot;, color = &quot;red&quot;) +
+  labs(title = &quot;Best Match Cosine Similarity for Each Factor in F_all vs F_1&quot;,
+       x = &quot;Factor in F_all&quot;,
+       y = &quot;Best Match Cosine Similarity with F_1&quot;) +
+  theme_minimal()
+
+# plot_F2 &lt;- ggplot(selected_factors_F_all, aes(x = Factor_All, y = Correlation_F2)) +
+#   geom_bar(stat = &quot;identity&quot;) +
+#   geom_hline(yintercept = 0.5, linetype = &quot;dashed&quot;, color = &quot;red&quot;) +
+#   labs(title = &quot;Best Match Correlation for Each Factor in F_all vs F_2&quot;,
+#        x = &quot;Factor in F_all&quot;,
+#        y = &quot;Best Match Correlation with F_2&quot;) +
+#   theme_minimal()
+
+plot_F2 &lt;- ggplot(selected_factors_F_all, aes(x = Factor_All, y = cosine_F2)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  geom_hline(yintercept = 0.5, linetype = &quot;dashed&quot;, color = &quot;red&quot;) +
+  labs(title = &quot;Best Match Cosine Similarity for Each Factor in F_all vs F_2&quot;,
+       x = &quot;Factor in F_all&quot;,
+       y = &quot;Best Match Cosine Similarity with F_2&quot;) +
+  theme_minimal()
+
+gridExtra::grid.arrange(plot_F1, plot_F2, nrow = 2)</code></pre>
+<p><img src="figure/half_validation_hungarian.rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
+Past versions of unnamed-chunk-12-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-12-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/b83ff6a6dfe6f5b01458e017726c1a00698ce6e8/docs/figure/half_validation_hungarian.rmd/unnamed-chunk-12-1.png" target="_blank">b83ff6a</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>How many large pve factors are there in the whole data analysis?</p>
+<pre class="r"><code>sum(which(flashier_snmf_summary$pve &gt; 1e-4) %in% selected_factors_F_all$Factor_All)/sum(flashier_snmf_summary$pve &gt; 1e-4)</code></pre>
+<pre><code>[1] 0.6029412</code></pre>
+<p>Structure plot:</p>
+<pre class="r"><code>filter_cells_by_total_membership &lt;- function (L, max_val = 10, numiter = 10) {
+  n &lt;- nrow(L)
+  rows &lt;- 1:n
+  for (iter in 1:numiter) {
+    x &lt;- rowSums(L)
+    cat(sprintf(&quot;%d. Filtered out %d cells.\n&quot;,iter,sum(x &gt; max_val)))
+    i &lt;- which(x &lt;= max_val)
+    L &lt;- L[i,]
+    rows &lt;- rows[i]
+    d &lt;- apply(L,2,max)
+    L &lt;- scale_cols(L,1/d)
+  }
+  return(rows)
+}
+scale_cols &lt;- function (A, b)
+  t(t(A) * b)</code></pre>
+<pre class="r"><code># Take out cells for visualization
+D_all &lt;- diag(1 / apply(L_all, 2, function(x) max(x)))
+L_all &lt;- L_all %*% D_all
+cells_all &lt;- filter_cells_by_total_membership(L_all, numiter = 12)</code></pre>
+<pre><code>1. Filtered out 69 cells.
+2. Filtered out 178 cells.
+3. Filtered out 157 cells.
+4. Filtered out 299 cells.
+5. Filtered out 232 cells.
+6. Filtered out 175 cells.
+7. Filtered out 193 cells.
+8. Filtered out 140 cells.
+9. Filtered out 46 cells.
+10. Filtered out 22 cells.
+11. Filtered out 1 cells.
+12. Filtered out 0 cells.</code></pre>
+<pre class="r"><code>L_all &lt;- L_all[cells_all,]
+d &lt;- apply(L_all,2,max)
+L_all &lt;- scale_cols(L_all,1/d)
+D_all &lt;- d * D_all
+seurat_meta_all &lt;- seurat_meta[match(rownames(L_all), seurat_meta$cellID),]
+
+D_1 &lt;- diag(1 / apply(L_1, 2, function(x) max(x)))
+L_1 &lt;- L_1 %*% D_1
+cells_1 &lt;- filter_cells_by_total_membership(L_1, numiter = 12)</code></pre>
+<pre><code>1. Filtered out 24 cells.
+2. Filtered out 99 cells.
+3. Filtered out 152 cells.
+4. Filtered out 117 cells.
+5. Filtered out 86 cells.
+6. Filtered out 40 cells.
+7. Filtered out 31 cells.
+8. Filtered out 18 cells.
+9. Filtered out 3 cells.
+10. Filtered out 12 cells.
+11. Filtered out 0 cells.
+12. Filtered out 0 cells.</code></pre>
+<pre class="r"><code>L_1 &lt;- L_1[cells_1,]
+d &lt;- apply(L_1,2,max)
+L_1 &lt;- scale_cols(L_1,1/d)
+D_1 &lt;- d * D_1
+seurat_meta_1 &lt;- seurat_meta[match(rownames(L_1), seurat_meta$cellID),]
+
+D_2 &lt;- diag(1 / apply(L_2, 2, function(x) max(x)))
+L_2 &lt;- L_2 %*% D_2
+cells_2 &lt;- filter_cells_by_total_membership(L_2, numiter = 12)</code></pre>
+<pre><code>1. Filtered out 30 cells.
+2. Filtered out 97 cells.
+3. Filtered out 96 cells.
+4. Filtered out 143 cells.
+5. Filtered out 127 cells.
+6. Filtered out 54 cells.
+7. Filtered out 23 cells.
+8. Filtered out 3 cells.
+9. Filtered out 0 cells.
+10. Filtered out 0 cells.
+11. Filtered out 0 cells.
+12. Filtered out 0 cells.</code></pre>
+<pre class="r"><code>L_2 &lt;- L_2[cells_2,]
+d &lt;- apply(L_2,2,max)
+L_2 &lt;- scale_cols(L_2,1/d)
+D_2 &lt;- d * D_2
+seurat_meta_2 &lt;- seurat_meta[match(rownames(L_2), seurat_meta$cellID),]</code></pre>
+<pre class="r"><code>## structure plot for all the data
+set.seed(12345)
+annotation_sub &lt;- seurat_meta_all$annotation_level1
+cells &lt;- which(annotation_sub == &quot;CD4&quot; | annotation_sub == &quot;CD8&quot;)
+cells &lt;- sample(cells,1e5)
+cells &lt;- sort(c(cells,which(annotation_sub != &quot;CD4&quot; &amp; annotation_sub != &quot;CD8&quot;)))
+selected_all_Factors &lt;- c(22, 30, 58, 68, 171)
+L_all_plot &lt;- L_all[cells,selected_all_Factors]
+colnames(L_all_plot) &lt;- paste0(&quot;K&quot;,selected_all_Factors)
+p_all &lt;- structure_plot(L_all_plot, gap = 10, n = 6000,
+                      topics = paste0(&quot;K&quot;,selected_all_Factors),
+                    grouping = annotation_sub[cells]) +
+  labs(y = &quot;membership&quot;,color = &quot;&quot;,fill = &quot;&quot;) +
+  # ylim(0,0.2) +
+  theme(legend.position = &quot;bottom&quot;)</code></pre>
+<pre><code>Warning: `aes_string()` was deprecated in ggplot2 3.0.0.
+ℹ Please use tidy evaluation idioms with `aes()`.
+ℹ See also `vignette(&quot;ggplot2-in-packages&quot;)` for more information.
+ℹ The deprecated feature was likely used in the fastTopics package.
+  Please report the issue at
+  &lt;https://github.com/stephenslab/fastTopics/issues&gt;.
+This warning is displayed once every 8 hours.
+Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+generated.</code></pre>
+<pre class="r"><code>## structure plot for the first half data
+selected_1_Factors &lt;- selected_factors_F_all$Best_Match_F1[match(selected_all_Factors,selected_factors_F_all$Factor_All)]
+annotation_sub1 &lt;- seurat_meta_1$annotation_level1
+cells1 &lt;- which(annotation_sub1 == &quot;CD4&quot; | annotation_sub1 == &quot;CD8&quot;)
+cells1 &lt;- sample(cells1,5e4)
+cells1 &lt;- sort(c(cells1,which(annotation_sub1 != &quot;CD4&quot; &amp; annotation_sub1 != &quot;CD8&quot;)))
+L_1_plot &lt;- L_1[cells1, selected_1_Factors]
+colnames(L_1_plot) &lt;- paste0(&quot;K&quot;,selected_1_Factors)
+p_1 &lt;- structure_plot(L_1_plot, gap = 10, n = 6000,
+                      topics = paste0(&quot;K&quot;,selected_1_Factors),
+                    grouping = annotation_sub1[cells1]) +
+  labs(y = &quot;membership&quot;,color = &quot;&quot;,fill = &quot;&quot;) +
+  # ylim(0,0.2) +
+  theme(legend.position = &quot;bottom&quot;)
+                    
+## structure plot for the second half data
+selected_2_Factors &lt;- selected_factors_F_all$Best_Match_F2[match(selected_all_Factors, selected_factors_F_all$Factor_All)]
+annotation_sub2 &lt;- seurat_meta_2$annotation_level1
+cells2 &lt;- which(annotation_sub2 == &quot;CD4&quot; | annotation_sub2 == &quot;CD8&quot;)
+cells2 &lt;- sample(cells2,5e4)
+cells2 &lt;- sort(c(cells2,which(annotation_sub2 != &quot;CD4&quot; &amp; annotation_sub2 !=  &quot;CD8&quot;)))
+L_2_plot &lt;- L_2[cells2, selected_2_Factors]
+colnames(L_2_plot) &lt;- paste0(&quot;K&quot;,selected_2_Factors)
+p_2 &lt;- structure_plot(L_2_plot, gap = 10, n = 6000,
+                      topics = paste0(&quot;K&quot;,selected_2_Factors),
+                    grouping = annotation_sub2[cells2]) +
+  labs(y = &quot;membership&quot;,color = &quot;&quot;,fill = &quot;&quot;) +
+  # ylim(0,0.2) +
+  theme(legend.position = &quot;bottom&quot;)</code></pre>
+<pre class="r"><code>plot_grid(p_all, p_1, p_2, nrow = 3)</code></pre>
+<pre><code>Ignoring unknown labels:
+• colour : &quot;&quot;
+Ignoring unknown labels:
+• colour : &quot;&quot;
+Ignoring unknown labels:
+• colour : &quot;&quot;</code></pre>
+<p><img src="figure/half_validation_hungarian.rmd/unnamed-chunk-17-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-17-1">
+Past versions of unnamed-chunk-17-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-17-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/05a0b5141993cc8b44dc78888423d92a73dae016/docs/figure/half_validation_hungarian.rmd/unnamed-chunk-17-1.png" target="_blank">05a0b51</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/b83ff6a6dfe6f5b01458e017726c1a00698ce6e8/docs/figure/half_validation_hungarian.rmd/unnamed-chunk-17-1.png" target="_blank">b83ff6a</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2025-10-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outlier-analysis" class="section level2">
+<h2>Outlier Analysis</h2>
+<p>To make the comparison clear, let’s scale by median.</p>
+<pre class="r"><code>L_all &lt;- flashier_snmf_summary$L_pm
+d &lt;- apply(L_all,2,median)
+L_all &lt;- scale_cols(L_all,1/d)
+
+L_1 &lt;- flashier_snmf_summary1$L_pm
+d &lt;- apply(L_1,2,median)
+L_1 &lt;- scale_cols(L_1,1/d)
+
+L_2 &lt;- flashier_snmf_summary2$L_pm
+d &lt;- apply(L_2,2,median)
+L_2 &lt;- scale_cols(L_2,1/d)</code></pre>
+<p>Take a look at the boxplot for some matched factors:</p>
+<pre class="r"><code>par(mfrow = c(2,2))
+for (i in 1:4) {
+  boxplot(L_all[,selected_factors_F_all$Factor_All[i]], L_1[,selected_factors_F_all$Best_Match_F1[i]], L_2[,selected_factors_F_all$Best_Match_F2[i]], names = c(&quot;All&quot;,&quot;1st Half&quot;,&quot;2nd Half&quot;), main = paste0(&quot;Factor &quot;, selected_factors_F_all$Factor_All[i], &quot; Loadings&quot;))
+}</code></pre>
+<p><img src="figure/half_validation_hungarian.rmd/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.5.1 (2025-06-13)
+Platform: aarch64-apple-darwin20
+Running under: macOS Sequoia 15.6.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: America/Chicago
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] ggrepel_0.9.6     cowplot_1.2.0     qs_0.27.3         fastTopics_0.7-25
+[5] dplyr_1.1.4       ggplot2_4.0.0    
+
+loaded via a namespace (and not attached):
+ [1] gtable_0.3.6          xfun_0.53             bslib_0.9.0          
+ [4] htmlwidgets_1.6.4     RApiSerialize_0.1.4   lattice_0.22-7       
+ [7] quadprog_1.5-8        vctrs_0.6.5           tools_4.5.1          
+[10] generics_0.1.4        parallel_4.5.1        tibble_3.3.0         
+[13] pkgconfig_2.0.3       Matrix_1.7-3          data.table_1.17.8    
+[16] SQUAREM_2021.1        RColorBrewer_1.1-3    S7_0.2.0             
+[19] RcppParallel_5.1.11-1 lifecycle_1.0.4       truncnorm_1.0-9      
+[22] compiler_4.5.1        farver_2.1.2          stringr_1.5.2        
+[25] git2r_0.36.2          progress_1.2.3        RhpcBLASctl_0.23-42  
+[28] httpuv_1.6.16         htmltools_0.5.8.1     sass_0.4.10          
+[31] yaml_2.3.10           lazyeval_0.2.2        plotly_4.11.0        
+[34] later_1.4.4           pillar_1.11.1         crayon_1.5.3         
+[37] jquerylib_0.1.4       whisker_0.4.1         tidyr_1.3.1          
+[40] uwot_0.2.3            cachem_1.1.0          gtools_3.9.5         
+[43] tidyselect_1.2.1      digest_0.6.37         Rtsne_0.17           
+[46] stringi_1.8.7         reshape2_1.4.4        purrr_1.1.0          
+[49] ashr_2.2-63           labeling_0.4.3        rprojroot_2.1.1      
+[52] fastmap_1.2.0         grid_4.5.1            cli_3.6.5            
+[55] invgamma_1.2          magrittr_2.0.4        withr_3.0.2          
+[58] prettyunits_1.2.0     scales_1.4.0          promises_1.3.3       
+[61] rmarkdown_2.30        httr_1.4.7            gridExtra_2.3        
+[64] workflowr_1.7.2       hms_1.1.3             stringfish_0.17.0    
+[67] pbapply_1.7-4         evaluate_1.0.5        RcppHungarian_0.3    
+[70] knitr_1.50            irlba_2.3.5.1         viridisLite_0.4.2    
+[73] rlang_1.1.6           Rcpp_1.1.0            mixsqp_0.3-54        
+[76] glue_1.8.0            rstudioapi_0.17.1     jsonlite_2.0.0       
+[79] plyr_1.8.9            R6_2.6.1              fs_1.6.6             </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

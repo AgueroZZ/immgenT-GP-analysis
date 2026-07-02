@@ -1,0 +1,162 @@
+---
+title: "Figure 2: GPs and lineages"
+author: "Ziang Zhang"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+All panels are produced by
+[`script-refactor/Figure2.R`](https://github.com/stephenslab/immgen-t-factors/blob/main/script-refactor/Figure2.R).
+The code below is shown for reference (not re-executed on this page); the
+images are its pre-rendered output.
+
+## Setup
+
+Data loading, shared across all panels below.
+
+```{r fig2-setup, code=readLines("../script-refactor/Figure2.R")[1:65], eval=FALSE}
+```
+
+## (A) AUC swarm plot by lineage {#fig2a}
+
+```{r fig2a-code, code=readLines("../script-refactor/Figure2.R")[67:113], eval=FALSE}
+```
+
+```{r fig2a-img, echo=FALSE, out.width="60%"}
+knitr::include_graphics("assets/Figure2/2A.png")
+```
+
+::: {.figcaption}
+**Fig. 2A.** Swarm plot of per-GP predictive performance (one-vs-rest AUC, computed on healthy non-thymocyte cells) across the seven major lineages (CD8, CD4, Treg, gdT, CD8aa, Tz, DN). Only up-regulated GPs (mean loading >= the overall mean) are plotted as circles; triangles mark forced-highlight GPs (GP3, GP22, GP29) that are down-regulated in gdT, CD8aa, and DN; the dashed line marks AUC = 0.5, and the most predictive GP per lineage is labeled.
+:::
+
+## (B) Structure plot of lineage-defining GPs {#fig2b}
+
+```{r fig2b-code, code=readLines("../script-refactor/Figure2.R")[115:167], eval=FALSE}
+```
+
+```{r fig2b-img, echo=FALSE, out.width="60%"}
+knitr::include_graphics("assets/Figure2/2B.png")
+```
+
+::: {.figcaption}
+**Fig. 2B.** Structure plot of the membership (GP loading) of six lineage-defining GPs (GP58, GP68, GP30, GP3, GP29, GP22) across cells grouped by major lineages (CD8, CD4, Treg, gdT, CD8aa, Tz, DN); CD4 and CD8 cells are subsampled for visualization.
+:::
+
+## (C) GP68 loading on the global MDE {#fig2c}
+
+```{r fig2c-code, code=readLines("../script-refactor/Figure2.R")[172:185], eval=FALSE}
+```
+
+```{r fig2c-img, echo=FALSE, out.width="40%"}
+knitr::include_graphics("assets/Figure2/2C.png")
+```
+
+::: {.figcaption}
+**Fig. 2C.** GP68 loading projected onto the global MDE embedding; each point is a cell, colored by its loading for GP68.
+:::
+
+## (D) GP68 signature volcano {#fig2d}
+
+```{r fig2d-code, code=readLines("../script-refactor/Figure2.R")[225:243], eval=FALSE}
+```
+
+```{r fig2d-img, echo=FALSE, out.width="40%"}
+knitr::include_graphics("assets/Figure2/2D.png")
+```
+
+::: {.figcaption}
+**Fig. 2D.** Per-gene view of GP68: each gene's score in the GP (x-axis, scaled so the maximum |score| = 1) versus its mean shifted-log expression (y-axis); top genes are labeled.
+:::
+
+## (E) GP30 loading on the global MDE {#fig2e}
+
+```{r fig2e-code, code=readLines("../script-refactor/Figure2.R")[187:200], eval=FALSE}
+```
+
+```{r fig2e-img, echo=FALSE, out.width="40%"}
+knitr::include_graphics("assets/Figure2/2E.png")
+```
+
+::: {.figcaption}
+**Fig. 2E.** GP30 loading projected onto the global MDE embedding; each point is a cell, colored by its loading for GP30.
+:::
+
+## (F) GP30 signature volcano {#fig2f}
+
+```{r fig2f-code, code=readLines("../script-refactor/Figure2.R")[245:258], eval=FALSE}
+```
+
+```{r fig2f-img, echo=FALSE, out.width="40%"}
+knitr::include_graphics("assets/Figure2/2F.png")
+```
+
+::: {.figcaption}
+**Fig. 2F.** Per-gene view of GP30: each gene's score in the GP (x-axis, scaled so the maximum |score| = 1) versus its mean shifted-log expression (y-axis); top genes are labeled.
+:::
+
+## (G) GP58 loading on the global MDE {#fig2g}
+
+```{r fig2g-code, code=readLines("../script-refactor/Figure2.R")[202:215], eval=FALSE}
+```
+
+```{r fig2g-img, echo=FALSE, out.width="40%"}
+knitr::include_graphics("assets/Figure2/2G.png")
+```
+
+::: {.figcaption}
+**Fig. 2G.** GP58 loading projected onto the global MDE embedding; each point is a cell, colored by its loading for GP58.
+:::
+
+## (H) GP58 signature volcano {#fig2h}
+
+```{r fig2h-code, code=readLines("../script-refactor/Figure2.R")[260:273], eval=FALSE}
+```
+
+```{r fig2h-img, echo=FALSE, out.width="40%"}
+knitr::include_graphics("assets/Figure2/2H.png")
+```
+
+::: {.figcaption}
+**Fig. 2H.** Per-gene view of GP58: each gene's score in the GP (x-axis, scaled so the maximum |score| = 1) versus its mean shifted-log expression (y-axis); top genes are labeled.
+:::
+
+## (I) gdT/CD8aa/DN MDE by lineage {#fig2i}
+
+```{r fig2i-code, code=readLines("../script-refactor/Figure2.R")[279:316], eval=FALSE}
+```
+
+```{r fig2i-img, echo=FALSE, out.width="40%"}
+knitr::include_graphics("assets/Figure2/2I.png")
+```
+
+::: {.figcaption}
+**Fig. 2I.** MDE restricted to gdT, CD8aa, and DN cells (excluding proliferating and miniverse subsets), colored by lineage.
+:::
+
+## (J-L) GP22, GP29, GP3 loading on the gdT/CD8aa/DN MDE {#fig2jl}
+
+```{r fig2jl-code, code=readLines("../script-refactor/Figure2.R")[321:338], eval=FALSE}
+```
+
+```{r fig2jl-img, echo=FALSE, out.width="30%"}
+knitr::include_graphics(c("assets/Figure2/2J.png", "assets/Figure2/2K.png", "assets/Figure2/2L.png"))
+```
+
+::: {.figcaption}
+**Fig. 2J-L.** GP loading on the same gdT/CD8aa/DN MDE for GP22 (J), GP29 (K), and GP3 (L).
+:::
+
+## (M) Top-30 gene score heatmap for GP3/GP29/GP22 {#fig2m}
+
+```{r fig2m-code, code=readLines("../script-refactor/Figure2.R")[351:367], eval=FALSE}
+```
+
+```{r fig2m-img, echo=FALSE, out.width="40%"}
+knitr::include_graphics("assets/Figure2/2M.png")
+```
+
+::: {.figcaption}
+**Fig. 2M.** Heatmap of the top 30 gene scores across GP3, GP29, and GP22 (blue, negative; red, positive), with Fcer1g, Ccl5, and Cd7 pinned to the top rows.
+:::

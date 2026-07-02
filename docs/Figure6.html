@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Ziang Zhang" />
+
+
+<title>Figure 6: Linking GPs to proteins</title>
+
+<script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="custom.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">immgenT-GP-analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Overview</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Figure 6: Linking GPs to proteins</h1>
+<h4 class="author">Ziang Zhang</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2026-07-02
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong>
+<code>immgenT-GP-analysis/analysis/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.2). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed1code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(1)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed1code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(1)</code> was run prior to running the
+code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongnoversioncontrol">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>Repository version:</strong> no
+version control </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongnoversioncontrol"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Tracking code development and connecting the code version to the
+results is critical for reproducibility. To start using Git, open the
+Terminal and type <code>git init</code> in your project directory.</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+This project is not being versioned with Git. To obtain the full
+reproducibility benefits of using workflowr, please see
+<code>?wflow_start</code>.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<p>All panels except (a) are produced by <a
+href="https://github.com/stephenslab/immgen-t-factors/blob/main/script-refactor/Figure6.R"><code>script-refactor/Figure6.R</code></a>,
+which shares its CITE-seq setup with <a href="FigureS6.html">Figure
+S6</a> via <code>code-refactor/R/citeseq_shared_setup.R</code>. The code
+below is shown for reference (not re-executed on this page, since this
+script takes about a minute to run); the images are its pre-rendered
+output.</p>
+<div id="setup" class="section level2">
+<h2>Setup</h2>
+<pre class="r"><code>library(ggplot2)
+library(ggrepel)
+library(dplyr)
+library(patchwork)
+library(pheatmap)
+library(tidyr)
+library(Matrix) # protein matrices are dgCMatrix; must be attached for `[` to dispatch
+
+data_path &lt;- &quot;data/&quot;
+figure_path &lt;- &quot;figure-refactor/Figure 6/&quot;
+source(&quot;code-refactor/R/gated_protein_helpers.R&quot;)</code></pre>
+<p>Panels (b) onward additionally load the shared CITE-seq cell/protein
+setup:</p>
+<pre class="r"><code># ============================================================
+# Load data (shared with FigureS6.R)
+# ============================================================
+source(&quot;code-refactor/R/citeseq_shared_setup.R&quot;)
+
+# Re-derive the normalized protein matrix used only by this script&#39;s panel
+# 6b (Protein_F_pm_raw filtered/scaled -- FigureS6.R doesn&#39;t need it).
+Protein_F_pm &lt;- Protein_F_pm_raw[!rownames(Protein_F_pm_raw) %in% isotype_proteins, ]
+Protein_F_pm &lt;- Protein_F_pm[rownames(Protein_F_pm) %in% good_proteins, ]
+Protein_F_pm &lt;- Protein_F_pm[!rownames(Protein_F_pm) %in% exclude_proteins, ]
+Protein_F_pm &lt;- Protein_F_pm[!rownames(Protein_F_pm) %in% thy11_proteins, ]
+D_lognorm &lt;- diag(1 / apply(Protein_F_pm, 2, function(x) max(abs(x))))
+Protein_F_pm &lt;- Protein_F_pm %*% D_lognorm
+colnames(Protein_F_pm) &lt;- paste0(&quot;GP&quot;, 1:ncol(Protein_F_pm))
+Protein_F_pm[is.na(Protein_F_pm)] &lt;- 0</code></pre>
+</div>
+<div id="fig6a" class="section level2">
+<h2>(a) Projection schematic</h2>
+<p>This panel is a hand-drawn schematic, not generated from R – there is
+no code or pre-rendered image to show here. See
+<code>figures/final-selected/bits/Figure 6/6a.pdf</code> for the
+published panel.</p>
+</div>
+<div id="fig6b" class="section level2">
+<h2>(b) Protein-program heatmap</h2>
+<pre class="r"><code># ============================================================
+# 6b: sparse protein-program heatmap, contamination GPs removed
+# ============================================================
+threshold_simplified &lt;- 0
+keep_rows_simplified &lt;- apply(Protein_F_pm, 1, function(v) any(abs(v) &gt; threshold_simplified, na.rm = TRUE))
+Protein_F_pm_simplified &lt;- Protein_F_pm[keep_rows_simplified, , drop = FALSE]
+keep_cols_simplified &lt;- apply(Protein_F_pm_simplified, 2, function(v) any(abs(v) &gt; threshold_simplified, na.rm = TRUE))
+Protein_F_pm_simplified &lt;- Protein_F_pm_simplified[, keep_cols_simplified, drop = FALSE]
+
+GP_contamination &lt;- c(&quot;GP40&quot;, &quot;GP50&quot;, &quot;GP55&quot;, &quot;GP188&quot;)
+Protein_F_pm_simplified_no_contamination &lt;- Protein_F_pm_simplified[, !colnames(Protein_F_pm_simplified) %in% GP_contamination, drop = FALSE]
+
+sparse_cutoff &lt;- 0.5
+bk_sparse &lt;- unique(c(seq(-1, -sparse_cutoff, length.out = 26), seq(-sparse_cutoff, sparse_cutoff, length.out = 51), seq(sparse_cutoff, 1, length.out = 26)))
+cols_sparse &lt;- c(colorRampPalette(c(&quot;#4575B4&quot;, &quot;white&quot;))(25), rep(&quot;white&quot;, 50), colorRampPalette(c(&quot;white&quot;, &quot;#D73027&quot;))(25))
+
+pdf(paste0(figure_path, &quot;6b.pdf&quot;), width = 20, height = 40)
+pheatmap::pheatmap(
+  t(Protein_F_pm_simplified_no_contamination),
+  main = sprintf(&quot;Protein programs (sparse, no contamination GPs): %d proteins x %d GPs&quot;, nrow(Protein_F_pm_simplified_no_contamination), ncol(Protein_F_pm_simplified_no_contamination)),
+  color = cols_sparse,
+  breaks = bk_sparse,
+  border_color = &quot;black&quot;
+)
+dev.off()</code></pre>
+<p><img src="assets/Figure6/6b.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 6b.</strong> Heatmap of the re-estimated protein matrix
+(U). The protein scores in each GP are scaled so its maximum |score| =
+1, after removing isotype and low-quality proteins and four putative
+contamination GPs (GP40, GP50, GP55, GP188); 47 proteins (columns) x 179
+GPs (rows). Entries with |score| &lt; 0.5 are shown white, with color
+running from blue (-1) through white to red (+1).</p>
+</div>
+</div>
+<div id="fig6cf" class="section level2">
+<h2>(c-f) Protein-gated vs. GP-loading populations</h2>
+<pre class="r"><code># ============================================================
+# 6c-6f: protein-gate vs. GP-loading comparison for the 4 curated main-figure GPs
+# (df_markers2, thymocyte/proliferating/miniverse_cells, L_pm_for_gating,
+# select_proteins, threshold_results_subset_manual all come from
+# citeseq_shared_setup.R above)
+# ============================================================
+GPs_fig6 &lt;- c(&quot;GP171&quot;, &quot;GP23&quot;, &quot;GP12&quot;, &quot;GP80&quot;)
+fig6_letter &lt;- c(&quot;GP171&quot; = &quot;6c&quot;, &quot;GP23&quot; = &quot;6d&quot;, &quot;GP12&quot; = &quot;6e&quot;, &quot;GP80&quot; = &quot;6f&quot;)
+enlarge_gps &lt;- c(&quot;GP8&quot;, &quot;GP30&quot;, &quot;GP170&quot;, &quot;GP107&quot;)
+for (gp in GPs_fig6) {
+  k_name &lt;- paste0(&quot;K&quot;, sub(&quot;^GP&quot;, &quot;&quot;, gp))
+  plot_gated_gp_vs_protein(
+    gp_name = k_name,
+    df_markers = df_markers2,
+    protein_mat = protein_mat_normalized_lognorm,
+    loading_mat = L_pm_for_gating,
+    mde_emb = mde_result,
+    missing_threshold_action = &quot;skip&quot;,
+    threshold_df = threshold_results_subset_manual,
+    exclude_cells = c(thymocyte_cells, proliferating_cells, miniverse_cells),
+    selected_proteins = select_proteins,
+    loading_q = NULL,
+    min_pointsize = if (gp %in% enlarge_gps) 3L else 0L,
+    save_path = paste0(figure_path, fig6_letter[gp], &quot;.pdf&quot;)
+  )
+}</code></pre>
+<p><img src="assets/Figure6/6c.png" width="49%" style="display: block; margin: auto;" /><img src="assets/Figure6/6d.png" width="49%" style="display: block; margin: auto;" /><img src="assets/Figure6/6e.png" width="49%" style="display: block; margin: auto;" /><img src="assets/Figure6/6f.png" width="49%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 6c-f.</strong> Transcriptional GPs recover protein-gated
+populations. For each GP, cells are shown twice on the same MDE
+embedding. Left, cells passing a protein gate built from the GP’s
+curated marker signature (positive markers above, and negative markers
+below); right, an equally sized set of cells with the highest GP loading
+(the loading cutoff is chosen to match the protein-gate count).
+Highlighted cells are colored by two-dimensional density and all other
+cells are grey; thymocytes, proliferating, and “miniverse” cells are
+excluded.</p>
+</div>
+</div>
+<div id="fig6gh" class="section level2">
+<h2>(g, h) KLRG1 modulation across lineages</h2>
+<pre class="r"><code># ============================================================
+# 6g/6h: KLRG1 modulation (CD8 vs CD4, CD8 vs Treg)
+# ============================================================
+FlashierDGE_corrected &lt;- function(F1, L1, group1, group2, title_plot = &quot;&quot;) {
+  loadings_group1 &lt;- colMeans(L1[group1, ])
+  loadings_group2 &lt;- colMeans(L1[group2, ])
+  mean_change_loadings &lt;- loadings_group1 - loadings_group2
+  vplot &lt;- data.frame(SYMBOL = names(mean_change_loadings), mean_change_loadings = mean_change_loadings, AveExpr = colMeans(L1[c(group1, group2), ]))
+  list(diff_factors = vplot)
+}
+get_klrg1_split &lt;- function(cell_type_label, meta, protein_data, threshold) {
+  cells &lt;- meta$cellID[meta$annotation_level1 == cell_type_label]
+  cells &lt;- intersect(cells, rownames(protein_data))
+  list(pos = cells[protein_data[cells, &quot;KLRG1&quot;] &gt;= threshold], neg = cells[protein_data[cells, &quot;KLRG1&quot;] &lt; threshold])
+}
+run_checked_dge &lt;- function(group_list, F_mat, L_mat, label) {
+  if (length(group_list$pos) &lt; 3 || length(group_list$neg) &lt; 3) stop(paste(&quot;Insufficient data:&quot;, label))
+  df &lt;- FlashierDGE_corrected(F1 = F_mat, L1 = L_mat, group1 = group_list$pos, group2 = group_list$neg)$diff_factors
+  if (!&quot;SYMBOL&quot; %in% colnames(df)) df$SYMBOL &lt;- rownames(df)
+  df
+}
+plot_target_gps &lt;- function(df, x_var, y_var, label_var, target_gps, highlight_color = &quot;darkorange&quot;, background_color = &quot;black&quot;,
+                             x_limits = c(-0.5, 0.5), y_limits = c(-0.5, 0.5), background_alpha = 0.5,
+                             xlab = &quot;Difference in Mean Loading&quot;, ylab = &quot;Difference in Mean Loading&quot;, title = &quot;Comparison of Specific GP Loadings&quot;) {
+  highlight_df &lt;- df %&gt;% filter({{ label_var }} %in% target_gps) %&gt;% mutate(.label_display = as.character({{ label_var }}))
+  ggplot(df, aes(x = {{ x_var }}, y = {{ y_var }})) +
+    geom_point(color = background_color, alpha = background_alpha) +
+    geom_abline(slope = 1, intercept = 0, linetype = &quot;dashed&quot;, color = &quot;red&quot;) +
+    geom_hline(yintercept = 0, linetype = &quot;dashed&quot;, color = &quot;blue&quot;) +
+    geom_vline(xintercept = 0, linetype = &quot;dashed&quot;, color = &quot;blue&quot;) +
+    geom_point(data = highlight_df, aes(color = {{ label_var }}), size = 2) +
+    ggrepel::geom_text_repel(data = highlight_df, aes(label = .label_display, color = {{ label_var }}), max.overlaps = Inf, size = 3.5, box.padding = 0.35, point.padding = 0.5, segment.color = &quot;grey50&quot;, show.legend = FALSE) +
+    scale_color_manual(values = highlight_color, guide = &quot;none&quot;) +
+    coord_cartesian(xlim = x_limits, ylim = y_limits) +
+    labs(x = xlab, y = ylab, title = title) +
+    theme_minimal()
+}
+
+klrg1_threshold &lt;- threshold_results_subset_manual$Threshold[threshold_results_subset_manual$Protein == &quot;KLRG1&quot;]
+cd8_split &lt;- get_klrg1_split(&quot;CD8&quot;, seurat_meta_filtered, protein_mat_normalized_lognorm, klrg1_threshold)
+CD4_split &lt;- get_klrg1_split(&quot;CD4&quot;, seurat_meta_filtered, protein_mat_normalized_lognorm, klrg1_threshold)
+treg_split &lt;- get_klrg1_split(&quot;Treg&quot;, seurat_meta_filtered, protein_mat_normalized_lognorm, klrg1_threshold)
+
+diff_CD8 &lt;- run_checked_dge(cd8_split, F_pm_filtered, L_pm_filtered, &quot;CD8&quot;) %&gt;% rename(mean_change_CD8 = mean_change_loadings, AveExpr_CD8 = AveExpr)
+diff_CD4 &lt;- run_checked_dge(CD4_split, F_pm_filtered, L_pm_filtered, &quot;CD4&quot;) %&gt;% rename(mean_change_CD4 = mean_change_loadings, AveExpr_CD4 = AveExpr)
+diff_Treg &lt;- run_checked_dge(treg_split, F_pm_filtered, L_pm_filtered, &quot;Treg&quot;) %&gt;% rename(mean_change_Treg = mean_change_loadings, AveExpr_Treg = AveExpr)
+
+# 6g: CD8 vs CD4
+merged_cd4 &lt;- inner_join(diff_CD4, diff_CD8, by = &quot;SYMBOL&quot;)
+p_6g &lt;- plot_target_gps(
+  df = merged_cd4, x_var = mean_change_CD8, y_var = mean_change_CD4, label_var = SYMBOL,
+  target_gps = c(&quot;GP10&quot;, &quot;GP58&quot;, &quot;GP25&quot;, &quot;GP26&quot;, &quot;GP43&quot;), background_alpha = 0.8, x_limits = c(-0.2, 0.4), y_limits = c(-0.2, 0.4),
+  highlight_color = c(&quot;GP10&quot; = &quot;darkorange2&quot;, &quot;GP25&quot; = &quot;blue&quot;, &quot;GP43&quot; = &quot;blue&quot;, &quot;GP26&quot; = &quot;blue&quot;, &quot;GP58&quot; = &quot;darkorange2&quot;),
+  title = &quot;KLRG1 Modulation: CD8 vs CD4&quot;, xlab = &quot;Effect Size in CD8 (KLRG1+ - KLRG1-)&quot;, ylab = &quot;Effect Size in CD4 (KLRG1+ - KLRG1-)&quot;
+) + theme_bw()
+ggsave(paste0(figure_path, &quot;6g.pdf&quot;), p_6g, width = 7, height = 6)
+
+# 6h: CD8 vs Treg
+merged_treg &lt;- inner_join(diff_Treg, diff_CD8, by = &quot;SYMBOL&quot;)
+p_6h &lt;- plot_target_gps(
+  df = merged_treg, x_var = mean_change_CD8, y_var = mean_change_Treg, label_var = SYMBOL,
+  target_gps = c(&quot;GP6&quot;, &quot;GP10&quot;, &quot;GP12&quot;, &quot;GP27&quot;, &quot;GP68&quot;, &quot;GP58&quot;), background_alpha = 0.8, x_limits = c(-0.2, 0.4), y_limits = c(-0.2, 0.4),
+  highlight_color = c(&quot;GP10&quot; = &quot;darkorange2&quot;, &quot;GP27&quot; = &quot;deeppink&quot;, &quot;GP6&quot; = &quot;deeppink&quot;, &quot;GP68&quot; = &quot;deeppink&quot;, &quot;GP12&quot; = &quot;deeppink&quot;, &quot;GP58&quot; = &quot;darkorange2&quot;),
+  title = &quot;KLRG1 Modulation: CD8 vs Treg&quot;, xlab = &quot;Effect Size in CD8 (KLRG1+ - KLRG1-)&quot;, ylab = &quot;Effect Size in Treg (KLRG1+ - KLRG1-)&quot;
+) + theme_bw()
+ggsave(paste0(figure_path, &quot;6h.pdf&quot;), p_6h, width = 7, height = 6)</code></pre>
+<p><img src="assets/Figure6/6g.png" width="49%" style="display: block; margin: auto;" /><img src="assets/Figure6/6h.png" width="49%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 6g, h.</strong> KLRG1 modulation of GPs across lineages.
+Within each lineage, cells are split KLRG1+ versus KLRG1- based on the
+threshold on the KLRG1 protein, and for every GP the effect size is the
+difference in mean GP loading (KLRG1+ minus KLRG1-). The scatter
+compares CD8 (x-axis) against CD4 (g) or Treg (h) (y-axis); each point
+is a GP, the dashed red line marks equal effect (y = x), and the dashed
+blue lines mark zero. Selected GPs are labeled – orange for large,
+concordant effects in both lineages, and blue/pink for lineage-biased
+GPs.</p>
+</div>
+</div>
+<div id="fig6ik" class="section level2">
+<h2>(i-k) GPs associated with CD69</h2>
+<pre class="r"><code># ============================================================
+# 6i/6j/6k: the 10 GPs most associated with CD69
+# ============================================================
+D_scale6 &lt;- diag(1 / apply(F_pm_filtered, 2, function(x) max(abs(x), na.rm = TRUE)))
+F_pm_filtered_scaled &lt;- F_pm_filtered %*% D_scale6
+colnames(F_pm_filtered_scaled) &lt;- paste0(&quot;GP&quot;, 1:ncol(F_pm_filtered_scaled))
+
+cd69_top_gps_subset &lt;- c(&quot;GP35&quot;, &quot;GP6&quot;, &quot;GP170&quot;, &quot;GP26&quot;, &quot;GP58&quot;, &quot;GP171&quot;, &quot;GP63&quot;, &quot;GP62&quot;, &quot;GP3&quot;, &quot;GP29&quot;)
+shared_cells_cd69 &lt;- intersect(rownames(L_pm_filtered), rownames(protein_mat_normalized_lognorm))
+cd69_expr_vec &lt;- protein_mat_normalized_lognorm[shared_cells_cd69, &quot;CD69&quot;]
+cd69_corr &lt;- sapply(cd69_top_gps_subset, function(gp) cor(L_pm_filtered[shared_cells_cd69, gp], cd69_expr_vec, method = &quot;spearman&quot;))
+cd69_top_gps_sorted &lt;- names(sort(cd69_corr, decreasing = FALSE)) # most-correlated GP ends up at top of y-axis
+
+plot_factor_heatmap &lt;- function(F_matrix, gp_vector, n_top = 5, min_abs_loading = 0.5, transpose = FALSE,
+                                 title = &quot;Factor loadings&quot;, low_color = &quot;steelblue&quot;, mid_color = &quot;white&quot;, high_color = &quot;firebrick&quot;, font_size = 9) {
+  F_sub &lt;- F_matrix[, gp_vector, drop = FALSE]
+  selected_genes &lt;- lapply(gp_vector, function(gp) {
+    vals &lt;- F_sub[, gp]
+    top_pos &lt;- names(sort(vals, decreasing = TRUE))[seq_len(min(n_top, sum(vals &gt; 0)))]
+    top_neg &lt;- names(sort(vals, decreasing = FALSE))[seq_len(min(n_top, sum(vals &lt; 0)))]
+    c(top_pos, top_neg)
+  })
+  selected_genes &lt;- unique(unlist(selected_genes))
+  if (min_abs_loading &gt; 0) {
+    max_abs &lt;- apply(F_sub[selected_genes, , drop = FALSE], 1, function(x) max(abs(x), na.rm = TRUE))
+    selected_genes &lt;- names(max_abs[max_abs &gt;= min_abs_loading])
+  }
+  hc_genes &lt;- hclust(dist(F_sub[selected_genes, , drop = FALSE]))
+  gene_order &lt;- rownames(F_sub[selected_genes, , drop = FALSE])[hc_genes$order]
+  plot_df &lt;- F_sub[selected_genes, , drop = FALSE] %&gt;%
+    as.data.frame() %&gt;%
+    tibble::rownames_to_column(&quot;Gene&quot;) %&gt;%
+    tidyr::pivot_longer(cols = -Gene, names_to = &quot;GP&quot;, values_to = &quot;Loading&quot;) %&gt;%
+    mutate(GP = factor(GP, levels = gp_vector), Gene = factor(Gene, levels = gene_order))
+  limit &lt;- max(abs(plot_df$Loading), na.rm = TRUE)
+  x_aes &lt;- if (transpose) &quot;Gene&quot; else &quot;GP&quot;
+  y_aes &lt;- if (transpose) &quot;GP&quot; else &quot;Gene&quot;
+  ggplot(plot_df, aes(x = .data[[x_aes]], y = .data[[y_aes]], fill = Loading)) +
+    geom_tile() +
+    scale_fill_gradient2(low = low_color, mid = mid_color, high = high_color, midpoint = 0, limits = c(-limit, limit), name = &quot;Loading&quot;) +
+    labs(title = title, x = NULL, y = NULL) +
+    theme_minimal(base_size = font_size) +
+    theme(axis.text.x = element_text(angle = if (transpose) 90 else 45, hjust = 1, size = font_size), axis.text.y = element_text(size = font_size), panel.grid = element_blank())
+}
+
+p_heatmap &lt;- plot_factor_heatmap(F_matrix = F_pm_filtered_scaled, gp_vector = cd69_top_gps_sorted, n_top = 5, font_size = 9, transpose = TRUE, low_color = &quot;#4DAF4A&quot;, mid_color = &quot;white&quot;, high_color = &quot;#984EA3&quot;)
+
+corr_strip_df &lt;- data.frame(GP = factor(cd69_top_gps_sorted, levels = cd69_top_gps_sorted), Correlation = cd69_corr[cd69_top_gps_sorted], x = &quot;Corr&quot;)
+corr_limit &lt;- max(abs(corr_strip_df$Correlation))
+p_corr_strip &lt;- ggplot(corr_strip_df, aes(x = x, y = GP, fill = Correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = &quot;royalblue&quot;, mid = &quot;white&quot;, high = &quot;tomato&quot;, midpoint = 0, limits = c(-corr_limit, corr_limit), name = &quot;Corr\n(CD69)&quot;) +
+  labs(x = NULL, y = NULL) +
+  theme_minimal(base_size = 9) +
+  theme(axis.text.x = element_text(size = 9, angle = 45, hjust = 1), axis.text.y = element_blank(), axis.ticks.y = element_blank(), panel.grid = element_blank())
+
+p_6i &lt;- p_corr_strip + p_heatmap + patchwork::plot_layout(widths = c(0.06, 1), guides = &quot;collect&quot;)
+ggsave(paste0(figure_path, &quot;6i.pdf&quot;), p_6i, width = 11, height = 5)
+
+# 6j/6k: mean loading of these GPs per tissue (j) and per lineage (k)
+cells_for_heatmap &lt;- intersect(rownames(L_pm_filtered), rownames(seurat_meta_filtered))
+L_cd69_sub &lt;- L_pm_filtered[cells_for_heatmap, cd69_top_gps_sorted, drop = FALSE]
+meta_hm &lt;- seurat_meta_filtered[cells_for_heatmap, c(&quot;annotation_level1&quot;, &quot;organ_simplified&quot;)]
+
+mean_loading_long &lt;- function(L_mat, group_vec, gp_levels) {
+  as.data.frame(L_mat) %&gt;%
+    mutate(group = group_vec) %&gt;%
+    tidyr::pivot_longer(cols = -group, names_to = &quot;GP&quot;, values_to = &quot;Loading&quot;) %&gt;%
+    group_by(group, GP) %&gt;%
+    summarise(mean_loading = mean(Loading, na.rm = TRUE), .groups = &quot;drop&quot;) %&gt;%
+    mutate(GP = factor(GP, levels = gp_levels))
+}
+make_mean_loading_heatmap &lt;- function(df, title) {
+  fill_max &lt;- max(df$mean_loading, na.rm = TRUE)
+  ggplot(df, aes(x = group, y = GP, fill = mean_loading)) +
+    geom_tile() +
+    scale_fill_gradient(low = &quot;white&quot;, high = &quot;firebrick&quot;, limits = c(0, fill_max), name = &quot;Mean\nloading&quot;) +
+    labs(title = title, x = NULL, y = NULL) +
+    theme_minimal(base_size = 9) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 9), axis.text.y = element_text(size = 9), panel.grid = element_blank())
+}
+
+df_organ &lt;- mean_loading_long(L_cd69_sub, meta_hm$organ_simplified, cd69_top_gps_sorted)
+p_6j &lt;- make_mean_loading_heatmap(df_organ, &quot;Mean GP loading by tissue (organ_simplified)&quot;)
+ggsave(paste0(figure_path, &quot;6j.pdf&quot;), p_6j, width = 9, height = 5)
+
+df_level1 &lt;- mean_loading_long(L_cd69_sub, meta_hm$annotation_level1, cd69_top_gps_sorted)
+p_6k &lt;- make_mean_loading_heatmap(df_level1, &quot;Mean GP loading by cell type (level1)&quot;)
+ggsave(paste0(figure_path, &quot;6k.pdf&quot;), p_6k, width = 7, height = 5)</code></pre>
+<p><img src="assets/Figure6/6i.png" width="32%" style="display: block; margin: auto;" /><img src="assets/Figure6/6j.png" width="32%" style="display: block; margin: auto;" /><img src="assets/Figure6/6k.png" width="32%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 6i-k.</strong> GPs associated with CD69. The ten GPs
+most associated with CD69 are ordered by the Spearman correlation
+between CD69 protein expression and GP loading. (i) Heatmap of the top
+five gene scores per GP (green-white-purple), with a left strip giving
+each GP’s CD69 correlation (blue-white-red). (j) Mean loading of these
+GPs per tissue and (k) per lineage.</p>
+</div>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.5.1 (2025-06-13)
+Platform: aarch64-apple-darwin20
+Running under: macOS Sequoia 15.6.1
+
+Matrix products: default
+BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_CA/en_CA/en_CA/C/en_CA/en_CA
+
+time zone: Asia/Tokyo
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+ [1] vctrs_0.7.3     cli_3.6.6       knitr_1.50      rlang_1.2.0    
+ [5] xfun_0.55       stringi_1.8.7   otel_0.2.0      promises_1.5.0 
+ [9] jsonlite_2.0.0  workflowr_1.7.2 glue_1.8.1      rprojroot_2.1.1
+[13] git2r_0.36.2    htmltools_0.5.9 httpuv_1.6.16   sass_0.4.10    
+[17] rmarkdown_2.30  evaluate_1.0.5  jquerylib_0.1.4 tibble_3.3.0   
+[21] fastmap_1.2.0   yaml_2.3.12     lifecycle_1.0.5 stringr_1.6.0  
+[25] compiler_4.5.1  fs_1.6.6        Rcpp_1.1.1-1.1  pkgconfig_2.0.3
+[29] later_1.4.4     digest_0.6.39   R6_2.6.1        pillar_1.11.1  
+[33] magrittr_2.0.5  bslib_0.9.0     tools_4.5.1     cachem_1.1.0   </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

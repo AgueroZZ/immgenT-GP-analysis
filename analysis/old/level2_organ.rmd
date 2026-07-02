@@ -1,0 +1,120 @@
+---
+title: "level2_organ"
+author: "Ziang Zhang"
+date: "2025-10-27"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+Let's analyze the distribution of coefficients of level2 and organ for each loading:
+
+```{r}
+library(ggplot2)
+library(fastTopics)
+library(dplyr)
+library(ggrepel)
+data_path <- "../data/"
+code_path <- "../code/"
+data_path <- "data/"
+code_path <- "code/"
+source(paste0(code_path, "ROC.R"))
+seurat_meta <- readRDS(paste0(data_path, "seurat_meta.rds"))
+flashier_snmf_summary <- readRDS(paste0(data_path, "flashier_snmf_summary.rds"))
+factor_stats_df <- readRDS(file = paste0(data_path, "conditional_analysis_factor_stats.rds"))
+```
+
+```{r}
+# plot Organ mean against Level-2 mean for all factors
+ggplot(factor_stats_df, aes(x = Organ_Mean, y = CellType_Mean)) +
+  geom_point() +
+  ylim(c(-0.07,0.07)) +
+  xlim(c(-0.07,0.07)) +
+  # add 45-degree line
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
+  geom_text_repel(aes(label = paste0("Factor ", Factor)), size = 3) +
+  xlab("Mean Coefficient (Organ)") +
+  ylab("Mean Coefficient (Level-2)") +
+  ggtitle("Mean Coefficient Comparison: Organ vs Level-2") +
+  theme_minimal()
+```
+
+
+Plot the maximum absolute coefficient for each factor:
+
+```{r}
+factor_coef_list <- readRDS(file = paste0(data_path, "conditional_analysis_factor.rds"))
+
+max_coef_df <- data.frame(
+  Factor = integer(),
+  Max_Abs_Coefficient_Organ = numeric(),
+  Max_Abs_Coefficient_Level2 = numeric()
+)
+
+for (i in 1:length(factor_coef_list)) {
+  coef_df <- factor_coef_list[[i]]
+  max_abs_organ <- max(abs(coef_df$organ_coefs))
+  max_abs_level2 <- max(abs(coef_df$level2_coefs))
+  max_coef_df <- rbind(max_coef_df, data.frame(
+    Factor = i,
+    Max_Abs_Coefficient_Organ = max_abs_organ,
+    Max_Abs_Coefficient_Level2 = max_abs_level2
+  ))
+}
+
+```
+
+```{r}
+top_n <- 5  # how many points to annotate above and below y = x
+
+df <- max_coef_df %>%
+  mutate(
+    residual = Max_Abs_Coefficient_Level2 - Max_Abs_Coefficient_Organ, # >0: above y=x; <0: below
+    abs_res  = abs(residual)
+  )
+
+# --- Select top-N above and below y = x ---
+label_above <- df %>%
+  filter(is.finite(residual), residual > 0) %>%
+  slice_max(residual, n = top_n, with_ties = FALSE)
+
+label_below <- df %>%
+  filter(is.finite(residual), residual < 0) %>%
+  slice_min(residual, n = top_n, with_ties = FALSE)
+
+# --- Base plot builder (no labels yet) ---
+base_plot <- ggplot(df, aes(x = Max_Abs_Coefficient_Organ, y = Max_Abs_Coefficient_Level2)) +
+  geom_point(alpha = 0.3, size = 1.8) +                                # background points
+  geom_point(data = label_above, color = "#1f78b4", alpha = 0.6, size = 1.8) +       # highlight above y=x
+  geom_point(data = label_below, color = "#e31a1c", alpha = 0.6, size = 1.8) +       # highlight below y=x
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
+  coord_cartesian(xlim = c(0, 0.6), ylim = c(0, 0.6), expand = TRUE) +  # keep your limits
+  labs(
+    x = "Max Absolute Coefficient (Organ)",
+    y = "Max Absolute Coefficient (Level-2)",
+    title = "Max Absolute Coefficient: Organ vs Level-2"
+  ) +
+  theme_minimal()
+
+# --- Combined plot: annotate both top-N above and below y = x ---
+p_all <- base_plot +
+  geom_text_repel(
+    data = label_above,
+    aes(label = paste0("Factor ", Factor)),
+    color = "#1f78b4", size = 3, max.overlaps = Inf,
+    box.padding = 0.3, point.padding = 0.2, min.segment.length = 0
+  ) +
+  geom_text_repel(
+    data = label_below,
+    aes(label = paste0("Factor ", Factor)),
+    color = "#e31a1c", size = 3, max.overlaps = Inf,
+    box.padding = 0.3, point.padding = 0.2, min.segment.length = 0
+  ) +
+  labs(subtitle = paste0("Annotating top ", top_n, " above (blue) and top ", top_n, " below (red) y = x"))
+
+p_all
+```
+
+
+
+

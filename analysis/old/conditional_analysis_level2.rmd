@@ -1,0 +1,158 @@
+---
+title: "conditional_analysis_level2"
+author: "Ziang Zhang"
+date: "2025-12-03"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+
+```{r}
+library(ggplot2)
+library(fastTopics)
+library(dplyr)
+library(ggrepel)
+data_path <- "../data/"
+code_path <- "../code/"
+data_path <- "data/"
+code_path <- "code/"
+source(paste0(code_path, "ROC.R"))
+
+num_cells_lower <- 1000
+```
+
+## Condition_detailed
+
+```{r}
+seurat_meta <- readRDS(paste0(data_path, "seurat_meta.rds"))
+flashier_snmf_summary <- readRDS(paste0(data_path, "flashier_snmf_summary.rds"))
+```
+
+Align the cells to remove the extra cells in the flashier result:
+
+```{r}
+cells_flashier <- rownames(flashier_snmf_summary$L_pm)
+cells_seurat <- seurat_meta$cellID
+which(!cells_flashier %in% cells_seurat)
+L_pm <- flashier_snmf_summary$L_pm[cells_flashier %in% cells_seurat, ]
+all(rownames(L_pm) == cells_seurat)
+```
+
+Filter out condition_detailed and cell types with too few cells:
+
+```{r}
+selected_condition <- table(seurat_meta$condition_detailed)
+selected_condition <- names(selected_condition[selected_condition >= num_cells_lower])
+selected_level2 <- table(seurat_meta$annotation_level2)
+selected_level2 <- names(selected_level2[selected_level2 >= num_cells_lower])
+selected_cells <- which(seurat_meta$condition_detailed %in% selected_condition & seurat_meta$annotation_level2 %in% selected_level2)
+seurat_meta_selected <- seurat_meta[selected_cells, ]
+# redefine the levels
+seurat_meta_selected$condition_detailed <- factor(seurat_meta_selected$condition_detailed)
+seurat_meta_selected$annotation_level2 <- factor(seurat_meta_selected$annotation_level2)
+```
+
+Write a function that computes the coefficients of condition and cell type for each factor:
+
+```{r}
+compute_coef_per_factor <- function(factor_id){
+  Y <- L_pm[selected_cells, factor_id]
+  condition <- seurat_meta_selected$condition_detailed
+  level2 <- seurat_meta_selected$annotation_level2
+  model_full <- lm(Y ~ condition + level2)
+  coefs <- coef(model_full)
+  # Extract coefficients for condition
+  condition_coefs <- coefs[grep("^condition", names(coefs))]
+  # Extract coefficients for annotation_level2
+  level2_coefs <- coefs[grep("^level2", names(coefs))]
+  
+  return(
+    list(
+      factor_id = factor_id,
+      condition_coefs = condition_coefs,
+      level2_coefs = level2_coefs
+    )
+  )
+}
+```
+
+```{r eval=FALSE}
+factor_coef_list <- lapply(1:ncol(L_pm), compute_coef_per_factor)
+saveRDS(factor_coef_list, file = paste0(data_path, "conditional_analysis_factor_condition_detailed.rds"))
+```
+
+## organ_simplified
+
+
+```{r}
+seurat_meta <- readRDS(paste0(data_path, "seurat_meta.rds"))
+flashier_snmf_summary <- readRDS(paste0(data_path, "flashier_snmf_summary.rds"))
+```
+
+Align the cells to remove the extra cells in the flashier result:
+
+```{r}
+cells_flashier <- rownames(flashier_snmf_summary$L_pm)
+cells_seurat <- seurat_meta$cellID
+which(!cells_flashier %in% cells_seurat)
+L_pm <- flashier_snmf_summary$L_pm[cells_flashier %in% cells_seurat, ]
+all(rownames(L_pm) == cells_seurat)
+```
+
+Focus on healthy cells:
+
+```{r}
+healthy_cells <- which(seurat_meta$condition_broad == "healthy")
+L_pm <- L_pm[healthy_cells, ]
+seurat_meta <- seurat_meta[healthy_cells, ]
+```
+
+
+Filter out organ_simplified and cell types with too few cells:
+
+```{r}
+selected_organ <- table(seurat_meta$organ_simplified)
+selected_organ <- names(selected_organ[selected_organ >= num_cells_lower])
+selected_level2 <- table(seurat_meta$annotation_level2)
+selected_level2 <- names(selected_level2[selected_level2 >= num_cells_lower])
+selected_cells <- which(seurat_meta$organ_simplified %in% selected_organ & seurat_meta$annotation_level2 %in% selected_level2)
+seurat_meta_selected <- seurat_meta[selected_cells, ]
+# redefine the levels
+seurat_meta_selected$organ_simplified <- factor(seurat_meta_selected$organ_simplified)
+seurat_meta_selected$annotation_level2 <- factor(seurat_meta_selected$annotation_level2)
+```
+
+Write a function that computes the coefficients of organ and cell type for each factor:
+
+```{r}
+compute_coef_per_factor <- function(factor_id){
+  Y <- L_pm[selected_cells, factor_id]
+  organ <- seurat_meta_selected$organ_simplified
+  level2 <- seurat_meta_selected$annotation_level2
+  model_full <- lm(Y ~ organ + level2)
+  coefs <- coef(model_full)
+  # Extract coefficients for organ
+  organ_coefs <- coefs[grep("^organ", names(coefs))]
+  # Extract coefficients for annotation_level2
+  level2_coefs <- coefs[grep("^level2", names(coefs))]
+  
+  return(
+    list(
+      factor_id = factor_id,
+      organ_coefs = condition_coefs,
+      level2_coefs = level2_coefs
+    )
+  )
+}
+```
+
+```{r eval=FALSE}
+factor_coef_list <- lapply(1:ncol(L_pm), compute_coef_per_factor)
+saveRDS(factor_coef_list, file = paste0(data_path, "conditional_analysis_factor_organ_simplified.rds"))
+```
+
+
+
+
+

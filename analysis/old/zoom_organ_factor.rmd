@@ -1,0 +1,283 @@
+---
+title: "Zooming in specific organs"
+author: "Ziang Zhang"
+date: "2025-09-29"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+# Read in data
+
+```{r}
+data_path <- "../data/"
+# data_path <- "data/"
+seurat_meta <- readRDS(paste0(data_path, "seurat_meta.rds"))
+flashier_snmf_summary <- readRDS(paste0(data_path, "flashier_snmf_summary.rds"))
+```
+
+```{r}
+# Normalize the L matrix based on 99.9 quantile
+D <- diag(1 / apply(flashier_snmf_summary$L_pm, 2, function(x) quantile(x,0.999)))
+flashier_snmf_summary$L_pm <- flashier_snmf_summary$L_pm %*% D
+flashier_snmf_summary$F_pm <- flashier_snmf_summary$F_pm %*% solve(D)
+```
+
+Align the cells to remove the extra cells in the flashier result:
+
+```{r}
+cells_flashier <- rownames(flashier_snmf_summary$L_pm)
+cells_seurat <- seurat_meta$cellID
+which(!cells_flashier %in% cells_seurat)
+L_pm <- flashier_snmf_summary$L_pm[cells_flashier %in% cells_seurat, ]
+all(rownames(L_pm) == cells_seurat)
+```
+
+Only keep factors with pve larger than $10^{-4}$.
+
+```{r}
+L_pm_old <- L_pm
+L_pm <- L_pm[, flashier_snmf_summary$pve > 1e-4]
+```
+
+# Analyzing factors K3 and K62 in specific organs {.tabset .tabset-pills}
+
+```{r}
+interested_factors <- c(1, 3, 62)
+```
+
+
+## small intestine epi
+
+```{r, fig.height=2.75, fig.width=8.25, results="hide", message=FALSE}
+interested_organ <- "small intestine epi"
+
+cells_interest <- seurat_meta$cellID[seurat_meta$organ_simplified %in% c(interested_organ)]
+L_pm_subset <- L_pm_old[cells_seurat %in% cells_interest, ]
+set.seed(12345)
+fit2 <- L_pm_subset[, interested_factors, drop = FALSE]
+colnames(fit2) <- paste0("k", interested_factors)
+fastTopics::structure_plot(
+  fit = fit2,
+  grouping = seurat_meta$annotation_level1[cells_seurat %in% cells_interest],
+  gap = 20, perplexity = 200, n = 2000
+)
+```
+
+## small intestine LP
+
+```{r, fig.height=2.75, fig.width=8.25, results="hide", message=FALSE}
+interested_organ <- "small intestine LP"
+
+cells_interest <- seurat_meta$cellID[seurat_meta$organ_simplified %in% c(interested_organ)]
+L_pm_subset <- L_pm_old[cells_seurat %in% cells_interest, ]
+set.seed(12345)
+fit2 <- L_pm_subset[, interested_factors, drop = FALSE]
+colnames(fit2) <- paste0("k", interested_factors)
+fastTopics::structure_plot(
+  fit = fit2,
+  grouping = seurat_meta$annotation_level1[cells_seurat %in% cells_interest],
+  gap = 20, perplexity = 200, n = 2000
+)
+```
+
+
+## mammary gland
+
+```{r, fig.height=2.75, fig.width=8.25, results="hide", message=FALSE}
+interested_organ <- "mammary gland"
+
+cells_interest <- seurat_meta$cellID[seurat_meta$organ_simplified %in% c(interested_organ)]
+L_pm_subset <- L_pm_old[cells_seurat %in% cells_interest, ]
+set.seed(12345)
+fit2 <- L_pm_subset[, interested_factors, drop = FALSE]
+colnames(fit2) <- paste0("k", interested_factors)
+fastTopics::structure_plot(
+  fit = fit2,
+  grouping = seurat_meta$annotation_level1[cells_seurat %in% cells_interest],
+  gap = 20, perplexity = 200, n = 2000
+)
+```
+
+## colon epi
+
+```{r, fig.height=2.75, fig.width=8.25, results="hide", message=FALSE}
+interested_organ <- "colon epi"
+
+cells_interest <- seurat_meta$cellID[seurat_meta$organ_simplified %in% c(interested_organ)]
+L_pm_subset <- L_pm_old[cells_seurat %in% cells_interest, ]
+set.seed(12345)
+fit2 <- L_pm_subset[, interested_factors, drop = FALSE]
+colnames(fit2) <- paste0("k", interested_factors)
+fastTopics::structure_plot(
+  fit = fit2,
+  grouping = seurat_meta$annotation_level1[cells_seurat %in% cells_interest],
+  gap = 20, perplexity = 200, n = 2000
+)
+```
+
+## colon LP
+
+```{r, fig.height=2.75, fig.width=8.25, results="hide", message=FALSE}
+interested_organ <- "colon LP"
+
+cells_interest <- seurat_meta$cellID[seurat_meta$organ_simplified %in% c(interested_organ)]
+L_pm_subset <- L_pm_old[cells_seurat %in% cells_interest, ]
+set.seed(12345)
+fit2 <- L_pm_subset[, interested_factors, drop = FALSE]
+colnames(fit2) <- paste0("k", interested_factors)
+fastTopics::structure_plot(
+  fit = fit2,
+  grouping = seurat_meta$annotation_level1[cells_seurat %in% cells_interest],
+  gap = 20, perplexity = 200, n = 2000
+)
+```
+
+
+
+## skin
+
+```{r, fig.height=2.75, fig.width=8.25, results="hide", message=FALSE}
+interested_organ <- "skin"
+
+cells_interest <- seurat_meta$cellID[seurat_meta$organ_simplified %in% c(interested_organ)]
+L_pm_subset <- L_pm_old[cells_seurat %in% cells_interest, ]
+set.seed(12345)
+fit2 <- L_pm_subset[, interested_factors, drop = FALSE]
+colnames(fit2) <- paste0("k", interested_factors)
+fastTopics::structure_plot(
+  fit = fit2,
+  grouping = seurat_meta$annotation_level1[cells_seurat %in% cells_interest],
+  gap = 20, perplexity = 200, n = 2000
+)
+```
+
+
+
+## liver
+
+```{r, fig.height=2.75, fig.width=8.25, results="hide", message=FALSE}
+interested_organ <- "liver"
+
+cells_interest <- seurat_meta$cellID[seurat_meta$organ_simplified %in% c(interested_organ)]
+L_pm_subset <- L_pm_old[cells_seurat %in% cells_interest, ]
+set.seed(12345)
+fit2 <- L_pm_subset[, interested_factors, drop = FALSE]
+colnames(fit2) <- paste0("k", interested_factors)
+fastTopics::structure_plot(
+  fit = fit2,
+  grouping = seurat_meta$annotation_level1[cells_seurat %in% cells_interest],
+  gap = 20, perplexity = 200, n = 2000
+)
+```
+
+
+
+## spleen
+
+```{r, fig.height=2.75, fig.width=8.25, results="hide", message=FALSE}
+interested_organ <- "spleen"
+cells_interest <- seurat_meta$cellID[seurat_meta$organ_simplified %in% c(interested_organ)]
+L_pm_subset <- L_pm_old[cells_seurat %in% cells_interest, ]
+set.seed(12345)
+fit2 <- L_pm_subset[, interested_factors, drop = FALSE]
+colnames(fit2) <- paste0("k", interested_factors)
+fastTopics::structure_plot(
+  fit = fit2,
+  grouping = seurat_meta$annotation_level1[cells_seurat %in% cells_interest],
+  gap = 20, perplexity = 200, n = 2000
+)
+```
+
+
+## blood
+
+
+```{r, fig.height=2.75, fig.width=8.25, results="hide", message=FALSE}
+interested_organ <- "blood"
+
+cells_interest <- seurat_meta$cellID[seurat_meta$organ_simplified %in% c(interested_organ)]
+L_pm_subset <- L_pm_old[cells_seurat %in% cells_interest, ]
+set.seed(12345)
+fit2 <- L_pm_subset[, interested_factors, drop = FALSE]
+colnames(fit2) <- paste0("k", interested_factors)
+fastTopics::structure_plot(
+  fit = fit2,
+  grouping = seurat_meta$annotation_level1[cells_seurat %in% cells_interest],
+  gap = 20, perplexity = 200, n = 2000
+)
+```
+
+
+## lung
+
+```{r, fig.height=2.75, fig.width=8.25, results="hide", message=FALSE}
+interested_organ <- "lung"
+
+cells_interest <- seurat_meta$cellID[seurat_meta$organ_simplified %in% c(interested_organ)]
+L_pm_subset <- L_pm_old[cells_seurat %in% cells_interest, ]
+set.seed(12345)
+fit2 <- L_pm_subset[, interested_factors, drop = FALSE]
+colnames(fit2) <- paste0("k", interested_factors)
+fastTopics::structure_plot(
+  fit = fit2,
+  grouping = seurat_meta$annotation_level1[cells_seurat %in% cells_interest],
+  gap = 20, perplexity = 200, n = 2000
+)
+```
+
+
+## submandibular gland
+
+```{r, fig.height=2.75, fig.width=8.25, results="hide", message=FALSE}
+interested_organ <- "submandibular gland"
+
+cells_interest <- seurat_meta$cellID[seurat_meta$organ_simplified %in% c(interested_organ)]
+L_pm_subset <- L_pm_old[cells_seurat %in% cells_interest, ]
+set.seed(12345)
+fit2 <- L_pm_subset[, interested_factors, drop = FALSE]
+colnames(fit2) <- paste0("k", interested_factors)
+fastTopics::structure_plot(
+  fit = fit2,
+  grouping = seurat_meta$annotation_level1[cells_seurat %in% cells_interest],
+  gap = 20, perplexity = 200, n = 2000
+)
+```
+
+
+## kidney
+
+```{r, fig.height=2.75, fig.width=8.25, results="hide", message=FALSE}
+interested_organ <- "kidney"
+
+cells_interest <- seurat_meta$cellID[seurat_meta$organ_simplified %in% c(interested_organ)]
+L_pm_subset <- L_pm_old[cells_seurat %in% cells_interest, ]
+set.seed(12345)
+fit2 <- L_pm_subset[, interested_factors, drop = FALSE]
+colnames(fit2) <- paste0("k", interested_factors)
+fastTopics::structure_plot(
+  fit = fit2,
+  grouping = seurat_meta$annotation_level1[cells_seurat %in% cells_interest],
+  gap = 20, perplexity = 200, n = 2000
+)
+```
+
+
+
+## pancreas
+
+```{r, fig.height=2.75, fig.width=8.25, results="hide", message=FALSE}
+interested_organ <- "pancreas"
+
+cells_interest <- seurat_meta$cellID[seurat_meta$organ_simplified %in% c(interested_organ)]
+L_pm_subset <- L_pm_old[cells_seurat %in% cells_interest, ]
+set.seed(12345)
+fit2 <- L_pm_subset[, interested_factors, drop = FALSE]
+colnames(fit2) <- paste0("k", interested_factors)
+fastTopics::structure_plot(
+  fit = fit2,
+  grouping = seurat_meta$annotation_level1[cells_seurat %in% cells_interest],
+  gap = 20, perplexity = 200, n = 2000
+)
+```
+

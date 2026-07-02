@@ -1,0 +1,3 @@
+# Figure S6. GP loadings recover protein-gated populations across GPs.
+
+Extension of Figure 6C–F to all well-aligned GPs, shown as two gallery pages (s6-1 and s6-2). For each GP, cells are shown twice on the same MDE embedding: left, cells passing a protein gate built from the GP's curated marker signature (positive markers above, negative below), with the gate size reported as "Matched n"; right, an equally sized set of cells with the highest GP loading. Highlighted cells are colored by two-dimensional density and all other cells are grey; thymocytes, proliferating, and "miniverse" cells are excluded. Each panel is labeled with its GP and protein signature.

@@ -1,0 +1,148 @@
+---
+title: "Linking factors with UMAP"
+author: "Ziang Zhang"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Process data
+
+```{r warning=FALSE, message=FALSE}
+source("https://raw.githubusercontent.com/stephenslab/single-cell-jamboree/refs/heads/main/code/group_factors.R")
+source("https://raw.githubusercontent.com/stephenslab/single-cell-jamboree/refs/heads/main/code/plot_loadings_on_umap.R")
+library(Seurat)
+library(Matrix)
+library(data.table)
+library(flashier)
+library(ggplot2)
+library(patchwork)
+library(cowplot)
+library(RColorBrewer)
+library(Biobase)
+library(ggpubr)
+library(gridExtra)
+library(fastTopics)
+library(tidyverse)
+library(moranfast)
+data_path <- "../data/"
+code_path <- "../code/"
+# data_path <- "data/"
+# code_path <- "code/"
+source(paste0(code_path, "ROC.R"))
+umap_result <- readRDS(paste0(data_path, "umap_result.rds"))
+colnames(umap_result) <- c("UMAP_1", "UMAP_2")
+seurat_meta <- readRDS(paste0(data_path, "seurat_meta.rds"))
+flashier_snmf_summary <- readRDS(paste0(data_path, "flashier_snmf_summary.rds"))
+colnames(flashier_snmf_summary$F_pm) <- paste0("K", 1:ncol(flashier_snmf_summary$F_pm))
+```
+
+```{r}
+plot_loadings_on_umap <- function(umap, loading, factor_num, size = 3) {
+  gplot <- ggplot(umap, aes(x = UMAP_1, y = UMAP_2)) +
+    geom_point(size = size, aes(alpha = loading, color = loading), 
+               show.legend = FALSE) +
+    labs(title = paste("factor ", factor_num) , x = "UMAP 1", y = "UMAP 2") +
+    theme_minimal() +
+    scale_color_gradient2(low="#f0f0f0", mid="#bdbdbd", high= "black") ##636363")
+  return(gplot)
+}
+```
+
+
+
+
+Normalization:
+
+```{r}
+# Normalize the L matrix based on 99 quantile
+D <- diag(1 / apply(flashier_snmf_summary$L_pm, 2, function(x) quantile(x,0.99)))
+L_pm <- flashier_snmf_summary$L_pm %*% D
+F_pm <- flashier_snmf_summary$F_pm %*% solve(D)
+colnames(F_pm) <- paste0("K", 1:ncol(F_pm))
+
+cells_flashier <- rownames(flashier_snmf_summary$L_pm)
+cells_seurat <- seurat_meta$cellID
+which(!cells_flashier %in% cells_seurat)
+
+L_pm <- L_pm[cells_flashier %in% cells_seurat, ]
+all(rownames(L_pm) == cells_seurat)
+
+L_pm_old <- L_pm
+colnames(L_pm_old) <- paste0("K", 1:ncol(L_pm_old))
+L_pm <- L_pm_old[, flashier_snmf_summary$pve > 1e-4]
+```
+
+## Compute the spatial correlation of each factor
+
+```{r eval=FALSE}
+compute_moran <- function(loading_index, sample_size = 10000){
+  sample_index <- sample(1:nrow(L_pm_old), size = min(sample_size, nrow(L_pm_old)), replace = FALSE)
+  loading <- L_pm_old[sample_index, loading_index]
+  # based on umap
+  moran <- moranfast(x = loading, c1 = umap_result[sample_index,1], c2 = umap_result[sample_index,2])
+  return(moran)
+}
+
+moran_list <- list()
+for (i in 1:ncol(L_pm_old)) {
+  # cat("Computing Moran's I for factor", i, "\n")
+  moran <- compute_moran(i)
+  moran_list[[i]] <- moran
+}
+saveRDS(moran_list, file = paste0(data_path, "moran_list_umap.rds"))
+```
+
+## Plot factors on UMAP
+
+Find the top factors with highest Moran's I
+
+```{r}
+# read the saved moran list
+moran_list <- readRDS(paste0(data_path, "moran_list_umap.rds"))
+moran_values <- sapply(moran_list, function(x) x$observed)
+names(moran_values) <- paste0("K", 1:length(moran_values))
+moran_values_sorted <- order(moran_values, decreasing = TRUE)
+moran_values_sorted
+```
+
+Some representative factors with high Moran's I:
+
+```{r}
+selected_factors <- c(7, 8, 14, 13) 
+plots <- list()
+sample_n <- 80000
+for (f in selected_factors) {
+  sample_index <- sample(1:nrow(L_pm_old), size = min(sample_n, nrow(L_pm_old)), replace = FALSE)
+  loading <- L_pm_old[sample_index, f]
+  
+  # # remove outliers defined by IQR
+  # Q1 <- quantile(loading, 0.25)
+  # Q3 <- quantile(loading, 0.75)
+  # IQR <- Q3 - Q1
+  # outlier_index <- which(loading > (Q3 + 10 * IQR))
+  # sample_index <- sample_index[-outlier_index]
+  # loading <- loading[-outlier_index]
+  
+  # normalize by column max
+  loading <- loading/max(na.omit(loading))
+  p <- plot_loadings_on_umap(umap = umap_result[sample_index,], loading = loading, factor_num = f, size = 1)
+  plots[[length(plots) + 1]] <- ggplotGrob(p)
+}
+
+# Combine the plots in a 2x2 grid
+combined_plot <- wrap_plots(plots, ncol = 2, nrow = 2)
+
+# Display the combined plot
+print(combined_plot)
+```
+
+
+
+
+
+
+
+
+
+

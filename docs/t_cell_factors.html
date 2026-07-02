@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Peter Carbonetto" />
+
+
+<title>Semi-NMF analysis of the T cell data</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">immgen-t factors</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Overview</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/stephenslab/immgen-t-factors">source</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Semi-NMF analysis of the T cell data</h1>
+<h4 class="author">Peter Carbonetto</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2025-09-26
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>immgen-t-factors/analysis/</code>
+<span class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.1). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed1code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(1)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed1code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(1)</code> was run prior to running the
+code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabimmgentfactorstreeefc67b002dec5946803652a6903e4ebd111c1d99targetblankefc67b0a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/stephenslab/immgen-t-factors/tree/efc67b002dec5946803652a6903e4ebd111c1d99" target="_blank">efc67b0</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabimmgentfactorstreeefc67b002dec5946803652a6903e4ebd111c1d99targetblankefc67b0a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/stephenslab/immgen-t-factors/tree/efc67b002dec5946803652a6903e4ebd111c1d99" target="_blank">efc67b0</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Untracked files:
+    Untracked:  data/flashier_snmf_ldf.RData
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/t_cell_factors.Rmd</code>) and
+HTML (<code>docs/t_cell_factors.html</code>) files. If you’ve configured
+a remote Git repository (see <code>?wflow_git_remote</code>), click on
+the hyperlinks in the table below to view the files as they were in that
+past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/efc67b002dec5946803652a6903e4ebd111c1d99/analysis/t_cell_factors.Rmd" target="_blank">efc67b0</a>
+</td>
+<td>
+Peter Carbonetto
+</td>
+<td>
+2025-09-26
+</td>
+<td>
+wflow_publish("t_cell_factors.Rmd", verbose = T, view = F)
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/e043a2bdd7f24f60e005468fc31f584ca059179a/analysis/t_cell_factors.Rmd" target="_blank">e043a2b</a>
+</td>
+<td>
+Peter Carbonetto
+</td>
+<td>
+2025-09-26
+</td>
+<td>
+Added a bunch of code to the t_cell_factors analysis for identifying
+candidate cell-type and organ factors.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/560000095a98f69ccd8a6a93b5d617c1232f2b0c/analysis/t_cell_factors.Rmd" target="_blank">5600000</a>
+</td>
+<td>
+Peter Carbonetto
+</td>
+<td>
+2025-09-26
+</td>
+<td>
+Modified the normalization of L in t_cell_factors.Rmd for bette
+Structure plots.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/fe55b4f9ae58d61977fce93f0dd16273c78f27fd/analysis/t_cell_factors.Rmd" target="_blank">fe55b4f</a>
+</td>
+<td>
+Peter Carbonetto
+</td>
+<td>
+2025-09-25
+</td>
+<td>
+Working on a new Structure plot in t_cell_factors.Rmd.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/b0fccc8d785771cc1c6f9c092c752d062e757733/analysis/t_cell_factors.Rmd" target="_blank">b0fccc8</a>
+</td>
+<td>
+Peter Carbonetto
+</td>
+<td>
+2025-09-25
+</td>
+<td>
+Added step to filter out some of the factors in the t_cell_factors
+analysis.
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/immgen-t-factors/f5c246a8c3609d180990223d3d7841b16b60aeec/docs/t_cell_factors.html" target="_blank">f5c246a</a>
+</td>
+<td>
+Peter Carbonetto
+</td>
+<td>
+2025-09-25
+</td>
+<td>
+First build of t_cell_factors analysis.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/immgen-t-factors/blob/a79455957ad3309b9529421cf216287bff78055a/analysis/t_cell_factors.Rmd" target="_blank">a794559</a>
+</td>
+<td>
+Peter Carbonetto
+</td>
+<td>
+2025-09-25
+</td>
+<td>
+wflow_publish("t_cell_factors.Rmd", verbose = T, view = F)
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<p>This is my attempt at making sense of the semi-NMF results (with
+<span class="math inline">\(K =
+200\)</span> factors).</p>
+<p>Load the packages needed for this analysis:</p>
+<pre class="r"><code>library(Matrix)
+library(fastTopics)
+library(flashier)
+library(ggplot2)
+library(cowplot)</code></pre>
+<p>Load the meta-data and the semi-NMF results:</p>
+<pre class="r"><code>load(&quot;../data/flashier_snmf_ldf.RData&quot;)
+L &lt;- fl_snmf_ldf$L
+F &lt;- fl_snmf_ldf$F
+rm(fl_snmf_ldf)</code></pre>
+<p>Renormalize the memberships in a way that leads to better Structure
+plots:</p>
+<pre class="r"><code>L &lt;- apply(L,2,function (x) x/quantile(x,0.999))</code></pre>
+<p>This is my attempt at identifying factors that might capture the
+major cell types (“level 1” annotation):</p>
+<pre class="r"><code>cell_type &lt;- sample_info$annotation_level1
+n &lt;- nlevels(cell_type)
+k &lt;- ncol(L)
+B &lt;- matrix(0,k,n)
+rownames(B) &lt;- colnames(L)
+colnames(B) &lt;- levels(cell_type)
+for (i in levels(cell_type)) {
+  j &lt;- which(cell_type == i)
+  B[,i] &lt;- apply(L[j,],2,median)
+}
+y &lt;- apply(B,1,function (x) diff(range(x)))
+k_set &lt;- order(y,decreasing = TRUE)
+qplot(1:k,y[k_set]) +
+  labs(x = &quot;rank&quot;,y = &quot;value&quot;) +
+  theme_cowplot(font_size = 12)
+# Warning: `qplot()` was deprecated in ggplot2 3.4.0.
+# This warning is displayed once every 8 hours.
+# Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+# generated.</code></pre>
+<p><img src="figure/t_cell_factors.Rmd/identify-cell-type-factors-1-1.png" width="300" style="display: block; margin: auto;" /></p>
+<p>These are the factors that show the largest differences:</p>
+<pre class="r"><code>y[y &gt; 0.1]
+#        k3        k7       k22       k27       k29       k30       k32       k58 
+# 0.3022671 0.1884079 0.1634978 0.1082307 0.3125011 0.3994922 0.1283452 0.4154239 
+#       k68       k80      k101      k127      k171 
+# 0.3277134 0.2531395 0.1658992 0.1437492 0.2382274</code></pre>
+<p>Now create a Structure plot with the cells grouped by major cell-type
+(the “level 1” annotation):</p>
+<pre class="r"><code>set.seed(1)
+cell_type_factors &lt;- c(&quot;k3&quot;,&quot;k7&quot;,&quot;k22&quot;,&quot;k27&quot;,&quot;k29&quot;,&quot;k30&quot;,&quot;k58&quot;,&quot;k68&quot;,
+                       &quot;k101&quot;,&quot;k127&quot;)
+cell_type &lt;- sample_info$annotation_level1
+cells &lt;- which(cell_type == &quot;CD4&quot; | cell_type == &quot;CD8&quot;)
+cells &lt;- sample(cells,1e5)
+cells &lt;- sort(c(cells,which(cell_type != &quot;CD4&quot; &amp; cell_type != &quot;CD8&quot;)))
+structure_plot(L[cells,cell_type_factors],gap = 10,n = 2000,
+                    grouping = cell_type[cells]) +
+  labs(y = &quot;membership&quot;,color = &quot;&quot;,fill = &quot;&quot;) +
+  ylim(0,3) +
+  theme(legend.position = &quot;bottom&quot;)
+# Warning: Removed 3 rows containing missing values or values outside the scale range
+# (`geom_col()`).</code></pre>
+<p><img src="figure/t_cell_factors.Rmd/structure-plot-by-cell-type-1.png" width="870" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>i &lt;- which(sample_info$annotation_level1 == &quot;CD8aa&quot;)
+j &lt;- which(sample_info$annotation_level1 != &quot;CD8aa&quot;)
+prop_in  &lt;- colMeans(L[i,])
+prop_out &lt;- colMeans(L[j,])
+plot(prop_in,prop_out,pch = 20)
+which(prop_in &gt; 0.02 &amp; prop_out &lt; 0.01)</code></pre>
+<p>Next let’s look for factors that correspond well with the organs.</p>
+<pre class="r"><code>organ &lt;- sample_info$organ_simplified
+n &lt;- nlevels(organ)
+k &lt;- ncol(L)
+B &lt;- matrix(0,k,n)
+rownames(B) &lt;- colnames(L)
+colnames(B) &lt;- levels(organ)
+for (i in levels(organ)) {
+  j &lt;- which(organ == i)
+  B[,i] &lt;- apply(L[j,],2,median)
+}
+y &lt;- apply(B,1,function (x) diff(range(x)))
+k_set &lt;- order(y,decreasing = TRUE)
+qplot(1:k,y[k_set]) +
+  labs(x = &quot;rank&quot;,y = &quot;value&quot;) +
+  theme_cowplot(font_size = 12)</code></pre>
+<p><img src="figure/t_cell_factors.Rmd/identify-organ-factors-1-1.png" width="300" style="display: block; margin: auto;" /></p>
+<p>These are the factors that show the largest differences:</p>
+<pre class="r"><code>y[y &gt; 0.1]
+#        k1        k3        k4       k11       k22       k23       k25       k26 
+# 0.2023193 0.4901934 0.4563594 0.3772909 0.1077751 0.1838901 0.2120120 0.4603664 
+#       k29       k30       k32       k35       k41       k43       k49       k51 
+# 0.5263798 0.1539460 0.1740245 0.4198034 0.3575829 0.4623533 0.3472607 0.1324474 
+#       k58       k62       k63       k80      k100      k101      k163      k166 
+# 0.2683655 0.3920622 0.1621562 0.3582005 0.1213145 0.2195654 0.1130597 0.1971944 
+#      k170      k171      k174 
+# 0.2391606 0.2214667 0.1394525</code></pre>
+<pre class="r"><code>set.seed(1)
+organ_factors &lt;- c(&quot;k3&quot;,&quot;k11&quot;,&quot;k22&quot;,&quot;k29&quot;,&quot;k30&quot;,&quot;k62&quot;,&quot;k63&quot;,&quot;k100&quot;,
+                   &quot;k101&quot;,&quot;k174&quot;)
+organ &lt;- sample_info$organ_simplified
+cells &lt;- sort(c(sample(which(organ == &quot;spleen&quot;),6e4),
+                sample(which(organ == &quot;LN&quot;),6e4),
+                which(organ != &quot;spleen&quot; &amp; organ != &quot;LN&quot;)))
+structure_plot(L[cells,organ_factors],gap = 10,n = 2000,
+                 grouping = organ[cells]) +
+  labs(y = &quot;membership&quot;,color = &quot;&quot;,fill = &quot;&quot;) +
+  ylim(0,3) +
+  theme(legend.position = &quot;bottom&quot;)
+# Warning: Removed 4 rows containing missing values or values outside the scale range
+# (`geom_col()`).</code></pre>
+<p><img src="figure/t_cell_factors.Rmd/structure-plot-by-organ-1.png" width="870" style="display: block; margin: auto;" /></p>
+<p><em>D.Z.:</em> There should be a gene program specific for the
+“resting” clusters (CD8_cl1/2, Treg_cl1/7, CD4_cl1/2) with typically
+Sell/Ccr7/Lef1/Satb1. Lots of cells, clear pattern that has been known
+for a long time.</p>
+<pre class="r"><code>target_clusters &lt;- c(&quot;CD8_cl1&quot;,&quot;CD8_cl2&quot;,&quot;Treg_cl1&quot;,&quot;Treg_cl7&quot;,
+                     &quot;CD4_cl1&quot;,&quot;CD4_cl2&quot;)
+i &lt;- which(is.element(sample_info$annotation_level2,target_clusters))
+j &lt;- which(!is.element(sample_info$annotation_level2,target_clusters))
+med_in  &lt;- apply(L[i,],2,median)
+med_out &lt;- apply(L[j,],2,median)
+y &lt;- med_in - med_out
+k_set &lt;- order(y,decreasing = TRUE)
+y[y &gt; 0.005]
+qplot(1:k,y[k_set]) +
+  labs(x = &quot;rank&quot;,y = &quot;value&quot;) +
+  theme_cowplot(font_size = 12)</code></pre>
+<p><img src="figure/t_cell_factors.Rmd/identify-resting-factors-1.png" width="300" style="display: block; margin: auto;" /></p>
+<pre><code>#         k11         k41         k43         k49         k58        k166 
+# 0.009649899 0.057206192 0.008471371 0.011521025 0.110809451 0.007246513 
+#        k171 
+# 0.020309567</code></pre>
+<p>Here’s the Structure plot for visualizing some of the candidate
+“resting” factors:</p>
+<pre class="r"><code>set.seed(1)
+target_factors &lt;- c(&quot;k11&quot;,&quot;k41&quot;,&quot;k43&quot;)
+cells &lt;- which(is.element(sample_info$annotation_level2,target_clusters))
+p1 &lt;- structure_plot(L[cells,target_factors],gap = 10,n = 2000,
+                 grouping = sample_info[cells,&quot;annotation_level2&quot;],
+                 topics = 1:3) +
+  labs(y = &quot;membership&quot;,color = &quot;&quot;,fill = &quot;&quot;) +
+  theme(legend.position = &quot;bottom&quot;) +
+  ylim(0,2)
+cells &lt;- which(cell_type == &quot;CD4&quot; | cell_type == &quot;CD8&quot;)
+cells &lt;- sample(cells,1e5)
+cells &lt;- sort(c(cells,which(cell_type != &quot;CD4&quot; &amp; cell_type != &quot;CD8&quot;)))
+p2 &lt;- structure_plot(L[cells,target_factors],gap = 10,n = 2000,
+                     grouping = cell_type[cells],topics = 1:3) +
+  labs(y = &quot;membership&quot;,color = &quot;&quot;,fill = &quot;&quot;) +
+  theme(legend.position = &quot;bottom&quot;) +
+  ylim(0,2)
+plot_grid(p1,p2,nrow = 2,ncol = 1)
+# Warning: Removed 2 rows containing missing values or values outside the scale range
+# (`geom_col()`).</code></pre>
+<p><img src="figure/t_cell_factors.Rmd/structure-plot-resting-1.png" width="870" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()
+# R version 4.3.3 (2024-02-29)
+# Platform: aarch64-apple-darwin20 (64-bit)
+# Running under: macOS 15.6.1
+# 
+# Matrix products: default
+# BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
+# LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+# 
+# locale:
+# [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+# 
+# time zone: America/Chicago
+# tzcode source: internal
+# 
+# attached base packages:
+# [1] stats     graphics  grDevices utils     datasets  methods   base     
+# 
+# other attached packages:
+# [1] cowplot_1.1.3     ggplot2_3.5.2     flashier_1.0.56   ebnm_1.1-34      
+# [5] fastTopics_0.7-25 Matrix_1.6-5     
+# 
+# loaded via a namespace (and not attached):
+#  [1] softImpute_1.4-3     gtable_0.3.6         xfun_0.52           
+#  [4] bslib_0.9.0          htmlwidgets_1.6.4    ggrepel_0.9.6       
+#  [7] lattice_0.22-5       quadprog_1.5-8       vctrs_0.6.5         
+# [10] tools_4.3.3          generics_0.1.4       parallel_4.3.3      
+# [13] Polychrome_1.5.1     tibble_3.3.0         pkgconfig_2.0.3     
+# [16] data.table_1.17.6    SQUAREM_2021.1       RColorBrewer_1.1-3  
+# [19] scatterplot3d_0.3-44 RcppParallel_5.1.10  lifecycle_1.0.4     
+# [22] truncnorm_1.0-9      compiler_4.3.3       farver_2.1.2        
+# [25] stringr_1.5.1        git2r_0.33.0         progress_1.2.3      
+# [28] RhpcBLASctl_0.23-42  httpuv_1.6.14        htmltools_0.5.8.1   
+# [31] sass_0.4.10          yaml_2.3.10          lazyeval_0.2.2      
+# [34] plotly_4.11.0        later_1.4.2          pillar_1.11.0       
+# [37] crayon_1.5.3         jquerylib_0.1.4      whisker_0.4.1       
+# [40] tidyr_1.3.1          uwot_0.2.3           cachem_1.1.0        
+# [43] trust_0.1-8          gtools_3.9.5         tidyselect_1.2.1    
+# [46] digest_0.6.37        Rtsne_0.17           stringi_1.8.7       
+# [49] reshape2_1.4.4       dplyr_1.1.4          purrr_1.0.4         
+# [52] ashr_2.2-66          labeling_0.4.3       splines_4.3.3       
+# [55] rprojroot_2.0.4      fastmap_1.2.0        grid_4.3.3          
+# [58] colorspace_2.1-0     cli_3.6.5            invgamma_1.2        
+# [61] magrittr_2.0.3       dichromat_2.0-0.1    withr_3.0.2         
+# [64] prettyunits_1.2.0    scales_1.4.0         promises_1.3.3      
+# [67] horseshoe_0.2.0      rmarkdown_2.29       httr_1.4.7          
+# [70] deconvolveR_1.2-1    workflowr_1.7.1      hms_1.1.3           
+# [73] pbapply_1.7-2        evaluate_1.0.4       knitr_1.50          
+# [76] irlba_2.3.5.1        viridisLite_0.4.2    rlang_1.1.6         
+# [79] Rcpp_1.1.0           mixsqp_0.3-54        glue_1.8.0          
+# [82] jsonlite_2.0.0       plyr_1.8.9           R6_2.6.1            
+# [85] fs_1.6.6</code></pre>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

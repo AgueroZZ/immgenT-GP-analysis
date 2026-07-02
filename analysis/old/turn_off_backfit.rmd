@@ -1,0 +1,453 @@
+---
+title: "Turning off backfitting for semi-NMF"
+author: "Ziang Zhang"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+knitr::opts_chunk$set(
+  message = FALSE,   
+  warning = FALSE,   
+  results = "hold"   
+)
+```
+
+
+One conjecture we have so far is that the backfitting procedure may exacerbate the cancelling out effect in semi-nmf.
+
+To confirm this, we will take a look at the full analysis where we turn off backfitting.
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(fastTopics)
+library(qs)
+library(cowplot)
+library(ggrepel)
+library(patchwork)
+
+data_path <- "../data/"
+code_path <- "../code/"
+# data_path <- "data/"
+# code_path <- "code/"
+
+seurat_meta <- readRDS(paste0(data_path, "seurat_meta.rds"))
+flashier_snmf_summary <- readRDS(paste0(data_path, "flashier_snmf_summary.rds"))
+flashier_snmf_summary_noback <- qs::qread(paste0(data_path, "fit_replicate_summary_noback.qs"))
+```
+
+
+To make the comparison clear, we will use the same way to normalize the L matrix, by dividing each column by its maximum.
+
+```{r}
+L_pm <- flashier_snmf_summary$L_pm
+F_pm <- flashier_snmf_summary$F_pm
+L_pm_noback <- flashier_snmf_summary_noback$L_pm
+F_pm_noback <- flashier_snmf_summary_noback$F_pm
+
+D <- diag(1 / apply(L_pm, 2, function(x) max(x)))
+L_pm <- L_pm %*% D
+F_pm <- F_pm %*% solve(D)
+
+D_noback <- diag(1 / apply(L_pm_noback, 2, function(x) max(x)))
+L_pm_noback <- L_pm_noback %*% D_noback
+F_pm_noback <- F_pm_noback %*% solve(D_noback)
+```
+
+Take the overlap of cells in the resulting L matrices.
+
+```{r}
+common_cells <- intersect(rownames(L_pm), rownames(L_pm_noback))
+L_pm <- L_pm[common_cells, ]
+L_pm_noback <- L_pm_noback[common_cells, ]
+```
+
+
+## Comparing the factors with and without backfitting
+
+Next, let's apply the hungarian algorithm to match the factors from the two analyses, based on the cosine similarity of the L matrices.
+
+```{r}
+compute_cosine_sim_matrix <- function(L1, L2){
+  norms1 <- apply(L1, 2, function(x){sqrt(sum(x^2))})
+  norms1[norms1 == 0] <- Inf
+  
+  norms2 <- apply(L2, 2, function(x){sqrt(sum(x^2))})
+  norms2[norms2 == 0] <- Inf
+  
+  L1_normalized <- t(t(L1)/norms1)
+  L2_normalized <- t(t(L2)/norms2)
+  
+  #compute matrix of cosine similarities
+  cosine_sim_matrix <- crossprod(L1_normalized, L2_normalized)
+  
+  return(cosine_sim_matrix)
+}
+cos_sim <- compute_cosine_sim_matrix(L_pm, L_pm_noback)
+assignment_problem <- RcppHungarian::HungarianSolver(-1*cos_sim)
+```
+
+Out of curiosity, let's see the factors that got matched to different factors after backfitting.
+
+```{r}
+head(assignment_problem$pairs[assignment_problem$pairs[,1] != assignment_problem$pairs[,2], ])
+```
+
+Most of the interesting factors got matched to the same factor index.
+
+```{r}
+match_results <- data.frame(
+  Factor_with_backfit = paste0("K", assignment_problem$pairs[,1]),
+  Factor_without_backfit = paste0("K", assignment_problem$pairs[,2]),
+  Cosine_Similarity = cos_sim[cbind(assignment_problem$pairs[,1], assignment_problem$pairs[,2])]
+)
+
+head(match_results)
+```
+
+
+To examine how severe the cancelling out effect is for each factor, we look at the histogram of the corresponding factors:
+
+```{r}
+selected_cols <- c(3, 58, 68, 171)
+plot_list <- list()
+
+for(i in selected_cols){
+  j <- assignment_problem$pairs[assignment_problem$pairs[,1] == i, 2]
+  df <- data.frame(
+    value = c(F_pm[, i], F_pm_noback[, j]),
+    type = rep(c("With backfitting", "Without backfitting"),
+               each = nrow(F_pm))
+  )
+  p <- ggplot(df, aes(x = value, fill = type)) +
+    geom_histogram(aes(y = after_stat(density)),
+                   position = "identity", alpha = 0.4, bins = 100) +
+    scale_fill_manual(values = c("blue", "darkgreen")) +
+    labs(title = paste0("Factor ", i, " vs ", j),
+         x = "F values", y = "Density") +
+    theme_minimal() +
+    theme(legend.position = "top",
+          plot.title = element_text(size = 12, face = "bold"))
+  plot_list[[i]] <- p
+}
+
+wrap_plots(plot_list[selected_cols], ncol = 2)
+```
+
+Also visualize using boxplots:
+
+```{r}
+selected_cols <- c(1, 3, 58, 68)
+
+pair_dfs <- lapply(selected_cols, function(i) {
+  # j: the matched factor index (no-backfitting)
+  j <- assignment_problem$pairs[assignment_problem$pairs[, 1] == i, 2]
+  data.frame(
+    value = c(F_pm[, i], F_pm_noback[, j]),
+    type  = rep(c("With backfitting", "Without backfitting"), each = nrow(F_pm)),
+    panel = paste0("Factor ", i, " vs ", j),
+    stringsAsFactors = FALSE
+  )
+})
+
+df_box <- do.call(rbind, pair_dfs)
+
+p_box <- ggplot(df_box, aes(x = type, y = value, fill = type)) +
+  geom_boxplot(width = 0.18, outlier.alpha = 0.3, notch = TRUE, outliers = TRUE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  scale_fill_manual(values = c("With backfitting" = "blue",
+                               "Without backfitting" = "darkgreen")) +
+  labs(x = NULL, y = "F values", title = "Factor distributions: backfitting vs no-backfitting") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        strip.text = element_text(face = "bold"),
+        axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+  facet_wrap(~ panel, ncol = 2, scales = "free_y")   # free_y: ranges differ by factor
+
+p_box
+```
+
+
+I am also interested in seeing the how the maximum F values differ between the two analyses.
+
+```{r}
+# based on the hungarian matching
+max_df <- data.frame(
+  Factor_with_backfit   = paste0("K", seq_len(ncol(F_pm))),
+  Factor_without_backfit= paste0("K", assignment_problem$pairs[, 2]),
+  Max_F_with_backfit    = apply(F_pm, 2, max, na.rm = TRUE),
+  Max_F_without_backfit = sapply(assignment_problem$pairs[, 2],
+                                 function(j) max(F_pm_noback[, j], na.rm = TRUE))
+)
+```
+
+```{r}
+# find the 5 factors with the largest Max_F_with_backfit
+top_extreme <- max_df %>%
+  dplyr::arrange(desc(Max_F_with_backfit)) %>%
+  dplyr::slice_head(n = 5)
+
+ggplot(max_df, aes(x = Max_F_with_backfit, y = Max_F_without_backfit)) +
+  geom_point(color = "darkorange", alpha = 0.6) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "blue") +
+  geom_text_repel(
+    data = top_extreme,
+    aes(label = Factor_with_backfit),
+    size = 3.5, color = "black",
+    box.padding = 0.3, max.overlaps = Inf
+  ) +
+  labs(
+    title = "Max F values: with backfitting vs without backfitting",
+    x = "Max F with backfitting",
+    y = "Max F without backfitting"
+  ) +
+  coord_cartesian(
+    xlim = c(0, max(c(max_df$Max_F_with_backfit, max_df$Max_F_without_backfit))),
+    ylim = c(0, max(c(max_df$Max_F_with_backfit, max_df$Max_F_without_backfit)))
+  ) +
+  theme_minimal()
+```
+
+Also, take a look at the total membership:
+
+```{r}
+pdat <- data.frame(x = rowSums(L_pm))
+p1 <- ggplot(pdat,aes(x = x)) +
+  geom_histogram(bins = 1000,color = "black",fill = "black") +
+  labs(x = "") +
+  scale_x_log10() +
+  theme_cowplot(font_size = 12)
+
+pdat_noback <- data.frame(x = rowSums(L_pm_noback))
+p2 <- ggplot(pdat_noback,aes(x = x)) +
+  geom_histogram(bins = 1000,color = "black",fill = "black") +
+  labs(x = "") +
+  scale_x_log10() +
+  theme_cowplot(font_size = 12)
+
+wrap_plots(p1 + labs(title = "With backfitting"),
+           p2 + labs(title = "Without backfitting"),
+           ncol = 2)
+```
+
+How many cells would be filtered out if we use Peter's iterative approach:
+
+```{r}
+filter_cells_by_total_membership <- function (L, max_val = 10, numiter = 10) {
+  n <- nrow(L)
+  rows <- 1:n
+  for (iter in 1:numiter) {
+    x <- rowSums(L)
+    cat(sprintf("%d. Filtered out %d cells.\n",iter,sum(x > max_val)))
+    i <- which(x <= max_val)
+    L <- L[i,]
+    rows <- rows[i]
+    d <- apply(L,2,max)
+    L <- scale_cols(L,1/d)
+  }
+  return(rows)
+}
+
+scale_cols <- function (A, b)
+  t(t(A) * b)
+
+cells <- filter_cells_by_total_membership(L_pm,numiter = 12)
+cells_noback <- filter_cells_by_total_membership(L_pm_noback,numiter = 12)
+```
+
+```{r}
+nrow(L_pm) - length(cells)
+nrow(L_pm_noback) - length(cells_noback)
+```
+
+Clearly the iterative filtering procedure removes more cells when backfitting is used.
+
+## Number of matched factors with/without backfitting
+
+Next, let's see how many factors could be matched by the two halved analyses, with and without backfitting.
+
+```{r}
+flashier_snmf_summary1 <- qs::qread(paste0(data_path, "fit1_summary.qs"))
+flashier_snmf_summary1_noback <- qs::qread(paste0(data_path, "fit1_summary_noback.qs"))
+
+flashier_snmf_summary2 <- qs::qread(paste0(data_path, "fit2_summary.qs"))
+flashier_snmf_summary2_noback <- qs::qread(paste0(data_path, "fit2_summary_noback.qs"))
+```
+
+```{r}
+L_pm1 <- flashier_snmf_summary1$L_pm
+F_pm1 <- flashier_snmf_summary1$F_pm
+L_pm_noback1 <- flashier_snmf_summary1_noback$L_pm
+F_pm_noback1 <- flashier_snmf_summary1_noback$F_pm
+
+L_pm2 <- flashier_snmf_summary2$L_pm
+F_pm2 <- flashier_snmf_summary2$F_pm
+L_pm_noback2 <- flashier_snmf_summary2_noback$L_pm
+F_pm_noback2 <- flashier_snmf_summary2_noback$F_pm
+
+D1 <- diag(1 / apply(L_pm1, 2, function(x) max(x)))
+L_pm1 <- L_pm1 %*% D1
+F_pm1 <- F_pm1 %*% solve(D1)
+
+D2 <- diag(1 / apply(L_pm2, 2, function(x) max(x)))
+L_pm2 <- L_pm2 %*% D2
+F_pm2 <- F_pm2 %*% solve(D2)
+
+D_noback1 <- diag(1 / apply(L_pm_noback1, 2, function(x) max(x)))
+L_pm_noback1 <- L_pm_noback1 %*% D_noback1
+F_pm_noback1 <- F_pm_noback1 %*% solve(D_noback1)
+
+D_noback2 <- diag(1 / apply(L_pm_noback2, 2, function(x) max(x)))
+L_pm_noback2 <- L_pm_noback2 %*% D_noback2
+F_pm_noback2 <- F_pm_noback2 %*% solve(D_noback2)
+```
+
+To ensure fair comparison, we will only keep the genes that are common to both analyses.
+
+```{r}
+common_genes <- intersect(rownames(F_pm1), rownames(F_pm2))
+F_pm1 <- F_pm1[common_genes, ]
+F_pm2 <- F_pm2[common_genes, ]
+
+common_genes_noback <- intersect(rownames(F_pm_noback1), rownames(F_pm_noback2))
+F_pm_noback1 <- F_pm_noback1[common_genes_noback, ]
+F_pm_noback2 <- F_pm_noback2[common_genes_noback, ]
+```
+
+
+Let's see the matching results for the two analyses with backfitting, based on cosine similarity of the F matrices.
+
+```{r}
+cos_sim_backfit <- compute_cosine_sim_matrix(F_pm1, F_pm2)
+assignment_problem_backfit <- RcppHungarian::HungarianSolver(-1 * cos_sim_backfit)
+match_results_backfit <- data.frame(
+  Factor_in_fit1 = paste0("K", assignment_problem_backfit$pairs[,1]),
+  Factor_in_fit2 = paste0("K", assignment_problem_backfit$pairs[,2]),
+  Cosine_Similarity = cos_sim_backfit[cbind(assignment_problem_backfit$pairs[,1], assignment_problem_backfit$pairs[,2])]
+)
+# count number of matched factors with cosine similarity > 0.5
+sum(match_results_backfit$Cosine_Similarity > 0.5)
+```
+
+Now, let's see the matching results for the two analyses without backfitting.
+
+```{r}
+cos_sim_noback <- compute_cosine_sim_matrix(F_pm_noback1, F_pm_noback2)
+assignment_problem_noback <- RcppHungarian::HungarianSolver(-1 * cos_sim_noback)
+match_results_noback <- data.frame(
+  Factor_in_fit1 = paste0("K", assignment_problem_noback$pairs[,1]),
+  Factor_in_fit2 = paste0("K", assignment_problem_noback$pairs[,2]),
+  Cosine_Similarity = cos_sim_noback[cbind(assignment_problem_noback$pairs[,1], assignment_problem_noback$pairs[,2])]
+)
+# count number of matched factors with cosine similarity > 0.5
+sum(match_results_noback$Cosine_Similarity > 0.5)
+```
+
+It seems like without backfitting, we are able to recover more matched factors between the two halved analyses.
+
+Just to confirm this is not due to Hungarian algorithm, let's also try matching based on optimizing the cosine similarity of the L matrices.
+
+```{r}
+match_results_backfit_opt <- data.frame(
+  Factor_in_fit1 = paste0("K", 1:ncol(F_pm1)),
+  Factor_in_fit2 = apply(cos_sim_backfit, 1, function(x) paste0("K", which.max(x))),
+  Cosine_Similarity = apply(cos_sim_backfit, 1, max)
+)
+sum(match_results_backfit_opt$Cosine_Similarity > 0.5)
+```
+
+```{r}
+match_results_no_backfit_opt <- data.frame(
+  Factor_in_fit1 = paste0("K", 1:ncol(F_pm_noback1)),
+  Factor_in_fit2 = apply(cos_sim_noback, 1, function(x) paste0("K", which.max(x))),
+  Cosine_Similarity = apply(cos_sim_noback, 1, max)
+)
+sum(match_results_no_backfit_opt$Cosine_Similarity > 0.5)
+```
+
+Still, we see more matched factors without backfitting.
+
+Now, let's make the validation more stringent: we first match the factors based on the full data analysis (with and without backfitting), and then see how many of these matched factors can be recovered in both the two halved analyses, and between the two halved analyses.
+
+Let's first get the common genes among all F matrices.
+
+```{r}
+common_genes <- intersect(common_genes, rownames(F_pm))
+F_pm1 <- F_pm1[common_genes, ]
+F_pm2 <- F_pm2[common_genes, ]
+F_pm <- F_pm[common_genes, ]
+
+common_genes_noback <- intersect(common_genes_noback, rownames(F_pm_noback))
+F_pm_noback1 <- F_pm_noback1[common_genes_noback, ]
+F_pm_noback2 <- F_pm_noback2[common_genes_noback, ]
+F_pm_noback <- F_pm_noback[common_genes_noback, ]
+```
+
+
+Now, get the matched factors based on the full data analyses.
+
+```{r}
+cos_sim_full_1_backfit <- compute_cosine_sim_matrix(F_pm, F_pm1)
+cos_sim_full_2_backfit <- compute_cosine_sim_matrix(F_pm, F_pm2)
+cos_sim_1_2_backfit <- compute_cosine_sim_matrix(F_pm1, F_pm2)
+assignment_problem_full_1_backfit <- RcppHungarian::HungarianSolver(-1 * cos_sim_full_1_backfit)
+assignment_problem_full_2_backfit <- RcppHungarian::HungarianSolver(-1 * cos_sim_full_2_backfit)
+assignment_problem_1_2_backfit <- RcppHungarian::HungarianSolver(-1 * cos_sim_1_2_backfit)
+```
+
+Let's see how many of these matched factors could be validated in the two halved analyses.
+
+```{r}
+matched_factors_backfit <- data.frame(
+  Factor_in_full = paste0("K", assignment_problem_full_1_backfit$pairs[,1]),
+  Factor_in_fit1 = paste0("K", assignment_problem_full_1_backfit$pairs[,2]),
+  Factor_in_fit2 = paste0("K", assignment_problem_full_2_backfit$pairs[assignment_problem_full_1_backfit$pairs[,1], 2])
+)
+
+matched_factors_backfit$cosine_F1 <- cos_sim_full_1_backfit[assignment_problem_full_1_backfit$pairs]
+matched_factors_backfit$cosine_F2 <- cos_sim_full_2_backfit[assignment_problem_full_2_backfit$pairs]
+matched_factors_backfit$cosine_F1_2 <- cos_sim_1_2_backfit[assignment_problem_1_2_backfit$pairs]
+
+matched_factors_backfit$validated <- (matched_factors_backfit$cosine_F1 > 0.5) &
+  (matched_factors_backfit$cosine_F2 > 0.5) &
+  (matched_factors_backfit$cosine_F1_2 > 0.5)
+
+sum(matched_factors_backfit$validated)
+```
+
+
+
+Now, do the same for the analyses without backfitting.
+
+```{r}
+cos_sim_full_1_nobackfit <- compute_cosine_sim_matrix(F_pm_noback, F_pm_noback1)
+cos_sim_full_2_nobackfit <- compute_cosine_sim_matrix(F_pm_noback, F_pm_noback2)
+cos_sim_1_2_nobackfit <- compute_cosine_sim_matrix(F_pm_noback1, F_pm_noback2)
+assignment_problem_full_1_nobackfit <- RcppHungarian::HungarianSolver(-1 * cos_sim_full_1_nobackfit)
+assignment_problem_full_2_nobackfit <- RcppHungarian::HungarianSolver(-1 * cos_sim_full_2_nobackfit)
+assignment_problem_1_2_nobackfit <- RcppHungarian::HungarianSolver(-1 * cos_sim_1_2_nobackfit)
+```
+
+```{r}
+matched_factors_nobackfit <- data.frame(
+  Factor_in_full = paste0("K", assignment_problem_full_1_nobackfit$pairs[,1]),
+  Factor_in_fit1 = paste0("K", assignment_problem_full_1_nobackfit$pairs[,2]),
+  Factor_in_fit2 = paste0("K", assignment_problem_full_2_nobackfit$pairs[assignment_problem_full_1_nobackfit$pairs[,1], 2])
+)
+
+matched_factors_nobackfit$cosine_F1 <- cos_sim_full_1_nobackfit[assignment_problem_full_1_nobackfit$pairs]
+matched_factors_nobackfit$cosine_F2 <- cos_sim_full_2_nobackfit[assignment_problem_full_2_nobackfit$pairs]
+matched_factors_nobackfit$cosine_F1_2 <- cos_sim_1_2_nobackfit[assignment_problem_1_2_nobackfit$pairs]
+
+matched_factors_nobackfit$validated <- (matched_factors_nobackfit$cosine_F1 > 0.5) &
+  (matched_factors_nobackfit$cosine_F2 > 0.5) &
+  (matched_factors_nobackfit$cosine_F1_2 > 0.5)
+
+sum(matched_factors_nobackfit$validated)
+```
+
+
+
+

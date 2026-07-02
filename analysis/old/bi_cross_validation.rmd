@@ -1,0 +1,326 @@
+---
+title: "bi_cross_validation"
+author: "Ziang Zhang"
+date: "2025-12-22"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Predicting CITE-seq using scRNA GEPs
+
+```{r}
+# Load necessary libraries
+library(ggplot2)
+library(ggrepel)
+library(patchwork)
+library(cowplot)
+library(fastTopics)
+library(dplyr)
+library(pheatmap)
+library(scales)
+library(scattermore)
+library(qs)
+
+# data_path <- "../data/"
+data_path <- "data/"
+full <- readRDS(paste0(data_path, "protein_flash_selected_summary_lognorm.rds"))
+partA <- qs::qread(paste0(data_path, "fit1_summary.qs"))
+partB <- readRDS(paste0(data_path, "GEP_flash_selected_summary_testB.rds"))
+partC <- readRDS(paste0(data_path, "protein_flash_selected_summary_train_C.rds"))
+
+protein_mat_normalized_lognorm <- readRDS(paste0(data_path, "protein_mat_normalized_lognorm.rds")) 
+```
+
+The best fitted CITE-seq matrix using GEP loadings:
+
+```{r}
+# included_cells <- intersect(rownames(partB$L_pm), rownames(full$L_pm))
+L_pm <- full$L_pm
+F_pm <- full$F_pm
+predicted_citeseq <- L_pm %*% t(F_pm)
+true_citeseq <- protein_mat_normalized_lognorm
+```
+
+```{r}
+all_test_cells <- intersect(rownames(predicted_citeseq), rownames(true_citeseq))
+all_test_genes <- intersect(colnames(predicted_citeseq), colnames(true_citeseq))
+
+predicted_citeseq <- predicted_citeseq[all_test_cells, all_test_genes]
+true_citeseq <- true_citeseq[all_test_cells, all_test_genes]
+```
+
+```{r}
+residual_mat <- true_citeseq - predicted_citeseq
+
+# aggregate the error by protein to rMSE
+rMSE_by_protein <- apply(residual_mat, 2, function(x) sqrt(mean(x^2)))
+rMSE_by_protein <- data.frame(protein = names(rMSE_by_protein),
+                                     rMSE = rMSE_by_protein)
+
+# compute the relative error by dividing the protein-level standard deviation
+rel_rMSE_by_protein <- rMSE_by_protein %>%
+  left_join(data.frame(protein = colnames(true_citeseq),
+                       SD = apply(true_citeseq, 2, sd)),
+            by = "protein") %>%
+  mutate(rel_rMSE = rMSE / SD)
+
+# plot the distribution of relative error
+ggplot(rel_rMSE_by_protein, aes(x = rel_rMSE)) +
+  geom_histogram(bins = 50, fill = "lightblue", color = "black") +
+  theme_minimal() +
+  labs(title = "Distribution of Relative rMSE by Protein",
+       x = "Relative rMSE",
+       y = "Frequency")
+
+# aggregate the error by cell
+rMSE_by_cell <- apply(residual_mat, 1, function(x) sqrt(mean(x^2)))
+rMSE_by_cell <- data.frame(cell = names(rMSE_by_cell),
+                           rMSE = rMSE_by_cell)
+# compute the relative error by dividing the cell-level standard deviation
+rel_rMSE_by_cell <- rMSE_by_cell %>%
+  left_join(data.frame(cell = rownames(true_citeseq),
+                       SD = apply(true_citeseq, 1, sd)),
+            by = "cell") %>%
+  mutate(rel_rMSE = rMSE / SD)
+# plot the distribution of relative error by cell
+ggplot(rel_rMSE_by_cell, aes(x = rel_rMSE)) +
+  geom_histogram(bins = 50, fill = "lightgreen", color = "black") +
+  theme_minimal() +
+  labs(title = "Distribution of Relative rMSE by Cell",
+       x = "Relative rMSE",
+       y = "Frequency")
+```
+
+What proteins were not well predicted?
+
+```{r}
+poorly_predicted_proteins <- rel_rMSE_by_protein %>%
+  arrange(desc(rel_rMSE)) %>%
+  head(10)
+
+poorly_predicted_proteins
+```
+
+Pick a protein, show the scatter plot of true vs predicted:
+
+```{r}
+# protein_to_plot <- "IL2RA.CD25"
+# protein_to_plot <- "FR4"
+# protein_to_plot <- "GITR.CD357"
+protein_to_plot <- "CD8B"
+# protein_to_plot <- "TCRVG1.1"
+ggplot(data.frame(True = true_citeseq[, protein_to_plot],
+                  Predicted = predicted_citeseq[, protein_to_plot]),
+       aes(x = True, y = Predicted)) +
+  coord_cartesian(xlim = c(0, max(true_citeseq[, protein_to_plot], predicted_citeseq[, protein_to_plot])),
+                  ylim = c(0, max(true_citeseq[, protein_to_plot], predicted_citeseq[, protein_to_plot]))) +
+  geom_scattermore(alpha = 0.3, pointsize = 1) +
+  theme_minimal() +
+  labs(title = paste("True vs Predicted for", protein_to_plot),
+       x = "True Expression",
+       y = "Predicted Expression") +
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+  # also show the R2 and lm line
+  geom_smooth(method = "lm", color = "blue", se = FALSE) +
+  annotate("text", x = Inf, y = Inf, label = paste0("R² = ",
+                                                  round(cor(true_citeseq[, protein_to_plot],
+                                                            predicted_citeseq[, protein_to_plot])^2, 3)),
+           hjust = 1.1, vjust = 1.5, size = 5, color = "black")
+```
+
+Compute the correlation between true and predicted for all proteins:
+
+```{r}
+cor_by_protein <- sapply(colnames(true_citeseq), function(protein) {
+  cor(true_citeseq[, protein], predicted_citeseq[, protein])
+})
+sort(cor_by_protein)
+```
+
+Show a plot of correlation by protein:
+
+```{r}
+ggplot(data.frame(protein = names(cor_by_protein),
+                  correlation = cor_by_protein),
+       aes(x = reorder(protein, correlation), y = correlation)) +
+  geom_bar(stat = "identity", fill = "lightcoral") +
+  coord_flip() +
+  theme_minimal() +
+  labs(title = "Correlation between True and Predicted by Protein",
+       x = "Protein",
+       y = "Correlation") +
+  # make the text size smaller
+  theme(axis.text.y = element_text(size = 4.5))
+```
+
+Show a plot of relative rMSE by protein:
+
+```{r}
+ggplot(rel_rMSE_by_protein, aes(x = reorder(protein, -rel_rMSE), y = rel_rMSE)) +
+  geom_bar(stat = "identity", fill = "lightseagreen") +
+  theme_minimal() +
+  labs(title = "Relative rMSE by Protein",
+       x = "Protein",
+       y = "Relative rMSE") +
+  # make the x-lim 0 to 1
+  coord_flip(ylim = c(0, 1)) +
+  # make the text size smaller
+  theme(axis.text.y = element_text(size = 4.5))
+```
+
+What types of cells were not well predicted?
+
+```{r}
+seurat_meta <- readRDS(file = paste0(data_path, "seurat_meta.rds"))
+cells_meta <- seurat_meta[rownames(seurat_meta) %in% all_test_cells, ]
+```
+
+Plot the distribution of relative rMSE by cell type (cells_meta$annotation_level1):
+
+```{r}
+rel_rMSE_by_cell <- rel_rMSE_by_cell %>%
+  left_join(cells_meta, by = c("cell" = "cellID"))
+ggplot(rel_rMSE_by_cell, aes(x = annotation_level1, y = rel_rMSE)) +
+  geom_boxplot(fill = "lightyellow", outliers = FALSE) +
+  theme_minimal() +
+  labs(title = "Distribution of Relative rMSE by Cell Type",
+       x = "Cell Type",
+       y = "Relative rMSE") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+
+## Gene-Gene Analysis
+
+```{r eval=FALSE}
+first_half_summary <- qs::qread(paste0(data_path, "fit1_summary.qs"))
+second_half_summary <- qs::qread(paste0(data_path, "fit2_summary.qs"))
+L_pm <- second_half_summary$L_pm
+F_pm <- first_half_summary$F_pm
+true_expression <- second_half
+
+
+Y_hat <- predicted_expression <- L_pm %*% t(F_pm[1, , drop = FALSE])
+Y <- (true_expression[rownames(L_pm), 1])
+rMSE <- sqrt(mean((Y-Y_hat)^2))
+
+compute_gene_rMSE_all <- function(true_expression, L_pm, F_pm,
+                                  genes = NULL,
+                                  gene_block = 500L,
+                                  na_rm = TRUE) {
+  # Align cells
+  cells <- rownames(L_pm)
+  if (is.null(cells)) stop("L_pm must have rownames (cell IDs).")
+  if (is.null(rownames(true_expression))) stop("true_expression must have rownames (cell IDs).")
+  
+  cells_use <- intersect(cells, rownames(true_expression))
+  if (length(cells_use) == 0L) stop("No overlapping cell IDs between L_pm and true_expression.")
+  if (length(cells_use) < length(cells)) {
+    L_pm <- L_pm[cells_use, , drop = FALSE]
+  }
+  Y_all <- true_expression[cells_use, , drop = FALSE]
+  
+  # Decide which genes to compute
+  if (is.null(genes)) {
+    if (!is.null(colnames(Y_all)) && !is.null(rownames(F_pm))) {
+      genes <- intersect(colnames(Y_all), rownames(F_pm))
+    } else {
+      # fallback: assume ordering matches by position
+      if (ncol(Y_all) != nrow(F_pm)) {
+        stop("Cannot infer gene mapping: need colnames(true_expression) and rownames(F_pm), or matching dimensions.")
+      }
+      genes <- seq_len(ncol(Y_all))
+    }
+  }
+  
+  # Pull the right Y and F in the same order
+  if (is.character(genes)) {
+    Y_all <- Y_all[, genes, drop = FALSE]
+    F_use <- F_pm[genes, , drop = FALSE]
+    gene_names <- genes
+  } else {
+    Y_all <- Y_all[, genes, drop = FALSE]
+    F_use <- F_pm[genes, , drop = FALSE]
+    gene_names <- colnames(Y_all)
+    if (is.null(gene_names) && !is.null(rownames(F_use))) gene_names <- rownames(F_use)
+  }
+  
+  m <- ncol(Y_all)
+  rmse <- numeric(m)
+  
+  for (j0 in seq.int(1L, m, by = gene_block)) {
+    j1 <- min(m, j0 + gene_block - 1L)
+    
+    # predicted block: n_cells x block_genes
+    pred_blk <- tcrossprod(L_pm, F_use[j0:j1, , drop = FALSE])
+    resid <- Y_all[, j0:j1, drop = FALSE] - pred_blk
+    
+    if (na_rm) {
+      ok <- !is.na(resid)
+      resid[!ok] <- 0
+      sse  <- colSums(resid * resid)
+      nobs <- colSums(ok)
+    } else {
+      sse  <- colSums(resid * resid)
+      nobs <- rep.int(nrow(resid), ncol(resid))
+    }
+    
+    rmse[j0:j1] <- sqrt(sse / pmax(nobs, 1))
+    rm(pred_blk, resid); gc()
+  }
+  
+  if (!is.null(gene_names)) names(rmse) <- gene_names
+  rmse
+}
+
+rmse_vec <- compute_gene_rMSE_all(true_expression, L_pm, F_pm, gene_block = 300)
+summary(rmse_vec)
+```
+
+
+```{r}
+gene_summary <- readRDS(paste0(data_path, "gene_factor_validation.rds"))
+# gene_summary <- readRDS(paste0(data_path, "gene_factor_validation_sanity.rds"))
+```
+
+
+```{r}
+gene_summary %>%
+  # order by rel_mse from low to high
+  arrange(rel_mse) %>%
+  # only show top 40 genes
+  head(40) %>%
+  ggplot(aes(x = reorder(gene, -rel_mse), y = rel_mse)) +
+  geom_bar(stat = "identity", fill = "lightseagreen") +
+  theme_minimal() +
+  labs(title = "Relative rMSE by gene",
+       x = "gene",
+       y = "Relative rMSE") +
+  # make the x-lim 0 to 1
+  coord_flip(ylim = c(0, 1)) +
+  # make the text size smaller +
+  theme(axis.text.y = element_text(size = 4.5))
+``` 
+
+Plot R2 by gene:
+
+```{r}
+gene_summary %>%
+  # order by R2 from high to low
+  arrange(desc(R2)) %>%
+  # only show top 40 genes
+  head(40) %>%
+  ggplot(aes(x = reorder(gene, R2), y = R2)) +
+  geom_bar(stat = "identity", fill = "lightcoral") +
+  theme_minimal() +
+  labs(title = "R² by gene",
+       x = "gene",
+       y = "R²") +
+  # make the x-lim 0 to 1
+  coord_flip(ylim = c(0, 1)) +
+  # make the text size smaller +
+  theme(axis.text.y = element_text(size = 4.5))
+```
+
+

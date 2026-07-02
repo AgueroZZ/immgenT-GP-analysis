@@ -1,0 +1,3390 @@
+---
+title: "Figures for the manuscript"
+author: "Ziang Zhang"
+date: "2025-12-01"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+library(ggplot2)
+library(ggrepel)
+library(patchwork)
+library(cowplot)
+library(fastTopics)
+library(dplyr)
+library(pheatmap)
+library(scales)
+library(scattermore)
+
+data_path <- "../data/"
+code_path <- "../code/"
+data_path <- "data/"
+code_path <- "code/"
+source(paste0(code_path, "ROC.R"))
+# seurat_meta <- readRDS(paste0(data_path, "seurat_meta.rds"))
+seurat_meta <- readRDS(paste0(data_path, "igt1_96_withtotalvi20260206_clean_ADTonly.Rds"))@meta.data
+flashier_snmf_summary <- readRDS(paste0(data_path, "flashier_snmf_summary.rds"))
+cells_flashier <- rownames(flashier_snmf_summary$L_pm)
+cells_seurat <- seurat_meta$cellID
+which(!cells_flashier %in% cells_seurat)
+L_pm <- flashier_snmf_summary$L_pm[cells_flashier %in% cells_seurat, ]
+
+filter_cells_by_total_membership <- function (L, max_val = 10, numiter = 10) {
+  n <- nrow(L)
+  rows <- 1:n
+  for (iter in 1:numiter) {
+    x <- rowSums(L)
+    cat(sprintf("%d. Filtered out %d cells.\n",iter,sum(x > max_val)))
+    i <- which(x <= max_val)
+    L <- L[i,]
+    rows <- rows[i]
+    d <- apply(L,2,max)
+    L <- scale_cols(L,1/d)
+  }
+  return(rows)
+}
+scale_cols <- function (A, b) t(t(A) * b)
+```
+
+Normalize L_pm for better visualization, so max of each column is 1
+
+```{r}
+D <- apply(L_pm,2,max)
+L_pm_norm <- scale_cols(L_pm,1/D)
+F_pm <- flashier_snmf_summary$F_pm
+F_pm_norm <- scale_cols(F_pm,D)
+```
+
+```{r}
+colnames(L_pm) <- paste0("K", seq_len(ncol(L_pm)))
+colnames(F_pm) <- paste0("F", seq_len(ncol(F_pm)))
+
+D <- diag(1 / apply(L_pm, 2, function(x) max(x)))
+L <- L_pm %*% D
+cells <- filter_cells_by_total_membership(L,numiter = 12)
+seurat_meta_filtered <- seurat_meta[cells,]
+L_pm_filtered <- L_pm[cells,]
+d <- apply(L_pm_filtered,2,max)
+L_pm_filtered <- scale_cols(L_pm_filtered,1/d)
+
+# normalize F correspondingly
+F_pm_filtered <- scale_cols(F_pm,d)
+
+L_pm_no_thymocytes_normalized <- L_pm_filtered[seurat_meta_filtered$annotation_level1 != "thymocyte", ]
+seurat_meta_filtered_no_thymocytes <- seurat_meta_filtered[seurat_meta_filtered$annotation_level1 != "thymocyte", ]
+```
+
+# Figure 1: 
+
+## (a) Illustration of EBMF
+
+Create using illustrator.
+
+
+## (b) Number of active cells in each GP
+
+For each GP, we define its number of active cells as the number of cells with loading > 0.1 of the max loading in that GP.:
+
+```{r}
+options(scipen = 999)
+L_pm_norm_col <- L_pm_filtered / matrix(apply(L_pm_filtered, 2, function(x) max(x)), nrow = nrow(L_pm_filtered), ncol = ncol(L_pm_filtered), byrow = TRUE)
+
+# a cell is active if its loading is larger than 0.1 of the max value in that GP
+gp_active_cell_counts <- colSums((L_pm_norm_col) > 1e-1)
+
+pdf("figures/Figure1/Figure1b_hist_active_cells_per_GP.pdf", width = 6, height = 4, useDingbats = FALSE)
+hist(gp_active_cell_counts, 
+     breaks = 100, 
+     xlab = "Number of highly active cells per GP",
+     main = "Histogram of highly active cells per GP", freq = T)
+dev.off()
+```
+
+
+Take a look at number of active programs versus activated status
+
+```{r}
+cells_activated <- seurat_meta_filtered$cellID[seurat_meta_filtered$annotation_level2_group == "activated"]
+
+L_pm_activated <- L_pm_filtered[seurat_meta_filtered$cellID %in% cells_activated, ]
+
+gp_active_cell_counts_activated <- rowSums(L_pm_activated  > 1e-1)
+
+cells_resting <- seurat_meta_filtered$cellID[seurat_meta_filtered$annotation_level2_group == "resting"]
+
+L_pm_resting <- L_pm_filtered[seurat_meta_filtered$cellID %in% cells_resting, ]
+
+gp_active_cell_counts_resting <- rowSums(L_pm_resting  > 1e-1)
+
+# plot the boxplot comparing the number of active cells in activated vs resting groups
+# boxplot(gp_active_cell_counts_resting)
+# boxplot(gp_active_cell_counts_activated)
+# side by side boxplot
+gp_active_cell_counts_df <- data.frame(
+  Group = c(rep("Activated", length(gp_active_cell_counts_activated)), rep("Resting", length(gp_active_cell_counts_resting))),
+  Active_Cell_Counts = c(gp_active_cell_counts_activated, gp_active_cell_counts_resting)
+)
+
+p <- ggplot(gp_active_cell_counts_df, aes(x = Group, y = Active_Cell_Counts, fill = Group)) +
+  geom_boxplot(outlier.size = 0.4, width = 0.6, alpha = 0.8, color = "gray40") +
+  scale_fill_manual(values = c("Activated" = "#1f78b4", "Resting" = "#e31a1c")) +
+  labs(
+    title = "",
+    x = "",
+    y = "Number of highly active GPs"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+    axis.text.x = element_text(size = 12),
+    axis.text.y = element_text(size = 12),
+    axis.title.y = element_text(size = 13, face = "bold"),
+    legend.position = "none"
+  )
+
+ggsave(
+  filename = "figures/Figure1/Figure1b_boxplot_active_cells_per_GP.pdf",
+  plot = p, width = 6, height = 4, dpi = 300
+)
+```
+
+Similar boxplot comparing across level 1 annotations
+
+```{r}
+gp_active_cell_counts_level1 <- data.frame(
+  Group = seurat_meta_filtered$annotation_level1,
+  Active_Cell_Counts = rowSums(L_pm_filtered > 1e-1)
+)
+
+p <- ggplot(gp_active_cell_counts_level1, aes(x = Group, y = Active_Cell_Counts, fill = Group)) +
+  geom_boxplot(outlier.size = 0.4, width = 0.6, alpha = 0.8, color = "gray40") +
+  scale_fill_manual(values = ZemmourLib::immgent_colors$level1) +
+  labs(
+    title = "",
+    x = "",
+    y = "Number of highly active GPs"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+    axis.text.x = element_text(size = 12, angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 12),
+    axis.title.y = element_text(size = 13, face = "bold"),
+    legend.position = "none"
+  )
+
+ggsave(
+  filename = "figures/Figure1/Figure1b_boxplot_active_cells_per_GP_level1.pdf",
+  plot = p, width = 6, height = 4, dpi = 300
+)
+
+```
+
+```{r}
+# load the protein matrix protein_mat_normalized_lognorm
+protein_mat_normalized_lognorm <- readRDS(paste0(data_path, "protein_mat_normalized_lognorm.rds"))
+protein_mat_normalized_lognorm <- protein_mat_normalized_lognorm[rownames(L_pm_filtered) , "CD44"]
+```
+
+```{r}
+# plot scatter plot of CD44 protein level vs number of active GPs (defined as loading > 0.1 of max loading in that GP)
+gp_active_cell_counts <- rowSums(L_pm_filtered > 1e-1)
+gp_active_cell_counts_df <- data.frame(
+  CD44_Protein_Level = protein_mat_normalized_lognorm,
+  Active_GP_Counts = gp_active_cell_counts
+)
+
+# take a random sample of 10000 points for better visualization
+set.seed(123)
+df_nz <- gp_active_cell_counts_df %>% dplyr::filter(CD44_Protein_Level > 0)
+df_nz <- df_nz %>% sample_n(min(10000, nrow(df_nz)))
+R <- cor(df_nz$CD44_Protein_Level, df_nz$Active_GP_Counts, use = "complete.obs")
+
+p <- ggplot(df_nz, aes(CD44_Protein_Level, Active_GP_Counts)) +
+  geom_point(alpha = 0.1, size = 0.7) +
+  geom_smooth(method = "lm", se = TRUE) +
+   labs(
+    title = "CD44 Protein Level vs Number of Active GPs",
+    x = "CD44 Protein Level (log-normalized)",
+    y = "Number of Active GPs"
+  ) +
+  annotate("text",
+           x = min(df_nz$CD44_Protein_Level, na.rm = TRUE) + 0.5,
+           y = max(df_nz$Active_GP_Counts, na.rm = TRUE) - 1,
+           label = paste0("R = ", round(R, 2)),
+           size = 4) +
+  theme_minimal(base_size = 13)
+
+
+ggsave(
+  filename = "figures/Figure1/Figure1b_scatterplot_CD44_vs_active_GPs.pdf",
+  plot = p, width = 6, height = 4, dpi = 300
+)
+```
+
+```{r}
+# also plot CD44 agains total loading across all GPs
+total_loading <- rowSums(L_pm_filtered)
+gp_total_loading_df <- data.frame(
+  CD44_Protein_Level = protein_mat_normalized_lognorm,
+  Total_Loading = total_loading
+)
+p <- ggplot(gp_total_loading_df, aes(x = CD44_Protein_Level, y = Total_Loading)) +
+  geom_point(alpha = 0.1, size = 1) +
+  labs(
+    title = "CD44 Protein Level vs Total Loading Across All GPs",
+    x = "CD44 Protein Level (log-normalized)",
+    y = "Total Loading Across All GPs"
+  ) +
+  # add regression line and correlation coefficient
+  geom_smooth(method = "lm", se = TRUE, color = "blue") +
+  # print correlation coefficient
+  geom_text(
+    data = data.frame(
+      x = min(gp_total_loading_df$CD44_Protein_Level, na.rm = TRUE) + 0.5,
+      y = max(gp_total_loading_df$Total_Loading, na.rm = TRUE) - 1,
+      label = paste0("R = ", round(cor(gp_total_loading_df$CD44_Protein_Level, gp_total_loading_df$Total_Loading, use = "complete.obs"), 2))
+    ),
+    aes(x = x, y = y, label = label),
+    inherit.aes = FALSE,
+    size = 4
+  ) +
+  theme_minimal(base_size = 13)
+```
+
+
+
+
+## (c) Number of genes active in each GP
+
+```{r}
+# divide each column by its max abs value
+F_pm_norm_col <- F_pm / matrix(apply(F_pm, 2, function(x) max(abs(x))), nrow = nrow(F_pm), ncol = ncol(F_pm), byrow = TRUE)
+# a gene is active if its abs factor value is larger than 0.25 of the max value in that GP
+gp_active_gene_counts <- colSums(abs(F_pm_norm_col) > 0.25)
+pdf("figures/Figure1/Figure1c_hist_active_genes_per_GP.pdf", width = 6, height = 4)
+hist(gp_active_gene_counts, 
+     breaks = 100, 
+     xlab = "Number of highly active genes per GP", 
+     main = "Histogram of highly active genes per GP", freq = T)
+dev.off()
+```
+
+
+
+
+## (d) PVE in each GP
+
+```{r}
+pve_df <- data.frame(
+  GP_Index = seq_along(pve_vec),
+  PVE = pve_vec
+)
+p <- ggplot(pve_df, aes(x = GP_Index, y = PVE)) +
+  geom_point() +
+  geom_line() +
+  geom_hline(yintercept = 1e-4, linetype = "dashed", color = "red") +
+  labs(
+    title = "PVE of each GP",
+    x = "GP Index",
+    y = "PVE"
+  ) +
+  theme_minimal(base_size = 13)
+ggsave(
+  filename = "figures/Figure1/Figure1d_elbow_plot_PVE_per_GP.pdf",
+  plot = p, width = 6, height = 4, dpi = 300
+)
+```
+
+
+
+
+## (e) scatterplot
+
+```{r}
+level_1_AUC_list <- readRDS(paste0(data_path, "level_1_AUC_list_figure.rds"))
+level_1_AUC <- level_1_AUC_list$auc
+level_1_AUC_max <- apply(level_1_AUC, 2, max)
+level_1_AUC_max_name <- apply(level_1_AUC, 2, function(x) rownames(level_1_AUC)[which.max(x)])
+o <- order(level_1_AUC_max, decreasing = TRUE)
+table_level_1_AUC <- data.frame(
+  Factor = colnames(level_1_AUC)[o],
+  Max_AUC = level_1_AUC_max[o],
+  Annotation = level_1_AUC_max_name[o]
+)
+
+organ_AUC_list <- readRDS(paste0(data_path, "organ_simplified_AUC_list_figure.rds"))
+organ_AUC <- organ_AUC_list$auc
+# remove categories with small count
+organ_small_count <- table(seurat_meta_filtered_no_thymocytes$organ_simplified)
+organ_small_count <- names(organ_small_count[organ_small_count < 3000])
+organ_AUC <- organ_AUC[!rownames(organ_AUC) %in% organ_small_count, ]
+organ_AUC_max <- apply(organ_AUC, 2, max)
+organ_AUC_max_name <- apply(organ_AUC, 2, function(x) rownames(organ_AUC)[which.max(x)])
+o <- order(organ_AUC_max, decreasing = TRUE)
+table_organ_AUC <- data.frame(
+  Max_AUC = organ_AUC_max[o],
+  Annotation = organ_AUC_max_name[o]
+)
+
+# merge the two AUC tables by factor
+max_AUC_df <- data.frame(
+  Factor = table_level_1_AUC$Factor,
+  annotation_Level1 = table_level_1_AUC$Annotation,
+  annotation_Organ = organ_AUC_max_name[match(table_level_1_AUC$Factor, names(organ_AUC_max))],
+  Max_AUC_Organ = organ_AUC_max[match(table_level_1_AUC$Factor, names(organ_AUC_max))],
+  Max_AUC_Level1 = table_level_1_AUC$Max_AUC
+)
+```
+
+```{r}
+df <- max_AUC_df %>%
+  mutate(
+    residual = Max_AUC_Level1 - Max_AUC_Organ,
+    abs_res  = abs(residual)
+  )
+
+label_above <- df %>%
+  filter(is.finite(residual), residual > 0, Max_AUC_Level1 > 0.85) %>%
+  mutate(nudge_x = -0.035)
+
+label_below <- df %>%
+  filter(is.finite(residual), residual < 0, Max_AUC_Organ > 0.85) %>%
+  mutate(nudge_x = 0.035)
+
+base_plot <- ggplot(df, aes(Max_AUC_Organ, Max_AUC_Level1)) +
+  geom_point(alpha = 0.3, size = 1.8) +
+  geom_point(data = label_above, color = "#1f78b4", alpha = 0.8, size = 1.8) +
+  geom_point(data = label_below, color = "#e31a1c", alpha = 0.8, size = 1.8) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black") +
+  coord_cartesian(xlim = c(0.46, 1.04), ylim = c(0.5, 1.02), expand = FALSE) +
+  labs(
+    x = "Max AUC (Organ Simplified)",
+    y = "Max AUC (Level-1)",
+    title = "Max AUC: Organ vs Level-1",
+    subtitle = sprintf("Annotating top %d above (blue) and top %d below (red) y = x", top_n, top_n)
+  ) +
+  theme_minimal(base_size = 13)
+
+p_all <- base_plot +
+  geom_text_repel(
+    data = label_above,
+    aes(label = paste0(Factor, ": ", annotation_Level1)),
+    color = "#1f78b4",
+    direction = "y",
+    nudge_x = label_above$nudge_x,
+    segment.color = "#1f78b4",
+    arrow = arrow(length = unit(0.008, "npc"), type = "closed", angle = 20),  # smaller arrow
+    force = 1.2, force_pull = 0.2,
+    box.padding = 0.35, point.padding = 0.15,
+    max.time = 2, max.iter = 5e3,
+    min.segment.length = 0.01,
+    segment.alpha = 0.7
+  ) +
+  geom_text_repel(
+    data = label_below,
+    aes(label = paste0(Factor, ": ", annotation_Organ)),
+    color = "#e31a1c",
+    direction = "y",
+    nudge_x = label_below$nudge_x,
+    segment.color = "#e31a1c",
+    arrow = arrow(length = unit(0.008, "npc"), type = "closed", angle = 20),  # smaller arrow
+    force = 1.2, force_pull = 0.2,
+    box.padding = 0.35, point.padding = 0.15,
+    max.time = 2, max.iter = 5e3,
+    min.segment.length = 0.01,
+    segment.alpha = 0.7
+  )
+
+p_all
+
+ggsave(
+  filename = "figures/Figure1/Figure1e_scatterplot.pdf",
+  plot = p_all, width = 8, height = 8, dpi = 300
+)
+```
+
+
+## (e) boxplot
+
+```{r}
+highlights <- c("K22","K30","K58","K68")
+color_coding <- ZemmourLib::immgent_colors$level1
+Level1_match <- c("DN", "nonconv", "CD8", "Treg")
+plot_factor_boxplot_level1 <- function(factor_id, 
+                                L_pm_filtered, 
+                                seurat_meta_filtered,
+                                outline = FALSE,
+                                log = FALSE,
+                                color_coding) {
+  df <- data.frame(
+    Loading = L_pm_filtered[, factor_id],
+    CellType = seurat_meta_filtered$annotation_level1
+  )
+  
+  median_order <- df %>%
+    group_by(CellType) %>%
+    summarize(med = median(Loading, na.rm = TRUE)) %>%
+    arrange(desc(med)) %>%        
+    pull(CellType)
+  
+  df$CellType <- factor(df$CellType, levels = median_order)
+  
+  p <- ggplot(df, aes(x = CellType, y = Loading, fill = CellType)) +
+    geom_boxplot(outliers = outline, outlier.size = 0.4, width = 0.6, alpha = 0.8, color = "gray40") +
+    scale_fill_manual(values = color_coding) +
+    # scale_y_log10() +
+    labs(
+      title = "",
+      x = "",
+      y = paste0("Loading K", factor_id)
+    ) +
+    theme_minimal(base_size = 12) +
+    theme(
+      plot.title = element_text(face = "bold", size = 13, hjust = 0.5),
+      axis.text.x = element_text(size = 10, angle = 45, hjust = 1, vjust = 1),
+      axis.text.y = element_text(size = 12),
+      axis.title = element_text(size = 14, face = "bold"),
+      legend.position = "none",
+      panel.grid.minor = element_blank(),
+      panel.grid.major.x = element_blank()
+    )
+  
+  if (log) {
+    p <- p + scale_y_log10()
+  }
+  
+  return(p)
+}
+
+p1 <- plot_factor_boxplot_level1(factor_id = 68, L_pm_filtered = L_pm_filtered, seurat_meta_filtered = seurat_meta_filtered, color_coding = color_coding)
+p2 <- plot_factor_boxplot_level1(factor_id = 58, L_pm_filtered = L_pm_filtered, seurat_meta_filtered = seurat_meta_filtered, color_coding = color_coding)
+p3 <- plot_factor_boxplot_level1(factor_id = 30, L_pm_filtered = L_pm_filtered, seurat_meta_filtered = seurat_meta_filtered, color_coding = color_coding)
+p4 <- plot_factor_boxplot_level1(factor_id = 22, L_pm_filtered = L_pm_filtered, seurat_meta_filtered = seurat_meta_filtered, color_coding = color_coding)
+p_combined <- gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2)
+ggsave(filename = "figures/Figure1/Figure1e_Boxplot.pdf",
+       plot = p_combined,
+       width = 8, height = 8)
+```
+
+## (e) structure plot
+
+```{r}
+match_category_to_factor <- function(auc_matrix) {
+  n_factors    <- ncol(auc_matrix)
+  n_categories <- nrow(auc_matrix)
+
+  category_to_factor <- rep(NA_character_, n_categories)
+  names(category_to_factor) <- rownames(auc_matrix)
+
+  factor_assigned <- rep(FALSE, n_factors)
+  names(factor_assigned) <- colnames(auc_matrix)
+
+  category_score <- apply(auc_matrix, 1, max)    
+  category_order <- order(category_score, decreasing = TRUE)
+  ordered_categories <- rownames(auc_matrix)[category_order]
+
+  for (cat in ordered_categories) {
+    aucs <- auc_matrix[cat, ]
+
+    aucs[factor_assigned] <- -Inf
+
+    best_factor_idx <- which.max(aucs)
+    best_factor_name <- names(aucs)[best_factor_idx]
+
+    category_to_factor[cat] <- best_factor_name
+    factor_assigned[best_factor_idx] <- TRUE
+  }
+
+  return(category_to_factor)
+}
+level1_category_to_factor <- match_category_to_factor(level_1_AUC)
+color_coding <- ZemmourLib::immgent_colors$level1
+colnames(L_pm_filtered) <- paste0("K", seq_len(ncol(L_pm_filtered)))
+```
+
+```{r}
+set.seed(123)
+color_coding <- ZemmourLib::immgent_colors$level1
+# create level1_category_to_factor manually now
+level1_category_to_factor <- c(
+  "Treg" = "K68",
+  "CD8" = "K58",
+  "nonconv" = "K30",
+  "DN" = "K22",
+  "CD8aa" = "K29",
+  "gdT" = "K3",
+  "DP" = "K171"
+)
+fit2 <- L_pm_no_thymocytes_normalized[, level1_category_to_factor, drop = FALSE]
+cell_type <- seurat_meta[rownames(fit2), "annotation_level1"]
+cells <- which(cell_type == "CD4" | cell_type == "CD8")
+cells <- sample(cells,1e5)
+cells <- sort(c(cells,which(cell_type != "CD4" & cell_type != "CD8")))
+
+structure_plot(fit2[cells,],gap = 20,n = 5000,
+               colors = color_coding[names(level1_category_to_factor)],
+               grouping = cell_type[cells]) +
+  labs(y = "membership",color = "",fill = "") +
+  guides(
+    fill = guide_legend(nrow = 1),
+    color = guide_legend(nrow = 1)
+  ) +
+  theme(
+    legend.position = "bottom",
+    legend.direction = "horizontal",
+    legend.box = "horizontal",
+    axis.text.x = element_text(size = 10, angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 12),
+    axis.title = element_text(size = 14, face = "bold"),
+    legend.text = element_text(size = 12),
+    legend.title = element_text(size = 13)
+  )
+
+ggsave(
+  filename = "figures/Figure1/Figure1e_Structure_Plot.pdf",
+  width = 10, height = 6, dpi = 300
+)
+```
+
+## (e) protein heatmap
+
+```{r}
+protein_flash_summary_lognorm <- readRDS(file = paste0(data_path, "protein_flash_selected_summary_lognorm.rds"))
+# normalize by the max(abs) of each column
+D_lognorm <- diag(1 / apply(protein_flash_summary_lognorm$F_pm, 2, function(x) max(abs(x))))
+Protein_F_pm <- protein_flash_summary_lognorm$F_pm %*% D_lognorm
+# colnames(Protein_F_pm) <- paste0("F", 1:ncol(flashier_snmf_summary$F_pm))[ flashier_snmf_summary$pve > 1e-4]
+factor.info <- read.csv(file = paste0(data_path, "factors_comments_updated.xlsx - factor_pve.csv"), header = TRUE, stringsAsFactors = FALSE)
+factors_considered <- sort(factor.info$X[factor.info$strongly.replicated])
+colnames(Protein_F_pm) <- paste0("F", factors_considered)
+```
+
+```{r}
+kset <- paste0("F", c(68, 58, 30, 22))
+Protein_F_pm_selected <- Protein_F_pm[, kset]
+annotation_heatmap(Protein_F_pm_selected,n = 5,
+                   dim = kset,
+                   show_dims = kset,
+                   compare_dims = kset,
+                   select_features = "largest",
+                   feature_sign = "both",
+                   zero_value = 0.1,
+                   font_size = 15) +
+  theme(plot.title = element_text(face = "plain",size = 10))
+ggsave(filename = "figures/Figure1/Figure1e_Protein_Heatmap.pdf",
+       width = 6, height = 6)
+```
+
+## (f) dotplot
+
+```{r}
+organ_factors_selected <- c("K3", "K11", "K26", "K29", "K35", "K37", "K49", "K101")
+organ_annotated <- c("small intestine epi", "placenta", "submandibular gland", "colon epi", "SLO", "mammary gland", "mammary gland", "thymus")
+
+organ_df <- data.frame(
+  Factor = organ_factors_selected,
+  Annotation = organ_annotated
+)
+
+# compute the median loading for each level 1 annotation in each annotated organ
+for (i in 1:nrow(organ_df)) {
+  factor_id <- organ_df$Factor[i]
+
+  selected_cells <- which(seurat_meta_filtered_no_thymocytes$organ_simplified == organ_df$Annotation[i])
+  selected_L_pm_filtered <- L_pm_no_thymocytes_normalized[selected_cells, , drop = FALSE]
+  selected_seurat_meta_filtered <- seurat_meta_filtered_no_thymocytes[selected_cells, , drop = FALSE]
+  
+  # avaliable level 1 annotations in the selected cells
+  level1_annotations <- unique(selected_seurat_meta_filtered$annotation_level1)
+  for (level1 in level1_annotations) {
+    cells_level1 <- which(selected_seurat_meta_filtered$annotation_level1 == level1)
+    median_loading <- median(selected_L_pm_filtered[cells_level1, factor_id], na.rm = TRUE)
+    
+    organ_df[i, level1] <- median_loading
+  }
+  
+  
+}
+```
+
+```{r}
+organ_df_contrast <- data.frame(
+  Annotation = organ_annotated
+)
+organ_df_contrast_vec <- c()
+# compute the median loading for cells NOT in that organ
+for (i in 1:nrow(organ_df)) {
+  factor_id <- organ_df$Factor[i]
+  selected_cells <- which(seurat_meta_filtered_no_thymocytes$organ_simplified != organ_df$Annotation[i])
+  selected_L_pm_filtered <- L_pm_no_thymocytes_normalized[selected_cells, , drop = FALSE]
+  
+  organ_df_contrast_vec[i] <- median(selected_L_pm_filtered[, factor_id], na.rm = TRUE)
+}
+organ_df_contrast$median_contrast <- organ_df_contrast_vec
+```
+
+
+```{r}
+organ_df_prop <- data.frame(
+  Annotation = organ_annotated
+)
+
+# compute the proportion for each level 1 annotation in each annotated organ
+for (i in 1:nrow(organ_df)) {
+  selected_cells <- which(seurat_meta_filtered_no_thymocytes$organ_simplified == organ_df$Annotation[i])
+  selected_seurat_meta_filtered <- seurat_meta_filtered_no_thymocytes[selected_cells, , drop = FALSE]
+  
+  # available level 1 annotations in the selected cells
+  level1_annotations <- unique(selected_seurat_meta_filtered$annotation_level1)
+  for (level1 in level1_annotations) {
+    cells_level1 <- which(selected_seurat_meta_filtered$annotation_level1 == level1)
+    organ_df_prop[i, level1] <- length(cells_level1) / nrow(selected_seurat_meta_filtered)
+  }
+}
+```
+
+
+```{r}
+organ_df_diff <- organ_df
+
+for (i in 1:nrow(organ_df_diff)) {
+  contrast_value <- organ_df_contrast$median_contrast[i]
+  level1_annotations <- colnames(organ_df_diff)[-(1:2)]
+  
+  for (level1 in level1_annotations) {
+    x <- organ_df_diff[i, level1]
+    
+    if (contrast_value <= 0) {
+      organ_df_diff[i, level1] <- NA
+    } else {
+      organ_df_diff[i, level1] <- log2(x / contrast_value)
+    }
+  }
+}
+
+
+level1_levels <- c("gdT", "CD8aa", "CD8", "nonconv", "DN", "Treg", "CD4", "DP")
+
+prop_long <- organ_df_prop |>
+  pivot_longer(
+    cols = -Annotation,
+    names_to  = "level1",
+    values_to = "prop"
+  )
+
+med_long <- organ_df_diff |>
+  pivot_longer(
+    cols = all_of(level1_levels),
+    names_to  = "level1",
+    values_to = "median_loading"
+  ) |>
+  mutate(
+    Factor_label = paste0(Factor, "\n", Annotation),
+    level1 = factor(level1, levels = level1_levels)
+  )
+
+plot_df <- med_long |>
+  left_join(
+    prop_long,
+    by = c("Annotation", "level1")
+  )
+
+```
+
+```{r}
+p <- ggplot(plot_df, aes(x = Factor_label, y = level1)) +
+  geom_point(aes(size = prop, color = median_loading), alpha = 0.9) +
+  scale_y_discrete(name = "Level 1 annotation") +
+  scale_x_discrete(name = "Factor (with organ simplified)") +
+  scale_size_continuous(name  = "Proportion of cells\nin that organ", range = c(2, 10)) +
+  scale_color_gradient2(
+    low       = "blue",
+    mid       = "white",
+    high      = "red",
+    midpoint  = 0,
+    limits   = c(-5, 5),
+    oob      = squish,
+    name      = "log2 fold-change\n(median loading)"
+  ) +
+  coord_cartesian(clip = "off") +
+  theme_bw() +
+  theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1,
+      vjust = 1
+    ),
+    panel.grid.major = element_line(linewidth = 0.2),
+    panel.grid.minor = element_blank()
+  )
+
+p
+
+ggsave(
+  filename = "figures/Figure1/Figure1f_Dotplot.pdf",
+  plot = p,
+  width = 8, height = 8
+)
+
+```
+
+
+
+## (g) level2 scatterplot (healthy)
+
+```{r}
+factor_coef_list <- readRDS(file = paste0(data_path, "conditional_analysis_factor_organ_simplified.rds"))
+
+max_coef_df <- data.frame(
+  Factor = integer(),
+  Max_Abs_Coefficient_Organ = numeric(),
+  the_max_organ = character(),
+  Max_Abs_Coefficient_Level2 = numeric(),
+  the_max_level2 = character()
+)
+
+for (i in 1:length(factor_coef_list)) {
+  coef_df <- factor_coef_list[[i]]
+  max_abs_organ <- max(abs(coef_df$organ_coefs))
+  max_abs_level2 <- max(abs(coef_df$level2_coefs))
+  max_coef_df <- rbind(max_coef_df, data.frame(
+    Factor = i,
+    Max_Abs_Coefficient_Organ = max_abs_organ,
+    the_max_organ = names(coef_df$organ_coefs)[which.max(abs(coef_df$organ_coefs))],
+    Max_Abs_Coefficient_Level2 = max_abs_level2,
+    the_max_level2 = names(coef_df$level2_coefs)[which.max(abs(coef_df$level2_coefs))]
+  ))
+  
+  max_coef_df$the_max_organ[i] <- sub("^organ", "", max_coef_df$the_max_organ[i])
+  max_coef_df$the_max_level2[i] <- sub("^level2", "", max_coef_df$the_max_level2[i])
+}
+```
+
+```{r}
+top_n <- 5  # how many points to annotate above and below y = x
+
+df <- max_coef_df %>%
+  mutate(
+    residual = Max_Abs_Coefficient_Level2 - Max_Abs_Coefficient_Organ, 
+    abs_res  = abs(residual)
+  )
+
+label_above <- df %>%
+  filter(is.finite(residual), residual > 0) %>%
+  slice_max(residual, n = top_n, with_ties = FALSE) %>%
+  mutate(
+    label = paste0("K", Factor, "\n", the_max_level2)  
+  )
+
+label_below <- df %>%
+  filter(is.finite(residual), residual < 0) %>%
+  slice_min(residual, n = top_n, with_ties = FALSE) %>%
+  mutate(
+    label = paste0("K", Factor, "\n", the_max_organ)   
+  )
+
+# --- Base plot ---
+base_plot <- ggplot(df, aes(x = Max_Abs_Coefficient_Organ,
+                            y = Max_Abs_Coefficient_Level2)) +
+  geom_point(alpha = 0.3, size = 1.8) +
+  geom_point(data = label_above, color = "#1f78b4", alpha = 0.6, size = 1.8) +
+  geom_point(data = label_below, color = "#e31a1c", alpha = 0.6, size = 1.8) +
+  geom_abline(slope = 1, intercept = 0,
+              linetype = "dashed", color = "red") +
+  coord_cartesian(xlim = c(0, 0.6), ylim = c(0, 0.6), expand = TRUE) +
+  labs(
+    x = "Max Absolute Coefficient (Organ Simplified)",
+    y = "Max Absolute Coefficient (Level-2)",
+    title = "Max Absolute Coefficient: Organ vs Level-2",
+    subtitle = "healthy cells"
+  )
+
+p_all <- base_plot +
+  geom_text_repel(
+    data = label_above,
+    aes(label = label),
+    color = "#1f78b4", size = 3, max.overlaps = Inf,
+    box.padding = 0.3, point.padding = 0.2, min.segment.length = 0
+  ) +
+  geom_text_repel(
+    data = label_below,
+    aes(label = label),
+    color = "#e31a1c", size = 3, max.overlaps = Inf,
+    box.padding = 0.3, point.padding = 0.2, min.segment.length = 0
+  ) +
+  theme_minimal(base_size = 13)
+
+p_all
+
+ggsave(
+  filename = "figures/Figure1/Figure1g_Level2_scatterplot_healthy.pdf",
+  plot = p_all, width = 8, height = 8, dpi = 300
+)
+```
+
+
+## (g) level2 scatterplot (all cells)
+```{r}
+factor_coef_list <- readRDS(file = paste0(data_path, "conditional_analysis_factor_condition_detailed.rds"))
+```
+
+```{r}
+max_coef_df <- data.frame(
+  Factor = integer(),
+  Max_Abs_Coefficient_condition = numeric(),
+  the_max_condition = character(),
+  Max_Abs_Coefficient_Level2 = numeric(),
+  the_max_level2 = character()
+)
+
+for (i in 1:length(factor_coef_list)) {
+  coef_df <- factor_coef_list[[i]]
+  max_abs_condition <- max(abs(coef_df$condition_coefs))
+  max_abs_level2 <- max(abs(coef_df$level2_coefs))
+  max_coef_df <- rbind(max_coef_df, data.frame(
+    Factor = i,
+    Max_Abs_Coefficient_condition = max_abs_condition,
+    the_max_condition = names(coef_df$condition_coefs)[which.max(abs(coef_df$condition_coefs))],
+    Max_Abs_Coefficient_Level2 = max_abs_level2,
+    the_max_level2 = names(coef_df$level2_coefs)[which.max(abs(coef_df$level2_coefs))]
+  ))
+  
+  max_coef_df$the_max_condition[i] <- sub("^condition", "", max_coef_df$the_max_condition[i])
+  max_coef_df$the_max_level2[i] <- sub("^level2", "", max_coef_df$the_max_level2[i])
+}
+```
+
+```{r}
+top_n <- 5  # how many points to annotate above and below y = x
+df <- max_coef_df %>%
+  mutate(
+    residual = Max_Abs_Coefficient_Level2 - Max_Abs_Coefficient_condition, 
+    abs_res  = abs(residual)
+  )
+label_above <- df %>%
+  filter(is.finite(residual), residual > 0) %>%
+  slice_max(residual, n = top_n, with_ties = FALSE) %>%
+  mutate(
+    label = paste0("K", Factor, "\n", the_max_level2)  
+  )
+label_below <- df %>%
+  filter(is.finite(residual), residual < 0) %>%
+  slice_min(residual, n = top_n, with_ties = FALSE) %>%
+  mutate(
+    label = paste0("K", Factor, "\n", the_max_condition)   
+  )
+# --- Base plot ---
+base_plot <- ggplot(df, aes(x = Max_Abs_Coefficient_condition,
+                            y = Max_Abs_Coefficient_Level2)) +
+  geom_point(alpha = 0.3, size = 1.8) +
+  geom_point(data = label_above, color = "#1f78b4", alpha = 0.6, size = 1.8) +
+  geom_point(data = label_below, color = "#e31a1c", alpha = 0.6, size = 1.8) +
+  geom_abline(slope = 1, intercept = 0,
+              linetype = "dashed", color = "red") +
+  coord_cartesian(xlim = c(0, 0.9), ylim = c(0, 0.9), expand = TRUE) +
+  labs(
+    x = "Max Absolute Coefficient (Condition Detailed)",
+    y = "Max Absolute Coefficient (Level-2)",
+    title = "Max Absolute Coefficient: Condition vs Level-2",
+    subtitle = "all cells"
+  )
+p_all <- base_plot +
+  geom_text_repel(
+    data = label_above,
+    aes(label = label),
+    color = "#1f78b4", size = 3, max.overlaps = Inf,
+    box.padding = 0.3, point.padding = 0.2, min.segment.length = 0
+  ) +
+  geom_text_repel(
+    data = label_below,
+    aes(label = label),
+    color = "#e31a1c", size = 3, max.overlaps = Inf,
+    box.padding = 0.3, point.padding = 0.2, min.segment.length = 0
+  ) +
+  theme_minimal(base_size = 13)
+
+p_all
+
+ggsave(
+  filename = "figures/Figure1/Figure1g_Level2_scatterplot_all_cells.pdf",
+  plot = p_all, width = 8, height = 8, dpi = 300
+)
+```
+
+
+
+
+## (g) level2 structure plot
+
+Within each level-1 category, we will produce a structure plot to visualize some highlighted factors across level-2 annotations.
+
+```{r}
+# load the AUC matrix for level2:
+level_2_AUC_list <- readRDS(paste0(data_path, "level_2_within_level_1_AUC_list_figure.rds"))
+level_2_AUC <- level_2_AUC_list$auc
+# filter out annotations with less than 500 cells
+which_less_500 <- sapply(rownames(level_2_AUC), function(x){
+  sum(seurat_meta_filtered_no_thymocytes$annotation_level2 == x) < 500
+})
+level_2_AUC <- level_2_AUC[!which_less_500, ]
+```
+
+```{r}
+top_k <- 15
+all_level1 <- c("CD4", "CD8", "Treg")
+structure_plots <- list()
+for (level1_cat in all_level1) {
+  cells_in_cat <- which(seurat_meta_filtered_no_thymocytes$annotation_level1 == level1_cat)
+  L_pm_cat <- L_pm_no_thymocytes_normalized[cells_in_cat, ]
+  seurat_meta_cat <- seurat_meta_filtered_no_thymocytes[cells_in_cat, ]
+  
+  level2_in_cat <- unique(seurat_meta_cat$annotation_level2)
+  level2_in_cat <- level2_in_cat[order(level2_in_cat)]
+  
+  # match level2 categories to factors
+  selected_level2 <- grep(paste0(level1_cat, "_"), rownames(level_2_AUC), value = TRUE)
+  # Select the top_k in terms of AUC
+  level2_category_to_factor <- colnames(level_2_AUC)[order(-apply(X = level_2_AUC[selected_level2,], FUN = max, MARGIN = 2))[1:top_k]]
+
+  # filter out cells in selected level2 categories
+  cells_selected_level2 <- which(seurat_meta_cat$annotation_level2 %in% selected_level2)
+  L_pm_cat <- L_pm_cat[cells_selected_level2, ]
+  seurat_meta_cat <- seurat_meta_cat[cells_selected_level2, ]
+  
+  fit_cat <- L_pm_cat[, level2_category_to_factor, drop = FALSE]
+  cell_type_cat <- seurat_meta_cat$annotation_level2
+  
+  # re-level cell_type_cat to remove unused levels
+  cell_type_cat <- factor(cell_type_cat, levels = (selected_level2))
+
+  # Make sure all the level2 categories have at least 500 cells
+  level2_counts <- table(cell_type_cat)
+  level2_selected <- names(level2_counts[level2_counts >= 500])
+  cells <- which(cell_type_cat %in% level2_selected)
+  
+  plot_new <- structure_plot(fit_cat[cells,], gap = 20,n = 5000,
+               grouping = cell_type_cat[cells]) +
+  labs(y = "membership",color = "",fill = "") +
+  guides(
+    fill = guide_legend(nrow = 1),
+    color = guide_legend(nrow = 1)
+  ) +
+  theme(
+    legend.position = "bottom",
+    legend.direction = "horizontal",
+    legend.box = "horizontal",
+    axis.text.x = element_text(size = 10, angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 12),
+    axis.title = element_text(size = 14, face = "bold"),
+    legend.text = element_text(size = 12),
+    legend.title = element_text(size = 13)
+  )
+    
+    structure_plots[[paste0("p", which(all_level1 == level1_cat))]] <- plot_new
+}
+
+plot_grid(structure_plots$p1,
+          structure_plots$p2,
+          structure_plots$p3,
+          nrow = 3,ncol = 1,
+          rel_heights = c(4,4,4))
+
+
+ggsave(
+  filename = paste0("figures/Figure1/Figure1g_Structure_Level2.pdf"),
+  width = 15, height = 15, dpi = 300,
+  device = cairo_pdf
+)
+```
+
+
+
+## (g) level2 boxplot
+
+```{r}
+num_truncated <- 15
+factor_id_vec <- c(8, 13, 36, 93)
+p_list <- list()
+for (factor_id in factor_id_vec) {
+  df_boxplot <- data.frame(Loading = L_pm_no_thymocytes_normalized[, factor_id], Level2  = seurat_meta_filtered_no_thymocytes$annotation_level2)
+  
+  level2_stats <- df_boxplot %>%
+    group_by(Level2) %>%
+    summarise(median_loading = median(Loading, na.rm = TRUE),
+              .groups = "drop")
+  
+  top_level2 <- level2_stats %>%
+    slice_max(median_loading, n = num_truncated, with_ties = FALSE) %>%
+    arrange(desc(median_loading))
+  
+  df_boxplot_top <- df_boxplot %>%
+    filter(Level2 %in% top_level2$Level2) %>%
+    mutate(Level2 = factor(Level2, levels = top_level2$Level2))
+  
+  p_new <- ggplot(df_boxplot_top, aes(x = Level2, y = Loading)) +
+    geom_boxplot(outlier.shape = NA) +
+    coord_cartesian(ylim = c(0, 1)) +
+    labs(title = paste0("Factor ", factor_id),
+         x = "Level-2 Annotation",
+         y = "Normalized Loading") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  p_list[[as.character(factor_id)]] <- p_new
+}
+p_combined <- wrap_plots(p_list, ncol = 2)
+p_combined
+ggsave(
+  filename = "figures/Figure1/Figure1g_Boxplot_Level2.pdf",
+  plot = p_combined,
+  width = 12, height = 12, dpi = 400
+)
+```
+
+
+
+
+## (h) level2 heatmap
+
+```{r}
+level_2_AUC_list <- readRDS(paste0(data_path, "level_2_within_level_1_AUC_list_figure.rds"))
+level_2_AUC <- level_2_AUC_list$auc
+```
+
+```{r}
+# Take out the level-2 categories with less than 500 cells
+which_less_500 <- sapply(rownames(level_2_AUC), function(x){
+  sum(seurat_meta$annotation_level2 == x) < 500
+})
+level_2_AUC_filtered <- level_2_AUC[!which_less_500, ]
+
+# Take out factors that never achieve AUC > 0.9 for any level-2 category
+factors_to_keep <- which(apply(level_2_AUC_filtered, 2, function
+(x) any(x > 0.9)))
+level_2_AUC_final <- level_2_AUC_filtered[, factors_to_keep]
+
+# Take out level-2 categories that never achieve AUC > 0.9 for any factor
+level2_to_keep <- which(apply(level_2_AUC_final, 1, function
+(x) any(x > 0.9)))
+level_2_AUC_final <- level_2_AUC_final[level2_to_keep, ]
+```
+
+Compute the median loading of each factor in each level-2 category
+
+```{r}
+# level_2_categories <- rownames(level_2_AUC_final)
+# do not filter for now
+level_2_categories <- unique(seurat_meta_filtered_no_thymocytes$annotation_level2)
+# factors <- colnames(level_2_AUC_final)
+factors <- paste0("K", 1:200)
+median_loading_matrix <- matrix(NA, nrow = length(level_2_categories), ncol = length(factors))
+rownames(median_loading_matrix) <- level_2_categories
+colnames(median_loading_matrix) <- factors
+for (i in seq_along(level_2_categories)) {
+  level2_cat <- as.character(level_2_categories[i])
+  cells_in_cat <- which(seurat_meta_filtered_no_thymocytes$annotation_level2 == level2_cat)
+  
+  for (j in seq_along(factors)) {
+    factor_id <- factors[j]
+    median_loading <- median(L_pm_no_thymocytes_normalized[cells_in_cat, factor_id], na.rm = TRUE)
+    median_loading_matrix[level2_cat, factor_id] <- median_loading
+  }
+}
+```
+
+
+```{r}
+# compute the reference median loading, which is the median loading of the factor across all the other level-2 categories in the same level-1 category
+# or just take the median loading across all other cells.
+reference_median_loading <- matrix(NA, nrow = nrow(median_loading_matrix), ncol = ncol(median_loading_matrix))
+rownames(reference_median_loading) <- rownames(median_loading_matrix)
+colnames(reference_median_loading) <- colnames(median_loading_matrix)
+
+for (i in seq_along(level_2_categories)) {
+  level2_cat <- as.character(level_2_categories[i])
+  level1_cat <- seurat_meta$annotation_level1[which(seurat_meta$annotation_level2 == level2_cat)[1]]
+  cells_in_other_level2 <- which(seurat_meta_filtered_no_thymocytes$annotation_level1 == level1_cat &
+                                  seurat_meta_filtered_no_thymocytes$annotation_level2 != level2_cat)
+  # cells_in_other_level2 <- which(seurat_meta_filtered_no_thymocytes$annotation_level2 != level2_cat)
+  for (j in seq_along(factors)) {
+    factor_id <- factors[j]
+    ref_median_loading <- median(L_pm_no_thymocytes_normalized[cells_in_other_level2, factor_id], na.rm = TRUE)
+    reference_median_loading[level2_cat, factor_id] <- ref_median_loading
+  }
+}
+```
+
+```{r}
+global_median <- apply(L_pm_no_thymocytes_normalized[, factors, drop = FALSE], 2, median, na.rm = TRUE)
+
+reference_median_loading <- matrix(
+  rep(global_median, each = length(level_2_categories)),
+  nrow = length(level_2_categories),
+  byrow = FALSE,
+  dimnames = list(level_2_categories, factors)
+)
+```
+
+
+compute log2 fold-change matrix
+
+```{r}
+log2fc_matrix <- log2((median_loading_matrix) / (reference_median_loading))
+```
+
+```{r}
+log2fc_cap <- pmax(pmin(log2fc_matrix, 5), -5)
+factor_levels <- colnames(log2fc_cap)
+factor_levels <- factor_levels[order(as.numeric(sub("^K", "", factor_levels)))]
+level2_names <- rownames(log2fc_cap)
+level1_prefix <- sub("_.*$", "", level2_names)
+level2_levels <- level2_names[order(level1_prefix, level2_names)]
+df_long <- as.data.frame(log2fc_cap) |>
+  rownames_to_column(var = "Level2") |>
+  pivot_longer(
+    cols      = -Level2,
+    names_to  = "Factor",
+    values_to = "log2fc"
+  ) |>
+  mutate(
+    Factor = factor(Factor, levels = factor_levels),
+    Level2 = factor(Level2, levels = level2_levels)
+  )
+
+p <- ggplot(df_long, aes(x = Level2, y = Factor, fill = log2fc)) +
+  geom_tile(color = "grey30", size = 0.3) +
+  scale_fill_gradient2(
+    low = "#4575B4", mid = "white", high = "#D73027",
+    midpoint = 0, oob = scales::squish, name = "log2 FC"
+  ) +
+  scale_x_discrete(expand = c(0, 0)) +
+  scale_y_discrete(expand = c(0, 0)) +
+  labs(
+    title = "log2 fold-change (cluster vs others in same level-1)",
+    x = "", y = ""
+  ) +
+  theme_minimal(base_size = 7) +
+  theme(
+    panel.grid  = element_blank(),
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 7),
+    axis.text.y = element_text(size = 7),
+    plot.title  = element_text(hjust = 0.5, face = "bold"),
+    legend.title = element_text(size = 7),
+    legend.text  = element_text(size = 7),
+    axis.ticks   = element_blank()
+  )
+
+p
+
+ggsave(
+  filename = "figures/Figure1/Figure1h_Level2_HeatmapFull.pdf",
+  plot = p,
+  width = 10, height = 8, dpi = 300
+)
+```
+
+```{r}
+log2fc_cap <- pmax(pmin(log2fc_matrix, 2), -2)
+# ---- remove factors (gp) that never exceed |log2fc| > 1 across all Level2 ----
+keep_factors <- apply(abs(log2fc_cap) > 1, 2, any, na.rm = TRUE)
+log2fc_cap <- log2fc_cap[, keep_factors, drop = FALSE]
+
+factor_levels <- colnames(log2fc_cap)
+factor_levels <- factor_levels[order(as.numeric(sub("^K", "", factor_levels)))]
+level2_names <- rownames(log2fc_cap)
+level1_prefix <- sub("_.*$", "", level2_names)
+level2_levels <- level2_names[order(level1_prefix, level2_names)]
+df_long <- as.data.frame(log2fc_cap) |>
+  rownames_to_column(var = "Level2") |>
+  pivot_longer(
+    cols      = -Level2,
+    names_to  = "Factor",
+    values_to = "log2fc"
+  ) |>
+  mutate(
+    Factor = factor(Factor, levels = factor_levels),
+    Level2 = factor(Level2, levels = level2_levels)
+  )
+
+p <- ggplot(df_long, aes(x = Level2, y = Factor, fill = log2fc)) +
+  geom_tile(color = "grey30", size = 0.3) +
+  scale_fill_gradient2(
+    low = "#4575B4", mid = "white", high = "#D73027",
+    midpoint = 0, oob = scales::squish, name = "log2 FC"
+  ) +
+  scale_x_discrete(expand = c(0, 0)) +
+  scale_y_discrete(expand = c(0, 0)) +
+  labs(
+    title = "log2 fold-change (cluster vs others in same level-1)",
+    x = "", y = ""
+  ) +
+  theme_minimal(base_size = 7) +
+  theme(
+    panel.grid  = element_blank(),
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 7),
+    axis.text.y = element_text(size = 7),
+    plot.title  = element_text(hjust = 0.5, face = "bold"),
+    legend.title = element_text(size = 7),
+    legend.text  = element_text(size = 7),
+    axis.ticks   = element_blank()
+  )
+
+p
+
+ggsave(
+  filename = "figures/Figure1/Figure1h_Level2_Heatmap.pdf",
+  plot = p,
+  width = 10, height = 8, dpi = 300
+)
+```
+
+# Figure 2:
+
+## (a) Relevance of TFs to GPs
+
+```{r}
+CD4_TF_list <- read.table(paste0(data_path, "/TF-list/CD4_tf_level2_AUC.txt"), header = TRUE)
+CD8_TF_list <- read.table(paste0(data_path, "/TF-list/CD8_tf_level2_AUC.txt"), header = TRUE)
+CD8aa_TF_list <- read.table(paste0(data_path, "/TF-list/CD8aa_tf_level2_AUC.txt"), header = TRUE)
+gdT_TF_list <- read.table(paste0(data_path, "/TF-list/gdT_tf_level2_AUC.txt"), header = TRUE)
+DN_TF_list <- read.table(paste0(data_path, "/TF-list/DN_tf_level2_AUC.txt"), header = TRUE)
+DP_TF_list <- read.table(paste0(data_path, "/TF-list/DP_tf_level2_AUC.txt"), header = TRUE)
+Treg_TF_list <- read.table(paste0(data_path, "/TF-list/Treg_tf_level2_AUC.txt"), header = TRUE)
+non_conv_TF_list <- read.table(paste0(data_path, "/TF-list/nonconv_tf_level2_AUC.txt"), header = TRUE)
+```
+
+```{r}
+threshold <- 0 # include all TFs
+TF_highlights <- c(CD4_TF_list$Gene[CD4_TF_list$auc >= threshold],
+                   CD8_TF_list$Gene[CD8_TF_list$auc >= threshold],
+                   CD8aa_TF_list$Gene[CD8aa_TF_list$auc >= threshold],
+                   gdT_TF_list$Gene[gdT_TF_list$auc >= threshold],
+                   DN_TF_list$Gene[DN_TF_list$auc >= threshold],
+                   DP_TF_list$Gene[DP_TF_list$auc >= threshold],
+                   non_conv_TF_list$Gene[non_conv_TF_list$auc >= threshold],
+                   Treg_TF_list$Gene[Treg_TF_list$auc >= threshold])
+
+TF_highlights <- unique(TF_highlights)
+```
+
+```{r}
+F_pm <- flashier_snmf_summary$F_pm
+d_f <- apply(F_pm, 2, function(x) max(abs(x)))
+F_pm_norm_col <- scale_cols(F_pm,1/d_f)
+
+# strongly-replicated
+factor.info <- read.csv(file = paste0(data_path, "factors_comments_updated.xlsx - factor_pve.csv"), header = TRUE, stringsAsFactors = FALSE)
+factors_considered <- sort(factor.info$X[factor.info$strongly.replicated])
+```
+
+Produce stacked barplot:
+
+```{r}
+produce_stacked_barplot_signed <- function(
+  tfs,
+  F_pm_norm_col,
+  select_gp = NULL,         # indices or "Kxx"
+  threshold = NULL,        
+  label_step = NULL,
+  cex_axis = 0.7,
+  las = 2,
+  legend_cex = 0.8,
+  legend_ncol = NULL,
+  palette = NULL,
+  legend_pos = "topright",
+  keep_order = TRUE
+) {
+  tfs <- intersect(tfs, rownames(F_pm_norm_col))
+  if (!length(tfs)) stop("None of the tfs are in rownames(F_pm_norm_col).")
+
+  # --- select GPs (keep original indices)
+  K_all <- seq_len(ncol(F_pm_norm_col))
+  if (!is.null(select_gp)) {
+    idx <- if (is.character(select_gp)) as.integer(sub("^K", "", select_gp)) else as.integer(select_gp)
+    idx <- idx[idx >= 1 & idx <= max(K_all)]
+  } else idx <- K_all
+
+  if (keep_order) idx <- sort(idx)
+
+  mat <- F_pm_norm_col[tfs, idx, drop = FALSE]  # raw signed loadings
+
+  # split into positive / negative magnitudes
+  pos <- pmax(mat, 0)
+  neg <- -pmin(mat, 0)  # magnitudes (positive numbers)
+
+  # axis labels
+  gp_labels <- paste0("K", idx)
+  if (is.null(label_step)) {
+    label_step <- if (length(idx) <= 40) 1 else if (length(idx) <= 80) 2 else 3
+  }
+  tick_i <- seq(1, length(idx), by = label_step)
+
+  # colors
+  if (is.null(palette)) {
+    palette <- hcl.colors(length(tfs), palette = "Dark 3")
+  } else {
+    stopifnot(length(palette) >= length(tfs))
+    palette <- palette[seq_along(tfs)]
+  }
+
+  # y-limits (adaptive)
+  ymax <- max(colSums(pos, na.rm = TRUE))
+  ymin <- max(colSums(neg, na.rm = TRUE))
+  ylim <- c(-1.05 * max(1e-8, ymin), 1.05 * max(1e-8, ymax))
+
+  # margins (space for x labels + legend)
+  op <- par(mar = c(9, 4, 3, 6))
+
+  # draw positive stacks
+  bp <- barplot(
+    pos,
+    beside = FALSE,
+    col = palette,
+    names.arg = rep("", ncol(pos)),
+    las = las,
+    ylim = ylim,
+    ylab = "normalized factor values",
+    main = "TF relevance across GPs (signed)"
+  )
+
+  # draw negative stacks (as negative values)
+  barplot(
+    -neg,
+    beside = FALSE,
+    col = palette,
+    names.arg = rep("", ncol(neg)),
+    add = TRUE,
+    axes = FALSE
+  )
+
+  # x-axis
+  axis(1, at = bp[tick_i], labels = gp_labels[tick_i], las = las, cex.axis = cex_axis)
+  abline(h = 0)
+
+  # optional: mark GPs with any TF |loading| >= threshold
+  if (!is.null(threshold)) {
+    hit_gp <- apply(abs(mat), 2, function(x) any(x >= threshold, na.rm = TRUE))
+    if (any(hit_gp)) {
+      points(bp[hit_gp], rep(0, sum(hit_gp)), pch = 19) 
+    }
+  }
+
+  # legend
+  if (is.null(legend_ncol)) {
+    legend_ncol <- ifelse(length(tfs) <= 10, 1, ifelse(length(tfs) <= 20, 2, 3))
+  }
+  legend(legend_pos, legend = tfs, fill = palette, cex = legend_cex,
+         ncol = legend_ncol, bty = "n")
+
+  par(op)
+  invisible(list(gps = gp_labels, tfs = tfs, colors = palette))
+}
+
+
+pdf("figures/Figure2/Figure2a_TFs_GP.pdf", width = 10, height = 9)
+produce_stacked_barplot_signed(
+  c("Tcf7", "Rorc", "Zfp683", "Etv5", "Maf", "Myb", "Aff3", "Lef1", "Foxp3"),
+  F_pm_norm_col,
+  select_gp = factors_considered,
+  label_step = 2,
+  threshold = NULL  
+)
+dev.off()
+```
+
+
+## (b) Rank plot of TF
+
+This figure shows, for each TF, the (n_genes - rank) across all GPs, where rank is determined by the (positive / absolute) loading of that TF in each GP. A higher (n_genes - rank) means that the TF is more specific to that GP.
+
+```{r}
+F_pm <- flashier_snmf_summary$F_pm
+d_f <- apply(F_pm, 2, function(x) max(abs(x)))
+F_pm_norm_col <- scale_cols(F_pm,1/d_f)
+
+# strongly-replicated
+factor.info <- read.csv(file = paste0(data_path, "factors_comments_updated.xlsx - factor_pve.csv"), header = TRUE, stringsAsFactors = FALSE)
+factors_considered <- sort(factor.info$X[factor.info$strongly.replicated])
+
+colnames(F_pm_norm_col) <- paste0("K", seq_len(ncol(F_pm_norm_col)))
+```
+
+```{r}
+# Compute TF rank (within each GEP/column) across all GEPs
+.compute_tf_rank_score <- function(F, tf, mode = c("positive", "abs", "raw")) {
+  mode <- match.arg(mode)
+
+  if (is.null(rownames(F))) stop("F must have rownames (gene names).")
+  if (!tf %in% rownames(F)) stop(sprintf("TF '%s' not found in rownames(F).", tf))
+
+  G <- ncol(F)
+  cols <- colnames(F)
+  if (is.null(cols)) cols <- paste0("K", seq_len(G))
+
+  score_mat <- switch(
+    mode,
+    positive = pmax(F, 0),
+    abs      = abs(F),
+    raw      = F
+  )
+
+  # Rank within each column: higher score -> smaller rank (rank=1 is best)
+  rank_mat <- apply(score_mat, 2, function(x) rank(-x, ties.method = "average", na.last = "keep"))
+  tf_rank <- as.numeric(rank_mat[tf, ])
+
+  data.frame(
+    GEP  = factor(cols, levels = cols),
+    rank = tf_rank,
+    tf   = tf,
+    stringsAsFactors = FALSE
+  )
+}
+
+plot_tf_rank_bars <- function(
+  F,
+  TFs,
+  mode = c("positive", "abs", "raw"),
+  rank_max = 100,
+  x_label_every = 10,
+  facet = TRUE,
+  alpha = 0.9,
+  label_best = TRUE
+) {
+  mode <- match.arg(mode)
+
+  df <- do.call(rbind, lapply(TFs, function(tf) .compute_tf_rank_score(F, tf, mode = mode)))
+
+  # Ensure numeric rank; drop missing ranks
+  df$rank <- as.numeric(df$rank)
+  df <- df[is.finite(df$rank), , drop = FALSE]
+
+  # Numeric x for dense categories (1..G)
+  levs <- levels(df$GEP)
+  df$x <- as.integer(df$GEP)
+
+  # Truncate worse ranks to rank_max (so they become height 0)
+  df$rank_clip <- pmin(df$rank, rank_max)
+
+  # "Skyscraper" height: better rank (smaller) -> taller bar
+  df$height <- rank_max - df$rank_clip
+
+  # Show fewer x tick labels to avoid overlap
+  keep_idx <- seq(1, length(levs), by = x_label_every)
+  x_breaks <- keep_idx
+  x_labels <- levs[keep_idx]
+
+  # y-axis: display as rank (1 at top, rank_max at bottom) via relabeling
+  y_breaks <- seq(0, rank_max, by = 25)
+  y_labels <- rank_max - y_breaks
+  # If you prefer 1 instead of 0 at the very top, you can tweak labels:
+  # y_labels[ y_labels == 0 ] <- 1  # optional, but usually not needed.
+
+  p <- ggplot(df, aes(x = x, y = height, fill = tf)) +
+    geom_col(alpha = alpha, width = 0.9) +
+    scale_x_continuous(breaks = x_breaks, labels = x_labels) +
+    scale_y_continuous(
+      breaks = y_breaks,
+      labels = y_labels,
+      limits = c(0, rank_max)
+    ) +
+    labs(
+      title = sprintf("TF rank bar skyline across GEPs (top %d)", rank_max),
+      x = "GEP",
+      y = "Rank within each GEP (1 = highest)"
+    ) +
+    theme_classic(base_size = 12) +
+    theme(
+      axis.text.x = element_text(vjust = 0.5, hjust = 0.5),
+      legend.position = if (facet) "none" else "right",
+      legend.title = element_blank()
+    )
+
+  if (facet) {
+    p <- p + facet_wrap(~tf, ncol = 1, scales = "fixed")
+  }
+
+  # Label the best GEP per TF (smallest rank -> tallest bar)
+  if (isTRUE(label_best) && nrow(df) > 0) {
+    best_df <- do.call(rbind, lapply(split(df, df$tf), function(d) d[which.min(d$rank), ]))
+    best_df$label <- as.character(best_df$GEP)
+
+    p <- p + geom_text(
+      data = best_df,
+      aes(x = x, y = height, label = label),
+      inherit.aes = FALSE,
+      vjust = -0.4,  # place label slightly above the bar
+      size = 3
+    )
+  }
+
+  p
+}
+
+p3 <- plot_tf_rank_bars(
+  F = F_pm_norm_col,
+  TFs = c("Tcf7", "Foxp3", "Rorc"),
+  mode = "abs",
+  rank_max = 100,
+  x_label_every = 10,
+  facet = TRUE,
+  label_best = TRUE
+)
+
+ggsave(
+  filename = "figures/Figure2/Figure2b_rank_TF_GP.pdf",
+  plot = p3, width = 10, height = 10, dpi = 300
+)
+```
+
+```{r}
+save_all_tf_rank_plots_pdf <- function(
+  F,
+  TFs,
+  out_pdf,
+  mode = c("positive", "abs", "raw"),
+  rank_max = 100,
+  x_label_every = 10,
+  alpha = 0.9,
+  width = 10,
+  height = 4,
+  dpi = 300
+) {
+  mode <- match.arg(mode)
+
+  # Use cairo if available (better text rendering)
+  # If cairo is not available on your system, replace with pdf(out_pdf, ...)
+  if (capabilities("cairo")) {
+    grDevices::cairo_pdf(filename = out_pdf, width = width, height = height)
+  } else {
+    grDevices::pdf(file = out_pdf, width = width, height = height)
+  }
+  on.exit(grDevices::dev.off(), add = TRUE)
+
+  for (tf in TFs) {
+    if (!tf %in% rownames(F)) next
+
+    p <- plot_tf_rank_bars(
+      F = F,
+      TFs = tf,               # one TF per page
+      mode = mode,
+      rank_max = rank_max,
+      x_label_every = x_label_every,
+      facet = FALSE,          # no facet when only one TF
+      alpha = alpha,
+      label_best = TRUE
+    ) +
+      ggtitle(sprintf("TF rank across GEPs: %s (top %d)", tf, rank_max))
+
+    print(p)
+  }
+
+  invisible(out_pdf)
+}
+
+# save to a multi-page PDF (one TF per page)
+save_all_tf_rank_plots_pdf(
+  F = F_pm_norm_col,
+  TFs = TF_highlights,
+  out_pdf = "figures/Figure2/Figure2b_rank_TF_GP_allTFs.pdf",
+  mode = "abs",
+  rank_max = 100,
+  x_label_every = 10,
+  width = 10,
+  height = 4
+)
+```
+
+```{r}
+compute_tf_rank_matrix <- function(
+  F,
+  TFs,
+  mode = c("positive", "abs", "raw"),
+  ties.method = "average",
+  verbose = TRUE
+) {
+  mode <- match.arg(mode)
+
+  if (is.null(rownames(F))) stop("F must have rownames (gene names).")
+  if (is.null(colnames(F))) colnames(F) <- paste0("K", seq_len(ncol(F)))
+
+  TFs_in <- intersect(TFs, rownames(F))
+  TFs_drop <- setdiff(TFs, TFs_in)
+
+  if (verbose && length(TFs_drop) > 0) {
+    message(sprintf(
+      "Dropping %d TFs not found in rownames(F). Example: %s",
+      length(TFs_drop),
+      paste(head(TFs_drop, 5), collapse = ", ")
+    ))
+  }
+  if (length(TFs_in) == 0) stop("None of the requested TFs are present in rownames(F).")
+
+  score_mat <- switch(
+    mode,
+    positive = pmax(F, 0),
+    abs      = abs(F),
+    raw      = F
+  )
+
+  # rank within each column (GP): higher score => smaller rank (1 = best)
+  rank_all <- apply(score_mat, 2, function(x) rank(-x, ties.method = ties.method, na.last = "keep"))
+
+  # subset rows to TFs
+  rank_tf <- rank_all[TFs_in, , drop = FALSE]
+
+  list(
+    rank = rank_tf,       # matrix: TF x GP
+    TFs_used = TFs_in,
+    TFs_dropped = TFs_drop
+  )
+}
+
+rk_obj <- compute_tf_rank_matrix(F_pm_norm_col, TF_highlights, mode = "abs")
+rank_tf <- rk_obj$rank
+
+library(pheatmap)
+rank_max <- 100
+rank_clip <- pmin(rank_tf, rank_max)
+keep <- apply(rank_clip, 1, function(v) any(v < rank_max, na.rm = TRUE))
+rank_clip <- rank_clip[keep, , drop = FALSE]
+pal <- colorRampPalette(c("red", "white"))(100)
+bk  <- seq(1, rank_max, length.out = length(pal) + 1)
+
+pheatmap(
+  mat = rank_clip,
+  color = pal,
+  breaks = bk,
+  cluster_rows = TRUE,
+  cluster_cols = FALSE,          
+  show_colnames = TRUE,         
+  fontsize_row = 6,
+  main = sprintf("TF × GP rank heatmap (abs; ranks 1–%d)", rank_max),
+  border_color = "grey85",
+  legend_breaks = seq(1, rank_max, by = 10),
+  legend_labels = as.character(seq(1, rank_max, by = 10))
+)
+```
+
+This time just look at the TF factors:
+
+```{r}
+F_pm_TF <- F_pm_norm_col[rownames(F_pm_norm_col) %in% TF_highlights, ]
+
+# only include TFs with at least one abs factor > 0.3
+keep <- apply(abs(F_pm_TF), 1, function(v) any(v > 0.3, na.rm = TRUE))
+F_pm_TF <- F_pm_TF[keep, , drop = FALSE]
+
+# only include GPs with at least one TF abs factor > 0.2
+keep_gp <- apply(abs(F_pm_TF), 2, function(v) any(v > 0.2, na.rm = TRUE))
+F_pm_TF <- F_pm_TF[, keep_gp, drop = FALSE]
+
+pdf("figures/Figure2/Figure2b_TF_GP_heatmap.pdf", width = 12, height = 10)
+pheatmap(
+  (F_pm_TF),
+  cluster_rows = TRUE,
+  cluster_cols = TRUE,
+  fontsize_row = 6,
+  fontsize_col = 8,
+  main = "TF × GP loading heatmap (normalized; TFs only)",
+  legend = TRUE
+)
+dev.off()
+```
+
+
+
+
+## (c) Relevance of markers to GPs
+
+Define a few set of markers by threshold logFC in each GP:
+
+```{r}
+protein_flash_summary_lognorm <- readRDS(file = paste0(data_path, "protein_flash_selected_summary_lognorm.rds"))
+# normalize by the max(abs) of each column
+D_lognorm <- diag(1 / apply(protein_flash_summary_lognorm$F_pm, 2, function(x) max(abs(x))))
+Protein_F_pm <- protein_flash_summary_lognorm$F_pm %*% D_lognorm
+factor.info <- read.csv(file = paste0(data_path, "factors_comments_updated.xlsx - factor_pve.csv"), header = TRUE, stringsAsFactors = FALSE)
+factors_considered <- sort(factor.info$X[factor.info$strongly.replicated])
+colnames(Protein_F_pm) <- paste0("K", factors_considered)
+```
+
+Take out poor quality proteins and proteins with name starting with Isotype
+
+```{r}
+isotype_proteins <- grep("^Isotype", rownames(Protein_F_pm), value = TRUE)
+# TableS4_citeseq_qc_20250513.csv
+proteins_quality <- read.csv(paste0(data_path, "TableS4_citeseq_qc_20250513.csv"), header = TRUE, stringsAsFactors = FALSE, skip = 1)
+poor_proteins <- proteins_quality$protein[proteins_quality$classification == "poor"]
+Protein_F_pm <- Protein_F_pm[!rownames(Protein_F_pm) %in% c(isotype_proteins, poor_proteins), ]
+
+# redo the normalization
+D_lognorm <- diag(1 / apply(Protein_F_pm, 2, function(x) max(abs(x))))
+Protein_F_pm <- Protein_F_pm %*% D_lognorm
+colnames(Protein_F_pm) <- paste0("K", factors_considered)
+```
+
+```{r}
+produce_stacked_barplot_signed_citeseq <- function(
+  tfs,
+  F_pm_norm_col,
+  threshold = NULL,        
+  label_step = NULL,
+  cex_axis = 0.7,
+  las = 2,
+  legend_cex = 0.8,
+  legend_ncol = NULL,
+  palette = NULL,
+  legend_pos = "bottomright"
+) {
+  tfs <- intersect(tfs, rownames(F_pm_norm_col))
+  if (!length(tfs)) stop("None of the tfs are in rownames(F_pm_norm_col).")
+
+  mat <- F_pm_norm_col[tfs, , drop = FALSE]  # raw signed loadings
+
+  # split into positive / negative magnitudes
+  pos <- pmax(mat, 0)
+  neg <- -pmin(mat, 0)  # magnitudes (positive numbers)
+
+  # axis labels
+  gp_labels <- colnames(F_pm_norm_col)
+  idx <- seq_len(ncol(F_pm_norm_col))
+  tick_i <- seq(1, length(idx), by = label_step)
+
+  # colors
+  if (is.null(palette)) {
+    palette <- hcl.colors(length(tfs), palette = "Dark 3")
+  } else {
+    stopifnot(length(palette) >= length(tfs))
+    palette <- palette[seq_along(tfs)]
+  }
+
+  # y-limits (adaptive)
+  ymax <- max(colSums(pos, na.rm = TRUE))
+  ymin <- max(colSums(neg, na.rm = TRUE))
+  ylim <- c(-1.05 * max(1e-8, ymin), 1.05 * max(1e-8, ymax))
+
+  # margins (space for x labels + legend)
+  op <- par(mar = c(9, 4, 3, 6))
+
+  # draw positive stacks
+  bp <- barplot(
+    pos,
+    beside = FALSE,
+    col = palette,
+    names.arg = rep("", ncol(pos)),
+    las = las,
+    ylim = ylim,
+    ylab = "normalized factors",
+    main = "Markers relevance across GPs (signed)"
+  )
+
+  # draw negative stacks (as negative values)
+  barplot(
+    -neg,
+    beside = FALSE,
+    col = palette,
+    names.arg = rep("", ncol(neg)),
+    add = TRUE,
+    axes = FALSE
+  )
+
+  # x-axis
+  axis(1, at = bp[tick_i], labels = gp_labels[tick_i], las = las, cex.axis = cex_axis)
+  abline(h = 0)
+
+  # optional: mark GPs with any TF |loading| >= threshold
+  if (!is.null(threshold)) {
+    hit_gp <- apply(abs(mat), 2, function(x) any(x >= threshold, na.rm = TRUE))
+    if (any(hit_gp)) {
+      points(bp[hit_gp], rep(0, sum(hit_gp)), pch = 19) 
+    }
+  }
+
+  # legend
+  if (is.null(legend_ncol)) {
+    legend_ncol <- ifelse(length(tfs) <= 10, 1, ifelse(length(tfs) <= 20, 2, 3))
+  }
+  legend(legend_pos, legend = tfs, fill = palette, cex = legend_cex,
+         ncol = legend_ncol, bty = "n")
+
+  par(op)
+  invisible(list(gps = gp_labels, tfs = tfs, colors = palette))
+}
+
+# produce stacked barplot for markers
+pdf("figures/Figure2/Figure2c_Markers_GP.pdf", width = 10, height = 9)
+produce_stacked_barplot_signed_citeseq(
+  c("CD4", "IL2RA.CD25", "FR4", "CD8A", "CD8B"),
+  Protein_F_pm,
+  label_step = 2,
+  threshold = NULL  
+)
+dev.off()
+```
+
+
+## (d) Enrichment of markers in GPs
+
+Define set of markers for each GP based on threshold:
+
+```{r}
+marker_threshold <- 0.5
+gp_marker_list <- list()
+for (i in 1:ncol(Protein_F_pm)) {
+  gp_name <- colnames(Protein_F_pm)[i]
+  marker_genes <- rownames(Protein_F_pm)[which(abs(Protein_F_pm)[, i] >= marker_threshold)]
+  gp_marker_list[[gp_name]] <- marker_genes
+}
+
+gp_marker_sign_list <- list()
+for (i in 1:ncol(Protein_F_pm)) {
+  gp_name <- colnames(Protein_F_pm)[i]
+  marker_genes_pos <- rownames(Protein_F_pm)[which(Protein_F_pm[, i] >= marker_threshold)]
+  marker_genes_neg <- rownames(Protein_F_pm)[which(Protein_F_pm[, i] <= -marker_threshold)]
+  gp_marker_sign_list[[gp_name]] <- list(
+    pos = marker_genes_pos,
+    neg = marker_genes_neg
+  )
+}
+```
+
+```{r}
+make_ucell_features <- function(gp_marker_sign_list) {
+  feats <- lapply(gp_marker_sign_list, function(x) {
+    pos <- x$pos
+    neg <- x$neg
+    
+    c(
+      if (length(pos)) paste0(pos, "+"),
+      if (length(neg)) paste0(neg, "-")
+    )
+  })
+  
+  feats <- feats[vapply(feats, length, integer(1)) > 0]
+  
+  feats <- lapply(feats, unique)
+  feats
+}
+features_ucell <- make_ucell_features(gp_marker_sign_list)
+```
+
+How many markers per GP?
+
+```{r}
+sapply(features_ucell, length)
+```
+
+If there are too many protein markers (>10) in that GP, we view the protein marker set from that GP as "non-informative", and skip that set.
+
+```{r}
+marker_threshold <- 0.5
+gp_marker_list <- list()
+gp_marker_sign_list <- list()
+for (i in 1:ncol(Protein_F_pm)) {
+  gp_name <- colnames(Protein_F_pm)[i]
+  marker_values <- Protein_F_pm[, i]
+  marker_genes <- rownames(Protein_F_pm)[which(abs(marker_values) >= marker_threshold)]
+  
+  if (length(marker_genes) > 10){
+    next
+  }
+  
+  gp_marker_list[[gp_name]] <- marker_genes
+  
+  marker_genes_pos <- marker_genes[which(marker_values[marker_genes] >= marker_threshold)]
+  marker_genes_neg <- marker_genes[which(marker_values[marker_genes] <= -marker_threshold)]
+  gp_marker_sign_list[[gp_name]] <- list(
+    pos = marker_genes_pos,
+    neg = marker_genes_neg
+  )
+}
+
+features_ucell <- make_ucell_features(gp_marker_sign_list)
+```
+
+Treat neg and pos in different ways:
+
+```{r}
+library(UCell)
+
+Knames <- colnames(Protein_F_pm)
+names(gp_marker_sign_list) <- paste0("Set_", names(gp_marker_sign_list))
+names(gp_marker_list) <- paste0("Set_", names(gp_marker_list))
+Set_names <- names(gp_marker_sign_list)
+
+custom_score <- matrix(NA_real_,
+                       nrow = length(Knames),
+                       ncol = length(Set_names),
+                       dimnames = list(Knames, Set_names))
+
+for (set_name in Set_names) {
+  markers_neg <- gp_marker_sign_list[[set_name]]$neg
+
+  Protein_F_pm_signed <- Protein_F_pm
+  if (length(markers_neg) > 0) {
+    Protein_F_pm_signed[markers_neg, ] <- -Protein_F_pm_signed[markers_neg, ]
+  }
+
+  out <- ScoreSignatures_UCell(
+    matrix   = as.matrix(Protein_F_pm_signed),
+    features = gp_marker_list[set_name],   
+    maxRank  = nrow(Protein_F_pm_signed)
+  )
+
+  custom_score[, set_name] <- out  
+}
+```
+
+```{r}
+make_sorted_curve_ms <- function(v, mode = c("positive", "abs"), transform = c("none","log1p")) {
+  mode <- match.arg(mode)
+  transform <- match.arg(transform)
+
+  score <- switch(mode,
+                  positive = pmax(v, 0),
+                  abs      = abs(v))
+
+  ord <- order(score, decreasing = TRUE, na.last = TRUE)
+  s   <- score[ord]
+
+  y <- switch(transform,
+              none  = s,
+              log1p = log1p(s))
+
+  res <- data.frame(
+    rank = seq_along(s),
+    y    = y,
+    score = s,
+    gp   = names(v)[ord]
+  )
+  res
+}
+
+plot_sorted_marker_enrichment <- function(
+  custom_score,
+  marker_highlights,
+  mode = "positive", # doesn't matter since scores are non-negative
+  transform = "none",        # "none" or "log1p"
+  n_bg = 80,
+  seed = 1,
+  label_at = 0.95,
+  title = "Sorted marker-set enrichment across GPs",
+  ylab = NULL,
+  ylim = c(0.5, 1),
+  xlim = c(0, 40),
+  show_points = TRUE,
+  point_size = 0.7,
+  point_alpha = 0.6,
+  show_legend = TRUE,
+  legend_pos = c(0.98, 0.98) # inside-plot coordinates; top-right
+) {
+  M <- as.matrix(custom_score)
+  stopifnot(!is.null(rownames(M)), !is.null(colnames(M)))
+
+  all_sets <- colnames(M)
+  ms_use   <- intersect(marker_highlights, all_sets)
+
+  set.seed(seed)
+  bg_sets <- setdiff(all_sets, ms_use)
+  if (length(bg_sets) > n_bg) bg_sets <- sample(bg_sets, n_bg)
+
+  bg_df <- do.call(rbind, lapply(bg_sets, function(ms) {
+    v <- M[, ms]; names(v) <- rownames(M)
+    d <- make_sorted_curve_ms(v, mode = mode, transform = transform)
+    d$marker_set <- ms
+    d$type <- "bg"
+    d
+  }))
+
+  ms_df <- do.call(rbind, lapply(ms_use, function(ms) {
+    v <- M[, ms]; names(v) <- rownames(M)
+    d <- make_sorted_curve_ms(v, mode = mode, transform = transform)
+    d$marker_set <- ms
+    d$type <- "ms"
+    d
+  }))
+
+  lab_df <- do.call(rbind, lapply(ms_use, function(ms) {
+    d <- ms_df[ms_df$marker_set == ms, ]
+    if (nrow(d) == 0) return(NULL)
+    i <- max(1, min(nrow(d), round(label_at * nrow(d))))
+    d[i, c("rank","y","marker_set")]
+  }))
+
+  if (is.null(ylab)) {
+    ylab <- if (transform == "log1p") "log(1 + enrichment score)" else "Enrichment score"
+  }
+
+  p <- ggplot() +
+    geom_line(data = bg_df, aes(rank, y, group = marker_set),
+              linewidth = 0.4, alpha = 0.12) +
+    geom_line(data = ms_df, aes(rank, y, color = marker_set,
+                                linetype = marker_set, group = marker_set),
+              linewidth = 0.75)
+
+  if (isTRUE(show_points)) {
+    p <- p +
+      geom_point(data = bg_df, aes(rank, y, group = marker_set),
+                 size = point_size, alpha = 0.08) +
+      geom_point(data = ms_df, aes(rank, y, color = marker_set, group = marker_set),
+                 size = point_size, alpha = point_alpha)
+  }
+
+  p <- p +
+    labs(title = title,
+         x = "Ranked GPs (by enrichment score)",
+         y = ylab,
+         color = NULL, linetype = NULL) +
+    theme_classic(base_size = 12)
+
+  if (isTRUE(show_legend)) {
+    p <- p +
+      theme(
+        legend.position = legend_pos,
+        legend.justification = c(1, 1),
+        legend.background = element_rect(fill = "white", colour = "grey70", linewidth = 0.2),
+        legend.key.size = grid::unit(0.35, "cm")
+      )
+  } else {
+    p <- p + theme(legend.position = "none")
+  }
+
+  if (!is.null(lab_df) && nrow(lab_df) > 0) {
+    p <- p + geom_label_repel(
+      data = lab_df,
+      aes(rank, y, label = marker_set, color = marker_set),
+      size = 3,
+      label.size = 0.2,
+      show.legend = FALSE,
+      max.overlaps = Inf
+    )
+  }
+  
+  p <- p + coord_cartesian(ylim = ylim, xlim = xlim)
+
+  p
+}
+
+# Example
+p_sorted <- plot_sorted_marker_enrichment(
+  custom_score,
+  marker_highlights = c("Set_K2", "Set_K8", "Set_K22", "Set_K26", "Set_K54", "Set_K58", "Set_K68", "Set_K171", "Set_K182"),
+  mode = "positive",
+  transform = "none",   # try "log1p" if most scores are tiny
+  n_bg = 30
+)
+p_sorted
+
+ggsave(
+  filename = "figures/Figure2/Figure2d_sorted_marker_enrichment.pdf",
+  plot = p_sorted, width = 6, height = 6, dpi = 300
+)
+```
+
+Produce a table of marker set for each GP:
+
+```{r}
+# ---- Convert gp_marker_sign_list to a LaTeX-friendly table ----
+# gp_marker_sign_list: a named list like $Set_K2$pos / $Set_K2$neg
+# Each row = one set; columns = Positive markers / Negative markers
+marker_list_to_df <- function(gp_marker_sign_list, collapse = ", ") {
+  stopifnot(is.list(gp_marker_sign_list), length(gp_marker_sign_list) > 0)
+
+  sets <- names(gp_marker_sign_list)
+  if (is.null(sets)) stop("gp_marker_sign_list must have names, e.g. 'Set_K68'.")
+
+  df <- data.frame(
+    Set = sets,
+    Positive = vapply(gp_marker_sign_list, function(x) {
+      pos <- x$pos
+      if (length(pos) == 0) return("")
+      paste(pos, collapse = collapse)
+    }, character(1)),
+    Negative = vapply(gp_marker_sign_list, function(x) {
+      neg <- x$neg
+      if (length(neg) == 0) return("")
+      paste(neg, collapse = collapse)
+    }, character(1)),
+    stringsAsFactors = FALSE
+  )
+
+  df
+}
+
+# Build the table data
+df_markers <- marker_list_to_df(gp_marker_sign_list)
+
+# Optional: sort by set index (K2, K5, K6, ...)
+df_markers$K_idx <- as.integer(sub(".*_K", "", df_markers$Set))
+df_markers <- df_markers[order(df_markers$K_idx), c("Set", "Positive", "Negative")]
+
+# ---- Output as LaTeX ----
+# Option A: knitr::kable (simple and works well)
+library(knitr)
+df_markers <- df_markers[, c("Positive", "Negative")]
+# If you use booktabs in your LaTeX preamble, set booktabs=TRUE
+latex_code <- knitr::kable(
+  df_markers,
+  format = "latex",
+  booktabs = TRUE,
+  longtable = TRUE,     # good if the table is long
+  escape = TRUE,        # keep TRUE unless you intentionally add LaTeX in cells
+  caption = "Positive and negative protein markers for each marker set."
+)
+
+cat(latex_code)
+
+```
+
+```{r}
+library(kableExtra)
+tab <- knitr::kable(df_markers, format = "html", caption = "Positive and negative protein markers for each marker set.") |>
+  kableExtra::kable_styling(full_width = FALSE)
+
+html_file <- "tmp_table/table_preview.html"
+png_file  <- "tmp_table/table_preview.png"
+dir.create("tmp_table", showWarnings = FALSE)
+kableExtra::save_kable(tab, file = html_file)
+webshot2::webshot(html_file, file = png_file, zoom = 2)
+png_file
+```
+
+Plot the maximal difference within the top 2 GPs for each marker set, against the number of markers in that set:
+
+```{r}
+max_diff_vs_nmarkers <- function(custom_score, gp_marker_list, top_n = 5) {
+  stopifnot(is.matrix(custom_score), nrow(custom_score) >= 1,
+            ncol(custom_score) >= 1)
+  stopifnot(is.list(gp_marker_list), length(gp_marker_list) >= 1)
+  sets <- colnames(custom_score)
+  stopifnot(all(names(gp_marker_list) %in% sets))
+  out <- data.frame(
+    Set = character(0),
+    n_markers = integer(0),
+    max_diff = numeric(0),
+    stringsAsFactors = FALSE
+  )
+  for (set in names(gp_marker_list)) {
+    scores <- custom_score[, set]
+    ord <- order(scores, decreasing = TRUE)
+    top_scores <- scores[ord[1: min(top_n, length(ord))]]
+    if (length(top_scores) >= 2) {
+      max_diff <- max(top_scores) - min(top_scores)
+    } else {
+      max_diff <- NA_real_
+    }
+    n_markers <- length(gp_marker_list[[set]])
+    out <- rbind(out, data.frame(
+      Set = set,
+      n_markers = n_markers,
+      max_diff = max_diff,
+      stringsAsFactors = FALSE
+    ))
+  }
+  out
+}
+df_diff <- max_diff_vs_nmarkers(custom_score, gp_marker_list, top_n = 2)
+p_diff <- ggplot(df_diff, aes(x = n_markers, y = max_diff, label = Set)) +
+  geom_point(size = 2, alpha = 0.7) +
+  geom_text_repel(size = 3) +
+  labs(
+    title = "",
+    x = "Number of markers in set",
+    y = "Difference in enrichment score (top 2 GPs)"
+  ) +
+  theme_classic(base_size = 12)
+# add lm line
+p_diff <- p_diff + geom_smooth(method = "lm", se = FALSE, color = "blue", linetype = "dashed")
+p_diff
+ggsave(
+  filename = "figures/Figure2/Figure2d_maxDiff_vs_nMarkers.pdf",
+  plot = p_diff, width = 6, height = 5, dpi = 300
+)
+```
+
+Check a correlation heatmap of protein programs:
+
+```{r}
+# pheatmap of protein programs
+library(pheatmap)
+# make it sparse
+Protein_F_pm_sparse <- ifelse(
+  abs(Protein_F_pm) >= 0.5,
+  Protein_F_pm,
+  0
+)
+pdf("figures/Figure2/Figure2d_Protein_Programs_heatmap.pdf", width = 12, height = 10)
+pheatmap::pheatmap(
+  t(Protein_F_pm_sparse),
+  main = "Protein programs (normalized loadings)"
+)
+dev.off()
+```
+
+```{r}
+cor_protein_programs <- cor(Protein_F_pm, method = "pearson")
+cor_protein_programs_threshold <- 0
+cor_protein_programs_sparse <- ifelse(
+  abs(cor_protein_programs) >= cor_protein_programs_threshold,
+  cor_protein_programs,
+  0
+)
+pdf("figures/Figure2/Figure2d_Protein_Programs_correlation_heatmap.pdf", width = 10, height = 10)
+pheatmap::pheatmap(
+  cor_protein_programs_sparse,
+  main = "Correlation among protein programs"
+)
+dev.off()
+```
+
+Let's try to define protein-marker sets based on cluster of programs:
+
+```{r}
+ph <- pheatmap(
+  cor_protein_programs,
+  main = "Correlation among protein programs"
+)
+
+hc_programs <- ph$tree_col
+prog_clusters <- cutree(hc_programs, h = 2)
+table(prog_clusters)
+```
+
+Now compute the average profile within each cluster, and then obtain a new protein-marker set for each cluster:
+
+```{r}
+gp_marker_sign_list_clustered <- list()
+gp_marker_list_clustered <- list()
+included_progs <- list()
+for (clust_id in unique(prog_clusters)) {
+  prog_in_clust <- names(prog_clusters)[prog_clusters == clust_id]
+  avg_profile <- rowMeans(Protein_F_pm[, prog_in_clust, drop = FALSE])
+  included_progs[[paste0("Cluster_", clust_id)]] <- prog_in_clust
+  marker_genes <- names(avg_profile)[which(abs(avg_profile) >= marker_threshold)]
+  gp_marker_list_clustered[[paste0("Cluster_", clust_id)]] <- marker_genes
+  
+  marker_genes_pos <- marker_genes[which(avg_profile[marker_genes] >= marker_threshold)]
+  marker_genes_neg <- marker_genes[which(avg_profile[marker_genes] <= -marker_threshold)]
+  gp_marker_sign_list_clustered[[paste0("Cluster_", clust_id)]] <- list(
+    pos = marker_genes_pos,
+    neg = marker_genes_neg
+  )
+}
+```
+
+Redo the table for clustered set:
+
+```{r}
+# Build the table data
+df_markers_clustered <- marker_list_to_df(gp_marker_sign_list_clustered)
+df_markers_clustered <- df_markers_clustered[order(df_markers_clustered$Set), c("Set", "Positive", "Negative")]
+df_markers_clustered <- df_markers_clustered[, c("Positive", "Negative")]
+
+# include what program each cluster corresponds to
+df_markers_clustered$programs <- vapply(rownames(df_markers_clustered), function(clust_name) {
+  progs <- included_progs[[clust_name]]
+  paste(progs, collapse = ", ")
+}, character(1))
+```
+
+```{r}
+library(kableExtra)
+tab2 <- knitr::kable(df_markers_clustered, format = "html", caption = "Positive and negative protein markers for each marker set.") |>
+  kableExtra::kable_styling(full_width = FALSE)
+
+html_file <- "tmp_table/table_preview_clust.html"
+png_file  <- "tmp_table/table_preview_clust.png"
+dir.create("tmp_table", showWarnings = FALSE)
+kableExtra::save_kable(tab2, file = html_file)
+webshot2::webshot(html_file, file = png_file, zoom = 2)
+png_file
+```
+
+Look at the enrichment table for these clustered sets:
+
+```{r}
+custom_score_clustered <- matrix(NA_real_,
+                       nrow = length(Knames),
+                       ncol = length(gp_marker_sign_list_clustered),
+                       dimnames = list(Knames, names(gp_marker_sign_list_clustered)))
+
+for (set_name in names(gp_marker_sign_list_clustered)) {
+  markers_neg <- gp_marker_sign_list_clustered[[set_name]]$neg
+
+  Protein_F_pm_signed <- Protein_F_pm
+  if (length(markers_neg) > 0) {
+    Protein_F_pm_signed[markers_neg, ] <- -Protein_F_pm_signed[markers_neg, ]
+  }
+
+  out <- ScoreSignatures_UCell(
+    matrix   = as.matrix(Protein_F_pm_signed),
+    features = gp_marker_list_clustered[set_name],
+    maxRank  = nrow(Protein_F_pm_signed)
+  )
+
+  custom_score_clustered[, set_name] <- out  
+}
+```
+
+```{r}
+p_sorted_clust <- plot_sorted_marker_enrichment(
+  custom_score_clustered,
+  marker_highlights = names(gp_marker_sign_list_clustered)[c(1,6,7,9,23,28)],
+  mode = "positive",
+  transform = "none",   # try "log1p" if most scores are tiny
+  n_bg = 15
+)
+ggsave(
+  filename = "figures/Figure2/Figure2d_sorted_marker_enrichment_clust.pdf",
+  plot = p_sorted_clust, width = 6, height = 6, dpi = 300
+)
+```
+
+
+
+# Figure 3:
+
+## (a) GP correlation among level-1 categories
+
+```{r}
+make_gp_pair_cor_table <- function(
+  L_pm,
+  meta,
+  cell_col = "annotation_level1",
+  gp_use = NULL,          # NULL -> use all colnames(L_pm)
+  pairs = NULL,           # NULL -> all pairs among gp_use; or c("K3-K10","K1-K4")
+  method = "pearson",
+  min_cells = 30L,
+  top_pairs = NULL        # optional: keep top N pairs by mean |cor| across cell types
+) {
+  stopifnot(nrow(L_pm) == nrow(meta))
+
+  # Ensure GP names
+  if (is.null(colnames(L_pm))) colnames(L_pm) <- paste0("K", seq_len(ncol(L_pm)))
+
+  if (is.null(gp_use)) gp_use <- colnames(L_pm)
+  gp_use <- intersect(gp_use, colnames(L_pm))
+  stopifnot(length(gp_use) >= 2)
+
+  # Build/parse pairs
+  if (is.null(pairs)) {
+    cmb <- utils::combn(gp_use, 2)
+    pairs <- paste0(cmb[1, ], "-", cmb[2, ])
+  } else {
+    pairs <- as.character(pairs)
+  }
+  gp1 <- sub("-.*$", "", pairs)
+  gp2 <- sub("^.*-", "", pairs)
+  pair_df <- data.frame(pair = pairs, gp1 = gp1, gp2 = gp2, stringsAsFactors = FALSE)
+
+  # Cell types
+  cell_types <- sort(unique(as.character(meta[[cell_col]])))
+  cell_types <- cell_types[!is.na(cell_types)]
+
+  out <- vector("list", length(cell_types))
+  names(out) <- cell_types
+
+  for (ct in cell_types) {
+    idx <- meta[[cell_col]] == ct
+    idx[is.na(idx)] <- FALSE
+    if (sum(idx) < min_cells) next
+
+    C <- stats::cor(L_pm[idx, gp_use, drop = FALSE],
+                    method = method, use = "pairwise.complete.obs")
+
+    keep <- pair_df$gp1 %in% colnames(C) & pair_df$gp2 %in% colnames(C)
+    tmp <- pair_df[keep, , drop = FALSE]
+    tmp$cell_type <- ct
+    tmp$cor <- C[cbind(tmp$gp1, tmp$gp2)]
+    tmp$n_cells <- sum(idx)
+
+    out[[ct]] <- tmp[, c("pair","gp1","gp2","cell_type","n_cells","cor")]
+  }
+
+  tab <- do.call(rbind, out)
+  tab <- tab[!is.na(tab$cor), , drop = FALSE]
+
+  # Optionally keep only top pairs by mean |cor|
+  if (!is.null(top_pairs)) {
+    agg <- aggregate(abs(cor) ~ pair, data = tab, FUN = mean)
+    keep_pairs <- head(agg[order(agg[[2]], decreasing = TRUE), "pair"], top_pairs)
+    tab <- tab[tab$pair %in% keep_pairs, , drop = FALSE]
+  }
+
+  tab
+}
+
+plot_gp_pair_cor_heatmap <- function(
+  tab,
+  pair_order = c("mean_abs", "none"),
+  cell_order = c("alphabetical", "none"),
+  limits = c(-1, 1)
+) {
+  pair_order <- match.arg(pair_order)
+  cell_order <- match.arg(cell_order)
+
+  df <- tab
+
+  # Order pairs
+  if (pair_order == "mean_abs") {
+    ord <- aggregate(abs(cor) ~ pair, data = df, FUN = mean)
+    ord <- ord[order(ord[[2]], decreasing = TRUE), "pair"]
+    df$pair <- factor(df$pair, levels = ord)
+  } else {
+    df$pair <- factor(df$pair, levels = unique(df$pair))
+  }
+
+  # Order cell types
+  if (cell_order == "alphabetical") {
+    df$cell_type <- factor(df$cell_type, levels = sort(unique(df$cell_type)))
+  } else {
+    df$cell_type <- factor(df$cell_type, levels = unique(df$cell_type))
+  }
+
+  ggplot2::ggplot(df, ggplot2::aes(x = cell_type, y = pair, fill = cor)) +
+    ggplot2::geom_tile() +
+    ggplot2::scale_fill_gradient2(limits = limits) +
+    ggplot2::labs(x = "Cell type", y = "GP pair", fill = "cor") +
+    ggplot2::theme_minimal(base_size = 12) +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
+}
+```
+
+```{r}
+tab <- make_gp_pair_cor_table(
+  L_pm = L_pm,
+  meta = seurat_meta,
+  cell_col = "annotation_level1",
+  top_pairs = NULL
+)
+
+# remove thymocytes from tab
+tab_non_thymocytes <- tab %>% filter(cell_type != "thymocyte")
+```
+
+```{r}
+# strongly-replicated GPs
+factor.info <- read.csv(file = paste0(data_path, "factors_comments_updated.xlsx - factor_pve.csv"), header = TRUE, stringsAsFactors = FALSE)
+factors_considered <- sort(factor.info$X[factor.info$strongly.replicated])
+strongly_replicated_gps <- paste0("K", factors_considered)
+```
+
+```{r}
+# only keep pairs where both GPs are strongly-replicated
+tab_non_thymocytes <- tab_non_thymocytes %>%
+  filter(gp1 %in% strongly_replicated_gps & gp2 %in% strongly_replicated_gps)
+
+# only keep pairs with |cor| > 0.5 in at least one cell type
+tab_non_thymocytes <- tab_non_thymocytes %>%
+  group_by(pair) %>%
+  filter(any(abs(cor) > 0.5)) %>%
+  ungroup()
+
+# only keep pairs with the range of cor larger than 0.1 across cell types
+tab_non_thymocytes <- tab_non_thymocytes %>%
+  group_by(pair) %>%
+  filter((max(cor) - min(cor)) > 0.1) %>%
+  ungroup()
+
+# only keep the top 50 pairs in terms of range of cor across cell types
+pair_ranges <- tab_non_thymocytes %>%
+  group_by(pair) %>%
+  summarize(cor_range = max(cor) - min(cor)) %>%
+  arrange(desc(cor_range))
+
+top_pairs <- head(pair_ranges$pair, 50)
+
+tab_non_thymocytes <- tab_non_thymocytes %>%
+  filter(pair %in% top_pairs)
+
+p <- plot_gp_pair_cor_heatmap(tab_non_thymocytes)
+p
+
+ggsave(
+  filename = "figures/Figure3/Figure3a_GP_pair_correlation_heatmap.pdf",
+  plot = p, width = 8, height = 10, dpi = 300
+)
+```
+
+
+
+
+# Supplementary Figures:
+
+## Figure S1: Citeseq volcano plots
+
+```{r}
+protein_mat_normalized_lognorm <- readRDS(file = paste0(data_path, "protein_mat_normalized_lognorm.rds"))
+protein_flash_summary_lognorm <- readRDS(file = paste0(data_path, "protein_flash_selected_summary_lognorm.rds"))
+citeseq_F <- protein_flash_summary_lognorm$F_pm
+
+factor.info <- read.csv(
+  file = paste0(data_path, "factors_comments_updated.xlsx - factor_pve.csv"), 
+  header = TRUE, stringsAsFactors = FALSE)
+factors_considered <- sort(factor.info$X[factor.info$strongly.replicated])
+colnames(citeseq_F) <- paste0("F", factors_considered)
+```
+
+```{r}
+mean_shifted_log_expr <- apply(protein_mat_normalized_lognorm, 2, function(x) mean(x))
+plot_scatterplot <- function(factor_index, n_higlight = 10) {
+  f_values <- citeseq_F[, factor_index]
+  
+  # normliaze f_values to have max absolute value 1
+  f_values <- f_values / max(abs(f_values))
+  
+  gene_names <- rownames(citeseq_F)
+  
+  df <- data.frame(
+    Gene = gene_names,
+    FactorValue = f_values,
+    MeanLogExpr = mean_shifted_log_expr[gene_names]
+  )
+  
+  # plot FactorValue (x) vs MeanLogExpr (y)
+  p <- ggplot(df, aes(x = FactorValue, y = MeanLogExpr))
+  p <- p + geom_point(alpha = 0.5)
+  p <- p + labs(
+    title = colnames(citeseq_F)[factor_index],
+    x = "Increase in Shifted Log Expression",
+    y = "Mean Shifted Log Expression"
+  ) +
+    theme_minimal(base_size = 13)
+  # highlight top n_higlight genes with highest absolute factor values
+  top_genes <- df %>%
+    slice_max(order_by = abs(FactorValue), n = n_higlight)
+  p <- p + geom_point(data = top_genes, aes(x = FactorValue, y = MeanLogExpr), color = "skyblue")
+  p <- p + geom_text_repel(
+    data = top_genes,
+    aes(label = Gene),
+    color = "skyblue",
+    box.padding = 0.35, point.padding = 0.15,
+    max.time = 1, max.iter = 5e3
+  )
+  return(p)
+}
+```
+
+```{r}
+# store all scatterplots in a list into one PDF
+pdf("figures/Supplementary_Figures/FigureS1_CiteSeq_volcano_plots.pdf", width = 6, height = 6)
+for (i in 1:ncol(citeseq_F)) {
+  p <- plot_scatterplot(i, n_higlight = 10)
+  print(p)
+}
+dev.off()
+```
+
+
+## Figure S2: UMAP plots
+
+```{r}
+# Plot all UMAPs
+umap_result <- readRDS(paste0(data_path, "umap_result.rds"))
+colnames(umap_result) <- c("UMAP_1", "UMAP_2")
+umap_result <- umap_result[rownames(L_pm_filtered),]
+df_umap <- as.data.frame(umap_result)
+```
+
+```{r}
+plot_loadings_on_umap_v2 <- function(umap, loading, factor_num,
+                                     size = 0.25,
+                                     show_bg = TRUE,
+                                     bg_alpha = 0.05,
+                                     bg_color = "grey90",
+                                     clip_q = 0.99,
+                                     top_q = NULL,
+                                     viridis_option = "viridis",
+                                     viridis_direction = 1) {
+  stopifnot(is.matrix(umap) || is.data.frame(umap))
+  df <- as.data.frame(umap)
+  stopifnot(all(c("UMAP_1","UMAP_2") %in% colnames(df)))
+  stopifnot(nrow(df) == length(loading))
+
+  q_hi <- stats::quantile(loading, probs = clip_q, na.rm = TRUE)
+  loading_clip <- pmin(loading, q_hi)
+
+  if (!is.null(top_q)) {
+    stopifnot(top_q > 0 && top_q < 1)
+    thr <- stats::quantile(loading_clip, probs = top_q, na.rm = TRUE)
+    loading_plot <- ifelse(loading_clip >= thr, loading_clip, NA_real_)
+  } else {
+    loading_plot <- loading_clip
+  }
+
+  df$loading_plot <- loading_plot
+
+  p <- ggplot() +
+    # --- background layer (raster) ---
+    {
+      if (show_bg)
+        scattermore::geom_scattermore(
+          data = df,
+          mapping = aes(x = UMAP_1, y = UMAP_2),
+          pointsize = size,          # size in pixels
+          color = bg_color,
+          alpha = bg_alpha
+        )
+    } +
+    # --- colored loading layer (raster) ---
+    scattermore::geom_scattermore(
+      data = df,
+      mapping = aes(x = UMAP_1, y = UMAP_2, color = loading_plot),
+      pointsize = size*2,
+      alpha = 1,
+      na.rm = TRUE
+    ) +
+    scale_color_viridis_c(
+      option   = viridis_option,
+      direction = viridis_direction,
+      limits   = c(0, q_hi),
+      oob      = scales::squish,
+      breaks   = scales::pretty_breaks(4),
+      name     = paste0("K", factor_num, " loading")
+    ) +
+    coord_equal() +
+    labs(
+      title = paste0("Factor ", factor_num),
+      x = "", y = ""
+    ) +
+    theme_minimal() +
+    theme(panel.grid = element_blank())
+
+  p
+}
+```
+
+```{r}
+selected_factors <- 1:ncol(L_pm_filtered)
+sample_n <- 80000
+set.seed(1)
+sample_index <- sample(seq_len(nrow(L_pm_filtered)), size = min(sample_n, nrow(L_pm_filtered)))
+umap_sub <- umap_result[sample_index, , drop = FALSE]
+L_sub    <- L_pm_filtered[sample_index, selected_factors, drop = FALSE]
+
+pdf("figures/Supplementary_Figures/FigureS2_UMAP_loadings_plots.pdf", width = 8, height = 8,
+    useDingbats = FALSE)
+for (f in selected_factors) {
+  p <-  plot_loadings_on_umap_v2(
+    umap    = umap_sub,
+    loading = L_sub[, f],
+    factor_num = f,
+    size = 0.4,
+    show_bg = TRUE,
+    bg_alpha = 0.06,
+    clip_q = 0.99,
+    top_q = NULL,
+    viridis_option = "viridis",
+    viridis_direction = 1
+  )
+  print(p)
+}
+dev.off()
+```
+
+## Figure S3: correlation plot
+
+```{r}
+cor_matrix <- cor(L_pm, method = "pearson")
+colnames(L_pm) <- paste0("K", seq_len(ncol(L_pm)))
+colnames(cor_matrix) <- paste0("K", seq_len(ncol(cor_matrix)))
+rownames(cor_matrix) <- paste0("K", seq_len(nrow(cor_matrix)))
+```
+
+```{r}
+plot_gp_corr_by_level1 <- function(
+  cor_full,        # filtered full correlation matrix (e.g., after high_corr_indices)
+  L_pm,            # loading matrix: cells x GPs
+  seurat_meta,     # metadata with annotation_level1, same row order as L_pm
+  level1_type = c("all"),
+  clustering_method = "complete",
+  main_prefix = "Correlation map of GP loadings",
+  width = 8,
+  height = 8,
+  show_names = TRUE,
+  filename = NULL
+) {
+  # ---- Basic checks ----
+  if (nrow(L_pm) != nrow(seurat_meta)) {
+    stop("L_pm and seurat_meta must have the same number of rows (cells).")
+  }
+  if (is.null(seurat_meta$annotation_level1)) {
+    stop("seurat_meta must contain a column named 'annotation_level1'.")
+  }
+  if (is.null(colnames(cor_full)) || is.null(rownames(cor_full))) {
+    stop("cor_full must have rownames and colnames (GP names).")
+  }
+  if (is.null(colnames(L_pm))) {
+    stop("L_pm must have column names (GP names) to match cor_full.")
+  }
+  
+  # Make sure level1_type is scalar character
+  level1_type <- as.character(level1_type)[1]
+  
+  # put this near the top (before calling pheatmap)
+  breaks_use <- seq(-0.6, 1, length.out = 201)  # 100 bins
+  cols_use   <- colorRampPalette(c("blue","white","red"))(length(breaks_use) - 1)
+  
+  ## ------------------------------------------------------------
+  ## 1. Run pheatmap on full correlation ONCE to get the ordering
+  ##    (this uses clustering; plot is suppressed with silent=TRUE)
+  ## ------------------------------------------------------------
+  res_all <- pheatmap(
+    cor_full,
+    clustering_method = clustering_method,
+    show_rownames     = show_names,
+    show_colnames     = show_names,
+    color  = cols_use,
+    breaks = breaks_use,
+    main              = paste0(main_prefix, " (all cells, for ordering)"),
+    treeheight_row    = 0,
+    treeheight_col    = 0,
+    silent            = TRUE        # don't actually draw this plot
+  )
+  
+  gp_order <- res_all$tree_row$order
+  gp_names <- rownames(cor_full)[gp_order]
+  
+  ## ------------------------------------------------------------
+  ## 2. Construct the correlation matrix to plot for this level1
+  ## ------------------------------------------------------------
+  if (identical(level1_type, "all")) {
+    # Just use the full correlation, reordered
+    cor_plot  <- cor_full[gp_names, gp_names, drop = FALSE]
+    main_title <- paste0(main_prefix, " (all cells)")
+  } else {
+    # Subset cells by level1_type
+    cell_idx <- which(seurat_meta$annotation_level1 == level1_type)
+    if (length(cell_idx) == 0) {
+      stop("No cells found with annotation_level1 == ", level1_type)
+    }
+    
+    L_sub <- L_pm[cell_idx, , drop = FALSE]
+    
+    # Keep the same GPs as in cor_full
+    common_gps <- intersect(colnames(cor_full), colnames(L_sub))
+    if (length(common_gps) == 0) {
+      stop("No overlapping GP names between cor_full and L_pm.")
+    }
+    # enforce same order as gp_names
+    common_gps <- gp_names[gp_names %in% common_gps]
+    L_sub <- L_sub[, common_gps, drop = FALSE]
+    
+    # Correlation for this subset of cells
+    cor_sub <- cor(L_sub, method = "pearson")
+    
+    # Reorder using the same gp_names ordering
+    cor_plot  <- cor_sub[gp_names, gp_names, drop = FALSE]
+    main_title <- paste0(main_prefix, " in ", level1_type, " cells")
+  }
+  
+  ## ------------------------------------------------------------
+  ## 3. Draw heatmap (no clustering here; we already fixed order)
+  ## ------------------------------------------------------------
+  if (is.null(filename)) {
+    res <- pheatmap(
+      cor_plot,
+      cluster_rows   = FALSE,
+      cluster_cols   = FALSE,
+      show_rownames  = show_names,
+      show_colnames  = show_names,
+      color  = cols_use,
+      breaks = breaks_use,
+      main           = main_title,
+      treeheight_row = 0,
+      treeheight_col = 0
+    )
+  } else {
+    res <- pheatmap(
+      cor_plot,
+      cluster_rows   = FALSE,
+      cluster_cols   = FALSE,
+      show_rownames  = show_names,
+      show_colnames  = show_names,
+      color  = cols_use,
+      breaks = breaks_use,
+      main           = main_title,
+      treeheight_row = 0,
+      treeheight_col = 0,
+      filename       = filename,
+      width          = width,
+      height         = height
+    )
+  }
+  
+  res
+}
+```
+
+
+```{r}
+# 1) All cells
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix,
+  L_pm        = L_pm,
+  seurat_meta = seurat_meta,
+  width = 25,
+  height = 25,
+  level1_type = "all",
+  filename    = "figures/Supplementary_Figures/FigureS3_correlation/Correlation_Map_All_GPs.png"
+)
+
+# 2) CD4
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix,
+  L_pm        = L_pm,
+  width = 25,
+  height = 25,
+  seurat_meta = seurat_meta,
+  level1_type = "CD4",
+  filename    = "figures/Supplementary_Figures/FigureS3_correlation/Correlation_Map_CD4_GPs.png"
+)
+
+# 3) CD8
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix,
+  L_pm        = L_pm,
+  seurat_meta = seurat_meta,
+  level1_type = "CD8",
+  width = 25,
+  height = 25,
+  filename    = "figures/Supplementary_Figures/FigureS3_correlation/Correlation_Map_CD8_GPs.png"
+)
+
+# 4) Treg
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix,
+  L_pm        = L_pm,
+  seurat_meta = seurat_meta,
+  level1_type = "Treg",
+  width = 25,
+  height = 25,
+  filename    = "figures/Supplementary_Figures/FigureS3_correlation/Correlation_Map_Treg_GPs.png"
+)
+
+# 5) DN
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix,
+  L_pm        = L_pm,
+  seurat_meta = seurat_meta,
+  level1_type = "DN",
+  width = 25,
+  height = 25,
+  filename    = "figures/Supplementary_Figures/FigureS3_correlation/Correlation_Map_DN_GPs.png"
+)
+
+# 6) DP
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix,
+  L_pm        = L_pm,
+  seurat_meta = seurat_meta,
+  level1_type = "DP",
+  width = 25,
+  height = 25,
+  filename    = "figures/Supplementary_Figures/FigureS3_correlation/Correlation_Map_DP_GPs.png"
+)
+
+# 7) nonconv
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix,
+  L_pm        = L_pm,
+  seurat_meta = seurat_meta,
+  level1_type = "nonconv",
+  width = 25,
+  height = 25,
+  filename    = "figures/Supplementary_Figures/FigureS3_correlation/Correlation_Map_nonconv_GPs.png"
+)
+
+# 8) gdT
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix,
+  L_pm        = L_pm,
+  seurat_meta = seurat_meta,
+  level1_type = "gdT",
+  width = 25,
+  height = 25,
+  filename    = "figures/Supplementary_Figures/FigureS3_correlation/Correlation_Map_gdT_GPs.png"
+)
+
+# 9) CD8aa
+plot_gp_corr_by_level1(
+  cor_full    = cor_matrix,
+  L_pm        = L_pm,
+  seurat_meta = seurat_meta,
+  level1_type = "CD8aa",
+  width = 25,
+  height = 25,
+  filename    = "figures/Supplementary_Figures/FigureS3_correlation/Correlation_Map_CD8aa_GPs.png"
+)
+```
+
+
+
+
+
+
+## Figure S4: contrast of protein heatmap
+
+```{r}
+selected_cells <- (seurat_meta_filtered$cellID)
+protein_flash_summary_lognorm <- readRDS(file = paste0(data_path, "protein_flash_selected_summary_lognorm.rds"))
+
+# normalize by the max abs of each column
+D_lognorm <- diag(apply(Protein_F_pm, 2, function(x) max(abs(x))))
+Protein_F_pm <- Protein_F_pm %*% solve(D_lognorm)
+# colnames(Protein_F_pm) <- paste0("F", 1:ncol(flashier_snmf_summary$F_pm))[ flashier_snmf_summary$pve > 1e-4]
+factor.info <- read.csv(
+  file = paste0(data_path, "factors_comments_updated.xlsx - factor_pve.csv"), 
+  header = TRUE, stringsAsFactors = FALSE)
+factors_considered <- sort(factor.info$X[factor.info$strongly.replicated])
+colnames(Protein_F_pm) <- paste0("F", factors_considered)
+```
+
+```{r}
+compute_le_effects_fix <- function (effects_matrix) 
+{
+    if (!(is.matrix(effects_matrix) & is.numeric(effects_matrix))) 
+        stop("Input \"effects_matrix\" should be a numeric matrix")
+    k <- ncol(effects_matrix)
+    if (k <= 1) 
+        return(effects_matrix)
+    out <- effects_matrix
+    for (j in 1:k) {
+        x <- effects_matrix[, j, drop = FALSE]
+        i <- which(x > 0)
+        if (length(i) > 0) {
+            y <- cbind(0, effects_matrix[i, -j, drop = FALSE])
+            out[i, j] <- pmax(0, x[i] - apply(y, 1, max))
+        }
+        i <- which(x < 0)
+        if (length(i) > 0) {
+            y <- cbind(0, effects_matrix[i, -j, drop = FALSE])
+            out[i, j] <- pmin(0, x[i] - apply(y, 1, min))
+        }
+    }
+    return(out)
+}
+Protein_F_pm_contrast <- compute_le_effects_fix(Protein_F_pm)
+```
+
+```{r}
+# drop columns with all zeros and rows with all zeros
+Protein_F_pm_contrast <- Protein_F_pm_contrast[rowSums(Protein_F_pm_contrast != 0) > 0, 
+                                               colSums(Protein_F_pm_contrast != 0) > 0]
+
+# only show column and row with at least one value with abs > threshold
+threshold <- 0.2
+Protein_F_pm_contrast_filtered <- Protein_F_pm_contrast[apply(Protein_F_pm_contrast, 1, function(x) any(abs(x) > threshold)), 
+                                                         apply(Protein_F_pm_contrast, 2, function(x) any(abs(x) > threshold))]
+
+```
+
+
+```{r}
+# heatmap
+annotation_heatmap(Protein_F_pm_contrast_filtered,n = 3,
+                   dim = colnames(Protein_F_pm_contrast_filtered),
+                   show_dims = colnames(Protein_F_pm_contrast_filtered),
+                   compare_dims = colnames(Protein_F_pm_contrast_filtered),
+                   select_features = "all",
+                   feature_sign = "both",
+                   zero_value = 0.1,
+                   font_size = 15) +
+  theme(plot.title = element_text(face = "plain",size = 8)) +
+  labs(
+    size  = "l.e. effect size",  
+    color = "effect sign"
+  )
+ggsave(filename = "figures/Supplementary_Figures/FigureS4_Protein_Heatmap_Contrast.pdf",
+       width = 8, height = 8)
+```
+
+
+
+
+
+## Figure S5: Sparsity of GPs
+
+```{r}
+load(paste0(data_path, "flashier_snmf_fitted_prior.rda"))
+l_pi_vec <- c()
+for (i in 1:200) {
+  l_pi_vec <- c(l_pi_vec, flashier_snmf_fitted_prior$L_ghat[[i]]$pi[1])
+}
+f_pi_vec <- c()
+for (i in 1:200) {
+  f_pi_vec <- c(f_pi_vec, flashier_snmf_fitted_prior$F_ghat[[i]]$pi[1])
+}
+```
+
+Convert sparsity to expect active cells/genes from the fitted prior:
+
+```{r}
+e_cells <- (1 - l_pi_vec) * nrow(L_pm)
+e_genes <- (1 - f_pi_vec) * nrow(F_pm)
+
+p_cells <- (1 - l_pi_vec)
+p_genes <- (1 - f_pi_vec)
+
+# round to integers
+e_cells <- round(e_cells)
+e_genes <- round(e_genes)
+```
+
+```{r}
+options(scipen = 999)
+pdf("figures/Supplementary_Figures/FigureS5_hist_e_active_cells.pdf", width = 6, height = 4)
+hist(e_cells, breaks = 100, xlab = "Expected number of active cells", main = "Histogram of expected active cells per GP", freq = T)
+dev.off()
+pdf("figures/Supplementary_Figures/FigureS5_hist_e_active_genes.pdf", width = 6, height = 4)
+hist(e_genes, breaks = 100, xlab = "Expected number of active genes", main = "Histogram of expected active genes per GP", freq = T)
+dev.off()
+```
+
+```{r}
+plot(
+  e_cells, e_genes,
+  xlab = "Expected number of active cells",
+  ylab = "Expected number of active genes",
+  log = "xy",
+  main = "Expected active cells vs genes per GP"
+)
+idx_highlight <- c(3, 22, 30, 58, 68)
+labels_highlight <- paste0("K", idx_highlight)
+cols_highlight   <- c("red", "blue", "darkgreen", "pink", "skyblue")
+points(
+  e_cells[idx_highlight],
+  e_genes[idx_highlight],
+  col = cols_highlight,
+  pch = 19,
+  cex = 1.3
+)
+text(
+  e_cells[idx_highlight],
+  e_genes[idx_highlight],
+  labels = labels_highlight,
+  col = cols_highlight,
+  pos = 3  # label above the point; try 4 for "to the right"
+)
+legend(
+  "bottomright",
+  legend = labels_highlight,
+  col    = cols_highlight,
+  pch    = 19,
+  pt.cex = 1.3,
+  bty    = "n"  # no box around legend (optional)
+)
+```
+
+```{r}
+pve <- flashier_snmf_summary$pve
+eps <- 0 
+pve_log <- log10(pve + eps)
+
+pve_log_min <- quantile(pve_log, 0.02, na.rm = TRUE)
+pve_log_max <- quantile(pve_log, 0.98, na.rm = TRUE)
+pve_log_clipped <- pmin(pmax(pve_log, pve_log_min), pve_log_max)
+
+pve_scaled <- (pve_log_clipped - min(pve_log_clipped)) /
+              (max(pve_log_clipped) - min(pve_log_clipped))
+
+n_col <- 100
+pal <- colorRampPalette(c("lightgray", "skyblue", "darkblue"))(n_col)
+idx_col <- pmin(pmax(1, floor(pve_scaled * (n_col - 1)) + 1), n_col)
+col_points <- pal[idx_col]
+
+
+pdf("figures/Supplementary_Figures/FigureS5_scatter_e_active_cells_vs_genes.pdf", width = 6, height = 6)
+plot(
+  e_cells, e_genes,
+  xlab = "Expected number of active cells",
+  ylab = "Expected number of active genes",
+  log  = "xy",
+  col  = col_points,
+  pch  = 19,
+  main = "Expected active cells vs genes per GP\n(colored by PVE)"
+)
+
+brks_pve <- c(1e-7, 1e-5, 1e-3, 1e-2, 0.1, 0.2)  
+brks_pve <- brks_pve[brks_pve >= min(pve) & brks_pve <= max(pve)]
+
+brks_log <- log10(brks_pve + eps)
+brks_log_clipped <- pmin(pmax(brks_log, pve_log_min), pve_log_max)
+brks_scaled <- (brks_log_clipped - min(pve_log_clipped)) /
+               (max(pve_log_clipped) - min(pve_log_clipped))
+brks_idx <- pmin(pmax(1, floor(brks_scaled * (n_col - 1)) + 1), n_col)
+brks_cols <- pal[brks_idx]
+
+legend(
+  "bottomright",
+  legend = format(brks_pve, scientific = TRUE, digits = 2),
+  col    = brks_cols,
+  pch    = 15,
+  pt.cex = 1.5,
+  title  = "PVE",
+  bty    = "n"
+)
+dev.off()
+```
+
+
+```{r}
+plot((gp_active_gene_counts/nrow(F_pm)) ~ I(1 - f_pi_vec))
+abline(lm((gp_active_gene_counts/nrow(F_pm)) ~ -1 + I(1 - f_pi_vec)), col='blue')
+abline(0,1,col='red')
+```
+
+
+## Figure S6: Relevance of TFs in GPs: details
+
+```{r}
+CD4_TF_list <- read.table(paste0(data_path, "/TF-list/CD4_tf_level2_AUC.txt"), header = TRUE)
+CD8_TF_list <- read.table(paste0(data_path, "/TF-list/CD8_tf_level2_AUC.txt"), header = TRUE)
+CD8aa_TF_list <- read.table(paste0(data_path, "/TF-list/CD8aa_tf_level2_AUC.txt"), header = TRUE)
+gdT_TF_list <- read.table(paste0(data_path, "/TF-list/gdT_tf_level2_AUC.txt"), header = TRUE)
+DN_TF_list <- read.table(paste0(data_path, "/TF-list/DN_tf_level2_AUC.txt"), header = TRUE)
+DP_TF_list <- read.table(paste0(data_path, "/TF-list/DP_tf_level2_AUC.txt"), header = TRUE)
+Treg_TF_list <- read.table(paste0(data_path, "/TF-list/Treg_tf_level2_AUC.txt"), header = TRUE)
+non_conv_TF_list <- read.table(paste0(data_path, "/TF-list/nonconv_tf_level2_AUC.txt"), header = TRUE)
+```
+
+```{r}
+threshold <- 0.80
+TF_highlights <- c(CD4_TF_list$Gene[CD4_TF_list$auc >= threshold],
+                   CD8_TF_list$Gene[CD8_TF_list$auc >= threshold],
+                   CD8aa_TF_list$Gene[CD8aa_TF_list$auc >= threshold],
+                   gdT_TF_list$Gene[gdT_TF_list$auc >= threshold],
+                   DN_TF_list$Gene[DN_TF_list$auc >= threshold],
+                   DP_TF_list$Gene[DP_TF_list$auc >= threshold],
+                   non_conv_TF_list$Gene[non_conv_TF_list$auc >= threshold],
+                   Treg_TF_list$Gene[Treg_TF_list$auc >= threshold])
+
+TF_highlights <- unique(TF_highlights)
+```
+
+```{r}
+F_pm <- flashier_snmf_summary$F_pm
+F_pm_norm_col <- F_pm / matrix(apply(F_pm, 2, function(x) max(abs(x))), nrow = nrow(F_pm), ncol = ncol(F_pm), byrow = TRUE)
+
+# strongly-replicated
+factor.info <- read.csv(file = paste0(data_path, "factors_comments_updated.xlsx - factor_pve.csv"), header = TRUE, stringsAsFactors = FALSE)
+factors_considered <- sort(factor.info$X[factor.info$strongly.replicated])
+```
+
+
+Produce a bar plot show the normalized factor value
+
+```{r}
+produce_barplot <- function(
+  tf,
+  F_pm_norm_col,
+  threshold = 0.8,
+  use_abs = TRUE,
+  select_gp = NULL,        # e.g. 1:68 or c(1,3,10,58) or c("K1","K58")
+  top_n = NULL,
+  keep_order = TRUE,
+  label_step = NULL,       # e.g. 2 or 3; NULL = auto
+  cex_axis = 0.7,
+  las = 2
+) {
+  stopifnot(tf %in% rownames(F_pm_norm_col))
+  v_all <- F_pm_norm_col[tf, ]
+  K_all <- seq_along(v_all)
+
+  # select_gp -> indices
+  if (!is.null(select_gp)) {
+    idx <- if (is.character(select_gp)) as.integer(sub("^K", "", select_gp)) else as.integer(select_gp)
+    idx <- idx[idx >= 1 & idx <= length(v_all)]
+  } else {
+    idx <- K_all
+  }
+
+  v <- v_all[idx]
+  score <- if (use_abs) abs(v) else v
+
+  # top_n within selected
+  if (!is.null(top_n)) {
+    kk <- order(score, decreasing = TRUE)[seq_len(min(top_n, length(score)))]
+    idx <- idx[kk]; v <- v[kk]; score <- score[kk]
+  }
+
+  # plotting order
+  if (keep_order) {
+    ord <- order(idx)
+    idx <- idx[ord]; v <- v[ord]; score <- score[ord]
+  } else {
+    ord <- order(score, decreasing = TRUE)
+    idx <- idx[ord]; v <- v[ord]; score <- score[ord]
+  }
+
+  gp_labels <- paste0("K", idx)
+  hit <- score >= threshold
+
+  # axis label density: for ~68, step=2 is usually good
+  if (is.null(label_step)) {
+    label_step <- if (length(idx) <= 40) 1 else if (length(idx) <= 80) 2 else 3
+  }
+  tick_i <- seq(1, length(idx), by = label_step)
+
+  # margins for rotated labels
+  op <- par(mar = c(9, 4, 3, 1))
+
+  ymin <- min(v, 0) * 1.1
+  ymax <- max(v, 0) * 1.1
+  if (!is.finite(ymin)) ymin <- -1
+  if (!is.finite(ymax)) ymax <- 1
+
+  bp <- barplot(v, names.arg = rep("", length(v)),
+                main = tf, ylab = "normalized factor value",
+                ylim = c(ymin, max(1.05, ymax)))
+
+  axis(1, at = bp[tick_i], labels = gp_labels[tick_i], las = las, cex.axis = cex_axis)
+
+  # highlight hits
+  if (any(hit)) {
+    points(bp[hit], v[hit], pch = 19)
+  }
+
+  par(op)
+  invisible(gp_labels[hit])
+}
+
+# produce figures for all TF_highlights, and store in a single PDF
+pdf("figures/Supplementary_Figures/FigureS6_TF_bars.pdf", width = 6, height = 6)
+for (i in 1:length(TF_highlights)) {
+  produce_barplot(TF_highlights[i], F_pm_norm_col,
+                threshold = 0.8,
+                select_gp = factors_considered,
+                label_step = 2)
+}
+dev.off()
+```
+
+## Figure S7: Enrichment of marker sets in GPs
+
+Define set of markers for each GP based on threshold and rank:
+
+```{r}
+make_ucell_features <- function(gp_marker_sign_list) {
+  feats <- lapply(gp_marker_sign_list, function(x) {
+    pos <- x$pos
+    neg <- x$neg
+    
+    c(
+      if (length(pos)) paste0(pos, "+"),
+      if (length(neg)) paste0(neg, "-")
+    )
+  })
+  
+  feats <- feats[vapply(feats, length, integer(1)) > 0]
+  
+  feats <- lapply(feats, unique)
+  feats
+}
+
+marker_threshold <- 0.25
+gp_marker_list <- list()
+gp_marker_sign_list <- list()
+for (i in 1:ncol(Protein_F_pm)) {
+  gp_name <- colnames(Protein_F_pm)[i]
+  marker_values <- Protein_F_pm[, i]
+  marker_genes <- rownames(Protein_F_pm)[which(abs(marker_values) >= marker_threshold)]
+  
+  if (length(marker_genes) > 5) {
+    top_indices <- order(-abs(marker_values[marker_genes]))[1:5]
+    marker_genes <- marker_genes[top_indices]
+  }
+  
+  gp_marker_list[[gp_name]] <- marker_genes
+  
+  marker_genes_pos <- marker_genes[which(marker_values[marker_genes] >= marker_threshold)]
+  marker_genes_neg <- marker_genes[which(marker_values[marker_genes] <= -marker_threshold)]
+  gp_marker_sign_list[[gp_name]] <- list(
+    pos = marker_genes_pos,
+    neg = marker_genes_neg
+  )
+}
+features_ucell <- make_ucell_features(gp_marker_sign_list)
+```
+
+```{r}
+library(UCell)
+
+Knames <- colnames(Protein_F_pm)
+names(gp_marker_sign_list) <- paste0("Set_", colnames(Protein_F_pm))
+names(gp_marker_list) <- paste0("Set_", colnames(Protein_F_pm))
+Set_names <- names(gp_marker_sign_list)
+
+custom_score <- matrix(NA_real_,
+                       nrow = length(Knames),
+                       ncol = length(Set_names),
+                       dimnames = list(Knames, Set_names))
+
+for (set_name in Set_names) {
+  markers_neg <- gp_marker_sign_list[[set_name]]$neg
+
+  Protein_F_pm_signed <- Protein_F_pm
+  if (length(markers_neg) > 0) {
+    Protein_F_pm_signed[markers_neg, ] <- -Protein_F_pm_signed[markers_neg, ]
+  }
+
+  out <- ScoreSignatures_UCell(
+    matrix   = as.matrix(Protein_F_pm_signed),
+    features = gp_marker_list[set_name],   
+    maxRank  = nrow(Protein_F_pm_signed)
+  )
+
+  custom_score[, set_name] <- out  
+}
+```
+
+```{r}
+# custom_score: matrix with rows = GPs (e.g. K1, K2, ...), cols = marker sets
+plot_marker_set_barplots <- function(custom_score,
+                                     sort_gps = TRUE,    # TRUE: order GPs by score within each plot
+                                     out_pdf = NULL,     # e.g. "ucell_marker_sets.pdf" (multi-page)
+                                     width = 9, height = 8) {
+
+  custom_score <- as.matrix(custom_score)
+
+  df <- as.data.frame(custom_score) |>
+    tibble::rownames_to_column("gp") |>
+    pivot_longer(-gp, names_to = "marker_set", values_to = "score") |>
+    filter(!is.na(score))
+
+  make_plot <- function(ms) {
+    d <- df |> filter(marker_set == ms)
+
+    if (sort_gps) {
+      d <- d |> mutate(gp = reorder(gp, score))  # sort by score
+    } else {
+      d <- d |> mutate(gp = factor(gp, levels = rownames(custom_score)))
+    }
+
+    ggplot(d, aes(x = gp, y = score)) +
+      geom_col() +
+      coord_flip() +
+      labs(title = ms, x = NULL, y = "Enrichment score") +
+      theme_bw(base_size = 11)
+  }
+
+  marker_sets <- colnames(custom_score)
+
+  if (!is.null(out_pdf)) {
+    pdf(out_pdf, width = width, height = height, onefile = TRUE)
+    for (ms in marker_sets) print(make_plot(ms))
+    dev.off()
+    message("Saved: ", out_pdf)
+    invisible(NULL)
+  } else {
+    # return list of ggplot objects (useful in Rmarkdown)
+    plots <- lapply(marker_sets, make_plot)
+    names(plots) <- marker_sets
+    plots
+  }
+}
+
+plot_marker_set_barplots(custom_score, sort_gps = TRUE, out_pdf = "figures/Supplementary_Figures/FigureS7_marker_set_enrichment_over_GPs.pdf")
+```
