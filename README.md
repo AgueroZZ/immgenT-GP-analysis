@@ -25,7 +25,3 @@ activation state, transcription factors, and surface protein expression.
 - `code/`, `script/` -- the original, pre-refactor analysis code, kept for
   provenance/history.
 
-## Caption status
-
-Figure captions on the site are draft/unconfirmed unless noted otherwise --
-see the maintainer's working notes for tracking status.
