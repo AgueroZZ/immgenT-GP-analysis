@@ -5,6 +5,9 @@ navbar:
   left:
   - text: Overview
     href: index.html
+  right:
+    - text: source
+      href: https://github.com/AgueroZZ/immgenT-GP-analysis
 output:
   workflowr::wflow_html:
     toc: yes

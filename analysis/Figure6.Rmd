@@ -7,20 +7,20 @@ editor_options:
 ---
 
 All panels except (a) are produced by
-[`script-refactor/Figure6.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script-refactor/Figure6.R),
+[`script/Figure6.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure6.R),
 which shares its CITE-seq setup with [Figure S6](FigureS6.html) via
-`code-refactor/R/citeseq_shared_setup.R`. The code below is shown for
+`code/R/citeseq_shared_setup.R`. The code below is shown for
 reference (not re-executed on this page, since this script takes about a
 minute to run); the images are its pre-rendered output.
 
 ## Setup
 
-```{r fig6-setup, code=readLines("../script-refactor/Figure6.R")[23:33], eval=FALSE}
+```{r fig6-setup, code=readLines("../script/Figure6.R")[23:33], eval=FALSE}
 ```
 
 Panels (b) onward additionally load the shared CITE-seq cell/protein setup:
 
-```{r fig6-setup2, code=readLines("../script-refactor/Figure6.R")[37:51], eval=FALSE}
+```{r fig6-setup2, code=readLines("../script/Figure6.R")[37:51], eval=FALSE}
 ```
 
 ## (a) Projection schematic {#fig6a}
@@ -29,7 +29,7 @@ This panel is a hand-drawn schematic, not generated from R -- there is no code o
 
 ## (b) Protein-program heatmap {#fig6b}
 
-```{r fig6b-code, code=readLines("../script-refactor/Figure6.R")[53:77], eval=FALSE}
+```{r fig6b-code, code=readLines("../script/Figure6.R")[53:77], eval=FALSE}
 ```
 
 ```{r fig6b-img, echo=FALSE, out.width="80%"}
@@ -42,7 +42,7 @@ knitr::include_graphics("assets/Figure6/6b.png")
 
 ## (c-f) Protein-gated vs. GP-loading populations {#fig6cf}
 
-```{r fig6cf-code, code=readLines("../script-refactor/Figure6.R")[79:104], eval=FALSE}
+```{r fig6cf-code, code=readLines("../script/Figure6.R")[79:104], eval=FALSE}
 ```
 
 ```{r fig6cf-img, echo=FALSE, out.width="49%"}
@@ -58,7 +58,7 @@ knitr::include_graphics(c(
 
 ## (g, h) KLRG1 modulation across lineages {#fig6gh}
 
-```{r fig6gh-code, code=readLines("../script-refactor/Figure6.R")[106:171], eval=FALSE}
+```{r fig6gh-code, code=readLines("../script/Figure6.R")[106:171], eval=FALSE}
 ```
 
 ```{r fig6gh-img, echo=FALSE, out.width="49%"}
@@ -71,7 +71,7 @@ knitr::include_graphics(c("assets/Figure6/6g.png", "assets/Figure6/6h.png"))
 
 ## (i-k) GPs associated with CD69 {#fig6ik}
 
-```{r fig6ik-code, code=readLines("../script-refactor/Figure6.R")[173:261], eval=FALSE}
+```{r fig6ik-code, code=readLines("../script/Figure6.R")[173:261], eval=FALSE}
 ```
 
 ```{r fig6ik-img, echo=FALSE, out.width="32%"}

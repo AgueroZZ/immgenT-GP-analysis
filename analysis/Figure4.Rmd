@@ -7,7 +7,7 @@ editor_options:
 ---
 
 All panels are produced by
-[`script-refactor/Figure4.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script-refactor/Figure4.R).
+[`script/Figure4.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure4.R).
 The code below is shown for reference (not re-executed on this page); the
 images are its pre-rendered output.
 
@@ -15,12 +15,12 @@ images are its pre-rendered output.
 
 Data loading, shared across all panels below.
 
-```{r fig4-setup, code=readLines("../script-refactor/Figure4.R")[1:87], eval=FALSE}
+```{r fig4-setup, code=readLines("../script/Figure4.R")[1:87], eval=FALSE}
 ```
 
 ## (a) Max AUC: organ vs. lineage {#fig4a}
 
-```{r fig4a-code, code=readLines("../script-refactor/Figure4.R")[88:176], eval=FALSE}
+```{r fig4a-code, code=readLines("../script/Figure4.R")[88:176], eval=FALSE}
 ```
 
 ```{r fig4a-img, echo=FALSE, out.width="60%"}
@@ -33,7 +33,7 @@ knitr::include_graphics("assets/Figure4/4a.png")
 
 ## (b) GP37+ rate in mammary gland vs. elsewhere {#fig4b}
 
-```{r fig4b-code, code=readLines("../script-refactor/Figure4.R")[243:337], eval=FALSE}
+```{r fig4b-code, code=readLines("../script/Figure4.R")[243:337], eval=FALSE}
 ```
 
 ```{r fig4b-img, echo=FALSE, out.width="60%"}
@@ -46,7 +46,7 @@ knitr::include_graphics("assets/Figure4/4b.png")
 
 ## (c) Marker genes of the 7 organ-specific GPs {#fig4c}
 
-```{r fig4c-code, code=readLines("../script-refactor/Figure4.R")[386:489], eval=FALSE}
+```{r fig4c-code, code=readLines("../script/Figure4.R")[386:489], eval=FALSE}
 ```
 
 ```{r fig4c-img, echo=FALSE, out.width="60%"}
@@ -59,7 +59,7 @@ knitr::include_graphics("assets/Figure4/4c.png")
 
 ## (d) Max AUC: organ vs. cluster {#fig4d}
 
-```{r fig4d-code, code=readLines("../script-refactor/Figure4.R")[177:242], eval=FALSE}
+```{r fig4d-code, code=readLines("../script/Figure4.R")[177:242], eval=FALSE}
 ```
 
 ```{r fig4d-img, echo=FALSE, out.width="60%"}
@@ -72,7 +72,7 @@ knitr::include_graphics("assets/Figure4/4d.png")
 
 ## (e) Organ, GP, and cluster alluvial diagram {#fig4e}
 
-```{r fig4e-code, code=readLines("../script-refactor/Figure4.R")[338:385], eval=FALSE}
+```{r fig4e-code, code=readLines("../script/Figure4.R")[338:385], eval=FALSE}
 ```
 
 ```{r fig4e-img, echo=FALSE, out.width="80%"}

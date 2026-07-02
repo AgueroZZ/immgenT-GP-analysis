@@ -7,22 +7,22 @@ editor_options:
 ---
 
 Both pages are produced by
-[`script-refactor/FigureS6.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script-refactor/FigureS6.R),
+[`script/FigureS6.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS6.R),
 which shares its CITE-seq setup and gating logic with
-[Figure 6c-f](Figure6.html#fig6cf) via `code-refactor/R/citeseq_shared_setup.R`
-and `code-refactor/R/gated_protein_helpers.R`. The code below is shown for
+[Figure 6c-f](Figure6.html#fig6cf) via `code/R/citeseq_shared_setup.R`
+and `code/R/gated_protein_helpers.R`. The code below is shown for
 reference (not re-executed on this page, since this script takes roughly a
 minute and a half to render ~25 GPs x 2 embeddings each); the images are its
 pre-rendered output.
 
 ## Setup
 
-```{r figs6-setup, code=readLines("../script-refactor/FigureS6.R")[1:21], eval=FALSE}
+```{r figs6-setup, code=readLines("../script/FigureS6.R")[1:21], eval=FALSE}
 ```
 
 ## Gallery pages {#figs6-gallery}
 
-```{r figs6-code, code=readLines("../script-refactor/FigureS6.R")[23:88], eval=FALSE}
+```{r figs6-code, code=readLines("../script/FigureS6.R")[23:88], eval=FALSE}
 ```
 
 ```{r figs6-img, echo=FALSE, out.width="100%"}

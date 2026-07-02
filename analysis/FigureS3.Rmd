@@ -7,20 +7,20 @@ editor_options:
 ---
 
 All panels are produced by
-[`script-refactor/FigureS3.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script-refactor/FigureS3.R),
+[`script/FigureS3.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS3.R),
 which shares its curated GP set with [Figure 3](Figure3.html) via
-`code-refactor/R/activation_shared_setup.R`. The code below is shown for
+`code/R/activation_shared_setup.R`. The code below is shown for
 reference (not re-executed on this page); the images are its pre-rendered
 output.
 
 ## Setup
 
-```{r figs3-setup, code=readLines("../script-refactor/FigureS3.R")[1:46], eval=FALSE}
+```{r figs3-setup, code=readLines("../script/FigureS3.R")[1:46], eval=FALSE}
 ```
 
 ## (s3c) GP26+ rate by organ {#figs3c}
 
-```{r figs3c-code, code=readLines("../script-refactor/FigureS3.R")[48:69], eval=FALSE}
+```{r figs3c-code, code=readLines("../script/FigureS3.R")[48:69], eval=FALSE}
 ```
 
 ```{r figs3c-img, echo=FALSE, out.width="32%"}
@@ -33,7 +33,7 @@ knitr::include_graphics("assets/FigureS3/s3c.png")
 
 ## (s3d) GSEA dot plot {#figs3d}
 
-```{r figs3d-code, code=readLines("../script-refactor/FigureS3.R")[71:90], eval=FALSE}
+```{r figs3d-code, code=readLines("../script/FigureS3.R")[71:90], eval=FALSE}
 ```
 
 ```{r figs3d-img, echo=FALSE, out.width="32%"}
@@ -46,7 +46,7 @@ knitr::include_graphics("assets/FigureS3/s3d.png")
 
 ## (s3e) GP79+ rate across conditions {#figs3e}
 
-```{r figs3e-code, code=readLines("../script-refactor/FigureS3.R")[131:184], eval=FALSE}
+```{r figs3e-code, code=readLines("../script/FigureS3.R")[131:184], eval=FALSE}
 ```
 
 ```{r figs3e-img, echo=FALSE, out.width="49%"}
@@ -59,7 +59,7 @@ knitr::include_graphics("assets/FigureS3/s3e.png")
 
 ## (s3f) Per-cell log2FC heatmap {#figs3f}
 
-```{r figs3f-code, code=readLines("../script-refactor/FigureS3.R")[269:392], eval=FALSE}
+```{r figs3f-code, code=readLines("../script/FigureS3.R")[269:392], eval=FALSE}
 ```
 
 ```{r figs3f-img, echo=FALSE, out.width="100%"}
@@ -72,7 +72,7 @@ knitr::include_graphics("assets/FigureS3/s3f.png")
 
 ## (s3g) GP57+ rate, cancer vs. other conditions {#figs3g}
 
-```{r figs3g-code, code=readLines("../script-refactor/FigureS3.R")[92:129], eval=FALSE}
+```{r figs3g-code, code=readLines("../script/FigureS3.R")[92:129], eval=FALSE}
 ```
 
 ```{r figs3g-img, echo=FALSE, out.width="49%"}
@@ -85,7 +85,7 @@ knitr::include_graphics("assets/FigureS3/s3g.png")
 
 ## (s3h) TF-GP network for Gata3/Rorc/Tbx21 {#figs3h}
 
-```{r figs3h-code, code=readLines("../script-refactor/FigureS3.R")[186:267], eval=FALSE}
+```{r figs3h-code, code=readLines("../script/FigureS3.R")[186:267], eval=FALSE}
 ```
 
 ```{r figs3h-img, echo=FALSE, out.width="49%"}

@@ -7,18 +7,18 @@ editor_options:
 ---
 
 Produced by
-[`script-refactor/TableS1.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script-refactor/TableS1.R):
+[`script/TableS1.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/TableS1.R):
 
-```{r table-s1-code, code=readLines("../script-refactor/TableS1.R"), eval=FALSE}
+```{r table-s1-code, code=readLines("../script/TableS1.R"), eval=FALSE}
 ```
 
 ## Table {#tables1}
 
 Showing the first 20 rows (of 200); download the full table at
-[`figure-refactor/Supplementary_Table1_GP_summary.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figure-refactor/Supplementary_Table1_GP_summary.csv).
+[`figures/generated/Supplementary_Table1_GP_summary.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generated/Supplementary_Table1_GP_summary.csv).
 
 ```{r table-s1-preview, echo=FALSE, message=FALSE}
-tab <- read.csv("../figure-refactor/Supplementary_Table1_GP_summary.csv", stringsAsFactors = FALSE)
+tab <- read.csv("../figures/generated/Supplementary_Table1_GP_summary.csv", stringsAsFactors = FALSE)
 knitr::kable(head(tab, 20), row.names = FALSE)
 ```
 
