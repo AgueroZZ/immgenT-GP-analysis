@@ -15,12 +15,12 @@ images are its pre-rendered output.
 
 Data loading, shared across all panels below.
 
-```{r fig2-setup, code=readLines("../script/Figure2.R")[1:65], eval=FALSE}
+```{r fig2-setup, code=readLines("../script/Figure2.R")[1:73], eval=FALSE}
 ```
 
 ## (A) AUC swarm plot by lineage {#fig2a}
 
-```{r fig2a-code, code=readLines("../script/Figure2.R")[67:113], eval=FALSE}
+```{r fig2a-code, code=readLines("../script/Figure2.R")[75:121], eval=FALSE}
 ```
 
 ```{r fig2a-img, echo=FALSE, out.width="60%"}
@@ -33,7 +33,7 @@ knitr::include_graphics("assets/Figure2/2A.png")
 
 ## (B) Structure plot of lineage-defining GPs {#fig2b}
 
-```{r fig2b-code, code=readLines("../script/Figure2.R")[115:167], eval=FALSE}
+```{r fig2b-code, code=readLines("../script/Figure2.R")[123:175], eval=FALSE}
 ```
 
 ```{r fig2b-img, echo=FALSE, out.width="60%"}
@@ -46,7 +46,7 @@ knitr::include_graphics("assets/Figure2/2B.png")
 
 ## (C) GP68 loading on the global MDE {#fig2c}
 
-```{r fig2c-code, code=readLines("../script/Figure2.R")[172:185], eval=FALSE}
+```{r fig2c-code, code=readLines("../script/Figure2.R")[180:193], eval=FALSE}
 ```
 
 ```{r fig2c-img, echo=FALSE, out.width="40%"}
@@ -59,7 +59,7 @@ knitr::include_graphics("assets/Figure2/2C.png")
 
 ## (D) GP68 signature volcano {#fig2d}
 
-```{r fig2d-code, code=readLines("../script/Figure2.R")[225:243], eval=FALSE}
+```{r fig2d-code, code=readLines("../script/Figure2.R")[233:251], eval=FALSE}
 ```
 
 ```{r fig2d-img, echo=FALSE, out.width="40%"}
@@ -72,7 +72,7 @@ knitr::include_graphics("assets/Figure2/2D.png")
 
 ## (E) GP30 loading on the global MDE {#fig2e}
 
-```{r fig2e-code, code=readLines("../script/Figure2.R")[187:200], eval=FALSE}
+```{r fig2e-code, code=readLines("../script/Figure2.R")[195:208], eval=FALSE}
 ```
 
 ```{r fig2e-img, echo=FALSE, out.width="40%"}
@@ -85,7 +85,7 @@ knitr::include_graphics("assets/Figure2/2E.png")
 
 ## (F) GP30 signature volcano {#fig2f}
 
-```{r fig2f-code, code=readLines("../script/Figure2.R")[245:258], eval=FALSE}
+```{r fig2f-code, code=readLines("../script/Figure2.R")[253:266], eval=FALSE}
 ```
 
 ```{r fig2f-img, echo=FALSE, out.width="40%"}
@@ -98,7 +98,7 @@ knitr::include_graphics("assets/Figure2/2F.png")
 
 ## (G) GP58 loading on the global MDE {#fig2g}
 
-```{r fig2g-code, code=readLines("../script/Figure2.R")[202:215], eval=FALSE}
+```{r fig2g-code, code=readLines("../script/Figure2.R")[210:223], eval=FALSE}
 ```
 
 ```{r fig2g-img, echo=FALSE, out.width="40%"}
@@ -111,7 +111,7 @@ knitr::include_graphics("assets/Figure2/2G.png")
 
 ## (H) GP58 signature volcano {#fig2h}
 
-```{r fig2h-code, code=readLines("../script/Figure2.R")[260:273], eval=FALSE}
+```{r fig2h-code, code=readLines("../script/Figure2.R")[268:281], eval=FALSE}
 ```
 
 ```{r fig2h-img, echo=FALSE, out.width="40%"}
@@ -124,7 +124,7 @@ knitr::include_graphics("assets/Figure2/2H.png")
 
 ## (I) gdT/CD8aa/DN MDE by lineage {#fig2i}
 
-```{r fig2i-code, code=readLines("../script/Figure2.R")[279:316], eval=FALSE}
+```{r fig2i-code, code=readLines("../script/Figure2.R")[287:324], eval=FALSE}
 ```
 
 ```{r fig2i-img, echo=FALSE, out.width="40%"}
@@ -137,7 +137,7 @@ knitr::include_graphics("assets/Figure2/2I.png")
 
 ## (J-L) GP22, GP29, GP3 loading on the gdT/CD8aa/DN MDE {#fig2jl}
 
-```{r fig2jl-code, code=readLines("../script/Figure2.R")[321:338], eval=FALSE}
+```{r fig2jl-code, code=readLines("../script/Figure2.R")[329:346], eval=FALSE}
 ```
 
 ```{r fig2jl-img, echo=FALSE, out.width="30%"}
@@ -150,7 +150,7 @@ knitr::include_graphics(c("assets/Figure2/2J.png", "assets/Figure2/2K.png", "ass
 
 ## (M) Top-30 gene score heatmap for GP3/GP29/GP22 {#fig2m}
 
-```{r fig2m-code, code=readLines("../script/Figure2.R")[351:367], eval=FALSE}
+```{r fig2m-code, code=readLines("../script/Figure2.R")[359:375], eval=FALSE}
 ```
 
 ```{r fig2m-img, echo=FALSE, out.width="40%"}

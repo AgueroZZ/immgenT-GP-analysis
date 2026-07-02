@@ -14,12 +14,12 @@ its pre-rendered output.
 
 ## Setup
 
-```{r figs2-setup, code=readLines("../script/FigureS2.R")[1:35], eval=FALSE}
+```{r figs2-setup, code=readLines("../script/FigureS2.R")[1:41], eval=FALSE}
 ```
 
 ## (A) GP30 loading across Tz subsets {#figs2a}
 
-```{r figs2a-code, code=readLines("../script/FigureS2.R")[37:64], eval=FALSE}
+```{r figs2a-code, code=readLines("../script/FigureS2.R")[43:70], eval=FALSE}
 ```
 
 ```{r figs2a-img, echo=FALSE, out.width="32%"}
@@ -32,7 +32,7 @@ knitr::include_graphics("assets/FigureS2/S2A.png")
 
 ## (B) GP58 loading, resting/activated CD8 {#figs2b}
 
-```{r figs2b-code, code=readLines("../script/FigureS2.R")[66:94], eval=FALSE}
+```{r figs2b-code, code=readLines("../script/FigureS2.R")[72:100], eval=FALSE}
 ```
 
 ```{r figs2b-img, echo=FALSE, out.width="32%"}
@@ -45,7 +45,7 @@ knitr::include_graphics("assets/FigureS2/S2B.png")
 
 ## (C) CD8A/CD8B protein expression {#figs2c}
 
-```{r figs2c-code, code=readLines("../script/FigureS2.R")[96:130], eval=FALSE}
+```{r figs2c-code, code=readLines("../script/FigureS2.R")[102:136], eval=FALSE}
 ```
 
 ```{r figs2c-img, echo=FALSE, out.width="32%"}

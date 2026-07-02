@@ -16,17 +16,17 @@ pre-rendered output.
 
 Data loading, shared across all panels below.
 
-```{r fig1-setup1, code=readLines("../script/Figure1.R")[31:57], eval=FALSE}
+```{r fig1-setup1, code=readLines("../script/Figure1.R")[42:68], eval=FALSE}
 ```
 
 Panels C and E-I additionally restrict to non-thymocyte cells:
 
-```{r fig1-setup2, code=readLines("../script/Figure1.R")[91:96], eval=FALSE}
+```{r fig1-setup2, code=readLines("../script/Figure1.R")[102:107], eval=FALSE}
 ```
 
 ## (A) Global MDE by lineage {#fig1a}
 
-```{r fig1a-code, code=readLines("../script/Figure1.R")[59:87], eval=FALSE}
+```{r fig1a-code, code=readLines("../script/Figure1.R")[70:98], eval=FALSE}
 ```
 
 ```{r fig1a-img, echo=FALSE, out.width="50%"}
@@ -43,7 +43,7 @@ This panel is a hand-drawn schematic, not generated from R -- there is no code o
 
 ## (C) GP loading heatmap {#fig1c}
 
-```{r fig1c-code, code=readLines("../script/Figure1.R")[98:172], eval=FALSE}
+```{r fig1c-code, code=readLines("../script/Figure1.R")[109:183], eval=FALSE}
 ```
 
 ```{r fig1c-img, echo=FALSE, out.width="50%"}
@@ -56,7 +56,7 @@ knitr::include_graphics("assets/Figure1/1C.png")
 
 ## (D) GP1 signature volcano {#fig1d}
 
-```{r fig1d-code, code=readLines("../script/Figure1.R")[259:269], eval=FALSE}
+```{r fig1d-code, code=readLines("../script/Figure1.R")[270:280], eval=FALSE}
 ```
 
 ```{r fig1d-img, echo=FALSE, out.width="50%"}
@@ -69,7 +69,7 @@ knitr::include_graphics("assets/Figure1/1D.png")
 
 ## (E) Active-cell proportion per GP {#fig1e}
 
-```{r fig1e-code, code=readLines("../script/Figure1.R")[183:193], eval=FALSE}
+```{r fig1e-code, code=readLines("../script/Figure1.R")[194:204], eval=FALSE}
 ```
 
 ```{r fig1e-img, echo=FALSE, out.width="50%"}
@@ -82,7 +82,7 @@ knitr::include_graphics("assets/Figure1/1E.png")
 
 ## (F) Active-gene count per GP {#fig1f}
 
-```{r fig1f-code, code=readLines("../script/Figure1.R")[248:257], eval=FALSE}
+```{r fig1f-code, code=readLines("../script/Figure1.R")[259:268], eval=FALSE}
 ```
 
 ```{r fig1f-img, echo=FALSE, out.width="50%"}
@@ -95,7 +95,7 @@ knitr::include_graphics("assets/Figure1/1F.png")
 
 ## (G) Active-GP count by lineage {#fig1g}
 
-```{r fig1g-code, code=readLines("../script/Figure1.R")[213:232], eval=FALSE}
+```{r fig1g-code, code=readLines("../script/Figure1.R")[224:243], eval=FALSE}
 ```
 
 ```{r fig1g-img, echo=FALSE, out.width="50%"}
@@ -108,7 +108,7 @@ knitr::include_graphics("assets/Figure1/1G.png")
 
 ## (H) Active-GP count, activated vs. resting {#fig1h}
 
-```{r fig1h-code, code=readLines("../script/Figure1.R")[195:211], eval=FALSE}
+```{r fig1h-code, code=readLines("../script/Figure1.R")[206:222], eval=FALSE}
 ```
 
 ```{r fig1h-img, echo=FALSE, out.width="50%"}
@@ -121,7 +121,7 @@ knitr::include_graphics("assets/Figure1/1H.png")
 
 ## (I) CD44 vs. active-GP count {#fig1i}
 
-```{r fig1i-code, code=readLines("../script/Figure1.R")[234:246], eval=FALSE}
+```{r fig1i-code, code=readLines("../script/Figure1.R")[245:257], eval=FALSE}
 ```
 
 ```{r fig1i-img, echo=FALSE, out.width="50%"}

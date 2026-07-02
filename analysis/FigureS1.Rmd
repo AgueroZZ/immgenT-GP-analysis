@@ -16,17 +16,17 @@ produced (a much heavier, cluster-scale computation).
 
 ## Setup
 
-```{r figs1-setup, code=readLines("../script/FigureS1.R")[1:31], eval=FALSE}
+```{r figs1-setup, code=readLines("../script/FigureS1.R")[1:37], eval=FALSE}
 ```
 
 Panels A and B both use the cached per-IGT cosine score matrix:
 
-```{r figs1-setup-ab, code=readLines("../script/FigureS1.R")[33:37], eval=FALSE}
+```{r figs1-setup-ab, code=readLines("../script/FigureS1.R")[39:43], eval=FALSE}
 ```
 
 ## (A) Cumulative GPs validated as IGTs are added {#figs1a}
 
-```{r figs1a-code, code=readLines("../script/FigureS1.R")[60:85], eval=FALSE}
+```{r figs1a-code, code=readLines("../script/FigureS1.R")[66:91], eval=FALSE}
 ```
 
 ```{r figs1a-img, echo=FALSE, out.width="49%"}
@@ -39,7 +39,7 @@ knitr::include_graphics("assets/FigureS1/S1A.png")
 
 ## (B) GPs validated by at least X IGTs {#figs1b}
 
-```{r figs1b-code, code=readLines("../script/FigureS1.R")[39:58], eval=FALSE}
+```{r figs1b-code, code=readLines("../script/FigureS1.R")[45:64], eval=FALSE}
 ```
 
 ```{r figs1b-img, echo=FALSE, out.width="49%"}
@@ -52,10 +52,10 @@ knitr::include_graphics("assets/FigureS1/S1B.png")
 
 ## (C) Between-IGT variability {#figs1c}
 
-```{r figs1c-setup, code=readLines("../script/FigureS1.R")[87:95], eval=FALSE}
+```{r figs1c-setup, code=readLines("../script/FigureS1.R")[93:101], eval=FALSE}
 ```
 
-```{r figs1c-code, code=readLines("../script/FigureS1.R")[97:121], eval=FALSE}
+```{r figs1c-code, code=readLines("../script/FigureS1.R")[103:127], eval=FALSE}
 ```
 
 ```{r figs1c-img, echo=FALSE, out.width="49%"}
@@ -68,7 +68,7 @@ knitr::include_graphics("assets/FigureS1/S1C.png")
 
 ## (D) Top-variance GP heatmap {#figs1d}
 
-```{r figs1d-code, code=readLines("../script/FigureS1.R")[123:152], eval=FALSE}
+```{r figs1d-code, code=readLines("../script/FigureS1.R")[129:158], eval=FALSE}
 ```
 
 ```{r figs1d-img, echo=FALSE, out.width="49%"}

@@ -17,12 +17,12 @@ output.
 
 Data loading, shared across all panels below.
 
-```{r fig3-setup, code=readLines("../script/Figure3.R")[1:45], eval=FALSE}
+```{r fig3-setup, code=readLines("../script/Figure3.R")[1:50], eval=FALSE}
 ```
 
 ## (3c) Activation effect, CD4 vs. CD8 {#fig3c}
 
-```{r fig3c-code, code=readLines("../script/Figure3.R")[47:95], eval=FALSE}
+```{r fig3c-code, code=readLines("../script/Figure3.R")[52:100], eval=FALSE}
 ```
 
 ```{r fig3c-img, echo=FALSE, out.width="50%"}
@@ -35,7 +35,7 @@ knitr::include_graphics("assets/Figure3/3c.png")
 
 ## (3d) GP-gene signature network {#fig3d}
 
-```{r fig3d-code, code=readLines("../script/Figure3.R")[97:156], eval=FALSE}
+```{r fig3d-code, code=readLines("../script/Figure3.R")[102:161], eval=FALSE}
 ```
 
 ```{r fig3d-img, echo=FALSE, out.width="50%"}
@@ -48,7 +48,7 @@ knitr::include_graphics("assets/Figure3/3d.png")
 
 ## (3e) TF-GP network {#fig3e}
 
-```{r fig3e-code, code=readLines("../script/Figure3.R")[158:195], eval=FALSE}
+```{r fig3e-code, code=readLines("../script/Figure3.R")[163:200], eval=FALSE}
 ```
 
 ```{r fig3e-img, echo=FALSE, out.width="50%"}
@@ -61,7 +61,7 @@ knitr::include_graphics("assets/Figure3/3e.png")
 
 ## (3f) Log2FC heatmap across conditions {#fig3f}
 
-```{r fig3f-code, code=readLines("../script/Figure3.R")[243:294], eval=FALSE}
+```{r fig3f-code, code=readLines("../script/Figure3.R")[248:299], eval=FALSE}
 ```
 
 ```{r fig3f-img, echo=FALSE, out.width="50%"}
@@ -74,7 +74,7 @@ knitr::include_graphics("assets/Figure3/3f.png")
 
 ## (3g) Mean loading by sub-lineage {#fig3g}
 
-```{r fig3g-code, code=readLines("../script/Figure3.R")[197:241], eval=FALSE}
+```{r fig3g-code, code=readLines("../script/Figure3.R")[202:246], eval=FALSE}
 ```
 
 ```{r fig3g-img, echo=FALSE, out.width="50%"}
