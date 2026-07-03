@@ -28,13 +28,17 @@ which already contains their cached outputs.
 
 1. `01_extract_data.R` — raw Seurat object -> gene-filtered RNA counts,
    CITE-seq protein matrix, condensed factorization summary.
-2. `02_compute_auc.R` — per-GP AUC for predicting lineage/organ (feeds
-   Figure2, Table S1).
-3. `03_protein_thresholds.R` — GMM + manual protein positivity thresholds
+2. `01b_filter_cells.R` — filters cells by total GP membership, producing
+   `L_pm_filtered.rds`/`F_pm_filtered.rds` (unlike `01_extract_data.R`,
+   this one *is* runnable against the `data/` in this repo).
+3. `02_compute_auc.R` — per-GP AUC for predicting lineage/organ/condition
+   (feeds Figure2, Table S1).
+4. `03_protein_thresholds.R` — GMM + manual protein positivity thresholds
    (feeds Figure6, FigureS6).
-4. `04_protein_projection.R` — projects CITE-seq protein data onto the
-   fixed scRNA cell loadings (Figure 6's caption panel (a) schematic).
-5. `05_igt_validation.R` — per-batch (IGT) reproducibility validation
+5. `04_protein_projection.R` — projects CITE-seq protein data onto the
+   fixed scRNA cell loadings (Figure 6's caption panel (a) schematic), and
+   derives `CITEseq_markers_full.rds`.
+6. `05_igt_validation.R` — per-batch (IGT) reproducibility validation
    (feeds FigureS1).
 
 ## Data provenance
@@ -51,7 +55,7 @@ back to this table.
 | `flashier_snmf_matrix.qs` | **gap** | Input matrix to the fit above; same status. |
 | `flashier_snmf_fitted_prior.rda` | **gap** | Saved alongside `flashier_snmf.rds` from the same interactive fit; not reproduced here. Used by Figure1.R's PVE-type panel. |
 | `flashier_snmf_summary.rds` | `01_extract_data.R` | Condenses `flashier_snmf.rds` into `L_pm`/`F_pm`/`elbo`/`pve`. |
-| `L_pm_filtered.rds`, `F_pm_filtered.rds` | **gap** | These are `flashier_snmf_summary.rds`'s `L_pm`/`F_pm` after `filter_cells_by_total_membership()` (`code/R/plot_utils.R`) — the script that ran that filter and saved these exact files is not preserved here. |
+| `L_pm_filtered.rds`, `F_pm_filtered.rds` | `01b_filter_cells.R` | `flashier_snmf_summary.rds`'s `L_pm`/`F_pm`, restricted to cells present in the current Seurat object (18 of `flashier_snmf_summary.rds`'s 682,953 cells aren't -- the same kind of data-version drift already noted for `seurat_meta.rds`), then filtered by `filter_cells_by_total_membership()` (`code/R/plot_utils.R`). Recovered from a commented-out block in the original `Figure_Overview.R`; verified **byte-identical** to the cached files (max abs diff 0, same 681,423 cells in the same order). |
 | `shifted_log_counts.qs`, `counts.qs` | `01_extract_data.R` | Gene-filtered RNA counts (raw and shifted-log). |
 | `shifted_log_counts_subset.rds` | **gap** | A subset of `shifted_log_counts.qs` (used by Figure4's panel c); the subsetting script isn't preserved. |
 | `mean_shifted_log_expr.rds` | **gap** | Per-gene mean shifted-log expression, most likely `colMeans()` of `shifted_log_counts.qs`; not scripted here. |
@@ -59,12 +63,12 @@ back to this table.
 | `protein_mat_normalized_lognorm.rds` | **gap** | A differently-named/derived variant of `protein_mat_normalized.rds`; the exact transform isn't preserved. |
 | `Thresholds_Selected_Proteins.csv`, `GMM_Thresholds_Summary.csv` | `03_protein_thresholds.R` | Per-protein positivity thresholds. |
 | `TableS4_citeseq_qc_20250513.csv` | *(external)* | The manuscript's own Supplementary Table S4 (manually reviewed protein QC classifications) — not computationally derived. |
-| `CITEseq_markers_full.rds` | **gap** | Curated per-GP marker-protein table (positive/negative signature); presumably manually reviewed, not scripted here. |
+| `CITEseq_markers_full.rds` | `04_protein_projection.R` | Per-GP positive/negative protein markers (\|score\| >= 0.5 on the same filtered/scaled protein factor matrix as Figure 6 panel b). Recovered from live (not commented-out) code in the original `Figure_CITEseq.R`; the marker-selection logic itself is verified byte-identical to the cached file when fed the same upstream input -- the only divergence is that this step uses the non-`backfit200` protein summary (see that row's caveat above). |
 | `protein_flash_selected_summary_lognorm.rds` | `04_protein_projection.R` | Re-estimated protein factor matrix U (Figure 6 panel a schematic). |
 | `protein_flash_selected_summary_lognorm_backfit200.rds` | **gap** | The variant actually consumed by Figure6/FigureS6 — likely the same script re-run with a larger `maxiter` and saved under a different name; not reproduced exactly. |
 | `level_1_AUC_list_figure.rds`, `level_2_AUC_list_figure.rds`, `organ_simplified_AUC_list_figure.rds` | `02_compute_auc.R` | Per-GP AUC/threshold for predicting level-1/level-2/organ, restricted to non-thymocyte healthy cells. |
 | `level_1_AUC_list_figure_no_thymocytes_healthy.rds`, `level_2_AUC_list_figure_no_thymocytes_healthy.rds`, `organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds` | **gap** | Consumed by Figure4; a differently-named variant of `02_compute_auc.R`'s output despite that script already restricting to non-thymocyte/healthy cells. Both variants exist side-by-side in `data/`, suggesting a later rerun changed the naming without an updated script being preserved. |
-| `condition_detailed_AUC_list_figure.rds` | **gap** | Consumed by TableS1; the same AUC pattern as `02_compute_auc.R` but grouped by `condition_detailed` instead of level_1/level_2/organ — not scripted here, though it would follow the same pattern as the other three. |
+| `condition_detailed_AUC_list_figure.rds` | `02_compute_auc.R` | The same `compute_auc_threshold_matrix()` pattern, grouped by `condition_detailed` instead of level_1/level_2/organ, restricted to non-thymocyte cells only. Recovered from an `eval=FALSE` chunk in `analysis/old/Figures_Manuscript_v1.rmd`. |
 | `umap_result.rds` | **gap** | The MDE/UMAP embedding coordinates used throughout. The dimensionality-reduction step itself is not scripted anywhere in this repo. |
 | `igt_specific_cosine_scores.csv`, `igt_specific_validated_matrix.csv` | `05_igt_validation.R` (Stage B) | Per-IGT reproducibility score matrix (feeds FigureS1). |
 | `igt_specific/*.qs` (per-IGT flashier fits) | **gap** (Stage A) | Already present in `data/`; the per-IGT re-fitting step that produced them is not scripted here (see `05_igt_validation.R`'s header). |

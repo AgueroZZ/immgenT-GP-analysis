@@ -24,7 +24,7 @@
 # Required inputs (data/) -- see code/README.md's "Data provenance" table
 # for the full picture:
 #   igt_specific_cosine_scores.csv           [code/pipeline/05_igt_validation.R]
-#   L_pm_filtered.rds                        [gap, no producer script here]
+#   L_pm_filtered.rds                        [code/pipeline/01b_filter_cells.R]
 #   igt1_96_..._ADTonly.Rds                  [primary input Seurat object]
 
 library(dplyr)

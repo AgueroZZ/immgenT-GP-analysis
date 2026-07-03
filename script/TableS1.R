@@ -13,11 +13,11 @@
 data_path <- "data/"
 output_path <- "figures/generated/"
 
-L_pm_filtered <- readRDS(paste0(data_path, "L_pm_filtered.rds")) # gap, no producer script here
-F_pm_filtered <- readRDS(paste0(data_path, "F_pm_filtered.rds")) # gap, no producer script here
+L_pm_filtered <- readRDS(paste0(data_path, "L_pm_filtered.rds")) # code/pipeline/01b_filter_cells.R
+F_pm_filtered <- readRDS(paste0(data_path, "F_pm_filtered.rds")) # code/pipeline/01b_filter_cells.R
 level_1_AUC_list <- readRDS(paste0(data_path, "level_1_AUC_list_figure.rds")) # code/pipeline/02_compute_auc.R
 level_2_AUC_list <- readRDS(paste0(data_path, "level_2_AUC_list_figure.rds")) # code/pipeline/02_compute_auc.R
-condition_detailed_AUC_list_figure <- readRDS(paste0(data_path, "condition_detailed_AUC_list_figure.rds")) # gap, no producer script here
+condition_detailed_AUC_list_figure <- readRDS(paste0(data_path, "condition_detailed_AUC_list_figure.rds")) # code/pipeline/02_compute_auc.R
 organ_simplified_AUC_list_figure <- readRDS(paste0(data_path, "organ_simplified_AUC_list_figure.rds")) # code/pipeline/02_compute_auc.R
 
 # Normalize F_pm_filtered such that each column has max abs value of 1

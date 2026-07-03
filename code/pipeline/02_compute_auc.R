@@ -49,3 +49,14 @@ organ_AUC_list <- compute_auc_threshold_matrix(loading_mat = L_pm_no_thymocytes_
 rownames(organ_AUC_list$auc) <- sort(unique(seurat_meta_no_thymocytes_healthy$organ_simplified))
 rownames(organ_AUC_list$threshold) <- sort(unique(seurat_meta_no_thymocytes_healthy$organ_simplified))
 saveRDS(organ_AUC_list, file = paste0(data_path, "organ_simplified_AUC_list_figure.rds"))
+
+# condition_detailed_AUC_list_figure.rds (feeds TableS1.R): same pattern,
+# grouped by condition_detailed instead of level_1/level_2/organ, and
+# restricted to non-thymocyte cells only (not additionally healthy-only --
+# condition_detailed is the condition variable itself). Source: recovered
+# from analysis/old/Figures_Manuscript_v1.rmd (an `eval=FALSE` chunk there,
+# same live compute_auc_threshold_matrix() logic used above).
+condition_detailed_AUC_list <- compute_auc_threshold_matrix(loading_mat = L_pm_no_thymocytes, group_info = seurat_meta_no_thymocytes$condition_detailed)
+rownames(condition_detailed_AUC_list$auc) <- sort(unique(seurat_meta_no_thymocytes$condition_detailed))
+rownames(condition_detailed_AUC_list$threshold) <- sort(unique(seurat_meta_no_thymocytes$condition_detailed))
+saveRDS(condition_detailed_AUC_list, file = paste0(data_path, "condition_detailed_AUC_list_figure.rds"))

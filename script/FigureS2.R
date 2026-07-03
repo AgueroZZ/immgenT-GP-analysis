@@ -15,7 +15,7 @@
 # Required inputs (data/) -- see code/README.md's "Data provenance" table
 # for the full picture:
 #   igt1_96_..._ADTonly.Rds                  [primary input Seurat object]
-#   L_pm_filtered.rds                        [gap, no producer script here]
+#   L_pm_filtered.rds                        [code/pipeline/01b_filter_cells.R]
 #   protein_mat_normalized_lognorm.rds       [gap, no producer script here]
 
 library(ggplot2)
