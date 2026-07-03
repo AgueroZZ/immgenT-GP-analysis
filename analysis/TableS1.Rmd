@@ -23,5 +23,5 @@ knitr::kable(head(tab, 20), row.names = FALSE)
 ```
 
 ::: {.figcaption}
-**Table S1.** One row per GP: which Level-1 (major lineage), Level-2 (sub-lineage), condition, and organ categories it predicts well (AUC > 0.8, driven by high loading), plus its top 5 positive and negative signature genes (|score| > 0.25).
+**Table S1.** One row per GP: which Level-1 (major lineage), Level-2 (sub-lineage), and organ categories it predicts well (AUC > 0.8, driven by high loading, restricted to non-thymocyte healthy cells), plus its top 5 positive and negative signature genes (|score| > 0.25).
 :::
