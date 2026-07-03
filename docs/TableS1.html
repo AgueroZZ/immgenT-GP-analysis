@@ -515,15 +515,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec41203de66cffc4be880b2f44492605c5baa2251targetblankc41203da">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree9944479ec7f710d550dfe4a105227bcb17acb164targetblank9944479a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c41203de66cffc4be880b2f44492605c5baa2251" target="_blank">c41203d</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/9944479ec7f710d550dfe4a105227bcb17acb164" target="_blank">9944479</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec41203de66cffc4be880b2f44492605c5baa2251targetblankc41203da"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree9944479ec7f710d550dfe4a105227bcb17acb164targetblank9944479a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -533,7 +533,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c41203de66cffc4be880b2f44492605c5baa2251" target="_blank">c41203d</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/9944479ec7f710d550dfe4a105227bcb17acb164" target="_blank">9944479</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -648,6 +648,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/9944479ec7f710d550dfe4a105227bcb17acb164/analysis/TableS1.Rmd" target="_blank">9944479</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-03
+</td>
+<td>
+Drop Condition column from TableS1 (would require healthy-only
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/8b50a78a9ae7ac1e324d39c2203167b8e5f1471a/docs/TableS1.html" target="_blank">8b50a78</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-03
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -812,12 +846,16 @@ Initial commit: immgenT-GP-analysis
 href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/TableS1.R"><code>script/TableS1.R</code></a>:</p>
 <pre class="r"><code># Supplementary Table 1: per-GP summary.
 #
-# One row per GP: which Level-1/Level-2/condition/organ categories it
-# predicts well (AUC &gt; 0.8, driven by high loading), plus its top positive
-# and negative signature genes.
+# One row per GP: which Level-1/Level-2/organ categories it predicts well
+# (AUC &gt; 0.8, driven by high loading), plus its top positive and negative
+# signature genes. All three AUC computations are restricted to
+# non-thymocyte, healthy cells (see code/pipeline/02_compute_auc.R) -- there
+# is no condition column, since restricting a condition-predicting AUC to
+# healthy-only cells would be degenerate (condition_broad would have just
+# one value left).
 #
 # Source: ported from Supplement_Table1.R (unchanged apart from the
-# output path).
+# output path and dropping the condition column, see above).
 #
 # Required inputs (data/) -- see code/README.md&#39;s &quot;Data provenance&quot; table
 # for the full picture.
@@ -829,7 +867,6 @@ L_pm_filtered &lt;- readRDS(paste0(data_path, &quot;L_pm_filtered.rds&quot;)) # 
 F_pm_filtered &lt;- readRDS(paste0(data_path, &quot;F_pm_filtered.rds&quot;)) # code/pipeline/01b_filter_cells.R
 level_1_AUC_list &lt;- readRDS(paste0(data_path, &quot;level_1_AUC_list_figure_no_thymocytes_healthy.rds&quot;)) # code/pipeline/02_compute_auc.R
 level_2_AUC_list &lt;- readRDS(paste0(data_path, &quot;level_2_AUC_list_figure_no_thymocytes_healthy.rds&quot;)) # code/pipeline/02_compute_auc.R
-condition_detailed_AUC_list_figure &lt;- readRDS(paste0(data_path, &quot;condition_detailed_AUC_list_figure.rds&quot;)) # code/pipeline/02_compute_auc.R -- pending recompute, see code/README.md
 organ_simplified_AUC_list_figure &lt;- readRDS(paste0(data_path, &quot;organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds&quot;)) # code/pipeline/02_compute_auc.R
 
 # Normalize F_pm_filtered such that each column has max abs value of 1
@@ -855,7 +892,6 @@ get_passing_categories &lt;- function(auc_list, gps, L_mat, threshold = 0.8) {
 
 level1_cats &lt;- get_passing_categories(level_1_AUC_list, gps, L_pm_filtered)
 level2_cats &lt;- get_passing_categories(level_2_AUC_list, gps, L_pm_filtered)
-condition_cats &lt;- get_passing_categories(condition_detailed_AUC_list_figure, gps, L_pm_filtered)
 organ_cats &lt;- get_passing_categories(organ_simplified_AUC_list_figure, gps, L_pm_filtered)
 
 sig_genes_pos &lt;- lapply(gps, function(gp) {
@@ -875,7 +911,6 @@ supp_table &lt;- data.frame(
   GP = gps,
   Level1 = unlist(level1_cats),
   Level2 = unlist(level2_cats),
-  Condition = unlist(condition_cats),
   Organ = unlist(organ_cats),
   Signature_Genes_Pos = unlist(sig_genes_pos),
   Signature_Genes_Neg = unlist(sig_genes_neg),
@@ -887,22 +922,20 @@ write.csv(supp_table, file = paste0(output_path, &quot;Supplementary_Table1_GP_s
 <h2>Table</h2>
 <p>Showing the first 20 rows (of 200); download the full table at <a
 href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generated/Supplementary_Table1_GP_summary.csv"><code>figures/generated/Supplementary_Table1_GP_summary.csv</code></a>.</p>
-<table>
+<table style="width:100%;">
 <colgroup>
 <col width="1%" />
-<col width="1%" />
-<col width="32%" />
-<col width="36%" />
-<col width="5%" />
-<col width="11%" />
-<col width="10%" />
+<col width="2%" />
+<col width="51%" />
+<col width="9%" />
+<col width="18%" />
+<col width="16%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th align="left">GP</th>
 <th align="left">Level1</th>
 <th align="left">Level2</th>
-<th align="left">Condition</th>
 <th align="left">Organ</th>
 <th align="left">Signature_Genes_Pos</th>
 <th align="left">Signature_Genes_Neg</th>
@@ -916,7 +949,6 @@ href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generate
 gdT.D; gdT.P; CD8aa.C; CD8aa.D; CD8aa.E; CD8aa.P; DN.P; DP.wY;
 DP.wP</td>
 <td align="left"></td>
-<td align="left"></td>
 <td align="left">CT010467.1; Tmsb4x; Actb; Tmsb10; Eef1a1</td>
 <td align="left"></td>
 </tr>
@@ -925,7 +957,6 @@ DP.wP</td>
 <td align="left"></td>
 <td align="left">CD8.wM; CD4.wM; Treg.wM; gdT.E; gdT.wM; CD8aa.wM;
 Tz.wM; DN.wM; DP.wC; DP.wM</td>
-<td align="left">PDAC_SoyHFD</td>
 <td align="left"></td>
 <td align="left">Arhgap15; Dock2; Mbnl1; Inpp4b; Foxp1</td>
 <td align="left">Tmsb10; Tmsb4x; Fau; Pfn1; Ppia</td>
@@ -935,8 +966,6 @@ Tz.wM; DN.wM; DP.wC; DP.wM</td>
 <td align="left"></td>
 <td align="left">gdT.A; gdT.B; gdT.C; gdT.D; gdT.E; gdT.F; gdT.Z; gdT.P;
 CD8aa.C; CD8aa.D; CD8aa.E; DP.wY</td>
-<td align="left">CeDtg; CeDtg_glia; Ddvillin; Ddvillin_glia; MNVCR6;
-MNVCW3</td>
 <td align="left">small intestine epi</td>
 <td align="left">Gzma; Cd7; Ccl5; Fcer1g; Tyrobp</td>
 <td align="left">Tmsb10; Tpt1; CT010467.1; Actb; Tmsb4x</td>
@@ -945,7 +974,6 @@ MNVCW3</td>
 <td align="left">K4</td>
 <td align="left"></td>
 <td align="left">CD4.wN</td>
-<td align="left"></td>
 <td align="left"></td>
 <td align="left">Tmsb10; Fau; CT010467.1; Pfn1; Ppia</td>
 <td align="left">Dock2; Rack1; Arhgap15; Myh9; Ptprc</td>
@@ -956,7 +984,6 @@ MNVCW3</td>
 <td align="left">CD8.K; CD8.P; CD4.P; Treg.P; gdT.P; CD8aa.P; Tz.P;
 DN.P; DP.wP</td>
 <td align="left"></td>
-<td align="left"></td>
 <td align="left">H2ac8; H1f5; H1f4; H4c4; Hist1h2ap</td>
 <td align="left"></td>
 </tr>
@@ -966,7 +993,6 @@ DN.P; DP.wP</td>
 <td align="left">CD8.K; CD4.T; CD4.U; CD4.X; CD4.Y; CD4.P; Treg.D;
 Treg.E; Treg.P; gdT.Q; gdT.R; gdT.S; gdT.T; gdT.U; gdT.V; gdT.X; gdT.Z;
 Tz.D</td>
-<td align="left">Crodentium; MTB_49w; Saureus</td>
 <td align="left">skin</td>
 <td align="left">S100a6; Gzmb; Lgals1; Vim; Crip1</td>
 <td align="left">Tmsb10; CT010467.1; Eef1a1; Cmss1; Cdk8</td>
@@ -976,7 +1002,6 @@ Tz.D</td>
 <td align="left"></td>
 <td align="left">gdT.Z; DP.wG</td>
 <td align="left"></td>
-<td align="left"></td>
 <td align="left">CT010467.1; Ccl5; Cmss1; Cdk8; Crip1</td>
 <td align="left">Igfbp4; Ccr7; Limd2</td>
 </tr>
@@ -984,8 +1009,6 @@ Tz.D</td>
 <td align="left">K8</td>
 <td align="left"></td>
 <td align="left">gdT.X; gdT.Z</td>
-<td align="left">VV_D63_AntigenExperienced; VV_D63_bystander;
-VV_D80_bystander</td>
 <td align="left">skin; CNS</td>
 <td align="left">Fth1; S100a6; Thy1; Ctla2a; Gem</td>
 <td align="left">Ccl5; Gzma; Gzmb; AW112010; Tyrobp</td>
@@ -995,7 +1018,6 @@ VV_D80_bystander</td>
 <td align="left"></td>
 <td align="left">CD8.wU; CD8.wV; DP.wC; DP.wE</td>
 <td align="left"></td>
-<td align="left"></td>
 <td align="left">Cdk8; Cmss1; CT010467.1; Eef2; Myh9</td>
 <td align="left">Tmsb10; Fau; Tmsb4x; Cd52</td>
 </tr>
@@ -1003,9 +1025,6 @@ VV_D80_bystander</td>
 <td align="left">K10</td>
 <td align="left"></td>
 <td align="left">CD8.H; CD8.I; CD8.K; CD8.wY; CD4.S; DN.F</td>
-<td align="left">dirty_2m_LCMVarm_D30; dirty_2m_LCMVarm_D7; GBMpron;
-LCMVarm_intravascular; LCMVarm_intravascularcirculating;
-LCMVarm_intravascularsurveilling</td>
 <td align="left"></td>
 <td align="left">Ccl5; Gzma; Lgals1; Nkg7; Ly6c2</td>
 <td align="left"></td>
@@ -1014,7 +1033,6 @@ LCMVarm_intravascularsurveilling</td>
 <td align="left">K11</td>
 <td align="left"></td>
 <td align="left">CD4.X</td>
-<td align="left"></td>
 <td align="left">lung; placenta; kidney</td>
 <td align="left">Vps37b; Gramd3; Dusp10; Junb; Ccr7</td>
 <td align="left">Cd52; Ltb; Ptprcap</td>
@@ -1025,7 +1043,6 @@ LCMVarm_intravascularsurveilling</td>
 <td align="left">CD8.C; CD8.wX; CD4.E; CD4.G; CD4.H; CD4.I; Treg.B;
 Tz.C; DN.A; DN.G</td>
 <td align="left"></td>
-<td align="left"></td>
 <td align="left">Izumo1r; Cdk8; Tox; Tbc1d4; Pdcd1</td>
 <td align="left">Crip1; Ccl5; Satb1; Igfbp4; Selplg</td>
 </tr>
@@ -1034,7 +1051,6 @@ Tz.C; DN.A; DN.G</td>
 <td align="left"></td>
 <td align="left">CD4.Y; gdT.Q; gdT.R; gdT.S; gdT.T; gdT.U; gdT.V;
 Tz.D</td>
-<td align="left">D3; Foxp3mutant_D3; Saureus</td>
 <td align="left"></td>
 <td align="left">Tmem176b; Tmem176a; Il7r; CT010467.1; Cd163l1</td>
 <td align="left">Ms4a4b; Inpp4b; Ctla4; Ifi27l2a; Cd2</td>
@@ -1043,7 +1059,6 @@ Tz.D</td>
 <td align="left">K14</td>
 <td align="left"></td>
 <td align="left">DP.wF; DP.wG</td>
-<td align="left"></td>
 <td align="left"></td>
 <td align="left">Cd8b1; Cd8a; Satb1; Rag1; Themis</td>
 <td align="left">H2-K1; Crip1; H2-D1; B2m; Eef1a1</td>
@@ -1054,7 +1069,6 @@ Tz.D</td>
 <td align="left">CD8.D; CD8.F; CD4.F; Treg.C; gdT.X; DN.G; DN.H;
 DP.wH</td>
 <td align="left"></td>
-<td align="left"></td>
 <td align="left">Eif5a; Npm1; Hsp90ab1; Ncl; Mif</td>
 <td align="left">Malat1; Tmsb4x; Itm2b; Cd52; Ypel3</td>
 </tr>
@@ -1062,15 +1076,12 @@ DP.wH</td>
 <td align="left">K16</td>
 <td align="left"></td>
 <td align="left">CD8.F; CD8.wY; CD4.D; DN.I; DN.J</td>
-<td align="left">B16_ACTaPD1a41BB; CtrachomatisL2_primaryD5;
-LCMVcl13_D8; Toxo_D9</td>
 <td align="left"></td>
 <td align="left">Ifi27l2a; Isg15; Ly6a; Bst2; Stat1</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left">K17</td>
-<td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left">CNS</td>
@@ -1082,13 +1093,11 @@ LCMVcl13_D8; Toxo_D9</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
-<td align="left"></td>
 <td align="left">Cpa3; CT010467.1; Crip1; Ccl5; Tmsb10</td>
 <td align="left">Ifi27l2a; Ccr7; Ly6d; Rgcc</td>
 </tr>
 <tr class="odd">
 <td align="left">K19</td>
-<td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
@@ -1099,7 +1108,6 @@ LCMVcl13_D8; Toxo_D9</td>
 <td align="left">K20</td>
 <td align="left"></td>
 <td align="left">CD8.K</td>
-<td align="left">LCMVarm_intravascular</td>
 <td align="left"></td>
 <td align="left">Cenpa; Ube2c; Cdc20; Cenpf; Arl6ip1</td>
 <td align="left">H2ac8; H1f5; H1f4; Hist1h2ap; H1f3</td>
@@ -1108,9 +1116,10 @@ LCMVcl13_D8; Toxo_D9</td>
 </table>
 <div class="figcaption">
 <p><strong>Table S1.</strong> One row per GP: which Level-1 (major
-lineage), Level-2 (sub-lineage), condition, and organ categories it
-predicts well (AUC &gt; 0.8, driven by high loading), plus its top 5
-positive and negative signature genes (|score| &gt; 0.25).</p>
+lineage), Level-2 (sub-lineage), and organ categories it predicts well
+(AUC &gt; 0.8, driven by high loading, restricted to non-thymocyte
+healthy cells), plus its top 5 positive and negative signature genes
+(|score| &gt; 0.25).</p>
 </div>
 <br>
 <p>
