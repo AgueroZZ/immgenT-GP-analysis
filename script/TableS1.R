@@ -1,11 +1,15 @@
 # Supplementary Table 1: per-GP summary.
 #
-# One row per GP: which Level-1/Level-2/condition/organ categories it
-# predicts well (AUC > 0.8, driven by high loading), plus its top positive
-# and negative signature genes.
+# One row per GP: which Level-1/Level-2/organ categories it predicts well
+# (AUC > 0.8, driven by high loading), plus its top positive and negative
+# signature genes. All three AUC computations are restricted to
+# non-thymocyte, healthy cells (see code/pipeline/02_compute_auc.R) -- there
+# is no condition column, since restricting a condition-predicting AUC to
+# healthy-only cells would be degenerate (condition_broad would have just
+# one value left).
 #
 # Source: ported from Supplement_Table1.R (unchanged apart from the
-# output path).
+# output path and dropping the condition column, see above).
 #
 # Required inputs (data/) -- see code/README.md's "Data provenance" table
 # for the full picture.
@@ -15,10 +19,9 @@ output_path <- "figures/generated/"
 
 L_pm_filtered <- readRDS(paste0(data_path, "L_pm_filtered.rds")) # code/pipeline/01b_filter_cells.R
 F_pm_filtered <- readRDS(paste0(data_path, "F_pm_filtered.rds")) # code/pipeline/01b_filter_cells.R
-level_1_AUC_list <- readRDS(paste0(data_path, "level_1_AUC_list_figure.rds")) # code/pipeline/02_compute_auc.R
-level_2_AUC_list <- readRDS(paste0(data_path, "level_2_AUC_list_figure.rds")) # code/pipeline/02_compute_auc.R
-condition_detailed_AUC_list_figure <- readRDS(paste0(data_path, "condition_detailed_AUC_list_figure.rds")) # code/pipeline/02_compute_auc.R
-organ_simplified_AUC_list_figure <- readRDS(paste0(data_path, "organ_simplified_AUC_list_figure.rds")) # code/pipeline/02_compute_auc.R
+level_1_AUC_list <- readRDS(paste0(data_path, "level_1_AUC_list_figure_no_thymocytes_healthy.rds")) # code/pipeline/02_compute_auc.R
+level_2_AUC_list <- readRDS(paste0(data_path, "level_2_AUC_list_figure_no_thymocytes_healthy.rds")) # code/pipeline/02_compute_auc.R
+organ_simplified_AUC_list_figure <- readRDS(paste0(data_path, "organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds")) # code/pipeline/02_compute_auc.R
 
 # Normalize F_pm_filtered such that each column has max abs value of 1
 F_pm_filtered <- apply(F_pm_filtered, 2, function(x) x / max(abs(x)))
@@ -43,7 +46,6 @@ get_passing_categories <- function(auc_list, gps, L_mat, threshold = 0.8) {
 
 level1_cats <- get_passing_categories(level_1_AUC_list, gps, L_pm_filtered)
 level2_cats <- get_passing_categories(level_2_AUC_list, gps, L_pm_filtered)
-condition_cats <- get_passing_categories(condition_detailed_AUC_list_figure, gps, L_pm_filtered)
 organ_cats <- get_passing_categories(organ_simplified_AUC_list_figure, gps, L_pm_filtered)
 
 sig_genes_pos <- lapply(gps, function(gp) {
@@ -63,7 +65,6 @@ supp_table <- data.frame(
   GP = gps,
   Level1 = unlist(level1_cats),
   Level2 = unlist(level2_cats),
-  Condition = unlist(condition_cats),
   Organ = unlist(organ_cats),
   Signature_Genes_Pos = unlist(sig_genes_pos),
   Signature_Genes_Neg = unlist(sig_genes_neg),

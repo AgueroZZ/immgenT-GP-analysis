@@ -30,7 +30,7 @@
 #   igt1_96_..._ADTonly.Rds                  [primary input Seurat object]
 #   L_pm_filtered.rds, F_pm_filtered.rds     [code/pipeline/01b_filter_cells.R]
 #   umap_result.rds                          [gap, no producer script here]
-#   level_1_AUC_list_figure.rds              [code/pipeline/02_compute_auc.R]
+#   level_1_AUC_list_figure_no_thymocytes_healthy.rds [code/pipeline/02_compute_auc.R]
 #   mean_shifted_log_expr.rds                [gap, no producer script here]
 
 library(ggplot2)
@@ -62,7 +62,7 @@ mde_result <- readRDS(paste0(data_path, "umap_result.rds"))
 colnames(mde_result) <- c("MDE_1", "MDE_2")
 mde_result <- mde_result[rownames(L_pm_filtered), ]
 df_mde <- as.data.frame(mde_result)
-level_1_AUC_list <- readRDS(paste0(data_path, "level_1_AUC_list_figure.rds"))
+level_1_AUC_list <- readRDS(paste0(data_path, "level_1_AUC_list_figure_no_thymocytes_healthy.rds"))
 
 # Rename K## to GP## for display consistency
 colnames(L_pm_filtered) <- gsub("^K", "GP", colnames(L_pm_filtered))

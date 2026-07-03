@@ -2,20 +2,24 @@
 #
 # Computes one-vs-rest AUC (+ optimal threshold) of each GP's loading for
 # predicting major lineage (level_1), sub-lineage (level_2), and organ,
-# restricted to non-thymocyte, healthy cells. Feeds Figure2.R (2A) and
-# TableS1.R.
+# restricted to non-thymocyte, healthy cells. Feeds Figure2.R (2A), Figure4.R,
+# and TableS1.R.
 #
-# GAP: Figure4.R (script/) consumes
-# level_1_AUC_list_figure_no_thymocytes_healthy.rds /
-# organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds -- differently
-# named from this script's output despite this script already restricting
-# to non-thymocyte/healthy cells. Both variants exist side-by-side in
-# data/, suggesting a later rerun changed the output naming without an
-# updated script being preserved. This step reproduces the *_figure.rds
-# names actually consumed by Figure2.R/TableS1.R; the *_no_thymocytes_healthy
-# variants are treated as an existing input for Figure4.R.
+# RESOLVED (previously logged here as a naming-mismatch GAP): two families of
+# cached AUC files exist in data/ -- level_1/2/organ_simplified_AUC_list_figure.rds
+# (no suffix) and the same names with a _no_thymocytes_healthy suffix. These
+# are NOT the same computation: the no-suffix files turned out to be a stale
+# artifact of an older, pre-refactor script (a chunk in
+# analysis/old/Figures_Manuscript_v1.rmd) that read the now-known-stale cached
+# seurat_meta.rds and did not restrict to healthy cells. The
+# _no_thymocytes_healthy files match this script's logic (and this script's
+# output) essentially exactly (max abs AUC diff ~1e-13). Figure2.R and
+# TableS1.R were updated to read the _no_thymocytes_healthy files, matching
+# Figure4.R and making all three figures/tables consistent. The no-suffix
+# files are superseded and no longer read by anything in script/.
 #
-# Source: ported from runAUC.R, unchanged apart from path variables.
+# Source: ported from runAUC.R, unchanged apart from path variables and
+# output filenames (see above).
 
 library(dplyr)
 source("code/R/roc_auc.R")
@@ -38,25 +42,27 @@ seurat_meta_no_thymocytes_healthy <- seurat_meta_no_thymocytes[cells_healthy, ]
 level_1_AUC_list <- compute_auc_threshold_matrix(loading_mat = L_pm_no_thymocytes_healthy, group_info = seurat_meta_no_thymocytes_healthy$annotation_level1)
 rownames(level_1_AUC_list$auc) <- sort(unique(seurat_meta_no_thymocytes_healthy$annotation_level1))
 rownames(level_1_AUC_list$threshold) <- sort(unique(seurat_meta_no_thymocytes_healthy$annotation_level1))
-saveRDS(level_1_AUC_list, file = paste0(data_path, "level_1_AUC_list_figure.rds"))
+saveRDS(level_1_AUC_list, file = paste0(data_path, "level_1_AUC_list_figure_no_thymocytes_healthy.rds"))
 
 level_2_AUC_list <- compute_auc_threshold_matrix(loading_mat = L_pm_no_thymocytes_healthy, group_info = seurat_meta_no_thymocytes_healthy$annotation_level2)
 rownames(level_2_AUC_list$auc) <- sort(unique(seurat_meta_no_thymocytes_healthy$annotation_level2))
 rownames(level_2_AUC_list$threshold) <- sort(unique(seurat_meta_no_thymocytes_healthy$annotation_level2))
-saveRDS(level_2_AUC_list, file = paste0(data_path, "level_2_AUC_list_figure.rds"))
+saveRDS(level_2_AUC_list, file = paste0(data_path, "level_2_AUC_list_figure_no_thymocytes_healthy.rds"))
 
 organ_AUC_list <- compute_auc_threshold_matrix(loading_mat = L_pm_no_thymocytes_healthy, group_info = seurat_meta_no_thymocytes_healthy$organ_simplified)
 rownames(organ_AUC_list$auc) <- sort(unique(seurat_meta_no_thymocytes_healthy$organ_simplified))
 rownames(organ_AUC_list$threshold) <- sort(unique(seurat_meta_no_thymocytes_healthy$organ_simplified))
-saveRDS(organ_AUC_list, file = paste0(data_path, "organ_simplified_AUC_list_figure.rds"))
+saveRDS(organ_AUC_list, file = paste0(data_path, "organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds"))
 
-# condition_detailed_AUC_list_figure.rds (feeds TableS1.R): same pattern,
-# grouped by condition_detailed instead of level_1/level_2/organ, and
-# restricted to non-thymocyte cells only (not additionally healthy-only --
-# condition_detailed is the condition variable itself). Source: recovered
-# from analysis/old/Figures_Manuscript_v1.rmd (an `eval=FALSE` chunk there,
-# same live compute_auc_threshold_matrix() logic used above).
-condition_detailed_AUC_list <- compute_auc_threshold_matrix(loading_mat = L_pm_no_thymocytes, group_info = seurat_meta_no_thymocytes$condition_detailed)
-rownames(condition_detailed_AUC_list$auc) <- sort(unique(seurat_meta_no_thymocytes$condition_detailed))
-rownames(condition_detailed_AUC_list$threshold) <- sort(unique(seurat_meta_no_thymocytes$condition_detailed))
-saveRDS(condition_detailed_AUC_list, file = paste0(data_path, "condition_detailed_AUC_list_figure.rds"))
+# NOTE: an earlier version of this script also computed a
+# condition_detailed_AUC_list_figure.rds (grouped by condition_detailed,
+# restricted to non-thymocyte cells only -- not additionally healthy-only,
+# since condition_detailed is the condition variable itself). That column
+# was dropped from TableS1.R: restricting a condition-predicting AUC to
+# healthy-only cells is degenerate (condition_broad would have just one
+# value left), and the cached data/condition_detailed_AUC_list_figure.rds
+# (which did NOT restrict to healthy) turned out to have the same
+# stale-seurat_meta.rds problem as level_1/2/organ above -- recovered
+# source was an `eval=FALSE` chunk in analysis/old/Figures_Manuscript_v1.rmd.
+# Since the column is gone, this file is no longer produced or read by
+# anything in script/.
