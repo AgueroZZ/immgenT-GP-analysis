@@ -515,15 +515,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree8ac7f9f6a5a767855e9187f8dfec6c6406d401e3targetblank8ac7f9fa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedb7a5cd819f20a186c7037c4ae9582f271a640f4targetblankdb7a5cda">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/8ac7f9f6a5a767855e9187f8dfec6c6406d401e3" target="_blank">8ac7f9f</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/db7a5cd819f20a186c7037c4ae9582f271a640f4" target="_blank">db7a5cd</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree8ac7f9f6a5a767855e9187f8dfec6c6406d401e3targetblank8ac7f9fa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedb7a5cd819f20a186c7037c4ae9582f271a640f4targetblankdb7a5cda"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -533,7 +533,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/8ac7f9f6a5a767855e9187f8dfec6c6406d401e3" target="_blank">8ac7f9f</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/db7a5cd819f20a186c7037c4ae9582f271a640f4" target="_blank">db7a5cd</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -577,10 +577,13 @@ Ignored files:
     Ignored:    figures/generated/Figure S3 2/
     Ignored:    figures/generated/Figure S6 2/
 
+Untracked files:
+    Untracked:  code/pipeline/01b_filter_cells.R
+
 Unstaged changes:
-    Modified:   code/R/setup_data.R
     Modified:   code/README.md
-    Modified:   code/pipeline/01_extract_data.R
+    Modified:   code/pipeline/02_compute_auc.R
+    Modified:   code/pipeline/04_protein_projection.R
     Modified:   figures/generated/Figure 1/1A.pdf
     Modified:   figures/generated/Figure 1/1C.pdf
     Modified:   figures/generated/Figure 1/1D.pdf
@@ -647,7 +650,6 @@ Unstaged changes:
     Modified:   script/FigureS2.R
     Modified:   script/FigureS3.R
     Modified:   script/FigureS6.R
-    Modified:   script/README.md
     Modified:   script/TableS1.R
 
 </code></pre>
@@ -693,6 +695,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/827c89bb68d46edabd11ed0710b3521b18c9eff8/docs/TableS1.html" target="_blank">827c89b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-03
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -836,11 +855,11 @@ href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/TableS1.R
 data_path &lt;- &quot;data/&quot;
 output_path &lt;- &quot;figures/generated/&quot;
 
-L_pm_filtered &lt;- readRDS(paste0(data_path, &quot;L_pm_filtered.rds&quot;)) # gap, no producer script here
-F_pm_filtered &lt;- readRDS(paste0(data_path, &quot;F_pm_filtered.rds&quot;)) # gap, no producer script here
+L_pm_filtered &lt;- readRDS(paste0(data_path, &quot;L_pm_filtered.rds&quot;)) # code/pipeline/01b_filter_cells.R
+F_pm_filtered &lt;- readRDS(paste0(data_path, &quot;F_pm_filtered.rds&quot;)) # code/pipeline/01b_filter_cells.R
 level_1_AUC_list &lt;- readRDS(paste0(data_path, &quot;level_1_AUC_list_figure.rds&quot;)) # code/pipeline/02_compute_auc.R
 level_2_AUC_list &lt;- readRDS(paste0(data_path, &quot;level_2_AUC_list_figure.rds&quot;)) # code/pipeline/02_compute_auc.R
-condition_detailed_AUC_list_figure &lt;- readRDS(paste0(data_path, &quot;condition_detailed_AUC_list_figure.rds&quot;)) # gap, no producer script here
+condition_detailed_AUC_list_figure &lt;- readRDS(paste0(data_path, &quot;condition_detailed_AUC_list_figure.rds&quot;)) # code/pipeline/02_compute_auc.R
 organ_simplified_AUC_list_figure &lt;- readRDS(paste0(data_path, &quot;organ_simplified_AUC_list_figure.rds&quot;)) # code/pipeline/02_compute_auc.R
 
 # Normalize F_pm_filtered such that each column has max abs value of 1
