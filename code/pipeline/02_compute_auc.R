@@ -8,15 +8,22 @@
 # RESOLVED (previously logged here as a naming-mismatch GAP): two families of
 # cached AUC files exist in data/ -- level_1/2/organ_simplified_AUC_list_figure.rds
 # (no suffix) and the same names with a _no_thymocytes_healthy suffix. These
-# are NOT the same computation: the no-suffix files turned out to be a stale
-# artifact of an older, pre-refactor script (a chunk in
-# analysis/old/Figures_Manuscript_v1.rmd) that read the now-known-stale cached
-# seurat_meta.rds and did not restrict to healthy cells. The
-# _no_thymocytes_healthy files match this script's logic (and this script's
-# output) essentially exactly (max abs AUC diff ~1e-13). Figure2.R and
-# TableS1.R were updated to read the _no_thymocytes_healthy files, matching
-# Figure4.R and making all three figures/tables consistent. The no-suffix
-# files are superseded and no longer read by anything in script/.
+# are NOT the same computation, despite using the same (current) annotation:
+# the no-suffix files turn out to be missing the healthy-only restriction
+# below (i.e. computed on ALL non-thymocyte cells, healthy and diseased
+# together) -- confirmed exactly by rerunning with that one restriction
+# dropped (organ_simplified: byte-identical, max diff 0; level_1/level_2:
+# max diff ~1e-12, floating-point noise). This also explains why the
+# no-suffix organ_simplified file has 4 extra categories (SLO, prostate,
+# pancreas, synovial fluid) not present in the healthy-only version -- these
+# are disease-model-specific sample sites. (An earlier theory blamed a stale
+# cached seurat_meta.rds from an older script -- ruled out: the category
+# labels in the no-suffix files are the same current-format labels as
+# everywhere else, not the old numeric-cluster style that stale file used.)
+# Figure2.R and TableS1.R were updated to read the _no_thymocytes_healthy
+# files, matching Figure4.R and making all three figures/tables consistent.
+# The no-suffix files are superseded and no longer read by anything in
+# script/.
 #
 # Source: ported from runAUC.R, unchanged apart from path variables and
 # output filenames (see above).
@@ -60,9 +67,10 @@ saveRDS(organ_AUC_list, file = paste0(data_path, "organ_simplified_AUC_list_figu
 # since condition_detailed is the condition variable itself). That column
 # was dropped from TableS1.R: restricting a condition-predicting AUC to
 # healthy-only cells is degenerate (condition_broad would have just one
-# value left), and the cached data/condition_detailed_AUC_list_figure.rds
-# (which did NOT restrict to healthy) turned out to have the same
-# stale-seurat_meta.rds problem as level_1/2/organ above -- recovered
-# source was an `eval=FALSE` chunk in analysis/old/Figures_Manuscript_v1.rmd.
-# Since the column is gone, this file is no longer produced or read by
-# anything in script/.
+# value left), so the "missing healthy filter" explanation above doesn't
+# apply here -- whatever's wrong with the cached
+# data/condition_detailed_AUC_list_figure.rds (dated Dec 2 2025, predating
+# even the current Seurat object) was never independently root-caused, since
+# dropping the column made it moot. Recovered source logic was an
+# `eval=FALSE` chunk in analysis/old/Figures_Manuscript_v1.rmd. This file is
+# no longer produced or read by anything in script/.
