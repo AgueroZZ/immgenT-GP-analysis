@@ -17,12 +17,12 @@ pre-rendered output.
 
 ## Setup
 
-```{r figs6-setup, code=readLines("../script/FigureS6.R")[1:34], eval=FALSE}
+```{r figs6-setup, code=readLines("../script/FigureS6.R")[1:35], eval=FALSE}
 ```
 
 ## Gallery pages {#figs6-gallery}
 
-```{r figs6-code, code=readLines("../script/FigureS6.R")[36:101], eval=FALSE}
+```{r figs6-code, code=readLines("../script/FigureS6.R")[37:102], eval=FALSE}
 ```
 
 ```{r figs6-img, echo=FALSE, out.width="100%"}
