@@ -2,14 +2,21 @@
 #
 # One row per GP: which Level-1/Level-2/organ categories it predicts well
 # (AUC > 0.8, driven by high loading), plus its top positive and negative
-# signature genes. All three AUC computations are restricted to
-# non-thymocyte, healthy cells (see code/pipeline/02_compute_auc.R) -- there
-# is no condition column, since restricting a condition-predicting AUC to
-# healthy-only cells would be degenerate (condition_broad would have just
-# one value left).
+# signature genes. Unlike Figure2.R (2A) and Figure4.R, these three AUC
+# computations are restricted to non-thymocyte cells only, WITHOUT an
+# additional healthy-only restriction (see code/pipeline/02_compute_auc.R) --
+# confirmed against the published Table S1.xlsx, whose Organ column includes
+# disease-specific sites (SLO, prostate, pancreas, synovial fluid) that only
+# exist in this broader, non-healthy-restricted population.
 #
-# Source: ported from Supplement_Table1.R (unchanged apart from the
-# output path and dropping the condition column, see above).
+# GAP: the published table also has a Condition column (per-GP AUC against
+# condition_detailed, same non-thymocyte-only restriction) that isn't
+# reproduced here -- recomputing it takes ~3 hours, deferred for now (see
+# code/pipeline/02_compute_auc.R's header for detail).
+#
+# Source: ported from Supplement_Table1.R (unchanged apart from the output
+# path, the AUC-file family used, the GP naming fix below, and the
+# still-missing condition column, see above).
 #
 # Required inputs (data/) -- see code/README.md's "Data provenance" table
 # for the full picture.
@@ -19,15 +26,20 @@ output_path <- "figures/generated/"
 
 L_pm_filtered <- readRDS(paste0(data_path, "L_pm_filtered.rds")) # code/pipeline/01b_filter_cells.R
 F_pm_filtered <- readRDS(paste0(data_path, "F_pm_filtered.rds")) # code/pipeline/01b_filter_cells.R
-level_1_AUC_list <- readRDS(paste0(data_path, "level_1_AUC_list_figure_no_thymocytes_healthy.rds")) # code/pipeline/02_compute_auc.R
-level_2_AUC_list <- readRDS(paste0(data_path, "level_2_AUC_list_figure_no_thymocytes_healthy.rds")) # code/pipeline/02_compute_auc.R
-organ_simplified_AUC_list_figure <- readRDS(paste0(data_path, "organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds")) # code/pipeline/02_compute_auc.R
+level_1_AUC_list <- readRDS(paste0(data_path, "level_1_AUC_list_figure_no_thymocytes.rds")) # code/pipeline/02_compute_auc.R
+level_2_AUC_list <- readRDS(paste0(data_path, "level_2_AUC_list_figure_no_thymocytes.rds")) # code/pipeline/02_compute_auc.R
+organ_simplified_AUC_list_figure <- readRDS(paste0(data_path, "organ_simplified_AUC_list_figure_no_thymocytes.rds")) # code/pipeline/02_compute_auc.R
 
 # Normalize F_pm_filtered such that each column has max abs value of 1
 F_pm_filtered <- apply(F_pm_filtered, 2, function(x) x / max(abs(x)))
 colnames(F_pm_filtered) <- colnames(L_pm_filtered)
 
+# L_pm_filtered/F_pm_filtered and the cached AUC matrices all share the raw
+# "K1", "K2", ... column names (from the underlying flashier fit); rename to
+# "GP1", "GP2", ... only for display, after all matching against those raw
+# names is done.
 gps <- colnames(F_pm_filtered)
+gp_labels <- paste0("GP", seq_along(gps))
 
 get_passing_categories <- function(auc_list, gps, L_mat, threshold = 0.8) {
   auc_mat <- auc_list$auc
@@ -62,7 +74,7 @@ sig_genes_neg <- lapply(gps, function(gp) {
 })
 
 supp_table <- data.frame(
-  GP = gps,
+  GP = gp_labels,
   Level1 = unlist(level1_cats),
   Level2 = unlist(level2_cats),
   Organ = unlist(organ_cats),

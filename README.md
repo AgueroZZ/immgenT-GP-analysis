@@ -8,11 +8,9 @@ activation state, transcription factors, and surface protein expression.
 ## Layout
 
 - `data/` -- input data (symlinked from `../immgen-t-factors/data`; not
-  tracked in git, see `.gitignore`).
-- `data-local/` -- small corrected/recomputed data files that supersede a
-  stale cached file in `data/`. Kept separate (and git-tracked) because
-  `data/` is a symlink into the shared `immgen-t-factors` project, so this
-  repo never writes there.
+  tracked in git, see `.gitignore`). Also holds outputs of `code/pipeline/`
+  scripts (e.g. the AUC files below) -- not pushed to GitHub either way,
+  since it's all local-only data, not part of what this repo shows readers.
 - `code/` -- shared R helper functions and the data-prep pipeline,
   sourced by the figure scripts. See `code/README.md`.
 - `script/` -- one R script per published figure

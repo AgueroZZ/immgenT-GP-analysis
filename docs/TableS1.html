@@ -362,7 +362,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success"
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -373,8 +373,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -383,13 +383,13 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-03
+<strong>Last updated:</strong> 2026-07-04
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 0
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong>
@@ -413,18 +413,21 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
@@ -515,15 +518,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree9944479ec7f710d550dfe4a105227bcb17acb164targetblank9944479a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree1d98d3afcc5cc8b3be08742b5ad473b99d915a72targetblank1d98d3aa">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/9944479ec7f710d550dfe4a105227bcb17acb164" target="_blank">9944479</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/1d98d3afcc5cc8b3be08742b5ad473b99d915a72" target="_blank">1d98d3a</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree9944479ec7f710d550dfe4a105227bcb17acb164targetblank9944479a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree1d98d3afcc5cc8b3be08742b5ad473b99d915a72targetblank1d98d3aa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -533,7 +536,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/9944479ec7f710d550dfe4a105227bcb17acb164" target="_blank">9944479</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/1d98d3afcc5cc8b3be08742b5ad473b99d915a72" target="_blank">1d98d3a</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -567,25 +570,18 @@ Ignored files:
     Ignored:    figures/final-selected/bits/Figure S3/.DS_Store
     Ignored:    figures/final-selected/bits/Figure S6/.DS_Store
     Ignored:    figures/final-selected/bits/Figure S7/.DS_Store
-    Ignored:    figures/generated/Figure 1 2/
+    Ignored:    figures/generated/.DS_Store
     Ignored:    figures/generated/Figure 5/
     Ignored:    figures/generated/Figure 7/
     Ignored:    figures/generated/Figure 8/
     Ignored:    figures/generated/Figure 9/
-    Ignored:    figures/generated/Figure S1 2/
-    Ignored:    figures/generated/Figure S2 2/
-    Ignored:    figures/generated/Figure S3 2/
-    Ignored:    figures/generated/Figure S6 2/
 
 Untracked files:
-    Untracked:  code/citeseq_run.R
-    Untracked:  code/extract_data.R
-    Untracked:  code/runAUC_midway3.R
-    Untracked:  data-local/
-    Untracked:  download_from_server/
+    Untracked:  tables/
 
 Unstaged changes:
     Modified:   README.md
+    Modified:   analysis/TableS1.Rmd
     Modified:   code/README.md
     Modified:   code/pipeline/02_compute_auc.R
     Modified:   figures/generated/Figure 2/2A.pdf
@@ -601,8 +597,13 @@ Unstaged changes:
     Modified:   figures/generated/Figure 2/2K.pdf
     Modified:   figures/generated/Figure 2/2L.pdf
     Modified:   figures/generated/Figure 2/2M.pdf
+    Modified:   figures/generated/Figure 4/4a.pdf
+    Modified:   figures/generated/Figure 4/4b.pdf
+    Modified:   figures/generated/Figure 4/4c.pdf
+    Modified:   figures/generated/Figure 4/4d.pdf
+    Modified:   figures/generated/Figure 4/4e.pdf
     Modified:   figures/generated/Supplementary_Table1_GP_summary.csv
-    Modified:   script/Figure2.R
+    Modified:   script/Figure4.R
     Modified:   script/TableS1.R
 
 </code></pre>
@@ -648,6 +649,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/8f0198ec605d8233f4ced6c48d155b0cc3b8e773/docs/TableS1.html" target="_blank">8f0198e</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-03
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -848,14 +866,21 @@ href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/TableS1.R
 #
 # One row per GP: which Level-1/Level-2/organ categories it predicts well
 # (AUC &gt; 0.8, driven by high loading), plus its top positive and negative
-# signature genes. All three AUC computations are restricted to
-# non-thymocyte, healthy cells (see code/pipeline/02_compute_auc.R) -- there
-# is no condition column, since restricting a condition-predicting AUC to
-# healthy-only cells would be degenerate (condition_broad would have just
-# one value left).
+# signature genes. Unlike Figure2.R (2A) and Figure4.R, these three AUC
+# computations are restricted to non-thymocyte cells only, WITHOUT an
+# additional healthy-only restriction (see code/pipeline/02_compute_auc.R) --
+# confirmed against the published Table S1.xlsx, whose Organ column includes
+# disease-specific sites (SLO, prostate, pancreas, synovial fluid) that only
+# exist in this broader, non-healthy-restricted population.
 #
-# Source: ported from Supplement_Table1.R (unchanged apart from the
-# output path and dropping the condition column, see above).
+# GAP: the published table also has a Condition column (per-GP AUC against
+# condition_detailed, same non-thymocyte-only restriction) that isn&#39;t
+# reproduced here -- recomputing it takes ~3 hours, deferred for now (see
+# code/pipeline/02_compute_auc.R&#39;s header for detail).
+#
+# Source: ported from Supplement_Table1.R (unchanged apart from the output
+# path, the AUC-file family used, the GP naming fix below, and the
+# still-missing condition column, see above).
 #
 # Required inputs (data/) -- see code/README.md&#39;s &quot;Data provenance&quot; table
 # for the full picture.
@@ -865,15 +890,20 @@ output_path &lt;- &quot;figures/generated/&quot;
 
 L_pm_filtered &lt;- readRDS(paste0(data_path, &quot;L_pm_filtered.rds&quot;)) # code/pipeline/01b_filter_cells.R
 F_pm_filtered &lt;- readRDS(paste0(data_path, &quot;F_pm_filtered.rds&quot;)) # code/pipeline/01b_filter_cells.R
-level_1_AUC_list &lt;- readRDS(paste0(data_path, &quot;level_1_AUC_list_figure_no_thymocytes_healthy.rds&quot;)) # code/pipeline/02_compute_auc.R
-level_2_AUC_list &lt;- readRDS(paste0(data_path, &quot;level_2_AUC_list_figure_no_thymocytes_healthy.rds&quot;)) # code/pipeline/02_compute_auc.R
-organ_simplified_AUC_list_figure &lt;- readRDS(paste0(data_path, &quot;organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds&quot;)) # code/pipeline/02_compute_auc.R
+level_1_AUC_list &lt;- readRDS(paste0(data_path, &quot;level_1_AUC_list_figure_no_thymocytes.rds&quot;)) # code/pipeline/02_compute_auc.R
+level_2_AUC_list &lt;- readRDS(paste0(data_path, &quot;level_2_AUC_list_figure_no_thymocytes.rds&quot;)) # code/pipeline/02_compute_auc.R
+organ_simplified_AUC_list_figure &lt;- readRDS(paste0(data_path, &quot;organ_simplified_AUC_list_figure_no_thymocytes.rds&quot;)) # code/pipeline/02_compute_auc.R
 
 # Normalize F_pm_filtered such that each column has max abs value of 1
 F_pm_filtered &lt;- apply(F_pm_filtered, 2, function(x) x / max(abs(x)))
 colnames(F_pm_filtered) &lt;- colnames(L_pm_filtered)
 
+# L_pm_filtered/F_pm_filtered and the cached AUC matrices all share the raw
+# &quot;K1&quot;, &quot;K2&quot;, ... column names (from the underlying flashier fit); rename to
+# &quot;GP1&quot;, &quot;GP2&quot;, ... only for display, after all matching against those raw
+# names is done.
 gps &lt;- colnames(F_pm_filtered)
+gp_labels &lt;- paste0(&quot;GP&quot;, seq_along(gps))
 
 get_passing_categories &lt;- function(auc_list, gps, L_mat, threshold = 0.8) {
   auc_mat &lt;- auc_list$auc
@@ -908,7 +938,7 @@ sig_genes_neg &lt;- lapply(gps, function(gp) {
 })
 
 supp_table &lt;- data.frame(
-  GP = gps,
+  GP = gp_labels,
   Level1 = unlist(level1_cats),
   Level2 = unlist(level2_cats),
   Organ = unlist(organ_cats),
@@ -924,12 +954,12 @@ write.csv(supp_table, file = paste0(output_path, &quot;Supplementary_Table1_GP_s
 href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generated/Supplementary_Table1_GP_summary.csv"><code>figures/generated/Supplementary_Table1_GP_summary.csv</code></a>.</p>
 <table style="width:100%;">
 <colgroup>
-<col width="1%" />
 <col width="2%" />
-<col width="51%" />
-<col width="9%" />
-<col width="18%" />
-<col width="16%" />
+<col width="3%" />
+<col width="48%" />
+<col width="8%" />
+<col width="20%" />
+<col width="17%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -943,17 +973,16 @@ href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generate
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">K1</td>
+<td align="left">GP1</td>
 <td align="left"></td>
-<td align="left">CD8.K; CD4.X; CD4.Y; CD4.P; Treg.P; gdT.B; gdT.C;
-gdT.D; gdT.P; CD8aa.C; CD8aa.D; CD8aa.E; CD8aa.P; DN.P; DP.wY;
-DP.wP</td>
+<td align="left">CD8.K; CD4.Y; CD4.P; Treg.P; gdT.B; gdT.C; gdT.D;
+gdT.P; CD8aa.C; CD8aa.D; CD8aa.P; DP.wY; DP.wP</td>
 <td align="left"></td>
 <td align="left">CT010467.1; Tmsb4x; Actb; Tmsb10; Eef1a1</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
-<td align="left">K2</td>
+<td align="left">GP2</td>
 <td align="left"></td>
 <td align="left">CD8.wM; CD4.wM; Treg.wM; gdT.E; gdT.wM; CD8aa.wM;
 Tz.wM; DN.wM; DP.wC; DP.wM</td>
@@ -962,24 +991,24 @@ Tz.wM; DN.wM; DP.wC; DP.wM</td>
 <td align="left">Tmsb10; Tmsb4x; Fau; Pfn1; Ppia</td>
 </tr>
 <tr class="odd">
-<td align="left">K3</td>
+<td align="left">GP3</td>
 <td align="left"></td>
-<td align="left">gdT.A; gdT.B; gdT.C; gdT.D; gdT.E; gdT.F; gdT.Z; gdT.P;
+<td align="left">gdT.A; gdT.B; gdT.C; gdT.D; gdT.E; gdT.F; gdT.Z;
 CD8aa.C; CD8aa.D; CD8aa.E; DP.wY</td>
 <td align="left">small intestine epi</td>
 <td align="left">Gzma; Cd7; Ccl5; Fcer1g; Tyrobp</td>
 <td align="left">Tmsb10; Tpt1; CT010467.1; Actb; Tmsb4x</td>
 </tr>
 <tr class="even">
-<td align="left">K4</td>
+<td align="left">GP4</td>
 <td align="left"></td>
 <td align="left">CD4.wN</td>
-<td align="left"></td>
+<td align="left">SLO</td>
 <td align="left">Tmsb10; Fau; CT010467.1; Pfn1; Ppia</td>
 <td align="left">Dock2; Rack1; Arhgap15; Myh9; Ptprc</td>
 </tr>
 <tr class="odd">
-<td align="left">K5</td>
+<td align="left">GP5</td>
 <td align="left"></td>
 <td align="left">CD8.K; CD8.P; CD4.P; Treg.P; gdT.P; CD8aa.P; Tz.P;
 DN.P; DP.wP</td>
@@ -988,75 +1017,75 @@ DN.P; DP.wP</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
-<td align="left">K6</td>
+<td align="left">GP6</td>
 <td align="left"></td>
-<td align="left">CD8.K; CD4.T; CD4.U; CD4.X; CD4.Y; CD4.P; Treg.D;
-Treg.E; Treg.P; gdT.Q; gdT.R; gdT.S; gdT.T; gdT.U; gdT.V; gdT.X; gdT.Z;
-Tz.D</td>
-<td align="left">skin</td>
+<td align="left">CD4.T; CD4.U; CD4.X; CD4.Y; CD4.P; Treg.D; Treg.E;
+gdT.Q; gdT.R; gdT.S; gdT.T; gdT.U; gdT.V; gdT.X; gdT.Z; Tz.D</td>
+<td align="left"></td>
 <td align="left">S100a6; Gzmb; Lgals1; Vim; Crip1</td>
 <td align="left">Tmsb10; CT010467.1; Eef1a1; Cmss1; Cdk8</td>
 </tr>
 <tr class="odd">
-<td align="left">K7</td>
+<td align="left">GP7</td>
 <td align="left"></td>
-<td align="left">gdT.Z; DP.wG</td>
+<td align="left">gdT.X; gdT.Z; DP.wG</td>
 <td align="left"></td>
 <td align="left">CT010467.1; Ccl5; Cmss1; Cdk8; Crip1</td>
 <td align="left">Igfbp4; Ccr7; Limd2</td>
 </tr>
 <tr class="even">
-<td align="left">K8</td>
+<td align="left">GP8</td>
 <td align="left"></td>
-<td align="left">gdT.X; gdT.Z</td>
-<td align="left">skin; CNS</td>
+<td align="left">gdT.Z</td>
+<td align="left"></td>
 <td align="left">Fth1; S100a6; Thy1; Ctla2a; Gem</td>
 <td align="left">Ccl5; Gzma; Gzmb; AW112010; Tyrobp</td>
 </tr>
 <tr class="odd">
-<td align="left">K9</td>
+<td align="left">GP9</td>
 <td align="left"></td>
-<td align="left">CD8.wU; CD8.wV; DP.wC; DP.wE</td>
+<td align="left">CD8.wU; CD8.wV; DP.wC; DP.wD; DP.wE</td>
 <td align="left"></td>
 <td align="left">Cdk8; Cmss1; CT010467.1; Eef2; Myh9</td>
 <td align="left">Tmsb10; Fau; Tmsb4x; Cd52</td>
 </tr>
 <tr class="even">
-<td align="left">K10</td>
+<td align="left">GP10</td>
 <td align="left"></td>
-<td align="left">CD8.H; CD8.I; CD8.K; CD8.wY; CD4.S; DN.F</td>
+<td align="left">CD8.G; CD8.H; CD8.I; CD8.J; CD8.K; CD8.wU; CD8.wY;
+CD4.S; DN.F</td>
 <td align="left"></td>
 <td align="left">Ccl5; Gzma; Lgals1; Nkg7; Ly6c2</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
-<td align="left">K11</td>
+<td align="left">GP11</td>
 <td align="left"></td>
-<td align="left">CD4.X</td>
-<td align="left">lung; placenta; kidney</td>
+<td align="left"></td>
+<td align="left">placenta; kidney</td>
 <td align="left">Vps37b; Gramd3; Dusp10; Junb; Ccr7</td>
 <td align="left">Cd52; Ltb; Ptprcap</td>
 </tr>
 <tr class="even">
-<td align="left">K12</td>
+<td align="left">GP12</td>
 <td align="left"></td>
-<td align="left">CD8.C; CD8.wX; CD4.E; CD4.G; CD4.H; CD4.I; Treg.B;
-Tz.C; DN.A; DN.G</td>
+<td align="left">CD8.C; CD8.wX; CD4.G; CD4.H; CD4.I; CD4.U; Treg.B;
+DN.A; DN.G</td>
 <td align="left"></td>
 <td align="left">Izumo1r; Cdk8; Tox; Tbc1d4; Pdcd1</td>
 <td align="left">Crip1; Ccl5; Satb1; Igfbp4; Selplg</td>
 </tr>
 <tr class="odd">
-<td align="left">K13</td>
+<td align="left">GP13</td>
 <td align="left"></td>
-<td align="left">CD4.Y; gdT.Q; gdT.R; gdT.S; gdT.T; gdT.U; gdT.V;
+<td align="left">CD4.X; CD4.Y; gdT.Q; gdT.R; gdT.S; gdT.T; gdT.U; gdT.V;
 Tz.D</td>
 <td align="left"></td>
 <td align="left">Tmem176b; Tmem176a; Il7r; CT010467.1; Cd163l1</td>
 <td align="left">Ms4a4b; Inpp4b; Ctla4; Ifi27l2a; Cd2</td>
 </tr>
 <tr class="even">
-<td align="left">K14</td>
+<td align="left">GP14</td>
 <td align="left"></td>
 <td align="left">DP.wF; DP.wG</td>
 <td align="left"></td>
@@ -1064,7 +1093,7 @@ Tz.D</td>
 <td align="left">H2-K1; Crip1; H2-D1; B2m; Eef1a1</td>
 </tr>
 <tr class="odd">
-<td align="left">K15</td>
+<td align="left">GP15</td>
 <td align="left"></td>
 <td align="left">CD8.D; CD8.F; CD4.F; Treg.C; gdT.X; DN.G; DN.H;
 DP.wH</td>
@@ -1073,23 +1102,23 @@ DP.wH</td>
 <td align="left">Malat1; Tmsb4x; Itm2b; Cd52; Ypel3</td>
 </tr>
 <tr class="even">
-<td align="left">K16</td>
+<td align="left">GP16</td>
 <td align="left"></td>
-<td align="left">CD8.F; CD8.wY; CD4.D; DN.I; DN.J</td>
+<td align="left">CD8.F; CD4.D; DN.I; DN.J</td>
 <td align="left"></td>
 <td align="left">Ifi27l2a; Isg15; Ly6a; Bst2; Stat1</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
-<td align="left">K17</td>
+<td align="left">GP17</td>
 <td align="left"></td>
 <td align="left"></td>
-<td align="left">CNS</td>
+<td align="left"></td>
 <td align="left">Ifi27l2a; Atp5e; Tmsb4x; Ripor2; Lef1</td>
 <td align="left">Actg1; Ubb; Hspa8; Eef1a1; Il31ra</td>
 </tr>
 <tr class="even">
-<td align="left">K18</td>
+<td align="left">GP18</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
@@ -1097,7 +1126,7 @@ DP.wH</td>
 <td align="left">Ifi27l2a; Ccr7; Ly6d; Rgcc</td>
 </tr>
 <tr class="odd">
-<td align="left">K19</td>
+<td align="left">GP19</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
@@ -1105,7 +1134,7 @@ DP.wH</td>
 <td align="left">Cts6; Ccr10</td>
 </tr>
 <tr class="even">
-<td align="left">K20</td>
+<td align="left">GP20</td>
 <td align="left"></td>
 <td align="left">CD8.K</td>
 <td align="left"></td>
@@ -1117,9 +1146,13 @@ DP.wH</td>
 <div class="figcaption">
 <p><strong>Table S1.</strong> One row per GP: which Level-1 (major
 lineage), Level-2 (sub-lineage), and organ categories it predicts well
-(AUC &gt; 0.8, driven by high loading, restricted to non-thymocyte
-healthy cells), plus its top 5 positive and negative signature genes
-(|score| &gt; 0.25).</p>
+(AUC &gt; 0.8, driven by high loading, restricted to non-thymocyte cells
+– healthy and diseased together, unlike Figure2/Figure4’s healthy-only
+restriction), plus its top 5 positive and negative signature genes
+(|score| &gt; 0.25). A Condition column (per-GP AUC against detailed
+condition) is not yet reproduced here – see <a
+href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/code/pipeline/02_compute_auc.R"><code>code/pipeline/02_compute_auc.R</code></a>
+for why.</p>
 </div>
 <br>
 <p>

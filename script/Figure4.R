@@ -25,9 +25,7 @@
 #   level_1_AUC_list_figure_no_thymocytes_healthy.rds,
 #   level_2_AUC_list_figure_no_thymocytes_healthy.rds,
 #   organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds
-#     [gap -- code/pipeline/02_compute_auc.R produces the similarly-named
-#     *_figure.rds variants (used by Figure2/TableS1), not these exact
-#     _no_thymocytes_healthy files; see that script's header for detail]
+#     [code/pipeline/02_compute_auc.R]
 
 library(ggplot2)
 library(ggrepel)
