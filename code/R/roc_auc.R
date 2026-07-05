@@ -265,3 +265,19 @@ compute_auc_threshold_matrix <- function(
     threshold = thr_mat
   )
 }
+
+# Reshape a compute_auc_threshold_matrix()-style list (its $auc is a
+# categories x GPs matrix whose columns are named "K1","K2",...) into a
+# per-GP table: one row per GP with the "K##" name relabeled to "GP##", one
+# column per category holding the one-vs-rest AUC, and a leading "GP" column.
+# Category labels are preserved verbatim as column headers (spaces and all).
+# Used by the Extended Data GP-AUC tables (lineage / tissue / cluster).
+auc_list_to_gp_table <- function(auc_list) {
+  auc_mat <- auc_list$auc                                   # categories x GPs
+  gp_tbl <- as.data.frame(t(auc_mat), check.names = FALSE,  # GPs x categories
+                          stringsAsFactors = FALSE)
+  gp_tbl <- data.frame(GP = sub("^K", "GP", rownames(gp_tbl)), gp_tbl,
+                       check.names = FALSE, stringsAsFactors = FALSE)
+  rownames(gp_tbl) <- NULL
+  gp_tbl
+}

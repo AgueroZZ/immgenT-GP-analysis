@@ -1,0 +1,37 @@
+---
+title: "Extended Data Table 7: protein gating"
+author: "Ziang Zhang"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+Produced by
+[`script/ExtendedDataTable7_protein_gating.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/ExtendedDataTable7_protein_gating.R):
+
+```{r edt7-code, code=readLines("../script/ExtendedDataTable7_protein_gating.R"), eval=FALSE}
+```
+
+## Table {#edt7}
+
+Showing the first 20 rows (of 200), ordered well-aligned GPs first; download the
+full table at
+[`figures/generated/ExtendedDataTable7_protein_gating.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generated/ExtendedDataTable7_protein_gating.csv).
+
+```{r edt7-preview, echo=FALSE, message=FALSE}
+tab <- read.csv("../figures/generated/ExtendedDataTable7_protein_gating.csv",
+                check.names = FALSE, stringsAsFactors = FALSE)
+knitr::kable(head(tab, 20), row.names = FALSE)
+```
+
+::: {.figcaption}
+**Extended Data Table 7.** One row per GP: its curated positive / negative protein
+marker signature, and how well a protein gate built from that signature recovers
+cells with high GP loading. For each GP, cells are gated by its markers (positive
+markers above their threshold, negative at/below); we report the proportion of
+gated cells positive for the GP (loading > 0.1; the True Discovery Proportion)
+versus that proportion among all cells, and a **Well aligned** flag. The flag is
+the formula-positive set (TDP >= 0.25 and greater than the all-cell proportion)
+hand-trimmed to those whose protein and loading gates also agree visually on the
+MDE embedding -- reproducing the published table's curated 25-GP set.
+:::

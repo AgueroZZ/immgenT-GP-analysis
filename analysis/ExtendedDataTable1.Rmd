@@ -1,0 +1,36 @@
+---
+title: "Extended Data Table 1: summary of GP characteristics and annotations"
+author: "Ziang Zhang"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+Produced by
+[`script/ExtendedDataTable1_GP_summary.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/ExtendedDataTable1_GP_summary.R):
+
+```{r edt1-code, code=readLines("../script/ExtendedDataTable1_GP_summary.R"), eval=FALSE}
+```
+
+## Table {#edt1}
+
+Showing the first 20 rows (of 200); download the full table at
+[`figures/generated/ExtendedDataTable1_GP_summary.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generated/ExtendedDataTable1_GP_summary.csv).
+
+```{r edt1-preview, echo=FALSE, message=FALSE}
+tab <- read.csv("../figures/generated/ExtendedDataTable1_GP_summary.csv",
+                check.names = FALSE, stringsAsFactors = FALSE, colClasses = "character")
+knitr::kable(head(tab, 20), row.names = FALSE)
+```
+
+::: {.figcaption}
+**Extended Data Table 1.** One row per GP. **Lineage**, **Cluster** and **Tissue**
+list the categories (annotation_level1, annotation_level2, organ_simplified) that
+the GP *positively* predicts well -- one-vs-rest AUC > 0.8 and the optimal
+decision threshold at or above the GP's median loading, so high (not low) loading
+drives the prediction -- computed on healthy non-thymocyte cells (the same
+population as Figure 2 / Figure 4), with the median loading taken on that same
+population. **Signature genes / proteins** give the top 5 up- and top 5
+down-regulated genes and proteins by factor score, among those with |score| > 0.1
+on the max|.|=1-per-GP-scaled gene and protein factor matrices.
+:::

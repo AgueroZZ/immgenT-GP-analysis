@@ -1,0 +1,32 @@
+---
+title: "Extended Data Table 6: protein factor matrix"
+author: "Ziang Zhang"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+Produced by
+[`script/ExtendedDataTable6_protein_factor_matrix.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/ExtendedDataTable6_protein_factor_matrix.R):
+
+```{r edt6-code, code=readLines("../script/ExtendedDataTable6_protein_factor_matrix.R"), eval=FALSE}
+```
+
+## Table {#edt6}
+
+Showing the first 20 rows (of 200) and first 10 columns; download the full table at
+[`figures/generated/ExtendedDataTable6_protein_factor_matrix.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generated/ExtendedDataTable6_protein_factor_matrix.csv).
+
+```{r edt6-preview, echo=FALSE, message=FALSE}
+tab <- read.csv("../figures/generated/ExtendedDataTable6_protein_factor_matrix.csv", check.names = FALSE)
+knitr::kable(head(tab[, seq_len(min(10, ncol(tab)))], 20), row.names = FALSE, digits = 3)
+```
+
+::: {.figcaption}
+**Extended Data Table 6.** The final processed CITE-seq protein factor matrix used
+by Figure 6 (panel 6b), as a plain table: one row per GP, one column per protein,
+holding the protein's factor score in that GP. Built from the projected protein
+EBMF fit, restricted to the selected "good" proteins (isotype / THY1.1 / excluded
+proteins removed) and scaled so each GP column has maximum absolute score 1.
+(Preview shows the first 10 of `r ncol(read.csv("../figures/generated/ExtendedDataTable6_protein_factor_matrix.csv", check.names = FALSE)) - 1` protein columns.)
+:::

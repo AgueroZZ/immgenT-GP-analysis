@@ -1,0 +1,29 @@
+---
+title: "Extended Data Table 2: GP AUC by lineage"
+author: "Ziang Zhang"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+Produced by
+[`script/ExtendedDataTable2_GP_AUC_lineage.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/ExtendedDataTable2_GP_AUC_lineage.R):
+
+```{r edt2-code, code=readLines("../script/ExtendedDataTable2_GP_AUC_lineage.R"), eval=FALSE}
+```
+
+## Table {#edt2}
+
+Showing the first 20 rows (of 200); download the full table at
+[`figures/generated/ExtendedDataTable2_GP_AUC_lineage.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generated/ExtendedDataTable2_GP_AUC_lineage.csv).
+
+```{r edt2-preview, echo=FALSE, message=FALSE}
+tab <- read.csv("../figures/generated/ExtendedDataTable2_GP_AUC_lineage.csv", check.names = FALSE)
+knitr::kable(head(tab, 20), row.names = FALSE, digits = 3)
+```
+
+::: {.figcaption}
+**Extended Data Table 2.** One row per GP, one column per major lineage
+(annotation_level1). Each value is the one-vs-rest AUC for predicting membership
+in that lineage from the GP's loading, computed on healthy non-thymocyte cells.
+:::

@@ -1,11 +1,13 @@
 # script/
 
-One R script per published figure. Each script:
+One R script per published figure, plus one per Extended Data table. Each script:
 
 - reads only from `data/` (never writes there),
 - writes its panels into `figures/generated/Figure N/` (or `Figure SN/`) using
   the exact panel filenames used in `figures/final-selected/bits/`, so each
-  output can be dropped next to and diffed against the ground truth,
+  output can be dropped next to and diffed against the ground truth (the
+  `ExtendedDataTable*.R` scripts instead write a single CSV into
+  `figures/generated/`),
 - sources shared plotting/data-loading helpers from `code/R/`
   rather than redefining them.
 
@@ -24,9 +26,24 @@ Run any script from the repo root, e.g. `Rscript script/Figure4.R`.
 | S2 | `FigureS2.R` | `Figure_Lineage.R` |
 | S3 | `FigureS3.R` | `Figure_Activation.R` |
 | S6 | `FigureS6.R` | `gated_protein_loading_plot.R` |
-| Table S1 | `TableS1.R` | `Supplement_Table1.R` |
 
 Figures 7 and S7 are **out of scope** (see below).
+
+## Extended Data table -> script map
+
+Each table is written as one CSV into `figures/generated/` by its script and
+previewed on a matching `analysis/ExtendedDataTable*.Rmd` page. Together these
+replace the retired Table S1/S2/S3, all now regenerated from code.
+
+| Extended Data table | Script | Primary original source(s) |
+|---|---|---|
+| 1 Summary of GP characteristics and annotations | `ExtendedDataTable1_GP_summary.R` | `Supplement_Table1.R` (reworked: healthy non-thymocyte AUC, protein signatures added) |
+| 2 GP AUC lineage | `ExtendedDataTable2_GP_AUC_lineage.R` | `runAUC.R` (healthy AUC, via `02_compute_auc.R`) |
+| 3 GP AUC tissue | `ExtendedDataTable3_GP_AUC_tissue.R` | `runAUC.R` (healthy AUC, via `02_compute_auc.R`) |
+| 4 GP AUC cluster | `ExtendedDataTable4_GP_AUC_cluster.R` | `runAUC.R` (healthy AUC, via `02_compute_auc.R`) |
+| 5 GP during activation | `ExtendedDataTable5_GP_during_activation.R` | `Figure_Activation.R` (`GP_activation_summary`) |
+| 6 Protein factor matrix | `ExtendedDataTable6_protein_factor_matrix.R` | `Figure_CITEseq.R` (`Protein_F_pm`) |
+| 7 Protein gating | `ExtendedDataTable7_protein_gating.R` | `Figure_CITEseq.R` (`compute_alignment_scores`) |
 
 ## Verification status (as of this refactor)
 
