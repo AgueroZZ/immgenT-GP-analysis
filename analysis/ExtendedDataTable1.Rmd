@@ -14,13 +14,26 @@ Produced by
 
 ## Table {#edt1}
 
-Showing the first 20 rows (of 200); download the full table at
+All 200 rows are browsable below: sort by clicking a column header, use the
+search boxes under each header to filter (e.g. type a GP name, or a lineage
+like `CD8`), or use the box in the top-right corner for a free-text search
+across every column. Download the raw CSV at
 [`figures/generated/ExtendedDataTable1_GP_summary.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generated/ExtendedDataTable1_GP_summary.csv).
 
 ```{r edt1-preview, echo=FALSE, message=FALSE}
+suppressPackageStartupMessages(library(DT))
 tab <- read.csv("../figures/generated/ExtendedDataTable1_GP_summary.csv",
                 check.names = FALSE, stringsAsFactors = FALSE, colClasses = "character")
-knitr::kable(head(tab, 20), row.names = FALSE)
+DT::datatable(
+  tab,
+  rownames = FALSE,
+  filter = "top",
+  options = list(
+    pageLength = 10,
+    lengthMenu = list(c(10, 25, 50, 100, -1), c("10", "25", "50", "100", "All")),
+    scrollX = TRUE
+  )
+)
 ```
 
 ::: {.figcaption}
@@ -30,7 +43,7 @@ the GP *positively* predicts well -- one-vs-rest AUC > 0.8 and the optimal
 decision threshold at or above the GP's median loading, so high (not low) loading
 drives the prediction -- computed on healthy non-thymocyte cells (the same
 population as Figure 2 / Figure 4), with the median loading taken on that same
-population. **Signature genes / proteins** give the top 5 up- and top 5
-down-regulated genes and proteins by factor score, among those with |score| > 0.1
-on the max|.|=1-per-GP-scaled gene and protein factor matrices.
+population. **Top Genes +/-** and **Top Proteins +/-** give the top 5 up- and
+top 5 down-regulated genes and proteins by factor score, among those with
+|score| > 0.1 on the max|.|=1-per-GP-scaled gene and protein factor matrices.
 :::

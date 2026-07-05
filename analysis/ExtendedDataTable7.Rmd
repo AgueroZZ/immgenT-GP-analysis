@@ -14,14 +14,32 @@ Produced by
 
 ## Table {#edt7}
 
-Showing the first 20 rows (of 200), ordered well-aligned GPs first; download the
-full table at
+All 200 rows are browsable below (default order: well-aligned GPs first): sort
+by clicking a column header, type a GP name into the search box under the
+**GP** column, or use the other per-column boxes to filter (e.g. a protein
+name in **Positive markers**, or a proportion range). Download the raw CSV at
 [`figures/generated/ExtendedDataTable7_protein_gating.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generated/ExtendedDataTable7_protein_gating.csv).
 
 ```{r edt7-preview, echo=FALSE, message=FALSE}
+suppressPackageStartupMessages(library(DT))
 tab <- read.csv("../figures/generated/ExtendedDataTable7_protein_gating.csv",
                 check.names = FALSE, stringsAsFactors = FALSE)
-knitr::kable(head(tab, 20), row.names = FALSE)
+DT::datatable(
+  tab,
+  rownames = FALSE,
+  filter = "top",
+  options = list(
+    pageLength = 10,
+    lengthMenu = list(c(10, 25, 50, 100, -1), c("10", "25", "50", "100", "All")),
+    scrollX = TRUE
+  )
+) |> DT::formatRound(
+  columns = c(
+    "Prop. positive among gated (True Discovery Proportion)",
+    "Prop. positive among all cells"
+  ),
+  digits = 3
+)
 ```
 
 ::: {.figcaption}

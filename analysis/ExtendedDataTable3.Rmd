@@ -14,17 +14,29 @@ Produced by
 
 ## Table {#edt3}
 
-Showing the first 20 rows (of 200) and first 10 columns; download the full table at
+All 200 rows and every tissue column are browsable below: sort by clicking a
+column header, type a GP name into the search box under the **GP** column, or
+use a per-tissue box to filter by AUC range. Scroll horizontally to see all
+tissue columns. Download the raw CSV at
 [`figures/generated/ExtendedDataTable3_GP_AUC_tissue.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generated/ExtendedDataTable3_GP_AUC_tissue.csv).
 
 ```{r edt3-preview, echo=FALSE, message=FALSE}
+suppressPackageStartupMessages(library(DT))
 tab <- read.csv("../figures/generated/ExtendedDataTable3_GP_AUC_tissue.csv", check.names = FALSE)
-knitr::kable(head(tab[, seq_len(min(10, ncol(tab)))], 20), row.names = FALSE, digits = 3)
+DT::datatable(
+  tab,
+  rownames = FALSE,
+  filter = "top",
+  options = list(
+    pageLength = 10,
+    lengthMenu = list(c(10, 25, 50, 100, -1), c("10", "25", "50", "100", "All")),
+    scrollX = TRUE
+  )
+) |> DT::formatRound(columns = colnames(tab)[-1], digits = 3)
 ```
 
 ::: {.figcaption}
 **Extended Data Table 3.** One row per GP, one column per tissue
 (organ_simplified). Each value is the one-vs-rest AUC for predicting membership
 in that tissue from the GP's loading, computed on healthy non-thymocyte cells.
-(Preview shows the first 10 of `r ncol(read.csv("../figures/generated/ExtendedDataTable3_GP_AUC_tissue.csv", check.names = FALSE)) - 1` tissue columns.)
 :::

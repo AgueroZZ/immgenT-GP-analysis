@@ -14,12 +14,25 @@ Produced by
 
 ## Table {#edt6}
 
-Showing the first 20 rows (of 200) and first 10 columns; download the full table at
+All 200 rows and every protein column are browsable below: sort by clicking a
+column header, type a GP name into the search box under the **GP** column, or
+use a per-protein box to filter by score range. Scroll horizontally to see all
+protein columns. Download the raw CSV at
 [`figures/generated/ExtendedDataTable6_protein_factor_matrix.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generated/ExtendedDataTable6_protein_factor_matrix.csv).
 
 ```{r edt6-preview, echo=FALSE, message=FALSE}
+suppressPackageStartupMessages(library(DT))
 tab <- read.csv("../figures/generated/ExtendedDataTable6_protein_factor_matrix.csv", check.names = FALSE)
-knitr::kable(head(tab[, seq_len(min(10, ncol(tab)))], 20), row.names = FALSE, digits = 3)
+DT::datatable(
+  tab,
+  rownames = FALSE,
+  filter = "top",
+  options = list(
+    pageLength = 10,
+    lengthMenu = list(c(10, 25, 50, 100, -1), c("10", "25", "50", "100", "All")),
+    scrollX = TRUE
+  )
+) |> DT::formatRound(columns = colnames(tab)[-1], digits = 3)
 ```
 
 ::: {.figcaption}
@@ -28,5 +41,4 @@ by Figure 6 (panel 6b), as a plain table: one row per GP, one column per protein
 holding the protein's factor score in that GP. Built from the projected protein
 EBMF fit, restricted to the selected "good" proteins (isotype / THY1.1 / excluded
 proteins removed) and scaled so each GP column has maximum absolute score 1.
-(Preview shows the first 10 of `r ncol(read.csv("../figures/generated/ExtendedDataTable6_protein_factor_matrix.csv", check.names = FALSE)) - 1` protein columns.)
 :::

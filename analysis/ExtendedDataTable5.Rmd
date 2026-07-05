@@ -14,12 +14,24 @@ Produced by
 
 ## Table {#edt5}
 
-Showing the first 20 rows (of 200); download the full table at
+All 200 rows are browsable below: sort by clicking a column header, type a GP
+name into the search box under the **GP** column, or use a per-column box to
+filter by value range. Download the raw CSV at
 [`figures/generated/ExtendedDataTable5_GP_during_activation.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generated/ExtendedDataTable5_GP_during_activation.csv).
 
 ```{r edt5-preview, echo=FALSE, message=FALSE}
+suppressPackageStartupMessages(library(DT))
 tab <- read.csv("../figures/generated/ExtendedDataTable5_GP_during_activation.csv", check.names = FALSE)
-knitr::kable(head(tab, 20), row.names = FALSE, digits = 4)
+DT::datatable(
+  tab,
+  rownames = FALSE,
+  filter = "top",
+  options = list(
+    pageLength = 10,
+    lengthMenu = list(c(10, 25, 50, 100, -1), c("10", "25", "50", "100", "All")),
+    scrollX = TRUE
+  )
+) |> DT::formatRound(columns = colnames(tab)[-1], digits = 4)
 ```
 
 ::: {.figcaption}

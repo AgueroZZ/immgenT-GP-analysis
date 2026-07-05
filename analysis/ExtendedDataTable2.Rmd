@@ -14,12 +14,24 @@ Produced by
 
 ## Table {#edt2}
 
-Showing the first 20 rows (of 200); download the full table at
+All 200 rows are browsable below: sort by clicking a column header, type a GP
+name into the search box under the **GP** column, or use a per-lineage box to
+filter by AUC range. Download the raw CSV at
 [`figures/generated/ExtendedDataTable2_GP_AUC_lineage.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generated/ExtendedDataTable2_GP_AUC_lineage.csv).
 
 ```{r edt2-preview, echo=FALSE, message=FALSE}
+suppressPackageStartupMessages(library(DT))
 tab <- read.csv("../figures/generated/ExtendedDataTable2_GP_AUC_lineage.csv", check.names = FALSE)
-knitr::kable(head(tab, 20), row.names = FALSE, digits = 3)
+DT::datatable(
+  tab,
+  rownames = FALSE,
+  filter = "top",
+  options = list(
+    pageLength = 10,
+    lengthMenu = list(c(10, 25, 50, 100, -1), c("10", "25", "50", "100", "All")),
+    scrollX = TRUE
+  )
+) |> DT::formatRound(columns = colnames(tab)[-1], digits = 3)
 ```
 
 ::: {.figcaption}

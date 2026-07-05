@@ -131,6 +131,10 @@ supp_table <- data.frame(
   Signature_Proteins_Neg = prot_sig$neg,
   stringsAsFactors = FALSE
 )
+colnames(supp_table) <- c(
+  "GP", "Lineage", "Cluster", "Tissue",
+  "Top Genes +", "Top Genes -", "Top Proteins +", "Top Proteins -"
+)
 
 write.csv(
   supp_table,

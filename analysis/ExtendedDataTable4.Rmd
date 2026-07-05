@@ -14,17 +14,29 @@ Produced by
 
 ## Table {#edt4}
 
-Showing the first 20 rows (of 200) and first 10 columns; download the full table at
+All 200 rows and every cluster column (107 sub-lineage clusters) are browsable
+below: sort by clicking a column header, type a GP name into the search box
+under the **GP** column, or use a per-cluster box to filter by AUC range.
+Scroll horizontally to see all cluster columns. Download the raw CSV at
 [`figures/generated/ExtendedDataTable4_GP_AUC_cluster.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generated/ExtendedDataTable4_GP_AUC_cluster.csv).
 
 ```{r edt4-preview, echo=FALSE, message=FALSE}
+suppressPackageStartupMessages(library(DT))
 tab <- read.csv("../figures/generated/ExtendedDataTable4_GP_AUC_cluster.csv", check.names = FALSE)
-knitr::kable(head(tab[, seq_len(min(10, ncol(tab)))], 20), row.names = FALSE, digits = 3)
+DT::datatable(
+  tab,
+  rownames = FALSE,
+  filter = "top",
+  options = list(
+    pageLength = 10,
+    lengthMenu = list(c(10, 25, 50, 100, -1), c("10", "25", "50", "100", "All")),
+    scrollX = TRUE
+  )
+) |> DT::formatRound(columns = colnames(tab)[-1], digits = 3)
 ```
 
 ::: {.figcaption}
 **Extended Data Table 4.** One row per GP, one column per sub-lineage cluster
 (annotation_level2). Each value is the one-vs-rest AUC for predicting membership
 in that cluster from the GP's loading, computed on healthy non-thymocyte cells.
-(Preview shows the first 10 of `r ncol(read.csv("../figures/generated/ExtendedDataTable4_GP_AUC_cluster.csv", check.names = FALSE)) - 1` cluster columns.)
 :::

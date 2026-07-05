@@ -1,4 +1,4 @@
-"GP","Lineage","Cluster","Tissue","Signature_Genes_Pos","Signature_Genes_Neg","Signature_Proteins_Pos","Signature_Proteins_Neg"
+"GP","Lineage","Cluster","Tissue","Top Genes +","Top Genes -","Top Proteins +","Top Proteins -"
 "GP1","","CD8.K; CD4.X; CD4.Y; CD4.P; Treg.P; gdT.B; gdT.C; gdT.D; gdT.P; CD8aa.C; CD8aa.D; CD8aa.E; CD8aa.P; DN.P; DP.wY; DP.wP","","CT010467.1; Tmsb4x; Actb; Tmsb10; Eef1a1","","THY1.2; CD45RB; CD5; CD2; CD55.DAF",""
 "GP2","","CD8.wM; CD4.wM; Treg.wM; gdT.E; gdT.wM; CD8aa.wM; Tz.wM; DN.wM; DP.wC; DP.wM","","Arhgap15; Dock2; Mbnl1; Inpp4b; Foxp1","Tmsb10; Tmsb4x; Fau; Pfn1; Ppia","CD45RB; THY1.2; CD44; CD24; CD27","CD4; ICOS.CD278"
 "GP3","","gdT.A; gdT.B; gdT.C; gdT.D; gdT.E; gdT.F; gdT.Z; gdT.P; CD8aa.C; CD8aa.D; CD8aa.E; DP.wY","small intestine epi","Gzma; Cd7; Ccl5; Fcer1g; Tyrobp","Tmsb10; Tpt1; CT010467.1; Actb; Tmsb4x","CD38; CD8A; ITB7; CD39; CD73.5NTD","THY1.2; CD5; CD2; CD11A; CD44"
