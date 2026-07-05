@@ -9,9 +9,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Ziang Zhang" />
 
 
-<title>Matrix factorization analyses of the immgenT scRNA-seq data</title>
+<title>Extended Data Table 7: protein gating</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -352,8 +353,8 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Matrix factorization analyses of the
-immgenT scRNA-seq data</h1>
+<h1 class="title toc-ignore">Extended Data Table 7: protein gating</h1>
+<h4 class="author">Ziang Zhang</h4>
 
 </div>
 
@@ -386,7 +387,7 @@ aria-hidden="true"></span> </a>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 1
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span> 1
 </p>
@@ -421,12 +422,96 @@ changes </a>
 <div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of
-the R Markdown file created these results, you’ll want to first commit
-it to the Git repo. If you’re still working on the analysis, you can
-ignore this warning. When you’re finished, you can run
+<p>The R Markdown is untracked by Git. To know which version of the R
+Markdown file created these results, you’ll want to first commit it to
+the Git repo. If you’re still working on the analysis, you can ignore
+this warning. When you’re finished, you can run
 <code>wflow_publish</code> to commit the R Markdown file and build the
 HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed1code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(1)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed1code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(1)</code> was run prior to running the
+code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
 </div>
 </div>
 </div>
@@ -541,253 +626,332 @@ have uncommitted changes.
 </div>
 <div id="versions" class="tab-pane fade">
 <p>
-These are the previous versions of the repository in which changes were
-made to the R Markdown (<code>analysis/index.Rmd</code>) and HTML
-(<code>docs/index.html</code>) files. If you’ve configured a remote Git
-repository (see <code>?wflow_git_remote</code>), click on the hyperlinks
-in the table below to view the files as they were in that past version.
+There are no past versions. Publish this analysis with
+<code>wflow_publish()</code> to start tracking its development.
 </p>
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-File
-</th>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-<th>
-Message
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/92021bffd83748fb85fed21cf4e1cbd02841d2bc/docs/index.html" target="_blank">92021bf</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-03
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/827c89bb68d46edabd11ed0710b3521b18c9eff8/docs/index.html" target="_blank">827c89b</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-03
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/f9db9620c74c5c7a9d7d2ec345b81fd4c17575af/analysis/index.Rmd" target="_blank">f9db962</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-<td>
-Simplify layout: drop old code/script folders, rename
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/c6e508625ce14c67840f299c63a5eb5dff3f53a5/docs/index.html" target="_blank">c6e5086</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/5a79883bb418ca3568e51f1b18b2c6303a053e6c/docs/index.html" target="_blank">5a79883</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/2b0e44573e40e8ea8f93667f6887866b2470be78/analysis/index.Rmd" target="_blank">2b0e445</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-<td>
-Fix GitHub source links to point at the new
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/cf1d0ac969c4ba22fa2d74cec44f8f4384101f8a/docs/index.html" target="_blank">cf1d0ac</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/06b2461eba2147f353f2ce082bdebe22f5dcee26/analysis/index.Rmd" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-<td>
-Initial commit: immgenT-GP-analysis
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/06b2461eba2147f353f2ce082bdebe22f5dcee26/docs/index.html" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-<td>
-Initial commit: immgenT-GP-analysis
-</td>
-</tr>
-</tbody>
-</table>
-</div>
 <hr>
 </div>
 </div>
 </div>
-<p>This site documents the gene program (GP) factorization analysis of
-the ImmGen-T single-cell RNA-seq/CITE-seq data: ~200 GPs learned by
-empirical Bayes matrix factorization (EBMF), and how they relate to cell
-lineage, tissue, activation state, transcription factors, and surface
-protein expression.</p>
-<p>Each page below covers one published figure: for every panel, the R
-code that produced it, the figure itself, and a short caption explaining
-what it shows.</p>
-<div id="main-figures" class="section level2">
-<h2>Main figures</h2>
-<ul>
-<li><a href="Figure1.html">Figure 1: Overview</a></li>
-<li><a href="Figure2.html">Figure 2: GPs and lineages</a></li>
-<li><a href="Figure3.html">Figure 3: GPs associated with T-cell
-activation</a></li>
-<li><a href="Figure4.html">Figure 4: GPs and tissue</a></li>
-<li><a href="Figure6.html">Figure 6: Linking GPs to proteins</a></li>
-</ul>
+<p>Produced by <a
+href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/ExtendedDataTable7_protein_gating.R"><code>script/ExtendedDataTable7_protein_gating.R</code></a>:</p>
+<pre class="r"><code># Extended Data Table 7: protein gating.
+#
+# One row per GP: its curated positive/negative protein-marker signature, and
+# how well a protein gate built from that signature recovers cells with high GP
+# loading. For each GP we gate cells by its markers (positive markers above
+# their threshold, negative markers at/below), then measure the proportion of
+# gated cells that are &quot;positive&quot; for the GP (loading &gt; 0.1; the True Discovery
+# Proportion) versus that proportion among all cells, and flag GPs whose gate is
+# well aligned with the GP loading.
+#
+# Reproduces the published data/CITEseq_alignment_scores_manual.csv (Table S3):
+# compute_alignment_scores() + format_scores_table() (code/R/gated_protein_helpers.R)
+# run on the manually-curated marker set df_markers2 from
+# code/R/citeseq_shared_setup.R. Here we keep the presentation subset of columns
+# used in Table S3.
+
+library(dplyr)
+library(Matrix) # protein matrices are dgCMatrix; must be attached for `[` to dispatch
+
+data_path &lt;- &quot;data/&quot;
+output_path &lt;- &quot;figures/generated/&quot;
+
+source(&quot;code/R/gated_protein_helpers.R&quot;) # compute_alignment_scores(), format_scores_table()
+source(&quot;code/R/citeseq_shared_setup.R&quot;)  # df_markers2, L_pm_filtered, protein_mat_normalized_lognorm,
+                                         # threshold_results_subset_manual, select_proteins, *_cells
+
+scores_manual &lt;- compute_alignment_scores(
+  df_m = df_markers2,
+  protein_mat = protein_mat_normalized_lognorm,
+  loading_mat = L_pm_filtered,
+  threshold_df = threshold_results_subset_manual,
+  selected_proteins = select_proteins,
+  exclude_cells = c(thymocyte_cells, proliferating_cells, miniverse_cells),
+  missing_threshold_action = &quot;skip&quot;
+)
+scores_manual_table &lt;- format_scores_table(scores_manual, df_markers2)
+
+# &quot;Well aligned&quot; in the published Table S3 is the formula-positive set
+# (prop_pos_gated &gt;= 0.25 &amp; &gt; prop_pos_all; 35 GPs here, matching
+# data/CITEseq_alignment_scores_manual.csv) hand-trimmed to those whose protein
+# gate and GP-loading gate also agree visually on the MDE embedding -- the 25
+# GPs below. We reproduce that curated flag (intersected with the formula set so
+# it stays internally consistent if the underlying numbers ever shift). Note
+# this 25-GP table set is deliberately distinct from Figure 6b&#39;s separately
+# curated 27-GP well_aligned_gps in code/R/citeseq_shared_setup.R.
+well_aligned_final &lt;- c(
+  &quot;GP3&quot;, &quot;GP8&quot;, &quot;GP10&quot;, &quot;GP12&quot;, &quot;GP22&quot;, &quot;GP25&quot;, &quot;GP26&quot;, &quot;GP27&quot;, &quot;GP29&quot;, &quot;GP30&quot;,
+  &quot;GP32&quot;, &quot;GP35&quot;, &quot;GP41&quot;, &quot;GP58&quot;, &quot;GP63&quot;, &quot;GP68&quot;, &quot;GP77&quot;, &quot;GP80&quot;, &quot;GP107&quot;,
+  &quot;GP117&quot;, &quot;GP163&quot;, &quot;GP166&quot;, &quot;GP170&quot;, &quot;GP171&quot;, &quot;GP181&quot;
+)
+scores_manual_table[[&quot;Well aligned&quot;]] &lt;-
+  scores_manual_table[[&quot;Well aligned&quot;]] &amp; scores_manual_table$GP %in% well_aligned_final
+
+# Presentation subset used in Table S3, with the two proportion columns given
+# their published, more descriptive headers.
+protein_gating &lt;- scores_manual_table[, c(
+  &quot;GP&quot;,
+  &quot;Positive markers&quot;,
+  &quot;Negative markers&quot;,
+  &quot;Prop. positive (gated)&quot;,
+  &quot;Prop. positive (all)&quot;,
+  &quot;Well aligned&quot;
+)]
+colnames(protein_gating) &lt;- c(
+  &quot;GP&quot;,
+  &quot;Positive markers&quot;,
+  &quot;Negative markers&quot;,
+  &quot;Prop. positive among gated (True Discovery Proportion)&quot;,
+  &quot;Prop. positive among all cells&quot;,
+  &quot;Well aligned&quot;
+)
+
+write.csv(
+  protein_gating,
+  file = paste0(output_path, &quot;ExtendedDataTable7_protein_gating.csv&quot;),
+  row.names = FALSE
+)</code></pre>
+<div id="edt7" class="section level2">
+<h2>Table</h2>
+<p>Showing the first 20 rows (of 200), ordered well-aligned GPs first;
+download the full table at <a
+href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generated/ExtendedDataTable7_protein_gating.csv"><code>figures/generated/ExtendedDataTable7_protein_gating.csv</code></a>.</p>
+<table style="width:100%;">
+<colgroup>
+<col width="2%" />
+<col width="27%" />
+<col width="19%" />
+<col width="27%" />
+<col width="15%" />
+<col width="6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">GP</th>
+<th align="left">Positive markers</th>
+<th align="left">Negative markers</th>
+<th align="right">Prop. positive among gated (True Discovery
+Proportion)</th>
+<th align="right">Prop. positive among all cells</th>
+<th align="left">Well aligned</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">GP117</td>
+<td align="left">CD73.5NTD, LY49A, CD24</td>
+<td align="left">THY1.2, CD44</td>
+<td align="right">1.000</td>
+<td align="right">0.003</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">GP10</td>
+<td align="left">KLRG1, CD8B, CD8A, ITAX.CD11C, ICAM1, ITA4.CD49D,
+CD29</td>
+<td align="left">CD4, CD62L, CD5</td>
+<td align="right">0.988</td>
+<td align="right">0.042</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">GP26</td>
+<td align="left">CD8B, CD38, CD44, CD86, CD8A, CD29, CD39, CD11A</td>
+<td align="left">CD45RB, CD62L</td>
+<td align="right">0.985</td>
+<td align="right">0.306</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">GP68</td>
+<td align="left">IL2RA.CD25, FR4, GITR.CD357, NEUROPILIN1.CD304</td>
+<td align="left"></td>
+<td align="right">0.982</td>
+<td align="right">0.057</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">GP171</td>
+<td align="left">CD62L</td>
+<td align="left">CD44</td>
+<td align="right">0.971</td>
+<td align="right">0.868</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">GP58</td>
+<td align="left">CD8B, CD8A</td>
+<td align="left">CD4</td>
+<td align="right">0.949</td>
+<td align="right">0.448</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">GP8</td>
+<td align="left">TCRVG3</td>
+<td align="left"></td>
+<td align="right">0.925</td>
+<td align="right">0.006</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">GP30</td>
+<td align="left">CD11A, CD49B, CD38</td>
+<td align="left">CD8B, CD8A, CD4</td>
+<td align="right">0.880</td>
+<td align="right">0.128</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">GP27</td>
+<td align="left">KLRG1, ICOS.CD278, GITR.CD357</td>
+<td align="left"></td>
+<td align="right">0.864</td>
+<td align="right">0.035</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">GP170</td>
+<td align="left">ITB7, CD103, CD4, CD38</td>
+<td align="left">GITR.CD357, CD62L</td>
+<td align="right">0.823</td>
+<td align="right">0.214</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">GP80</td>
+<td align="left">CD29, CD44, ITA4.CD49D</td>
+<td align="left">ITB7, CD103</td>
+<td align="right">0.795</td>
+<td align="right">0.398</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">GP35</td>
+<td align="left">THY1.2, CD73.5NTD, CD11A, CD2, CD69, CD5,
+ITAM.CD11B</td>
+<td align="left">CD62L</td>
+<td align="right">0.793</td>
+<td align="right">0.313</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">GP12</td>
+<td align="left">FR4, CD73.5NTD</td>
+<td align="left">CD62L, CD45RB</td>
+<td align="right">0.752</td>
+<td align="right">0.102</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">GP3</td>
+<td align="left"></td>
+<td align="left">THY1.2, CD5, CD2, CD11A, CD44, SCA1</td>
+<td align="right">0.746</td>
+<td align="right">0.112</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">GP29</td>
+<td align="left">CD8A</td>
+<td align="left">CD4, CD8B</td>
+<td align="right">0.725</td>
+<td align="right">0.210</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">GP77</td>
+<td align="left">CD55.DAF, CD38, CD24, LY49A, B220, ITB7, CD45RB</td>
+<td align="left"></td>
+<td align="right">0.722</td>
+<td align="right">0.003</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">GP166</td>
+<td align="left">CD44, THY1.2, KLRG1, ITB7, ITAM.CD11B</td>
+<td align="left"></td>
+<td align="right">0.708</td>
+<td align="right">0.406</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">GP22</td>
+<td align="left">LY49A</td>
+<td align="left">CD4, CD8B, TCRGD</td>
+<td align="right">0.703</td>
+<td align="right">0.050</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">GP32</td>
+<td align="left">CD45RB, CD27, CD62L</td>
+<td align="left">CD103, CD24, CD38, ITB7, CD4, CD73.5NTD</td>
+<td align="right">0.696</td>
+<td align="right">0.548</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">GP25</td>
+<td align="left"></td>
+<td align="left">CD62L, CD45RB, CD55.DAF</td>
+<td align="right">0.686</td>
+<td align="right">0.334</td>
+<td align="left">TRUE</td>
+</tr>
+</tbody>
+</table>
+<div class="figcaption">
+<p><strong>Extended Data Table 7.</strong> One row per GP: its curated
+positive / negative protein marker signature, and how well a protein
+gate built from that signature recovers cells with high GP loading. For
+each GP, cells are gated by its markers (positive markers above their
+threshold, negative at/below); we report the proportion of gated cells
+positive for the GP (loading &gt; 0.1; the True Discovery Proportion)
+versus that proportion among all cells, and a <strong>Well
+aligned</strong> flag. The flag is the formula-positive set (TDP &gt;=
+0.25 and greater than the all-cell proportion) hand-trimmed to those
+whose protein and loading gates also agree visually on the MDE embedding
+– reproducing the published table’s curated 25-GP set.</p>
 </div>
-<div id="supplementary-figures" class="section level2">
-<h2>Supplementary figures</h2>
-<ul>
-<li><a href="FigureS1.html">Figure S1: GP reproducibility across
-IGTs</a></li>
-<li><a href="FigureS2.html">Figure S2: GP30 and GP58 loadings across
-T-cell subsets</a></li>
-<li><a href="FigureS3.html">Figure S3: Characterizing activation
-GPs</a></li>
-<li><a href="FigureS6.html">Figure S6: GP loadings recover protein-gated
-populations across GPs</a></li>
-</ul>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.5.1 (2025-06-13)
+Platform: aarch64-apple-darwin20
+Running under: macOS Sequoia 15.6.1
+
+Matrix products: default
+BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_CA/en_CA/en_CA/C/en_CA/en_CA
+
+time zone: Asia/Tokyo
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+ [1] vctrs_0.7.3     cli_3.6.6       knitr_1.50      rlang_1.2.0    
+ [5] xfun_0.55       stringi_1.8.7   otel_0.2.0      promises_1.5.0 
+ [9] jsonlite_2.0.0  workflowr_1.7.2 glue_1.8.1      rprojroot_2.1.1
+[13] git2r_0.36.2    htmltools_0.5.9 httpuv_1.6.16   sass_0.4.10    
+[17] rmarkdown_2.30  evaluate_1.0.5  jquerylib_0.1.4 tibble_3.3.0   
+[21] fastmap_1.2.0   yaml_2.3.12     lifecycle_1.0.5 stringr_1.6.0  
+[25] compiler_4.5.1  fs_1.6.6        Rcpp_1.1.1-1.1  pkgconfig_2.0.3
+[29] later_1.4.4     digest_0.6.39   R6_2.6.1        pillar_1.11.1  
+[33] magrittr_2.0.5  bslib_0.9.0     tools_4.5.1     cachem_1.1.0   </code></pre>
 </div>
-<div id="extended-data-tables" class="section level2">
-<h2>Extended Data tables</h2>
-<ul>
-<li><a href="ExtendedDataTable1.html">Extended Data Table 1: summary of
-GP characteristics and annotations</a></li>
-<li><a href="ExtendedDataTable2.html">Extended Data Table 2: GP AUC by
-lineage</a></li>
-<li><a href="ExtendedDataTable3.html">Extended Data Table 3: GP AUC by
-tissue</a></li>
-<li><a href="ExtendedDataTable4.html">Extended Data Table 4: GP AUC by
-cluster</a></li>
-<li><a href="ExtendedDataTable5.html">Extended Data Table 5: GP during
-activation</a></li>
-<li><a href="ExtendedDataTable6.html">Extended Data Table 6: protein
-factor matrix</a></li>
-<li><a href="ExtendedDataTable7.html">Extended Data Table 7: protein
-gating</a></li>
-</ul>
-</div>
-<div id="reproducing-these-figures" class="section level2">
-<h2>Reproducing these figures</h2>
-<p>Every page above is generated by a single R script in <a
-href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/main/script"><code>script/</code></a>,
-which sources shared plotting/data-loading helpers from <a
-href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/main/code/R"><code>code/R/</code></a>.
-To regenerate a figure yourself, run (from the repository root):</p>
-<pre><code>Rscript script/Figure1.R</code></pre>
 </div>
 </div>
 </div>

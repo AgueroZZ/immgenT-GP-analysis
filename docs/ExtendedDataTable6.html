@@ -9,9 +9,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Ziang Zhang" />
 
 
-<title>Matrix factorization analyses of the immgenT scRNA-seq data</title>
+<title>Extended Data Table 6: protein factor matrix</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -352,8 +353,9 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Matrix factorization analyses of the
-immgenT scRNA-seq data</h1>
+<h1 class="title toc-ignore">Extended Data Table 6: protein factor
+matrix</h1>
+<h4 class="author">Ziang Zhang</h4>
 
 </div>
 
@@ -386,7 +388,7 @@ aria-hidden="true"></span> </a>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 1
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span> 1
 </p>
@@ -421,12 +423,96 @@ changes </a>
 <div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of
-the R Markdown file created these results, you’ll want to first commit
-it to the Git repo. If you’re still working on the analysis, you can
-ignore this warning. When you’re finished, you can run
+<p>The R Markdown is untracked by Git. To know which version of the R
+Markdown file created these results, you’ll want to first commit it to
+the Git repo. If you’re still working on the analysis, you can ignore
+this warning. When you’re finished, you can run
 <code>wflow_publish</code> to commit the R Markdown file and build the
 HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed1code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(1)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed1code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(1)</code> was run prior to running the
+code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
 </div>
 </div>
 </div>
@@ -541,253 +627,385 @@ have uncommitted changes.
 </div>
 <div id="versions" class="tab-pane fade">
 <p>
-These are the previous versions of the repository in which changes were
-made to the R Markdown (<code>analysis/index.Rmd</code>) and HTML
-(<code>docs/index.html</code>) files. If you’ve configured a remote Git
-repository (see <code>?wflow_git_remote</code>), click on the hyperlinks
-in the table below to view the files as they were in that past version.
+There are no past versions. Publish this analysis with
+<code>wflow_publish()</code> to start tracking its development.
 </p>
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-File
-</th>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-<th>
-Message
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/92021bffd83748fb85fed21cf4e1cbd02841d2bc/docs/index.html" target="_blank">92021bf</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-03
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/827c89bb68d46edabd11ed0710b3521b18c9eff8/docs/index.html" target="_blank">827c89b</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-03
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/f9db9620c74c5c7a9d7d2ec345b81fd4c17575af/analysis/index.Rmd" target="_blank">f9db962</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-<td>
-Simplify layout: drop old code/script folders, rename
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/c6e508625ce14c67840f299c63a5eb5dff3f53a5/docs/index.html" target="_blank">c6e5086</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/5a79883bb418ca3568e51f1b18b2c6303a053e6c/docs/index.html" target="_blank">5a79883</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/2b0e44573e40e8ea8f93667f6887866b2470be78/analysis/index.Rmd" target="_blank">2b0e445</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-<td>
-Fix GitHub source links to point at the new
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/cf1d0ac969c4ba22fa2d74cec44f8f4384101f8a/docs/index.html" target="_blank">cf1d0ac</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/06b2461eba2147f353f2ce082bdebe22f5dcee26/analysis/index.Rmd" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-<td>
-Initial commit: immgenT-GP-analysis
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/06b2461eba2147f353f2ce082bdebe22f5dcee26/docs/index.html" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-<td>
-Initial commit: immgenT-GP-analysis
-</td>
-</tr>
-</tbody>
-</table>
-</div>
 <hr>
 </div>
 </div>
 </div>
-<p>This site documents the gene program (GP) factorization analysis of
-the ImmGen-T single-cell RNA-seq/CITE-seq data: ~200 GPs learned by
-empirical Bayes matrix factorization (EBMF), and how they relate to cell
-lineage, tissue, activation state, transcription factors, and surface
-protein expression.</p>
-<p>Each page below covers one published figure: for every panel, the R
-code that produced it, the figure itself, and a short caption explaining
-what it shows.</p>
-<div id="main-figures" class="section level2">
-<h2>Main figures</h2>
-<ul>
-<li><a href="Figure1.html">Figure 1: Overview</a></li>
-<li><a href="Figure2.html">Figure 2: GPs and lineages</a></li>
-<li><a href="Figure3.html">Figure 3: GPs associated with T-cell
-activation</a></li>
-<li><a href="Figure4.html">Figure 4: GPs and tissue</a></li>
-<li><a href="Figure6.html">Figure 6: Linking GPs to proteins</a></li>
-</ul>
+<p>Produced by <a
+href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/ExtendedDataTable6_protein_factor_matrix.R"><code>script/ExtendedDataTable6_protein_factor_matrix.R</code></a>:</p>
+<pre class="r"><code># Extended Data Table 6: protein factor matrix.
+#
+# The final processed CITE-seq protein factor matrix used by Figure 6 (panel 6b
+# heatmap), exported as a plain table: one row per GP (GP1..GP200), one column
+# per protein, holding the protein&#39;s factor score in that GP. Built exactly as
+# script/Figure6.R (lines 58-65) does from the projected protein EBMF fit --
+# drop isotype / THY1.1 / excluded / non-&quot;good&quot; proteins, then scale each GP
+# column so its maximum absolute score is 1 (the same max|.|=1 normalization the
+# heatmap uses). See code/pipeline/04_protein_projection.R for how the raw
+# protein factor matrix is fit, and code/R/citeseq_shared_setup.R:35-40 for the
+# protein-selection filters reproduced here.
+#
+# The r-object orientation is proteins x GPs; we transpose to GP x protein so GP
+# is the row, as requested for the table.
+
+data_path &lt;- &quot;data/&quot;
+output_path &lt;- &quot;figures/generated/&quot;
+
+Protein_flash_result &lt;- readRDS(paste0(data_path, &quot;protein_flash_selected_summary_lognorm_backfit200.rds&quot;))
+Protein_F_pm_raw &lt;- Protein_flash_result$F_pm
+
+# Protein-selection filters (mirror code/R/citeseq_shared_setup.R:35-40)
+isotype_proteins &lt;- grep(&quot;^Isotype&quot;, rownames(Protein_F_pm_raw), value = TRUE)
+proteins_quality &lt;- read.csv(paste0(data_path, &quot;TableS4_citeseq_qc_20250513.csv&quot;), header = TRUE, stringsAsFactors = FALSE, skip = 1)
+good_proteins &lt;- c(proteins_quality$protein[proteins_quality$classification == &quot;good&quot;], &quot;IL2RA.CD25&quot;, &quot;ITB7&quot;, &quot;CD69&quot;)
+exclude_proteins &lt;- c(&quot;CD19&quot;, &quot;CD34&quot;, &quot;CD45.1&quot;, &quot;CD45.2&quot;, &quot;CD138&quot;, &quot;TCRVA2&quot;, &quot;TER119&quot;)
+thy11_proteins &lt;- grep(&quot;THY1.1&quot;, rownames(Protein_F_pm_raw), value = TRUE)
+
+# Filter + per-GP-column max|.|=1 scaling (mirror script/Figure6.R:58-65)
+Protein_F_pm &lt;- Protein_F_pm_raw[!rownames(Protein_F_pm_raw) %in% isotype_proteins, ]
+Protein_F_pm &lt;- Protein_F_pm[rownames(Protein_F_pm) %in% good_proteins, ]
+Protein_F_pm &lt;- Protein_F_pm[!rownames(Protein_F_pm) %in% exclude_proteins, ]
+Protein_F_pm &lt;- Protein_F_pm[!rownames(Protein_F_pm) %in% thy11_proteins, ]
+D_lognorm &lt;- diag(1 / apply(Protein_F_pm, 2, function(x) max(abs(x))))
+Protein_F_pm &lt;- Protein_F_pm %*% D_lognorm
+colnames(Protein_F_pm) &lt;- paste0(&quot;GP&quot;, seq_len(ncol(Protein_F_pm)))
+Protein_F_pm[is.na(Protein_F_pm)] &lt;- 0
+
+# Transpose to GP (row) x protein (column) and write out.
+protein_factor_gp &lt;- as.data.frame(t(Protein_F_pm), check.names = FALSE, stringsAsFactors = FALSE)
+protein_factor_gp &lt;- data.frame(GP = rownames(protein_factor_gp), protein_factor_gp,
+                                check.names = FALSE, stringsAsFactors = FALSE)
+rownames(protein_factor_gp) &lt;- NULL
+
+write.csv(
+  protein_factor_gp,
+  file = paste0(output_path, &quot;ExtendedDataTable6_protein_factor_matrix.csv&quot;),
+  row.names = FALSE
+)</code></pre>
+<div id="edt6" class="section level2">
+<h2>Table</h2>
+<p>Showing the first 20 rows (of 200) and first 10 columns; download the
+full table at <a
+href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generated/ExtendedDataTable6_protein_factor_matrix.csv"><code>figures/generated/ExtendedDataTable6_protein_factor_matrix.csv</code></a>.</p>
+<table>
+<colgroup>
+<col width="6%" />
+<col width="9%" />
+<col width="14%" />
+<col width="9%" />
+<col width="9%" />
+<col width="13%" />
+<col width="9%" />
+<col width="9%" />
+<col width="9%" />
+<col width="9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">GP</th>
+<th align="right">B220</th>
+<th align="right">BTLA.CD272</th>
+<th align="right">CD103</th>
+<th align="right">CD11A</th>
+<th align="right">CD155.PVR</th>
+<th align="right">CD160</th>
+<th align="right">CD2</th>
+<th align="right">CD24</th>
+<th align="right">CD27</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">GP1</td>
+<td align="right">0.278</td>
+<td align="right">0.298</td>
+<td align="right">0.490</td>
+<td align="right">0.612</td>
+<td align="right">0.355</td>
+<td align="right">0.365</td>
+<td align="right">0.678</td>
+<td align="right">0.336</td>
+<td align="right">0.611</td>
+</tr>
+<tr class="even">
+<td align="left">GP2</td>
+<td align="right">0.310</td>
+<td align="right">0.147</td>
+<td align="right">0.362</td>
+<td align="right">0.294</td>
+<td align="right">0.290</td>
+<td align="right">0.389</td>
+<td align="right">0.106</td>
+<td align="right">0.658</td>
+<td align="right">0.535</td>
+</tr>
+<tr class="odd">
+<td align="left">GP3</td>
+<td align="right">-0.027</td>
+<td align="right">-0.274</td>
+<td align="right">0.068</td>
+<td align="right">-0.586</td>
+<td align="right">-0.280</td>
+<td align="right">-0.103</td>
+<td align="right">-0.635</td>
+<td align="right">-0.153</td>
+<td align="right">-0.412</td>
+</tr>
+<tr class="even">
+<td align="left">GP4</td>
+<td align="right">0.393</td>
+<td align="right">0.455</td>
+<td align="right">0.187</td>
+<td align="right">0.611</td>
+<td align="right">0.345</td>
+<td align="right">0.524</td>
+<td align="right">0.664</td>
+<td align="right">0.094</td>
+<td align="right">0.409</td>
+</tr>
+<tr class="odd">
+<td align="left">GP5</td>
+<td align="right">0.343</td>
+<td align="right">0.143</td>
+<td align="right">0.701</td>
+<td align="right">0.460</td>
+<td align="right">0.183</td>
+<td align="right">0.454</td>
+<td align="right">0.357</td>
+<td align="right">0.474</td>
+<td align="right">0.258</td>
+</tr>
+<tr class="even">
+<td align="left">GP6</td>
+<td align="right">-0.326</td>
+<td align="right">-0.364</td>
+<td align="right">-0.039</td>
+<td align="right">-0.294</td>
+<td align="right">-0.133</td>
+<td align="right">-0.378</td>
+<td align="right">-0.244</td>
+<td align="right">0.117</td>
+<td align="right">-0.497</td>
+</tr>
+<tr class="odd">
+<td align="left">GP7</td>
+<td align="right">0.375</td>
+<td align="right">0.148</td>
+<td align="right">0.740</td>
+<td align="right">0.375</td>
+<td align="right">0.111</td>
+<td align="right">0.534</td>
+<td align="right">0.156</td>
+<td align="right">0.848</td>
+<td align="right">0.567</td>
+</tr>
+<tr class="even">
+<td align="left">GP8</td>
+<td align="right">-0.197</td>
+<td align="right">0.098</td>
+<td align="right">-0.026</td>
+<td align="right">0.220</td>
+<td align="right">0.263</td>
+<td align="right">-0.218</td>
+<td align="right">0.619</td>
+<td align="right">0.202</td>
+<td align="right">-0.090</td>
+</tr>
+<tr class="odd">
+<td align="left">GP9</td>
+<td align="right">0.240</td>
+<td align="right">0.311</td>
+<td align="right">0.435</td>
+<td align="right">0.499</td>
+<td align="right">0.314</td>
+<td align="right">0.340</td>
+<td align="right">0.680</td>
+<td align="right">0.067</td>
+<td align="right">0.608</td>
+</tr>
+<tr class="even">
+<td align="left">GP10</td>
+<td align="right">0.057</td>
+<td align="right">-0.119</td>
+<td align="right">-0.043</td>
+<td align="right">0.466</td>
+<td align="right">0.029</td>
+<td align="right">0.049</td>
+<td align="right">0.062</td>
+<td align="right">0.046</td>
+<td align="right">-0.278</td>
+</tr>
+<tr class="odd">
+<td align="left">GP11</td>
+<td align="right">0.137</td>
+<td align="right">0.237</td>
+<td align="right">0.251</td>
+<td align="right">0.019</td>
+<td align="right">0.173</td>
+<td align="right">0.252</td>
+<td align="right">0.650</td>
+<td align="right">0.111</td>
+<td align="right">-0.451</td>
+</tr>
+<tr class="even">
+<td align="left">GP12</td>
+<td align="right">0.051</td>
+<td align="right">0.205</td>
+<td align="right">-0.072</td>
+<td align="right">0.318</td>
+<td align="right">0.020</td>
+<td align="right">0.080</td>
+<td align="right">-0.083</td>
+<td align="right">-0.199</td>
+<td align="right">0.219</td>
+</tr>
+<tr class="odd">
+<td align="left">GP13</td>
+<td align="right">0.225</td>
+<td align="right">0.092</td>
+<td align="right">0.403</td>
+<td align="right">0.358</td>
+<td align="right">-0.098</td>
+<td align="right">0.238</td>
+<td align="right">-0.422</td>
+<td align="right">0.061</td>
+<td align="right">-0.025</td>
+</tr>
+<tr class="even">
+<td align="left">GP14</td>
+<td align="right">-0.118</td>
+<td align="right">-0.077</td>
+<td align="right">-0.233</td>
+<td align="right">0.100</td>
+<td align="right">0.539</td>
+<td align="right">-0.104</td>
+<td align="right">0.000</td>
+<td align="right">0.113</td>
+<td align="right">-0.082</td>
+</tr>
+<tr class="odd">
+<td align="left">GP15</td>
+<td align="right">-0.021</td>
+<td align="right">-0.075</td>
+<td align="right">-0.126</td>
+<td align="right">-0.196</td>
+<td align="right">-0.143</td>
+<td align="right">0.076</td>
+<td align="right">-0.297</td>
+<td align="right">0.181</td>
+<td align="right">-0.143</td>
+</tr>
+<tr class="even">
+<td align="left">GP16</td>
+<td align="right">0.075</td>
+<td align="right">0.152</td>
+<td align="right">0.150</td>
+<td align="right">0.332</td>
+<td align="right">0.289</td>
+<td align="right">0.102</td>
+<td align="right">0.220</td>
+<td align="right">0.130</td>
+<td align="right">0.129</td>
+</tr>
+<tr class="odd">
+<td align="left">GP17</td>
+<td align="right">-0.240</td>
+<td align="right">-0.139</td>
+<td align="right">-0.448</td>
+<td align="right">0.146</td>
+<td align="right">0.179</td>
+<td align="right">-0.265</td>
+<td align="right">0.343</td>
+<td align="right">0.634</td>
+<td align="right">-0.281</td>
+</tr>
+<tr class="even">
+<td align="left">GP18</td>
+<td align="right">0.197</td>
+<td align="right">0.020</td>
+<td align="right">0.682</td>
+<td align="right">0.606</td>
+<td align="right">-0.029</td>
+<td align="right">0.234</td>
+<td align="right">0.359</td>
+<td align="right">0.429</td>
+<td align="right">0.721</td>
+</tr>
+<tr class="odd">
+<td align="left">GP19</td>
+<td align="right">-0.026</td>
+<td align="right">-0.017</td>
+<td align="right">-0.220</td>
+<td align="right">-0.103</td>
+<td align="right">-0.134</td>
+<td align="right">-0.092</td>
+<td align="right">-0.171</td>
+<td align="right">0.122</td>
+<td align="right">-0.212</td>
+</tr>
+<tr class="even">
+<td align="left">GP20</td>
+<td align="right">-0.222</td>
+<td align="right">-0.269</td>
+<td align="right">-0.471</td>
+<td align="right">-0.389</td>
+<td align="right">-0.418</td>
+<td align="right">-0.215</td>
+<td align="right">-0.424</td>
+<td align="right">-0.379</td>
+<td align="right">-0.302</td>
+</tr>
+</tbody>
+</table>
+<div class="figcaption">
+<p><strong>Extended Data Table 6.</strong> The final processed CITE-seq
+protein factor matrix used by Figure 6 (panel 6b), as a plain table: one
+row per GP, one column per protein, holding the protein’s factor score
+in that GP. Built from the projected protein EBMF fit, restricted to the
+selected “good” proteins (isotype / THY1.1 / excluded proteins removed)
+and scaled so each GP column has maximum absolute score 1. (Preview
+shows the first 10 of 47 protein columns.)</p>
 </div>
-<div id="supplementary-figures" class="section level2">
-<h2>Supplementary figures</h2>
-<ul>
-<li><a href="FigureS1.html">Figure S1: GP reproducibility across
-IGTs</a></li>
-<li><a href="FigureS2.html">Figure S2: GP30 and GP58 loadings across
-T-cell subsets</a></li>
-<li><a href="FigureS3.html">Figure S3: Characterizing activation
-GPs</a></li>
-<li><a href="FigureS6.html">Figure S6: GP loadings recover protein-gated
-populations across GPs</a></li>
-</ul>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.5.1 (2025-06-13)
+Platform: aarch64-apple-darwin20
+Running under: macOS Sequoia 15.6.1
+
+Matrix products: default
+BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_CA/en_CA/en_CA/C/en_CA/en_CA
+
+time zone: Asia/Tokyo
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+ [1] vctrs_0.7.3     cli_3.6.6       knitr_1.50      rlang_1.2.0    
+ [5] xfun_0.55       stringi_1.8.7   otel_0.2.0      promises_1.5.0 
+ [9] jsonlite_2.0.0  workflowr_1.7.2 glue_1.8.1      rprojroot_2.1.1
+[13] git2r_0.36.2    htmltools_0.5.9 httpuv_1.6.16   sass_0.4.10    
+[17] rmarkdown_2.30  evaluate_1.0.5  jquerylib_0.1.4 tibble_3.3.0   
+[21] fastmap_1.2.0   yaml_2.3.12     lifecycle_1.0.5 stringr_1.6.0  
+[25] compiler_4.5.1  fs_1.6.6        Rcpp_1.1.1-1.1  pkgconfig_2.0.3
+[29] later_1.4.4     digest_0.6.39   R6_2.6.1        pillar_1.11.1  
+[33] magrittr_2.0.5  bslib_0.9.0     tools_4.5.1     cachem_1.1.0   </code></pre>
 </div>
-<div id="extended-data-tables" class="section level2">
-<h2>Extended Data tables</h2>
-<ul>
-<li><a href="ExtendedDataTable1.html">Extended Data Table 1: summary of
-GP characteristics and annotations</a></li>
-<li><a href="ExtendedDataTable2.html">Extended Data Table 2: GP AUC by
-lineage</a></li>
-<li><a href="ExtendedDataTable3.html">Extended Data Table 3: GP AUC by
-tissue</a></li>
-<li><a href="ExtendedDataTable4.html">Extended Data Table 4: GP AUC by
-cluster</a></li>
-<li><a href="ExtendedDataTable5.html">Extended Data Table 5: GP during
-activation</a></li>
-<li><a href="ExtendedDataTable6.html">Extended Data Table 6: protein
-factor matrix</a></li>
-<li><a href="ExtendedDataTable7.html">Extended Data Table 7: protein
-gating</a></li>
-</ul>
-</div>
-<div id="reproducing-these-figures" class="section level2">
-<h2>Reproducing these figures</h2>
-<p>Every page above is generated by a single R script in <a
-href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/main/script"><code>script/</code></a>,
-which sources shared plotting/data-loading helpers from <a
-href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/main/code/R"><code>code/R/</code></a>.
-To regenerate a figure yourself, run (from the repository root):</p>
-<pre><code>Rscript script/Figure1.R</code></pre>
 </div>
 </div>
 </div>
