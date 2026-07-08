@@ -7,7 +7,9 @@ One R script per published figure, plus one per Extended Data table. Each script
   the exact panel filenames used in `figures/final-selected/bits/`, so each
   output can be dropped next to and diffed against the ground truth (the
   `ExtendedDataTable*.R` scripts instead write a single CSV into
-  `figures/generated/`),
+  `figures/generated/` -- except Table 8, which writes an .xlsx, since its
+  per-GP meta-column grouping needs a merged header row a flat CSV can't
+  express),
 - sources shared plotting/data-loading helpers from `code/R/`
   rather than redefining them.
 
@@ -33,7 +35,11 @@ Figures 7 and S7 are **out of scope** (see below).
 
 Each table is written as one CSV into `figures/generated/` by its script and
 previewed on a matching `analysis/ExtendedDataTable*.Rmd` page. Together these
-replace the retired Table S1/S2/S3, all now regenerated from code.
+replace the retired Table S1/S2/S3, all now regenerated from code. Table 8 is
+the exception: it ships in two layouts from two scripts, a tidy long table
+(the default, `ExtendedDataTable8.html`) and a per-GP-column wide table
+(`ExtendedDataTable8_wide.html`) that needs a merged-header .xlsx instead of a
+flat CSV -- see the row below.
 
 | Extended Data table | Script | Primary original source(s) |
 |---|---|---|
@@ -44,6 +50,8 @@ replace the retired Table S1/S2/S3, all now regenerated from code.
 | 5 GP during activation | `ExtendedDataTable5_GP_during_activation.R` | `Figure_Activation.R` (`GP_activation_summary`) |
 | 6 Protein factor matrix | `ExtendedDataTable6_protein_factor_matrix.R` | `Figure_CITEseq.R` (`Protein_F_pm`) |
 | 7 Protein gating | `ExtendedDataTable7_protein_gating.R` | `Figure_CITEseq.R` (`compute_alignment_scores`) |
+| 8 Comprehensive gene signature matrix (long, default) | `ExtendedDataTable8_gene_signature_matrix_long.R` | new (full list behind Table 1's Top Genes +/-, capped at 100 per direction) |
+| 8 Comprehensive gene signature matrix (wide) | `ExtendedDataTable8_gene_signature_matrix_wide.R` | same data as the long version, per-GP-column .xlsx layout |
 
 ## Verification status (as of this refactor)
 

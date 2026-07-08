@@ -36,6 +36,8 @@ produced it, the figure itself, and a short caption explaining what it shows.
 + [Extended Data Table 5: GP during activation](ExtendedDataTable5.html)
 + [Extended Data Table 6: protein factor matrix](ExtendedDataTable6.html)
 + [Extended Data Table 7: protein gating](ExtendedDataTable7.html)
++ [Extended Data Table 8: comprehensive gene signature matrix](ExtendedDataTable8.html)
+  ([wide format](ExtendedDataTable8_wide.html))
 
 ## Reproducing these figures
 

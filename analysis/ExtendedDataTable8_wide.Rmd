@@ -1,0 +1,77 @@
+---
+title: "Extended Data Table 8 (wide format): comprehensive gene signature matrix"
+author: "Ziang Zhang"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+Alternate, per-GP-column layout of
+[Extended Data Table 8](ExtendedDataTable8.html); produced by
+[`script/ExtendedDataTable8_gene_signature_matrix_wide.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/ExtendedDataTable8_gene_signature_matrix_wide.R):
+
+```{r edt8wide-code, code=readLines("../script/ExtendedDataTable8_gene_signature_matrix_wide.R"), eval=FALSE}
+```
+
+## Table {#edt8wide}
+
+This table is a per-GP grouping (200 GPs x 3 columns each: Gene, Direction,
+Score) rather than one row per GP, so it's distributed as an .xlsx with a
+merged GP header rather than a flat CSV. Pick a GP below to browse its full
+signature gene list (up to 202 rows: up to 100 up- and 100 down-regulated,
+plus a truncation note if either was capped -- see below); sort by clicking a
+column header, or use the search boxes under **Gene** / **Direction** to
+filter further. Download the full spreadsheet at
+[`figures/generated/ExtendedDataTable8_gene_signature_matrix_wide.xlsx`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generated/ExtendedDataTable8_gene_signature_matrix_wide.xlsx).
+
+```{r edt8wide-preview, echo=FALSE, message=FALSE}
+suppressPackageStartupMessages({
+  library(DT)
+  library(crosstalk)
+})
+source("../code/R/gene_signature_helpers.R")
+
+F_pm_filtered <- readRDS("../data/F_pm_filtered.rds")
+F_pm_filtered <- apply(F_pm_filtered, 2, function(x) x / max(abs(x)))
+n_gp <- ncol(F_pm_filtered)
+gp_labels <- paste0("GP", seq_len(n_gp))
+
+gp_blocks <- build_gp_gene_signature_blocks(F_pm_filtered, cutoff = 0.1, cap = 100)
+long_df <- do.call(rbind, Map(function(gp, block) {
+  cbind(GP = gp, block, stringsAsFactors = FALSE)
+}, gp_labels, gp_blocks))
+rownames(long_df) <- NULL
+
+shared <- SharedData$new(long_df, ~GP)
+bscols(
+  widths = c(3, 9),
+  filter_select("edt8wide-gp-filter", "GP", shared, ~GP),
+  DT::datatable(
+    shared,
+    rownames = FALSE,
+    filter = "top",
+    options = list(
+      pageLength = 25,
+      lengthMenu = list(c(25, 50, 100, 200, -1), c("25", "50", "100", "200", "All")),
+      scrollX = TRUE
+    )
+  ) |> DT::formatRound(columns = "Score", digits = 3)
+)
+```
+
+::: {.figcaption}
+**Extended Data Table 8 (wide format).** The comprehensive signature gene
+list for every GP, one 3-column block per GP (Gene, Direction, Score),
+listing every gene with |score| > 0.1 on the same max|.|=1-per-GP-scaled
+gene factor matrix Extended Data Table 1 uses, ranked by |score| within
+direction (up-regulated genes first, then down-regulated), and capped at the
+top 100 up- and top 100 down-regulated genes per GP. When a direction has
+more than 100 qualifying genes, one extra row immediately follows its
+(capped) gene rows -- e.g. row 101 after 100 up-regulated genes -- noting how
+many more were left out (Score blank for that row). Table 1's **Top Genes
++/-** columns are this table's top 5 per direction; this table is the full
+list. Different GPs have different signature-gene counts, so shorter blocks
+are blank-padded in the downloadable spreadsheet. See
+[Extended Data Table 8](ExtendedDataTable8.html) for the same data as a tidy
+long table (one row per gene).
+:::

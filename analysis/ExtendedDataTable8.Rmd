@@ -1,0 +1,49 @@
+---
+title: "Extended Data Table 8: comprehensive gene signature matrix"
+author: "Ziang Zhang"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+Produced by
+[`script/ExtendedDataTable8_gene_signature_matrix_long.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/ExtendedDataTable8_gene_signature_matrix_long.R):
+
+```{r edt8-code, code=readLines("../script/ExtendedDataTable8_gene_signature_matrix_long.R"), eval=FALSE}
+```
+
+## Table {#edt8}
+
+One row per signature gene: sort by clicking a column header, or use the
+search boxes under each header to filter (e.g. type `GP1_up` into the
+**signature_name** box, or a gene symbol into **gene_symbol**). Download the
+raw CSV at
+[`figures/generated/ExtendedDataTable8_gene_signature_matrix_long.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generated/ExtendedDataTable8_gene_signature_matrix_long.csv).
+The same data is also available in a per-GP-column
+[wide format](ExtendedDataTable8_wide.html).
+
+```{r edt8-preview, echo=FALSE, message=FALSE}
+suppressPackageStartupMessages(library(DT))
+tab <- read.csv("../figures/generated/ExtendedDataTable8_gene_signature_matrix_long.csv", stringsAsFactors = FALSE)
+DT::datatable(
+  tab,
+  rownames = FALSE,
+  filter = "top",
+  options = list(
+    pageLength = 25,
+    lengthMenu = list(c(25, 50, 100, 200, -1), c("25", "50", "100", "200", "All")),
+    scrollX = TRUE
+  )
+) |> DT::formatRound(columns = "score", digits = 3)
+```
+
+::: {.figcaption}
+**Extended Data Table 8.** The comprehensive signature gene list for every
+GP, as a tidy long table: one row per gene, with **signature_name**
+identifying the GP and direction it's a signature gene for (e.g. `GP1_up`)
+and **score** its factor loading. Every gene has |score| > 0.1 on the same
+max|.|=1-per-GP-scaled gene factor matrix Extended Data Table 1 uses, ranked
+by |score| within each GP-direction and capped at the top 100 up- and top 100
+down-regulated genes per GP. Table 1's **Top Genes +/-** columns are this
+table's top 5 per direction; this table is the full list.
+:::
