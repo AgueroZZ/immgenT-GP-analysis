@@ -1,0 +1,137 @@
+---
+title: "Methods: Flashier matrix factorization"
+output: workflowr::wflow_html
+---
+
+This page documents the upstream matrix factorization step that produces the
+gene programs (GPs) analyzed throughout this site. The code is shown for
+reference; it was run on the UChicago RCC cluster and its outputs (the fitted
+`flashier` object) are the starting point for all downstream analyses.
+
+## Overview
+
+We fit an empirical Bayes matrix factorization (EBMF) model to the full
+ImmGen-T scRNA-seq dataset using the
+[`flashier`](https://github.com/willwerscheid/flashier) R package. The model
+decomposes the cells × genes expression matrix into a product of a loading
+matrix (cells × GPs) and a factor matrix (GPs × genes), learning up to 200
+gene programs from the data.
+
+## Key steps
+
+### 1. Normalization
+
+Each cell's counts are log-normalized using a cell-specific scale factor equal
+to the dataset-wide mean library size (`mean(nCount_RNA)`). This "shifted
+log" normalization keeps the data on a comparable scale across cells while
+preserving count structure.
+
+### 2. Gene filtering
+
+Before factorization, we remove genes that would confound or dilute the
+biological signal:
+
+- **TCR genes** (`Trbv`, `Trav`, `Trgv`, `Trdv`, …): highly variable but
+  reflect V(D)J recombination, not transcriptional programs.
+- **Mitochondrial genes** (`mt-`): reflect cell quality rather than biology.
+- **Ribosomal genes** (`Rpl`, `Rps`, `Mrpl`, `Mrps`, `Rsl`): ubiquitously
+  expressed housekeeping genes.
+- **Pseudogenes / predicted genes** (`Gm…`, `…Rik`, `…-ps`): annotation
+  artifacts with unreliable quantification.
+- **Unexpressed genes**: genes with zero total counts across all cells.
+
+### 3. Variance regularization
+
+To set the noise level parameter `S` for `flashier`, we estimate the standard
+deviation of log-normalized Poisson noise:
+
+```r
+n <- nrow(counts)              # number of cells
+x <- rpois(1e7, 1/n)          # Poisson draws at rate 1/cell
+s1 <- sd(log(x + 1))          # SD on the shifted-log scale
+```
+
+This gives a data-driven estimate of the baseline technical noise floor,
+passed to `flash()` as the `S` argument.
+
+### 4. Flashier fit
+
+```r
+fit <- flash(shifted_log_counts,
+             ebnm_fn = c(ebnm_point_exponential, ebnm_point_laplace),
+             var_type = 2,
+             S = s1,
+             backfit = TRUE,
+             greedy_Kmax = 200L)
+```
+
+- **`ebnm_point_exponential`** for loadings (cells): enforces non-negativity,
+  so each cell's contribution to a GP is a non-negative weight.
+- **`ebnm_point_laplace`** for factors (genes): allows both positive and
+  negative gene weights within a GP, capturing genes that are up- or
+  down-regulated together.
+- **`var_type = 2`**: estimates a separate residual variance for each gene
+  (column-wise), accommodating the wide range of expression variability across
+  genes.
+- **`backfit = TRUE`**: after the greedy initialization adds up to 200
+  factors, a backfitting pass refines all factors jointly to improve the
+  overall fit.
+
+The fitted object is saved as `fit.Rds` and used for all downstream GP
+analyses on this site.
+
+## Full script
+
+```r
+# David Zemmour
+# Usage: Rscript topic_flashier_20250212.R [path_to_seurat_object] [output_dir] [backfit (True/False)]
+
+options(max.print=1000)
+options(expressions = 50000)
+
+args = commandArgs(TRUE)
+path_to_seurat_object = args[1]
+output_dir = args[2]
+backfit_option = tolower(args[3])
+
+if (backfit_option %in% c("true", "t")) {
+    backfit_option = TRUE
+} else if (backfit_option %in% c("false", "f")) {
+    backfit_option = FALSE
+}
+
+if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
+
+libs = c("fastTopics", "flashier", "Matrix", "Seurat", "BPCells")
+sapply(libs, function(x) suppressMessages(library(x, character.only = TRUE, quietly = TRUE)))
+
+so = readRDS(file = path_to_seurat_object)
+
+norm_fac = mean(so$nCount_RNA)
+so = NormalizeData(so, assay = "RNA", normalization.method = "LogNormalize", scale.factor = norm_fac)
+counts = t(so[['RNA']]$counts)
+shifted_log_counts = t(so[['RNA']]$data)
+
+tcr_genes       = grepl(rownames(so), pattern = "Trbv|Trbd|Trbj|Trbc|Trav|Traj|Trac|Trgv|Trgd|Trgj|Trgc|Trdv|Trdj|Trdc")
+gm_rik_genes    = grepl(rownames(so), pattern = "Gm|Rik$|\\-ps$")
+ribo_genes      = grepl(rownames(so), pattern = "Rpl|Rps|Mrpl|Mrps|Rsl")
+mt_genes        = grepl(rownames(so), pattern = "^mt-")
+genes_not_expressed = rowSums(so[["RNA"]]$counts) == 0
+genes_to_keep   = !(tcr_genes | gm_rik_genes | ribo_genes | mt_genes | genes_not_expressed)
+
+shifted_log_counts = shifted_log_counts[, genes_to_keep]
+counts             = counts[, genes_to_keep]
+
+n  = nrow(counts)
+x  = rpois(1e7, 1/n)
+s1 = sd(log(x + 1))
+
+fit = flash(shifted_log_counts,
+            ebnm_fn = c(ebnm_point_exponential, ebnm_point_laplace),
+            var_type = 2,
+            S = s1,
+            backfit = backfit_option,
+            greedy_Kmax = 200L)
+
+saveRDS(fit, file = sprintf("%s/fit.Rds", output_dir))
+```
