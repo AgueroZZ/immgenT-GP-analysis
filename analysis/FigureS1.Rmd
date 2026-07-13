@@ -68,7 +68,7 @@ knitr::include_graphics("assets/FigureS1/S1C.png")
 
 ## (D) Top-variance GP heatmap {#figs1d}
 
-```{r figs1d-code, code=readLines("../script/FigureS1.R")[129:158], eval=FALSE}
+```{r figs1d-code, code=readLines("../script/FigureS1.R")[129:160], eval=FALSE}
 ```
 
 ```{r figs1d-img, echo=FALSE, out.width="49%"}
@@ -77,4 +77,17 @@ knitr::include_graphics("assets/FigureS1/S1D.png")
 
 ::: {.figcaption}
 **Fig. S1D.** Heatmap of the per-IGT mean loading (same standard spleen subset, restricted to IGTs with >= 500 cells) for the ten GPs with the highest between-IGT variance from (C). Rows (GPs) are hierarchically clustered; color runs from white (low) to red (high mean loading).
+:::
+
+## (E) Active-gene vs. active-cell proportion per GP {#figs1e}
+
+```{r figs1e-code, code=readLines("../script/FigureS1.R")[165:195], eval=FALSE}
+```
+
+```{r figs1e-img, echo=FALSE, out.width="60%"}
+knitr::include_graphics("assets/FigureS1/S1E.png")
+```
+
+::: {.figcaption}
+**Fig. S1E.** For each GP, the expected number of active genes (x-axis) versus the expected proportion of active cells (y-axis), taken directly from the EBMF-learned point-mass prior of each factor (the mixture weight on the non-zero component, `1 - pi0`, with the gene x-axis rescaled to a count by the total number of genes) rather than from a hard threshold on the fitted matrices. Both axes on log scale; each dot is one of the 200 GPs. GPs that are active in more genes tend also to be active in more cells.
 :::

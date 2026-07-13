@@ -56,7 +56,7 @@ knitr::include_graphics("assets/Figure1/1C.png")
 
 ## (D) GP1 signature volcano {#fig1d}
 
-```{r fig1d-code, code=readLines("../script/Figure1.R")[270:280], eval=FALSE}
+```{r fig1d-code, code=readLines("../script/Figure1.R")[284:290], eval=FALSE}
 ```
 
 ```{r fig1d-img, echo=FALSE, out.width="50%"}
@@ -69,7 +69,7 @@ knitr::include_graphics("assets/Figure1/1D.png")
 
 ## (E) Active-cell proportion per GP {#fig1e}
 
-```{r fig1e-code, code=readLines("../script/Figure1.R")[194:204], eval=FALSE}
+```{r fig1e-code, code=readLines("../script/Figure1.R")[194:209], eval=FALSE}
 ```
 
 ```{r fig1e-img, echo=FALSE, out.width="50%"}
@@ -77,12 +77,12 @@ knitr::include_graphics("assets/Figure1/1E.png")
 ```
 
 ::: {.figcaption}
-**Fig. 1E.** Histogram of the proportion of cells with high loading (> 0.1) per GP, across all 200 GPs.
+**Fig. 1E.** Histogram of the proportion of cells with high loading (> 0.1) per GP, across all 200 GPs (x-axis on log scale).
 :::
 
 ## (F) Active-gene count per GP {#fig1f}
 
-```{r fig1f-code, code=readLines("../script/Figure1.R")[259:268], eval=FALSE}
+```{r fig1f-code, code=readLines("../script/Figure1.R")[264:273], eval=FALSE}
 ```
 
 ```{r fig1f-img, echo=FALSE, out.width="50%"}
@@ -90,12 +90,12 @@ knitr::include_graphics("assets/Figure1/1F.png")
 ```
 
 ::: {.figcaption}
-**Fig. 1F.** Histogram of the number of highly-active genes (|score| > 0.25 of that GP's max) per GP.
+**Fig. 1F.** Histogram of the number of highly-active genes (|score| > 0.25 of that GP's max) per GP (x-axis on log scale).
 :::
 
 ## (G) Active-GP count by lineage {#fig1g}
 
-```{r fig1g-code, code=readLines("../script/Figure1.R")[224:243], eval=FALSE}
+```{r fig1g-code, code=readLines("../script/Figure1.R")[229:248], eval=FALSE}
 ```
 
 ```{r fig1g-img, echo=FALSE, out.width="50%"}
@@ -108,7 +108,7 @@ knitr::include_graphics("assets/Figure1/1G.png")
 
 ## (H) Active-GP count, activated vs. resting {#fig1h}
 
-```{r fig1h-code, code=readLines("../script/Figure1.R")[206:222], eval=FALSE}
+```{r fig1h-code, code=readLines("../script/Figure1.R")[211:227], eval=FALSE}
 ```
 
 ```{r fig1h-img, echo=FALSE, out.width="50%"}
@@ -121,7 +121,7 @@ knitr::include_graphics("assets/Figure1/1H.png")
 
 ## (I) CD44 vs. active-GP count {#fig1i}
 
-```{r fig1i-code, code=readLines("../script/Figure1.R")[245:257], eval=FALSE}
+```{r fig1i-code, code=readLines("../script/Figure1.R")[250:262], eval=FALSE}
 ```
 
 ```{r fig1i-img, echo=FALSE, out.width="50%"}

@@ -199,9 +199,14 @@ hist(gp_active_cell_counts, breaks = 100, xlab = "Number of highly active cells 
 dev.off()
 
 gp_active_cell_prop <- gp_active_cell_counts / nrow(L_pm_norm_col)
-pdf(paste0(figure_path, "1E.pdf"), width = 6, height = 4, useDingbats = FALSE) # hist_active_cells_prop_per_GP
-hist(gp_active_cell_prop, breaks = 100, xlab = "Proportion of highly active cells per GP", main = "Histogram of highly active cells per GP (proportion)", freq = TRUE)
-dev.off()
+p_1E <- ggplot(data.frame(prop = gp_active_cell_prop), aes(x = prop)) +
+  geom_histogram(bins = 40, fill = "steelblue", color = "white") +
+  scale_x_log10(labels = scales::label_percent()) +
+  annotation_logticks(sides = "b") +
+  labs(x = "Proportion of highly active cells per GP (log scale)", y = "Count",
+       title = "Histogram of highly active cells per GP (proportion)") +
+  theme_minimal(base_size = 13)
+ggsave(filename = paste0(figure_path, "1E.pdf"), plot = p_1E, width = 6, height = 4, dpi = 300)
 
 cells_activated <- seurat_meta_filtered$cellID[seurat_meta_filtered$annotation_level2_group == "activated"]
 L_pm_activated <- L_pm_filtered[seurat_meta_filtered$cellID %in% cells_activated, ]
@@ -258,9 +263,14 @@ ggsave(filename = paste0(figure_path, "1I.pdf"), plot = p_1I, width = 6, height 
 
 F_pm_norm_col <- F_pm_filtered / matrix(apply(F_pm_filtered, 2, function(x) max(abs(x))), nrow = nrow(F_pm_filtered), ncol = ncol(F_pm_filtered), byrow = TRUE)
 gp_active_gene_counts <- colSums(abs(F_pm_norm_col) > 0.25)
-pdf(paste0(figure_path, "1F.pdf"), width = 6, height = 4, useDingbats = FALSE) # hist_active_genes_per_GP
-hist(gp_active_gene_counts, breaks = 100, xlab = "Number of highly active genes per GP", main = "Histogram of highly active genes per GP", freq = TRUE)
-dev.off()
+p_1F <- ggplot(data.frame(count = gp_active_gene_counts), aes(x = count)) +
+  geom_histogram(bins = 40, fill = "steelblue", color = "white") +
+  scale_x_log10(labels = scales::label_comma()) +
+  annotation_logticks(sides = "b") +
+  labs(x = "Number of highly active genes per GP (log scale)", y = "Count",
+       title = "Histogram of highly active genes per GP") +
+  theme_minimal(base_size = 13)
+ggsave(filename = paste0(figure_path, "1F.pdf"), plot = p_1F, width = 6, height = 4, dpi = 300)
 
 gp_active_gene_prop <- gp_active_gene_counts / nrow(F_pm_norm_col)
 pdf(paste0(figure_path, "hist_active_genes_prop_per_GP.pdf"), width = 6, height = 4, useDingbats = FALSE)
