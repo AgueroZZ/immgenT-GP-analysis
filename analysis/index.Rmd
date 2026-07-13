@@ -25,6 +25,7 @@ produced it, the figure itself, and a short caption explaining what it shows.
 + [Figure S1: GP reproducibility across IGTs](FigureS1.html)
 + [Figure S2: GP30 and GP58 loadings across T-cell subsets](FigureS2.html)
 + [Figure S3: Characterizing activation GPs](FigureS3.html)
++ [Figure S4: Healthy non-thymocyte GP mean-loading heatmaps](FigureS4.html)
 + [Figure S6: GP loadings recover protein-gated populations across GPs](FigureS6.html)
 
 ## Extended Data tables

@@ -1,0 +1,87 @@
+---
+title: "Figure S4: Healthy non-thymocyte GP mean-loading heatmaps"
+author: "Ziang Zhang"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+Figure S4 is produced by
+[`script/FigureS4.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS4.R).
+The page provides raw and within-GP-normalized alternatives as clickable tabs
+for each panel; no display choice has been finalized. The code is shown for
+reference and is not re-executed on this page. All panels use healthy
+non-thymocyte cells (`condition_broad == "healthy"` and
+`annotation_level1 != "thymocyte"`).
+
+## Setup, filtering, and ordering
+
+```{r figs4-setup, code=readLines("../script/FigureS4.R")[1:238], eval=FALSE}
+```
+
+## (a) Tissue mean loading {#figs4a .tabset}
+
+Both alternatives retain the same 31 GPs and 18 `organ_simplified` tissues.
+GPs are retained only when a tissue has raw mean loading >= 0.1; the
+dominant-group order is calculated on that filtered raw matrix. The normalized
+values are calculated before filtering, so each displayed GP has a raw mean
+maximum of at least 0.1.
+
+### Raw mean loading
+
+```{r figs4a-raw-img, echo=FALSE, out.width="100%"}
+knitr::include_graphics("assets/FigureS4/S4a_raw_mean_loading.png")
+```
+
+::: {.figcaption}
+**Fig. S4a, raw alternative.** Mean GP loading across healthy non-thymocyte
+tissues. Rows and columns follow dominant-group blocks: each GP is assigned to
+the tissue with its largest raw mean loading; tissues are ordered by their
+number of dominant GPs, and GPs within a block by dominance gap.
+:::
+
+### Within-GP normalized mean loading
+
+```{r figs4a-normalized-img, echo=FALSE, out.width="100%"}
+knitr::include_graphics("assets/FigureS4/S4a_normalized_mean_loading.png")
+```
+
+::: {.figcaption}
+**Fig. S4a, normalized alternative.** The same retained GPs, tissues, and
+dominant-group order as the raw view, with each GP divided by its largest raw
+tissue mean before filtering. This view emphasizes relative tissue preference.
+:::
+
+## (b) Level2 mean loading {#figs4b .tabset}
+
+Both alternatives retain the same 64 GPs and 107 `annotation_level2` clusters.
+The same raw-mean cutoff and dominant-group ordering rule are used as in panel
+(a). Every displayed GP has a raw mean maximum of at least 0.1.
+
+### Raw mean loading
+
+```{r figs4b-raw-img, echo=FALSE, out.width="100%"}
+knitr::include_graphics("assets/FigureS4/S4b_raw_mean_loading.png")
+```
+
+::: {.figcaption}
+**Fig. S4b, raw alternative.** Mean GP loading across healthy non-thymocyte
+level2 clusters. Clusters and GPs use the filtered dominant-group order.
+:::
+
+### Within-GP normalized mean loading
+
+```{r figs4b-normalized-img, echo=FALSE, out.width="100%"}
+knitr::include_graphics("assets/FigureS4/S4b_normalized_mean_loading.png")
+```
+
+::: {.figcaption}
+**Fig. S4b, normalized alternative.** The same retained GPs, level2 clusters,
+and dominant-group order as the raw view, with within-GP normalization applied
+before filtering.
+:::
+
+## Panel rendering
+
+```{r figs4-rendering, code=readLines("../script/FigureS4.R")[240:300], eval=FALSE}
+```

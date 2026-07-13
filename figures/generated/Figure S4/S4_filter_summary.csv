@@ -1,0 +1,3 @@
+panel,grouping,raw_mean_cutoff,full_gp_count,retained_gp_count,full_group_count,retained_group_count
+S4a,organ_simplified,0.1,200,31,18,18
+S4b,annotation_level2,0.1,200,64,107,107
