@@ -19,7 +19,7 @@ Data loading, shared across all panels below.
 ```{r fig1-setup1, code=readLines("../script/Figure1.R")[42:68], eval=FALSE}
 ```
 
-Panels C and E-I additionally restrict to non-thymocyte cells:
+Panels E-I additionally restrict to non-thymocyte cells:
 
 ```{r fig1-setup2, code=readLines("../script/Figure1.R")[102:107], eval=FALSE}
 ```
@@ -41,22 +41,31 @@ knitr::include_graphics("assets/Figure1/1A.png")
 
 This panel is a hand-drawn schematic, not generated from R -- there is no code or pre-rendered image to show here. See `figures/final-selected/bits/Figure 1/1B.pdf` for the published panel.
 
-## (C) GP loading heatmap {#fig1c}
+## (C) Gene-program network {#fig1c}
 
-```{r fig1c-code, code=readLines("../script/Figure1.R")[109:183], eval=FALSE}
+```{r fig1c-code, code=readLines("../script/Figure1.R")[109:193], eval=FALSE}
 ```
 
-```{r fig1c-img, echo=FALSE, out.width="50%"}
+```{r fig1c-img, echo=FALSE, out.width="70%"}
 knitr::include_graphics("assets/Figure1/1C.png")
 ```
 
 ::: {.figcaption}
-**Fig. 1C.** Heatmap of all 200 GP loadings across a stratified sample of cells, ordered by lineage then organ; columns (GPs) are clustered by similarity.
+**Fig. 1C. Gene-program (GP) network.** A map of the 200 GPs and the signature
+genes they share. Each GP's loadings are first normalized within the GP (divided
+by that GP's maximum absolute loading, so loadings run 0–1), and every GP is
+connected to its **top 10 up-regulated signature genes** (largest positive
+normalized loadings, ≥ 0.1). **Blue balls are GPs** (numbered) and **tan balls
+are genes**; an edge joins a GP to each of its top signature genes, so a gene
+that appears among several GPs' top genes links those GPs. Five **marker genes**
+(legend: *Foxp3, Cd8a, Cd8b1,
+Izumo1r* [FR4], *Il2ra*) are highlighted, each in its own color shared by the
+gene's ball and its edges, indicating which GPs carry that marker.
 :::
 
 ## (D) GP1 signature volcano {#fig1d}
 
-```{r fig1d-code, code=readLines("../script/Figure1.R")[284:290], eval=FALSE}
+```{r fig1d-code, code=readLines("../script/Figure1.R")[294:300], eval=FALSE}
 ```
 
 ```{r fig1d-img, echo=FALSE, out.width="50%"}
@@ -69,7 +78,7 @@ knitr::include_graphics("assets/Figure1/1D.png")
 
 ## (E) Active-cell proportion per GP {#fig1e}
 
-```{r fig1e-code, code=readLines("../script/Figure1.R")[194:209], eval=FALSE}
+```{r fig1e-code, code=readLines("../script/Figure1.R")[204:219], eval=FALSE}
 ```
 
 ```{r fig1e-img, echo=FALSE, out.width="50%"}
@@ -82,7 +91,7 @@ knitr::include_graphics("assets/Figure1/1E.png")
 
 ## (F) Active-gene count per GP {#fig1f}
 
-```{r fig1f-code, code=readLines("../script/Figure1.R")[264:273], eval=FALSE}
+```{r fig1f-code, code=readLines("../script/Figure1.R")[274:283], eval=FALSE}
 ```
 
 ```{r fig1f-img, echo=FALSE, out.width="50%"}
@@ -95,7 +104,7 @@ knitr::include_graphics("assets/Figure1/1F.png")
 
 ## (G) Active-GP count by lineage {#fig1g}
 
-```{r fig1g-code, code=readLines("../script/Figure1.R")[229:248], eval=FALSE}
+```{r fig1g-code, code=readLines("../script/Figure1.R")[239:258], eval=FALSE}
 ```
 
 ```{r fig1g-img, echo=FALSE, out.width="50%"}
@@ -108,7 +117,7 @@ knitr::include_graphics("assets/Figure1/1G.png")
 
 ## (H) Active-GP count, activated vs. resting {#fig1h}
 
-```{r fig1h-code, code=readLines("../script/Figure1.R")[211:227], eval=FALSE}
+```{r fig1h-code, code=readLines("../script/Figure1.R")[221:237], eval=FALSE}
 ```
 
 ```{r fig1h-img, echo=FALSE, out.width="50%"}
@@ -121,7 +130,7 @@ knitr::include_graphics("assets/Figure1/1H.png")
 
 ## (I) CD44 vs. active-GP count {#fig1i}
 
-```{r fig1i-code, code=readLines("../script/Figure1.R")[250:262], eval=FALSE}
+```{r fig1i-code, code=readLines("../script/Figure1.R")[260:272], eval=FALSE}
 ```
 
 ```{r fig1i-img, echo=FALSE, out.width="50%"}
