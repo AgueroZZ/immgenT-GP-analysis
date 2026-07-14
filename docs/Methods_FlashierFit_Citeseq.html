@@ -11,7 +11,7 @@
 
 
 
-<title>Matrix factorization analyses of the immgenT scRNA-seq data</title>
+<title>Fitting CITE-seq protein programs with fixed scRNA loadings</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -352,8 +352,8 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Matrix factorization analyses of the
-immgenT scRNA-seq data</h1>
+<h1 class="title toc-ignore">Fitting CITE-seq protein programs with
+fixed scRNA loadings</h1>
 
 </div>
 
@@ -382,11 +382,11 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-12
+<strong>Last updated:</strong> 2026-07-14
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 1
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span> 1
 </p>
@@ -421,10 +421,10 @@ changes </a>
 <div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of
-the R Markdown file created these results, you’ll want to first commit
-it to the Git repo. If you’re still working on the analysis, you can
-ignore this warning. When you’re finished, you can run
+<p>The R Markdown is untracked by Git. To know which version of the R
+Markdown file created these results, you’ll want to first commit it to
+the Git repo. If you’re still working on the analysis, you can ignore
+this warning. When you’re finished, you can run
 <code>wflow_publish</code> to commit the R Markdown file and build the
 HTML.</p>
 </div>
@@ -433,15 +433,99 @@ HTML.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec5cbc77fcf5f5b88f45d2334dc18c65bac9defc1targetblankc5cbc77a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed1code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(1)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed1code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(1)</code> was run prior to running the
+code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec344aaac0f40cec3809038031fd2a44e7e90baf7targetblankc344aaaa">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c5cbc77fcf5f5b88f45d2334dc18c65bac9defc1" target="_blank">c5cbc77</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c344aaac0f40cec3809038031fd2a44e7e90baf7" target="_blank">c344aaa</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec5cbc77fcf5f5b88f45d2334dc18c65bac9defc1targetblankc5cbc77a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec344aaac0f40cec3809038031fd2a44e7e90baf7targetblankc344aaaa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -451,7 +535,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c5cbc77fcf5f5b88f45d2334dc18c65bac9defc1" target="_blank">c5cbc77</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c344aaac0f40cec3809038031fd2a44e7e90baf7" target="_blank">c344aaa</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -492,16 +576,39 @@ Ignored files:
     Ignored:    figures/generated/Figure 7/
     Ignored:    figures/generated/Figure 8/
     Ignored:    figures/generated/Figure 9/
+    Ignored:    tmp/
 
 Untracked files:
-    Untracked:  analysis/Methods_FlashierFit.Rmd
+    Untracked:  analysis/Methods_FlashierFit_Citeseq.Rmd
     Untracked:  code/other/
-    Untracked:  experiments/
+    Untracked:  experiments/active_metric_comparison/
+    Untracked:  experiments/figure6b_sparsity_ordered/
+    Untracked:  experiments/gene_correlation_network/
+    Untracked:  experiments/gene_umap_gp_space/
+    Untracked:  experiments/surface_protein_activation_scatter/
+    Untracked:  log/2026-07-13-surface-protein-activation-scatter.md
+    Untracked:  log/2026-07-14-citeseq-normalization-ebmf-methods.md
+    Untracked:  plan/2026-07-13-active-cell-gene-metrics-exploration.md
+    Untracked:  plan/2026-07-13-surface-protein-activation-scatter.md
+    Untracked:  plan/2026-07-13_figure6b_triangular_order_plan.md
+    Untracked:  plan/2026-07-13_figure6b_wide_gp_columns_formal_plan.md
+    Untracked:  plan/2026-07-14-citeseq-normalization-ebmf-methods.md
     Untracked:  tables/
 
 Unstaged changes:
+    Modified:   analysis/Figure6.Rmd
+    Modified:   analysis/Methods_FlashierFit.Rmd
+    Modified:   analysis/assets/Figure6/6b.png
     Modified:   analysis/index.Rmd
+    Modified:   code/README.md
+    Modified:   code/pipeline/01_extract_data.R
+    Modified:   code/pipeline/04_protein_projection.R
+    Modified:   figures/generated/Figure 6/6b.pdf
+    Modified:   script/Figure1.R
     Modified:   script/Figure3.R
+    Modified:   script/Figure6.R
+    Modified:   script/FigureS2.R
+    Modified:   script/FigureS6.R
 
 </code></pre>
 <p>
@@ -517,336 +624,250 @@ have uncommitted changes.
 </div>
 <div id="versions" class="tab-pane fade">
 <p>
-These are the previous versions of the repository in which changes were
-made to the R Markdown (<code>analysis/index.Rmd</code>) and HTML
-(<code>docs/index.html</code>) files. If you’ve configured a remote Git
-repository (see <code>?wflow_git_remote</code>), click on the hyperlinks
-in the table below to view the files as they were in that past version.
+There are no past versions. Publish this analysis with
+<code>wflow_publish()</code> to start tracking its development.
 </p>
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-File
-</th>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-<th>
-Message
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/c5cbc77fcf5f5b88f45d2334dc18c65bac9defc1/docs/index.html" target="_blank">c5cbc77</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-08
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/fb8c85584373feeb4e399f68e6da4079a90e00a7/analysis/index.Rmd" target="_blank">fb8c855</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-08
-</td>
-<td>
-Add Extended Data Table 8: comprehensive gene signature matrix (long +
-wide)
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/92d1365b6404711bd94bd048888cf7f8346357cc/docs/index.html" target="_blank">92d1365</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-05
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/d07f797e4bbdb9e29a8bd6e63ae67abd5ec5ef00/analysis/index.Rmd" target="_blank">d07f797</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-05
-</td>
-<td>
-Replace Table S1/S2/S3 with 7 fully-reproducible Extended Data Tables
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/92021bffd83748fb85fed21cf4e1cbd02841d2bc/docs/index.html" target="_blank">92021bf</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-03
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/827c89bb68d46edabd11ed0710b3521b18c9eff8/docs/index.html" target="_blank">827c89b</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/f9db9620c74c5c7a9d7d2ec345b81fd4c17575af/analysis/index.Rmd" target="_blank">f9db962</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-<td>
-Simplify layout: drop old code/script folders, rename
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/c6e508625ce14c67840f299c63a5eb5dff3f53a5/docs/index.html" target="_blank">c6e5086</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/5a79883bb418ca3568e51f1b18b2c6303a053e6c/docs/index.html" target="_blank">5a79883</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/2b0e44573e40e8ea8f93667f6887866b2470be78/analysis/index.Rmd" target="_blank">2b0e445</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-<td>
-Fix GitHub source links to point at the new
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/cf1d0ac969c4ba22fa2d74cec44f8f4384101f8a/docs/index.html" target="_blank">cf1d0ac</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/06b2461eba2147f353f2ce082bdebe22f5dcee26/analysis/index.Rmd" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-<td>
-Initial commit: immgenT-GP-analysis
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/06b2461eba2147f353f2ce082bdebe22f5dcee26/docs/index.html" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-<td>
-Initial commit: immgenT-GP-analysis
-</td>
-</tr>
-</tbody>
-</table>
-</div>
 <hr>
 </div>
 </div>
 </div>
-<p>This site documents the gene program (GP) factorization analysis of
-the ImmGen-T single-cell RNA-seq/CITE-seq data: ~200 GPs learned by
-empirical Bayes matrix factorization (EBMF), and how they relate to cell
-lineage, tissue, activation state, transcription factors, and surface
-protein expression.</p>
-<p>Each page below covers one published figure: for every panel, the R
-code that produced it, the figure itself, and a short caption explaining
-what it shows.</p>
-<div id="main-figures" class="section level2">
-<h2>Main figures</h2>
+<p>This page documents the CITE-seq protein factorization used to
+connect surface proteins to the scRNA-derived gene programs (GPs). The
+workflow reads the provided Seurat object, extracts and log-normalizes
+its ADT assay, and uses the cell loadings learned from the scRNA-seq
+EBMF fit as fixed covariates to estimate a protein score for each
+GP.</p>
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>Let <span class="math inline">\(Y\)</span> be the cells-by-proteins
+matrix of log-normalized ADT measurements and let <span
+class="math inline">\(L\)</span> be the cells-by-GPs loading matrix from
+the scRNA-seq fit. We estimate the protein-by-GPs score matrix <span
+class="math inline">\(U\)</span> in</p>
+<p><span class="math display">\[
+Y \approx L U^T,
+\]</span></p>
+<p>while keeping <span class="math inline">\(L\)</span> fixed. An
+ordinary least-squares projection initializes <span
+class="math inline">\(U\)</span>; <code>flashier</code> then refines the
+protein scores under point-Laplace priors and protein-specific residual
+variances.</p>
+<p>The complete cluster-scale source scripts are:</p>
 <ul>
-<li><a href="Figure1.html">Figure 1: Overview</a></li>
-<li><a href="Figure2.html">Figure 2: GPs and lineages</a></li>
-<li><a href="Figure3.html">Figure 3: GPs associated with T-cell
-activation</a></li>
-<li><a href="Figure4.html">Figure 4: GPs and tissue</a></li>
-<li><a href="Figure6.html">Figure 6: Linking GPs to proteins</a></li>
+<li><a
+href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/code/other/prepare_citeseq_protein_matrices_20260206.R"><code>prepare_citeseq_protein_matrices_20260206.R</code></a></li>
+<li><a
+href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/code/other/fit_citeseq_fixed_loading_ebmf_20260206.R"><code>fit_citeseq_fixed_loading_ebmf_20260206.R</code></a></li>
 </ul>
 </div>
-<div id="supplementary-figures" class="section level2">
-<h2>Supplementary figures</h2>
-<ul>
-<li><a href="FigureS1.html">Figure S1: GP reproducibility across
-IGTs</a></li>
-<li><a href="FigureS2.html">Figure S2: GP30 and GP58 loadings across
-T-cell subsets</a></li>
-<li><a href="FigureS3.html">Figure S3: Characterizing activation
-GPs</a></li>
-<li><a href="FigureS4.html">Figure S4: Healthy non-thymocyte GP
-mean-loading heatmaps</a></li>
-<li><a href="FigureS6.html">Figure S6: GP loadings recover protein-gated
-populations across GPs</a></li>
-</ul>
+<div id="key-steps" class="section level2">
+<h2>Key steps</h2>
+<div id="setup" class="section level3">
+<h3>0. Setup</h3>
+<p>The script takes the path to a provided Seurat object and an analysis
+directory. After loading the required packages, it reads the object and
+its cell metadata. The object must contain an <code>ADT</code> assay and
+the <code>cellID</code>, <code>cite_seq</code>, and
+<code>nCount_ADT</code> metadata columns.</p>
+<pre class="r"><code>library(flashier)
+library(Seurat)
+
+seurat_obj &lt;- readRDS(path_to_seurat_object)
+seurat_meta &lt;- seurat_obj@meta.data</code></pre>
 </div>
-<div id="extended-data-tables" class="section level2">
-<h2>Extended Data tables</h2>
-<ul>
-<li><a href="ExtendedDataTable1.html">Extended Data Table 1: summary of
-GP characteristics and annotations</a></li>
-<li><a href="ExtendedDataTable2.html">Extended Data Table 2: GP AUC by
-lineage</a></li>
-<li><a href="ExtendedDataTable3.html">Extended Data Table 3: GP AUC by
-tissue</a></li>
-<li><a href="ExtendedDataTable4.html">Extended Data Table 4: GP AUC by
-cluster</a></li>
-<li><a href="ExtendedDataTable5.html">Extended Data Table 5: GP during
-activation</a></li>
-<li><a href="ExtendedDataTable6.html">Extended Data Table 6: protein
-factor matrix</a></li>
-<li><a href="ExtendedDataTable7.html">Extended Data Table 7: protein
-gating</a></li>
-<li><a href="ExtendedDataTable8.html">Extended Data Table 8:
-comprehensive gene signature matrix</a> (<a
-href="ExtendedDataTable8_wide.html">wide format</a>)</li>
-</ul>
+<div id="adt-normalization" class="section level3">
+<h3>1. ADT normalization</h3>
+<p>The ADT assay is stored with proteins in rows and cells in columns.
+We use Seurat <code>LogNormalize</code> with the rounded mean ADT
+library size as the scale factor, then transpose the result so that
+cells are rows and proteins are columns.</p>
+<pre class="r"><code>adt_scale_factor &lt;- round(mean(seurat_meta$nCount_ADT, na.rm = TRUE))
+
+seurat_obj &lt;- NormalizeData(
+  seurat_obj,
+  assay = &quot;ADT&quot;,
+  normalization.method = &quot;LogNormalize&quot;,
+  scale.factor = adt_scale_factor
+)
+protein_mat_normalized_lognorm &lt;- t(seurat_obj[[&quot;ADT&quot;]]$data)
+saveRDS(
+  protein_mat_normalized_lognorm,
+  file.path(data_path, &quot;protein_mat_normalized_lognorm.rds&quot;)
+)</code></pre>
+<p>For cell <span class="math inline">\(i\)</span> and protein <span
+class="math inline">\(j\)</span>, the normalized value is</p>
+<p><span class="math display">\[
+Y_{ij} = \log\left(1 + \frac{C_{ij}}{\sum_q C_{iq}} \times s\right),
+\]</span></p>
+<p>where <span class="math inline">\(C_{ij}\)</span> is the raw ADT
+count and <span class="math inline">\(s\)</span> is
+<code>adt_scale_factor</code>.</p>
 </div>
-<div id="methods" class="section level2">
-<h2>Methods</h2>
-<ul>
-<li><a href="Methods_FlashierFit.html">Fitting EBMF using
-flashier</a></li>
-<li><a href="Methods_FlashierFit_Citeseq.html">Fitting CITE-seq protein
-programs with fixed scRNA loadings</a></li>
-</ul>
+<div id="select-measured-cells-and-align-matrices"
+class="section level3">
+<h3>2. Select measured cells and align matrices</h3>
+<p>Only cells marked <code>cite_seq == TRUE</code> are eligible. Their
+cell IDs are intersected explicitly with both the normalized protein
+matrix and the scRNA loading matrix, then both matrices are placed in
+the same order before fitting.</p>
+<pre class="r"><code>cells_measured &lt;- seurat_meta$cellID[
+  !is.na(seurat_meta$cite_seq) &amp; seurat_meta$cite_seq
+]
+cells_used &lt;- cells_measured[
+  cells_measured %in% rownames(protein_mat_normalized_lognorm) &amp;
+    cells_measured %in% rownames(scRNA_result$L_pm)
+]
+
+L_mat &lt;- scRNA_result$L_pm[cells_used, , drop = FALSE]
+protein_mat_normalized &lt;- as.matrix(
+  protein_mat_normalized_lognorm[cells_used, , drop = FALSE]
+)</code></pre>
 </div>
-<div id="reproducing-these-figures" class="section level2">
-<h2>Reproducing these figures</h2>
-<p>Every page above is generated by a single R script in <a
-href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/main/script"><code>script/</code></a>,
-which sources shared plotting/data-loading helpers from <a
-href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/main/code/R"><code>code/R/</code></a>.
-To regenerate a figure yourself, run (from the repository root):</p>
-<pre><code>Rscript script/Figure1.R</code></pre>
+<div id="ols-initialization" class="section level3">
+<h3>3. OLS initialization</h3>
+<p>With <span class="math inline">\(L\)</span> fixed, the least-squares
+initialization is</p>
+<p><span class="math display">\[
+\hat U^T = (L^T L)^{-1} L^T Y.
+\]</span></p>
+<p>The implementation uses a QR decomposition instead of forming the
+inverse explicitly.</p>
+<pre class="r"><code>qrL &lt;- qr(L_mat)
+U_t &lt;- qr.coef(qrL, protein_mat_normalized)
+U &lt;- t(U_t)
+saveRDS(U, file.path(data_path, &quot;protein_projection_OLS_lognorm.rds&quot;))</code></pre>
+</div>
+<div id="fixed-loading-flashier-fit" class="section level3">
+<h3>4. Fixed-loading flashier fit</h3>
+<p>The OLS protein scores initialize <code>flashier</code>. The cell
+loading for every GP is then fixed, so backfitting updates the protein
+scores and residual variances but does not alter the scRNA-derived
+cellular programs.</p>
+<ul>
+<li><code>ebnm_point_laplace</code> allows each protein score to be
+exactly zero or positive or negative.</li>
+<li><code>var_type = 2</code> estimates a separate residual variance for
+every protein.</li>
+<li><code>flash_factors_fix(..., which_dim = "loadings")</code> fixes
+all columns of <span class="math inline">\(L\)</span>.</li>
+</ul>
+<pre class="r"><code>flash_fixed_loading &lt;- flash_init(protein_mat_normalized, var_type = 2) |&gt;
+  flash_set_verbose(1) |&gt;
+  flash_factors_init(
+    list(L_mat, U),
+    ebnm_fn = ebnm_point_laplace
+  ) |&gt;
+  flash_factors_fix(
+    kset = seq_len(ncol(L_mat)),
+    which_dim = &quot;loadings&quot;
+  )</code></pre>
+</div>
+<div id="backfitting-schedule" class="section level3">
+<h3>5. Backfitting schedule</h3>
+<p>The fit is checkpointed after 20, 40, 80, 120, 160, and 200
+cumulative iterations. Extrapolation is disabled for the first two
+20-iteration stages and enabled for each subsequent 40-iteration
+stage.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Cumulative iteration</th>
+<th align="right">Additional iterations</th>
+<th align="left">Extrapolate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">20</td>
+<td align="right">20</td>
+<td align="left">No</td>
+</tr>
+<tr class="even">
+<td align="right">40</td>
+<td align="right">20</td>
+<td align="left">No</td>
+</tr>
+<tr class="odd">
+<td align="right">80</td>
+<td align="right">40</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="right">120</td>
+<td align="right">40</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="right">160</td>
+<td align="right">40</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="right">200</td>
+<td align="right">40</td>
+<td align="left">Yes</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>checkpoint_schedule &lt;- data.frame(
+  cumulative_iterations = c(20L, 40L, 80L, 120L, 160L, 200L),
+  additional_iterations = c(20L, 20L, 40L, 40L, 40L, 40L),
+  extrapolate = c(FALSE, FALSE, TRUE, TRUE, TRUE, TRUE)
+)
+
+for (i in seq_len(nrow(checkpoint_schedule))) {
+  flash_fixed_loading &lt;- flash_backfit(
+    flash_fixed_loading,
+    extrapolate = checkpoint_schedule$extrapolate[[i]],
+    maxiter = checkpoint_schedule$additional_iterations[[i]],
+    verbose = 2
+  )
+  # The source script saves both the full fit and a compact summary here.
+}</code></pre>
+<p>The final compact output,
+<code>protein_flash_selected_summary_lognorm_backfit200.rds</code>,
+contains <code>L_pm</code>, <code>F_pm</code>, <code>pve</code>,
+<code>elbo</code>, and <code>residuals_sd</code>. This is the
+protein-program matrix used by Figure 6, Figure S6, and the
+protein-related Extended Data tables.</p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.5.1 (2025-06-13)
+Platform: aarch64-apple-darwin20
+Running under: macOS Sequoia 15.6.1
+
+Matrix products: default
+BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] C.UTF-8/C.UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8
+
+time zone: Asia/Shanghai
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base
+
+loaded via a namespace (and not attached):
+ [1] vctrs_0.7.3     cli_3.6.6       knitr_1.50      rlang_1.2.0
+ [5] xfun_0.55       stringi_1.8.7   otel_0.2.0      promises_1.5.0
+ [9] jsonlite_2.0.0  workflowr_1.7.2 glue_1.8.1      rprojroot_2.1.1
+[13] git2r_0.36.2    htmltools_0.5.9 httpuv_1.6.16   sass_0.4.10
+[17] rmarkdown_2.30  evaluate_1.0.5  jquerylib_0.1.4 tibble_3.3.0
+[21] fastmap_1.2.0   yaml_2.3.12     lifecycle_1.0.5 stringr_1.6.0
+[25] compiler_4.5.1  fs_1.6.6        Rcpp_1.1.1-1.1  pkgconfig_2.0.3
+[29] later_1.4.4     digest_0.6.39   R6_2.6.1        pillar_1.11.1
+[33] magrittr_2.0.5  bslib_0.9.0     tools_4.5.1     cachem_1.1.0   </code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>

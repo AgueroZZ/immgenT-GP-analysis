@@ -24,11 +24,10 @@
 # see code/README.md's "Data provenance" table for the full picture:
 #   L_pm_filtered.rds, F_pm_filtered.rds        [code/pipeline/01b_filter_cells.R]
 #   igt1_96_..._ADTonly.Rds                     [primary input Seurat object]
-#   protein_mat_normalized_lognorm.rds          [gap, no producer script here]
+#   protein_mat_normalized_lognorm.rds          [code/other/prepare_citeseq_protein_matrices_20260206.R]
 #   umap_result.rds                             [gap, no producer script here]
 #   protein_flash_selected_summary_lognorm_backfit200.rds
-#     [gap -- code/pipeline/04_protein_projection.R produces the
-#     non-backfit200 variant, not this exact file]
+#     [code/other/fit_citeseq_fixed_loading_ebmf_20260206.R]
 #   TableS4_citeseq_qc_20250513.csv             [external: manuscript's own Table S4]
 #   Thresholds_Selected_Proteins.csv            [code/pipeline/03_protein_thresholds.R]
 #   CITEseq_markers_full.rds                    [code/pipeline/04_protein_projection.R, using the

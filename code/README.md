@@ -26,8 +26,10 @@ one-command rebuild** — several steps are cluster-scale (need the full
 meant to be run against the trimmed `data/` directory shipped in this repo,
 which already contains their cached outputs.
 
-1. `01_extract_data.R` — raw Seurat object -> gene-filtered RNA counts,
-   CITE-seq protein matrix, condensed factorization summary.
+1. `01_extract_data.R` — historical full-object extraction -> gene-filtered
+   RNA counts, raw/CLR CITE-seq matrices, and a condensed factorization summary.
+   For the authoritative 20260206 protein workflow and LogNormalize matrix, use
+   `other/prepare_citeseq_protein_matrices_20260206.R`.
 2. `01b_filter_cells.R` — filters cells by total GP membership, producing
    `L_pm_filtered.rds`/`F_pm_filtered.rds` (unlike `01_extract_data.R`,
    this one *is* runnable against the `data/` in this repo).
@@ -39,10 +41,18 @@ which already contains their cached outputs.
 4. `03_protein_thresholds.R` — GMM + manual protein positivity thresholds
    (feeds Figure6, FigureS6).
 5. `04_protein_projection.R` — projects CITE-seq protein data onto the
-   fixed scRNA cell loadings (Figure 6's caption panel (a) schematic), and
-   derives `CITEseq_markers_full.rds`.
+   fixed scRNA cell loadings using the shorter historical backfit, and derives
+   `CITEseq_markers_full.rds`. The complete 20-to-200 checkpoint workflow is
+   preserved under `other/` below.
 6. `05_igt_validation.R` — per-batch (IGT) reproducibility validation
    (feeds FigureS1).
+
+## other/ — cluster-scale source workflows
+
+| File | Contents |
+|---|---|
+| `prepare_citeseq_protein_matrices_20260206.R` | Authoritative 20260206 CITE-seq extraction: saves versioned metadata, raw ADT counts, the legacy CLR-normalized matrix, and the LogNormalize matrix used by protein EBMF. |
+| `fit_citeseq_fixed_loading_ebmf_20260206.R` | Aligns measured CITE-seq cells to the scRNA loading matrix, initializes protein scores by OLS, fixes the cell loadings, and saves cumulative flashier checkpoints at 20, 40, 80, 120, 160, and 200 iterations. |
 
 ## Data provenance
 
@@ -69,13 +79,14 @@ across two directories.
 | `shifted_log_counts.qs`, `counts.qs` | `01_extract_data.R` | Gene-filtered RNA counts (raw and shifted-log). |
 | `shifted_log_counts_subset.rds` | **gap** | A subset of `shifted_log_counts.qs` (used by Figure4's panel c); the subsetting script isn't preserved. |
 | `mean_shifted_log_expr.rds` | **gap** | Per-gene mean shifted-log expression, most likely `colMeans()` of `shifted_log_counts.qs`; not scripted here. |
-| `protein_mat.rds`, `protein_mat_normalized.rds` | `01_extract_data.R` | CITE-seq ADT matrix (raw and CLR-normalized). |
-| `protein_mat_normalized_lognorm.rds` | **gap** | A differently-named/derived variant of `protein_mat_normalized.rds`; the exact transform isn't preserved. |
+| `seurat_meta_20260206.rds` | `other/prepare_citeseq_protein_matrices_20260206.R` | Versioned metadata snapshot from the 20260206 ADT-only Seurat object; used for all CITE-seq cell selection. |
+| `protein_mat.rds`, `protein_mat_normalized.rds` | `other/prepare_citeseq_protein_matrices_20260206.R` (the historical raw/CLR extraction is also present in `01_extract_data.R`) | CITE-seq ADT matrix: raw counts and CLR normalization (`margin = 2`), respectively. |
+| `protein_mat_normalized_lognorm.rds` | `other/prepare_citeseq_protein_matrices_20260206.R` | Seurat LogNormalize ADT matrix used for protein EBMF. The scale factor is `round(mean(nCount_ADT)) = 3472` for the 20260206 object; the reconstructed matrix matches the cached file to floating-point precision. |
 | `Thresholds_Selected_Proteins.csv`, `GMM_Thresholds_Summary.csv` | `03_protein_thresholds.R` | Per-protein positivity thresholds. |
 | `TableS4_citeseq_qc_20250513.csv` | *(external)* | The manuscript's own Supplementary Table S4 (manually reviewed protein QC classifications) — not computationally derived. |
 | `CITEseq_markers_full.rds` | `04_protein_projection.R` | Per-GP positive/negative protein markers (\|score\| >= 0.5 on the same filtered/scaled protein factor matrix as Figure 6 panel b). Recovered from live (not commented-out) code in the original `Figure_CITEseq.R`; the marker-selection logic itself is verified byte-identical to the cached file when fed the same upstream input -- the only divergence is that this step uses the non-`backfit200` protein summary (see that row's caveat above). |
 | `protein_flash_selected_summary_lognorm.rds` | `04_protein_projection.R` | Re-estimated protein factor matrix U (Figure 6 panel a schematic). |
-| `protein_flash_selected_summary_lognorm_backfit200.rds` | `citeseq_run.R` (not yet ported into `code/pipeline/`) | Six-stage `flash_backfit()` sequence (20+20+40+40+40+40 iterations, checkpointed at each stage) starting from `04_protein_projection.R`'s OLS-initialized fit; the final checkpoint is this file. Doesn't depend on cell-level annotation (protein values/embeddings only), so not affected by the stale-`seurat_meta.rds` issue found for the AUC files below. |
+| `protein_flash_selected_summary_lognorm_backfit200.rds` | `other/fit_citeseq_fixed_loading_ebmf_20260206.R` | Six-stage `flash_backfit()` sequence (20+20+40+40+40+40 iterations, checkpointed at each stage) starting from an OLS protein-score initialization with scRNA cell loadings fixed. The fit uses `seurat_meta_20260206.rds` and the LogNormalize protein matrix above. |
 | `level_1_AUC_list_figure_no_thymocytes_healthy.rds`, `level_2_AUC_list_figure_no_thymocytes_healthy.rds`, `organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds` | `02_compute_auc.R` | Per-GP AUC/threshold for predicting level-1/level-2/organ, restricted to non-thymocyte **healthy-only** cells. Used by Figure2.R (2A) and Figure4.R. |
 | `level_1_AUC_list_figure_no_thymocytes.rds`, `level_2_AUC_list_figure_no_thymocytes.rds`, `organ_simplified_AUC_list_figure_no_thymocytes.rds` | `02_compute_auc.R` (copied from the old no-suffix files below, not recomputed -- verified equivalent) | Per-GP AUC/threshold for predicting level-1/level-2/organ, restricted to non-thymocyte cells **without** an additional healthy-only restriction (healthy and diseased together). Fed the retired TableS1.R (now removed; the Extended Data tables that replaced it use the healthy non-thymocyte family instead, so this broader family is currently unused). Was confirmed against the published `Table S1.xlsx`: its Organ column includes disease-specific sites (SLO, prostate, pancreas, synovial fluid) that only exist in this broader population, and a full column-by-column diff against the published table matched on Signature genes 200/200, Level1 199/200, Organ 189/200, Level2 169/200 (residual few-row differences are AUC values sitting right at the 0.8 cutoff, consistent with the ~16-18 cell version drift already noted elsewhere in this table). |
 | `level_1_AUC_list_figure.rds`, `level_2_AUC_list_figure.rds`, `organ_simplified_AUC_list_figure.rds` (no suffix) | *(superseded by the `_no_thymocytes.rds` files above, same computation, kept only for the ambiguous old name)* | Confirmed identical to the `_no_thymocytes` files above (`organ_simplified`: byte-identical; `level_1`/`level_2`: diff ~1e-12, floating-point noise) -- simply copied under the clearer name rather than recomputed. Earlier documentation here wrongly guessed these were superseded/wrong; they are in fact what the retired TableS1.R used (see above). Left in `data/` untouched, no longer read directly. |

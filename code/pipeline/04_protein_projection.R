@@ -2,15 +2,11 @@
 # scRNA-derived cell loadings (L), re-estimating a protein factor matrix U
 # via EBMF (Figure 6's caption panel (a) schematic: Y ~= L U^T).
 #
-# GAP: this produces protein_flash_selected_summary_lognorm.rds, but the
-# file actually consumed by Figure6.R/FigureS6.R is
-# protein_flash_selected_summary_lognorm_backfit200.rds (a longer-backfit
-# variant, presumably maxiter=200 instead of the 100+40 used here). No
-# script anywhere in this repository produces that exact backfit200 file --
-# it was most likely produced by re-running this same script with a larger
-# `maxiter` interactively and saving under a different name. Treat
-# ..._backfit200.rds as an existing input until that variant is
-# reconstructed.
+# This historical pipeline variant saves a shorter, unnumbered summary after
+# 100 non-extrapolated plus 40 extrapolated iterations. The exact six-stage
+# workflow that produces the backfit20/40/80/120/160/200 checkpoints consumed
+# by Figure6.R/FigureS6.R is preserved in
+# code/other/fit_citeseq_fixed_loading_ebmf_20260206.R.
 #
 # Source: ported from analyze_protein_selected_lognorm_full.R,
 # unchanged apart from path variables and this header.
@@ -62,7 +58,7 @@ saveRDS(protein_flash_summary_lognorm, file = paste0(data_path, "protein_flash_s
 # Source: recovered from live (not commented-out) code in the original
 # Figure_CITEseq.R -- the marker-selection logic itself was never removed,
 # just fed by a *_backfit200.rds variant of protein_flash_summary_lognorm
-# that this pipeline doesn't reproduce exactly (see GAP note above). Using
+# that this shorter pipeline does not reproduce exactly (see note above). Using
 # this step's own protein_flash_summary_lognorm instead, so the result may
 # differ slightly from the cached data/CITEseq_markers_full.rds.
 # ============================================================

@@ -42,7 +42,8 @@ produced it, the figure itself, and a short caption explaining what it shows.
 
 ## Methods
 
-+ [Flashier matrix factorization](Methods_FlashierFit.html): how the gene programs were learned from the data (normalization, gene filtering, EBMF model setup)
++ [Fitting EBMF using flashier](Methods_FlashierFit.html)
++ [Fitting CITE-seq protein programs with fixed scRNA loadings](Methods_FlashierFit_Citeseq.html)
 
 ## Reproducing these figures
 

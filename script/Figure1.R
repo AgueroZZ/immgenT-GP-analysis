@@ -34,7 +34,7 @@
 #   flashier_snmf_summary.rds                [code/pipeline/01_extract_data.R]
 #   L_pm_filtered.rds, F_pm_filtered.rds      [code/pipeline/01b_filter_cells.R]
 #   igt1_96_..._ADTonly.Rds                   [primary input Seurat object]
-#   protein_mat_normalized_lognorm.rds        [gap, no producer script here]
+#   protein_mat_normalized_lognorm.rds        [code/other/prepare_citeseq_protein_matrices_20260206.R]
 #   umap_result.rds                           [gap, no producer script here]
 #   mean_shifted_log_expr.rds                 [gap, no producer script here]
 #   flashier_snmf_fitted_prior.rda            [gap, no producer script here]

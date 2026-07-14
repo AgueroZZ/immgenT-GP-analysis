@@ -20,6 +20,11 @@
 #
 # Source: ported from extract_data.R, unchanged apart from path
 # variables and this header.
+#
+# NOTE: the RNA portion remains the historical full-object extraction, and the
+# ADT portion below preserves the historical raw/CLR outputs. The authoritative
+# 20260206 CITE-seq preparation, including the LogNormalize matrix used by the
+# protein EBMF fit, is code/other/prepare_citeseq_protein_matrices_20260206.R.
 
 libs <- c("fastTopics", "flashier", "Matrix", "Seurat", "qs")
 invisible(sapply(libs, function(x) suppressMessages(suppressWarnings(library(x, character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)))))

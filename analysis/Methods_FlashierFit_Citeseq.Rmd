@@ -1,0 +1,178 @@
+---
+title: "Fitting CITE-seq protein programs with fixed scRNA loadings"
+output: workflowr::wflow_html
+---
+
+This page documents the CITE-seq protein factorization used to connect surface
+proteins to the scRNA-derived gene programs (GPs). The workflow reads the
+provided Seurat object, extracts and log-normalizes its ADT assay, and uses the
+cell loadings learned from the scRNA-seq EBMF fit as fixed covariates to
+estimate a protein score for each GP.
+
+## Overview
+
+Let $Y$ be the cells-by-proteins matrix of log-normalized ADT measurements and
+let $L$ be the cells-by-GPs loading matrix from the scRNA-seq fit. We estimate
+the protein-by-GPs score matrix $U$ in
+
+$$
+Y \approx L U^T,
+$$
+
+while keeping $L$ fixed. An ordinary least-squares projection initializes $U$;
+`flashier` then refines the protein scores under point-Laplace priors and
+protein-specific residual variances.
+
+The complete cluster-scale source scripts are:
+
+- [`prepare_citeseq_protein_matrices_20260206.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/code/other/prepare_citeseq_protein_matrices_20260206.R)
+- [`fit_citeseq_fixed_loading_ebmf_20260206.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/code/other/fit_citeseq_fixed_loading_ebmf_20260206.R)
+
+## Key steps
+
+### 0. Setup
+
+The script takes the path to a provided Seurat object and an analysis directory.
+After loading the required packages, it reads the object and its cell metadata.
+The object must contain an `ADT` assay and the `cellID`, `cite_seq`, and
+`nCount_ADT` metadata columns.
+
+```{r, eval=FALSE}
+library(flashier)
+library(Seurat)
+
+seurat_obj <- readRDS(path_to_seurat_object)
+seurat_meta <- seurat_obj@meta.data
+```
+
+### 1. ADT normalization
+
+The ADT assay is stored with proteins in rows and cells in columns. We use
+Seurat `LogNormalize` with the rounded mean ADT library size as the scale
+factor, then transpose the result so that cells are rows and proteins are
+columns.
+
+```{r, eval=FALSE}
+adt_scale_factor <- round(mean(seurat_meta$nCount_ADT, na.rm = TRUE))
+
+seurat_obj <- NormalizeData(
+  seurat_obj,
+  assay = "ADT",
+  normalization.method = "LogNormalize",
+  scale.factor = adt_scale_factor
+)
+protein_mat_normalized_lognorm <- t(seurat_obj[["ADT"]]$data)
+saveRDS(
+  protein_mat_normalized_lognorm,
+  file.path(data_path, "protein_mat_normalized_lognorm.rds")
+)
+```
+
+For cell $i$ and protein $j$, the normalized value is
+
+$$
+Y_{ij} = \log\left(1 + \frac{C_{ij}}{\sum_q C_{iq}} \times s\right),
+$$
+
+where $C_{ij}$ is the raw ADT count and $s$ is `adt_scale_factor`.
+
+### 2. Select measured cells and align matrices
+
+Only cells marked `cite_seq == TRUE` are eligible. Their cell IDs are
+intersected explicitly with both the normalized protein matrix and the scRNA
+loading matrix, then both matrices are placed in the same order before fitting.
+
+```{r, eval=FALSE}
+cells_measured <- seurat_meta$cellID[
+  !is.na(seurat_meta$cite_seq) & seurat_meta$cite_seq
+]
+cells_used <- cells_measured[
+  cells_measured %in% rownames(protein_mat_normalized_lognorm) &
+    cells_measured %in% rownames(scRNA_result$L_pm)
+]
+
+L_mat <- scRNA_result$L_pm[cells_used, , drop = FALSE]
+protein_mat_normalized <- as.matrix(
+  protein_mat_normalized_lognorm[cells_used, , drop = FALSE]
+)
+```
+
+### 3. OLS initialization
+
+With $L$ fixed, the least-squares initialization is
+
+$$
+\hat U^T = (L^T L)^{-1} L^T Y.
+$$
+
+The implementation uses a QR decomposition instead of forming the inverse
+explicitly.
+
+```{r, eval=FALSE}
+qrL <- qr(L_mat)
+U_t <- qr.coef(qrL, protein_mat_normalized)
+U <- t(U_t)
+saveRDS(U, file.path(data_path, "protein_projection_OLS_lognorm.rds"))
+```
+
+### 4. Fixed-loading flashier fit
+
+The OLS protein scores initialize `flashier`. The cell loading for every GP is
+then fixed, so backfitting updates the protein scores and residual variances but
+does not alter the scRNA-derived cellular programs.
+
+- `ebnm_point_laplace` allows each protein score to be exactly zero or positive
+  or negative.
+- `var_type = 2` estimates a separate residual variance for every protein.
+- `flash_factors_fix(..., which_dim = "loadings")` fixes all columns of $L$.
+
+```{r, eval=FALSE}
+flash_fixed_loading <- flash_init(protein_mat_normalized, var_type = 2) |>
+  flash_set_verbose(1) |>
+  flash_factors_init(
+    list(L_mat, U),
+    ebnm_fn = ebnm_point_laplace
+  ) |>
+  flash_factors_fix(
+    kset = seq_len(ncol(L_mat)),
+    which_dim = "loadings"
+  )
+```
+
+### 5. Backfitting schedule
+
+The fit is checkpointed after 20, 40, 80, 120, 160, and 200 cumulative
+iterations. Extrapolation is disabled for the first two 20-iteration stages
+and enabled for each subsequent 40-iteration stage.
+
+| Cumulative iteration | Additional iterations | Extrapolate |
+|---:|---:|:---|
+| 20 | 20 | No |
+| 40 | 20 | No |
+| 80 | 40 | Yes |
+| 120 | 40 | Yes |
+| 160 | 40 | Yes |
+| 200 | 40 | Yes |
+
+```{r, eval=FALSE}
+checkpoint_schedule <- data.frame(
+  cumulative_iterations = c(20L, 40L, 80L, 120L, 160L, 200L),
+  additional_iterations = c(20L, 20L, 40L, 40L, 40L, 40L),
+  extrapolate = c(FALSE, FALSE, TRUE, TRUE, TRUE, TRUE)
+)
+
+for (i in seq_len(nrow(checkpoint_schedule))) {
+  flash_fixed_loading <- flash_backfit(
+    flash_fixed_loading,
+    extrapolate = checkpoint_schedule$extrapolate[[i]],
+    maxiter = checkpoint_schedule$additional_iterations[[i]],
+    verbose = 2
+  )
+  # The source script saves both the full fit and a compact summary here.
+}
+```
+
+The final compact output,
+`protein_flash_selected_summary_lognorm_backfit200.rds`, contains `L_pm`,
+`F_pm`, `pve`, `elbo`, and `residuals_sd`. This is the protein-program matrix
+used by Figure 6, Figure S6, and the protein-related Extended Data tables.
