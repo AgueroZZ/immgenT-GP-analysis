@@ -15,12 +15,12 @@ minute to run); the images are its pre-rendered output.
 
 ## Setup
 
-```{r fig6-setup, code=readLines("../script/Figure6.R")[37:47], eval=FALSE}
+```{r fig6-setup, code=readLines("../script/Figure6.R")[39:49], eval=FALSE}
 ```
 
 Panels (b) onward additionally load the shared CITE-seq cell/protein setup:
 
-```{r fig6-setup2, code=readLines("../script/Figure6.R")[51:65], eval=FALSE}
+```{r fig6-setup2, code=readLines("../script/Figure6.R")[53:67], eval=FALSE}
 ```
 
 ## (a) Projection schematic {#fig6a}
@@ -29,20 +29,20 @@ This panel is a hand-drawn schematic, not generated from R -- there is no code o
 
 ## (b) Protein-program heatmap {#fig6b}
 
-```{r fig6b-code, code=readLines("../script/Figure6.R")[67:91], eval=FALSE}
+```{r fig6b-code, code=readLines("../script/Figure6.R")[69:145], eval=FALSE}
 ```
 
-```{r fig6b-img, echo=FALSE, out.width="80%"}
+```{r fig6b-img, echo=FALSE, out.width="100%"}
 knitr::include_graphics("assets/Figure6/6b.png")
 ```
 
 ::: {.figcaption}
-**Fig. 6b.** Heatmap of the re-estimated protein matrix (U). The protein scores in each GP are scaled so its maximum |score| = 1, after removing isotype and low-quality proteins and four putative contamination GPs (GP40, GP50, GP55, GP188); 47 proteins (columns) x 179 GPs (rows). Entries with |score| < 0.5 are shown white, with color running from blue (-1) through white to red (+1).
+**Fig. 6b.** Heatmap of the re-estimated protein matrix (U). The protein scores in each GP are scaled so its maximum |score| = 1, after removing isotype and low-quality proteins and four putative contamination GPs (GP40, GP50, GP55, GP188); 47 proteins (rows) x 179 GPs (columns). Entries with |score| < 0.5 are shown white, with color running from blue (-1) through white to red (+1). GP columns are ordered from the most to the fewest visible proteins. Protein rows are ordered by the position of their rightmost visible GP, placing proteins that extend into the sparse right side first and exposing a triangular support boundary; visible count and a rarity-weighted support score break ties. This triangular-first row order is not monotone in per-protein sparsity. GP labels are vertical and sized to the available heatmap-cell width; protein labels are sized to the available row height.
 :::
 
 ## (c-f) Protein-gated vs. GP-loading populations {#fig6cf}
 
-```{r fig6cf-code, code=readLines("../script/Figure6.R")[93:118], eval=FALSE}
+```{r fig6cf-code, code=readLines("../script/Figure6.R")[147:172], eval=FALSE}
 ```
 
 ```{r fig6cf-img, echo=FALSE, out.width="49%"}
@@ -58,7 +58,7 @@ knitr::include_graphics(c(
 
 ## (g, h) KLRG1 modulation across lineages {#fig6gh}
 
-```{r fig6gh-code, code=readLines("../script/Figure6.R")[120:185], eval=FALSE}
+```{r fig6gh-code, code=readLines("../script/Figure6.R")[174:239], eval=FALSE}
 ```
 
 ```{r fig6gh-img, echo=FALSE, out.width="49%"}
@@ -71,7 +71,7 @@ knitr::include_graphics(c("assets/Figure6/6g.png", "assets/Figure6/6h.png"))
 
 ## (i-k) GPs associated with CD69 {#fig6ik}
 
-```{r fig6ik-code, code=readLines("../script/Figure6.R")[187:275], eval=FALSE}
+```{r fig6ik-code, code=readLines("../script/Figure6.R")[241:329], eval=FALSE}
 ```
 
 ```{r fig6ik-img, echo=FALSE, out.width="32%"}

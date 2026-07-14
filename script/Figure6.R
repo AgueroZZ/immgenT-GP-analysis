@@ -7,7 +7,9 @@
 #       code-generated, no source to port. Not produced by this script.
 #   6b  Heatmap of the re-estimated protein matrix U (sparse: |score| < 0.5
 #       shown white), after removing isotype/low-quality proteins and 4
-#       contamination GPs (GP40/50/55/188).
+#       contamination GPs (GP40/50/55/188). GPs are columns ordered from dense
+#       to sparse; proteins are rows ordered by their rightmost visible GP to
+#       expose a triangular support boundary.
 #   6c-6f  Protein-gate vs. GP-loading comparison on the MDE embedding, for
 #       the 4 curated GPs GP171/GP23/GP12/GP80.
 #   6g,6h  KLRG1 modulation: CD8 vs CD4 (g) and CD8 vs Treg (h).
@@ -79,13 +81,65 @@ sparse_cutoff <- 0.5
 bk_sparse <- unique(c(seq(-1, -sparse_cutoff, length.out = 26), seq(-sparse_cutoff, sparse_cutoff, length.out = 51), seq(sparse_cutoff, 1, length.out = 26)))
 cols_sparse <- c(colorRampPalette(c("#4575B4", "white"))(25), rep("white", 50), colorRampPalette(c("white", "#D73027"))(25))
 
-pdf(paste0(figure_path, "6b.pdf"), width = 20, height = 40)
+# Display proteins as rows and GPs as columns. Order GP columns from most to
+# fewest visible proteins. Order protein rows by their rightmost visible GP, so
+# proteins extending into the sparse right side appear first and form a
+# triangular boundary. Visible count and a rarity-weighted support score provide
+# deterministic secondary ordering.
+wide_matrix_6b <- as.matrix(Protein_F_pm_simplified_no_contamination)
+wide_visible_mask_6b <- abs(wide_matrix_6b) >= sparse_cutoff
+wide_gp_visible_count_6b <- colSums(wide_visible_mask_6b)
+wide_protein_visible_count_6b <- rowSums(wide_visible_mask_6b)
+wide_gp_number_6b <- as.integer(sub("^GP", "", colnames(wide_matrix_6b)))
+
+wide_gp_order_6b <- order(-wide_gp_visible_count_6b, wide_gp_number_6b)
+wide_mask_ordered_cols_6b <- wide_visible_mask_6b[
+  ,
+  wide_gp_order_6b,
+  drop = FALSE
+]
+wide_rightmost_visible_gp_6b <- apply(
+  wide_mask_ordered_cols_6b,
+  1,
+  function(values) max(which(values))
+)
+wide_rarity_weights_6b <- seq_len(ncol(wide_mask_ordered_cols_6b))^2
+wide_protein_rarity_score_6b <- as.numeric(
+  wide_mask_ordered_cols_6b %*% wide_rarity_weights_6b
+)
+wide_protein_order_6b <- order(
+  -wide_rightmost_visible_gp_6b,
+  -wide_protein_visible_count_6b,
+  -wide_protein_rarity_score_6b,
+  rownames(wide_matrix_6b)
+)
+wide_ordered_matrix_6b <- wide_matrix_6b[
+  wide_protein_order_6b,
+  wide_gp_order_6b,
+  drop = FALSE
+]
+
+pdf(paste0(figure_path, "6b.pdf"), width = 48, height = 14)
 pheatmap::pheatmap(
-  t(Protein_F_pm_simplified_no_contamination),
-  main = sprintf("Protein programs (sparse, no contamination GPs): %d proteins x %d GPs", nrow(Protein_F_pm_simplified_no_contamination), ncol(Protein_F_pm_simplified_no_contamination)),
+  wide_ordered_matrix_6b,
+  main = sprintf(
+    paste0(
+      "Protein programs - GP columns, triangular-first protein rows ",
+      "(|score| >= %.1f; protein-row sparsity is not monotone)"
+    ),
+    sparse_cutoff
+  ),
   color = cols_sparse,
   breaks = bk_sparse,
-  border_color = "black"
+  cluster_rows = FALSE,
+  cluster_cols = FALSE,
+  border_color = "grey75",
+  fontsize = 16,
+  fontsize_row = 16,
+  fontsize_col = 16,
+  angle_col = 90,
+  legend_breaks = c(-1, -sparse_cutoff, 0, sparse_cutoff, 1),
+  legend_labels = c("-1", "-0.5", "0 (white)", "0.5", "1")
 )
 dev.off()
 
