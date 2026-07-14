@@ -182,3 +182,129 @@ renderings were synchronized to both `analysis/assets/FigureS4/` and
 all source/docs image pairs are byte-identical, and raw/normalized tissue and
 level2 alternatives were visually checked. No `figures/final-selected/` files
 were changed because the raw-versus-normalized choice remains open.
+
+## Centered alternatives and Figure 1 level2 ordering
+
+Added a third, row-centered alternative to each Figure S4 panel. Centered
+values are calculated from the full mean-loading matrix as each GP's group mean
+minus that GP's mean across all groups, before taking the same raw-filtered
+subset used by the raw and normalized views. The centered color scale is
+symmetric blue-white-red around zero. Figure S4 now contains clickable raw,
+normalized, and centered tabs for both tissue and level2 panels.
+
+The level2 columns in all three formal S4b alternatives now follow the Figure
+1 level1 sequence `CD8, CD4, Treg, gdT, CD8aa, Tz, DN, DP`, with
+`annotation_level2` labels alphabetized within each level1 block. GP rows stay
+in dominant-level2 blocks relative to this fixed column order. Two annotation
+strips identify the level1 block and individual level2 group.
+
+The experiment renderer also writes unfiltered, internal centered PDFs with
+all 200 GPs and all observed groups:
+
+- `organ_simplified_row_centered_mean_loading_full_dominant_group_heatmap.pdf`
+  (200 GPs by 18 tissues);
+- `annotation_level2_row_centered_mean_loading_full_level1_order_heatmap.pdf`
+  (200 GPs by 107 level2 groups).
+
+The corresponding centered matrix CSVs and row/column order CSVs are retained
+in the experiment directory. The full level2 order was checked against the
+healthy non-thymocyte metadata: its distinct level1 blocks match the confirmed
+sequence exactly and each block is alphabetically ordered. The maximum absolute
+centered-row mean was `2.523942e-16`. Both formal and internal renderers
+completed successfully; all six formal PDFs and the four centered experiment
+PDFs are one-page files. Quick Look inspection confirmed the centered
+diverging scale, labels, and the level1/level2 annotation strips.
+
+## Centered positive-threshold filtering
+
+Changed the centered alternatives so they no longer inherit the raw-mean
+filter. The full mean-loading matrix is row-centered first. A GP is then kept
+only if at least one positive centered entry is >= 0.1; a group is kept only if
+at least one retained GP has a positive centered entry >= 0.1. Centered rows
+and columns are ordered independently after this filter, while raw and
+normalized alternatives continue to share the original raw-mean-filtered set.
+
+The resulting formal centered dimensions are 22 GPs by 16 tissues for S4a and
+61 GPs by 100 level2 clusters for S4b. The centered level2 columns retain the
+Figure 1 level1-first, alphabetical-within-level1 sequence among the 100 kept
+clusters. The all-200-GP internal centered PDFs remain unfiltered.
+
+Both renderers completed successfully. Filter summary CSVs, filtered centered
+matrix CSVs, and centered order CSVs were regenerated in the experiment
+directory. Quick Look inspection confirmed the new centered tissue and level2
+layouts, diverging color scale, and level1/level2 strips.
+
+## Heatmap typography update
+
+Increased heatmap typography across the formal Figure S4 and the experiment
+renderer. Column labels are now vertical, and row/column label font sizes are
+calculated from the available heatmap cell dimensions, with a readability-first
+range of 9--14 pt. Titles, annotation labels, row titles, and legend text were
+also enlarged. This keeps labels as large as each matrix layout can support
+without column-label overlap, including the wide level2 heatmaps.
+
+All formal PDFs and the experiment outputs were regenerated. Quick Look
+inspection of the tissue and level2 centered panels confirmed clearly larger
+labels, vertical non-overlapping column names, and readable legends.
+
+## Current-output cleanup and GP37 diagnosis
+
+Removed obsolete hierarchical, triangular, and unfiltered raw/normalized
+artifacts from `experiments/healthy_nonthymus_mean_loading_heatmaps/`. The
+renderer now creates only the current six filtered raw/normalized/centered
+heatmaps, the two unfiltered all-200-GP centered internal heatmaps, and the
+matrices, group counts, filter summaries, and order CSVs needed to interpret
+those eight PDFs. A future run no longer recreates the retired candidates.
+
+GP37 was checked because it is mammary-gland-specific but absent from the
+filtered tissue panels. Its largest raw tissue mean is `0.01122608` and its
+largest centered tissue mean is `0.01057881`, both in mammary gland. These are
+below the current raw and positive-centered display thresholds of `0.1`, so its
+absence is caused by filtering rather than annotation or ordering.
+
+## Per-GP SD centered filtering and compact figure sizing
+
+Replaced the fixed centered-mean `0.1` filter with a GP-specific variability
+rule. For each GP, the renderer calculates the SD of that GP's mean loading
+across all groups. A centered entry is supported when it is at least `2 x` that
+GP-specific SD. Centered heatmaps retain GP rows and group columns containing
+at least one supported entry, then recompute the dominant-group row order.
+Raw and normalized views remain unchanged and continue to share the raw-mean
+`>= 0.1` subset.
+
+The centered tissue view now retains 182 GPs and 17 tissues; only lung is
+removed. The centered level2 view retains all 200 GPs and 103 of 107 clusters;
+the removed clusters are `CD4.E`, `DP.wA`, `gdT.K`, and `Tz.C`. The unfiltered
+internal centered views remain 200 GPs by 18 tissues and 200 GPs by 107 level2
+clusters.
+
+GP37 now passes the centered tissue filter. Its maximum centered tissue mean is
+`0.01057881`, while its GP-specific SD is `0.00264075` and its `2 x SD` cutoff
+is `0.00528150`. In level2, its maximum centered mean is `0.01434731` and its
+`2 x SD` cutoff is `0.00515319`.
+
+Heatmap height is now proportional to the number of displayed GPs, with a
+160 mm minimum and 3.5 mm per row, instead of the previous fixed 480 mm
+minimum. This reduces the filtered tissue raw/normalized PDF height from the
+oversized layout to 9.8 inches while keeping row labels at the largest
+non-overlapping size. Centered panels expand vertically as needed for their
+larger retained GP sets.
+
+## Fixed 0.01 centered filtering
+
+Replaced the per-GP `2 x SD` centered filter after review showed that it retained
+too many GP rows. The centered display now uses a fixed positive cutoff: a GP
+row is retained when at least one centered group mean is `>= 0.01`, and a group
+column is retained when at least one retained GP meets the same cutoff.
+
+This produces a substantially smaller centered display: 70 GPs by all 18
+tissues and 112 GPs by all 107 level2 clusters. GP37 remains in both centered
+views. Its maximum centered tissue mean is `0.01057881`, just above the fixed
+cutoff, and its maximum centered level2 mean is `0.01434731`.
+
+Raw and normalized views remain unchanged at 31 GPs by 18 tissues and 64 GPs
+by 107 level2 clusters using the raw mean `>= 0.1` filter. The internal full
+centered views also remain unfiltered at 200 GPs by 18 tissues and 200 GPs by
+107 level2 clusters. Experiment artifact names now use `centered_mean_ge_0.01`;
+the retired `centered_mean_ge_2sd` matrices, summaries, and order files were
+removed.

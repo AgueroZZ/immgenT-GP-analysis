@@ -4,18 +4,19 @@ GPs: 200
 Observed organ_simplified groups: 18
 Observed annotation_level2 groups: 107
 Shared raw-mean color maximum: 0.62324141
-Clustering: Euclidean distance with complete linkage on both rows and columns.
+Shared centered color maximum: 0.54986156
 Normalized matrices: each GP row divided by its maximum group mean.
-Triangular support cutoff: 0.5
-Triangular ordering: columns by decreasing support; rows by rightmost support boundary, support count, and rarity score.
-Organ triangular right-boundary increases: 0
-Level2 triangular right-boundary increases: 0
-Dominant-group ordering: columns by number of dominant GPs; rows grouped by dominant group and ordered by decreasing dominance gap.
-Organ dominant groups represented: 17
-Level2 dominant groups represented: 69
+Centered matrices: each GP row has its mean across groups subtracted.
+Tissue dominant-group ordering: columns by number of dominant GPs; rows grouped by dominant group and ordered by decreasing dominance gap.
+Final level2 ordering: Figure 1 level1 order (CD8, CD4, Treg, gdT, CD8aa, Tz, DN, DP), alphabetized within level1; rows grouped by dominant level2.
 Final raw dominant heatmap cutoff: 0.1
+Final centered dominant heatmap cutoff: 0.01
 Filtered tissue raw dominant heatmap: 31 GPs x 18 groups
 Filtered level2 raw dominant heatmap: 64 GPs x 107 groups
-Final raw and normalized dominant-group heatmaps share the raw-filtered rows, columns, and order for each grouping.
-Organ PDF dimensions (inches): 12.2 x 28.3
-Level2 PDF dimensions (inches): 22.8 x 28.3
+Filtered tissue centered dominant heatmap: 70 GPs x 18 groups
+Filtered level2 centered dominant heatmap: 112 GPs x 107 groups
+Final raw and normalized dominant-group heatmaps share their raw-filtered rows, columns, and order; centered heatmaps use independent positive centered mean >= 0.01 filtering and ordering.
+Full centered tissue heatmap: 200 GPs x 18 groups
+Full centered level2 heatmap: 200 GPs x 107 groups
+Filtered tissue PDF dimensions (inches): 12.2 x 9.8
+Filtered level2 PDF dimensions (inches): 22.8 x 12.4

@@ -1,8 +1,7 @@
 # Render GP-by-group mean-loading heatmaps for the healthy non-thymocyte reference.
 #
-# The hierarchical and triangular-first PDFs are intentionally kept in this
-# experiment directory. They do not modify any formal figure, workflowr page,
-# or published output.
+# The experiment retains only the current filtered raw, normalized, and
+# centered heatmaps plus unfiltered all-200-GP centered internal views.
 
 suppressPackageStartupMessages({
   library(ComplexHeatmap)
@@ -47,58 +46,11 @@ normalize_by_gp_max <- function(mean_matrix) {
   sweep(mean_matrix, 1L, row_max, "/")
 }
 
-triangular_first_order <- function(normalized_matrix, support_cutoff = 0.50) {
-  visible_mask <- normalized_matrix >= support_cutoff
-  row_visible_count <- rowSums(visible_mask)
-  column_visible_count <- colSums(visible_mask)
-
-  if (any(row_visible_count == 0L) || any(column_visible_count == 0L)) {
-    stop("The triangular support cutoff leaves an empty GP row or group column.")
-  }
-
-  gp_number <- suppressWarnings(as.integer(sub("^GP", "", rownames(normalized_matrix))))
-  if (anyNA(gp_number)) {
-    stop("GP row names must have the form `GP<number>` for deterministic ordering.")
-  }
-
-  column_order <- order(-column_visible_count, colnames(normalized_matrix))
-  visible_mask_ordered_columns <- visible_mask[, column_order, drop = FALSE]
-  rightmost_visible_column <- apply(
-    visible_mask_ordered_columns,
-    1L,
-    function(values) max(which(values))
-  )
-  column_rarity_weights <- seq_len(ncol(visible_mask_ordered_columns))^2
-  row_rarity_score <- as.numeric(
-    visible_mask_ordered_columns %*% column_rarity_weights
-  )
-  row_order <- order(
-    -rightmost_visible_column,
-    -row_visible_count,
-    -row_rarity_score,
-    gp_number
-  )
-
-  ordered_right_boundary <- rightmost_visible_column[row_order]
-  ordered_column_support <- column_visible_count[column_order]
-  if (any(diff(ordered_right_boundary) > 0L) || any(diff(ordered_column_support) > 0L)) {
-    stop("Triangular ordering invariants failed.")
-  }
-
-  list(
-    support_cutoff = support_cutoff,
-    row_order = row_order,
-    column_order = column_order,
-    row_visible_count = row_visible_count,
-    column_visible_count = column_visible_count,
-    rightmost_visible_column = rightmost_visible_column,
-    row_rarity_score = row_rarity_score,
-    row_right_boundary_increases = sum(diff(ordered_right_boundary) > 0L),
-    column_support_increases = sum(diff(ordered_column_support) > 0L)
-  )
+center_by_gp_mean <- function(mean_matrix) {
+  sweep(mean_matrix, 1L, rowMeans(mean_matrix), "-")
 }
 
-dominant_group_order <- function(raw_mean_matrix) {
+dominant_group_order <- function(raw_mean_matrix, fixed_column_order = NULL) {
   if (ncol(raw_mean_matrix) < 2L) {
     stop("Dominant-group ordering requires at least two groups.")
   }
@@ -117,12 +69,21 @@ dominant_group_order <- function(raw_mean_matrix) {
   )
   dominance_gap <- dominant_mean - second_mean
   dominant_gp_count <- tabulate(dominant_index, nbins = ncol(raw_mean_matrix))
-
-  column_order <- order(
-    -dominant_gp_count,
-    -colMeans(raw_mean_matrix),
-    colnames(raw_mean_matrix)
-  )
+  if (is.null(fixed_column_order)) {
+    column_order <- order(
+      -dominant_gp_count,
+      -colMeans(raw_mean_matrix),
+      colnames(raw_mean_matrix)
+    )
+  } else {
+    if (
+      length(fixed_column_order) != ncol(raw_mean_matrix) ||
+      !identical(sort(fixed_column_order), seq_len(ncol(raw_mean_matrix)))
+    ) {
+      stop("The fixed column order must be a complete permutation.")
+    }
+    column_order <- fixed_column_order
+  }
   dominant_group_position <- match(dominant_index, column_order)
   row_order <- order(
     dominant_group_position,
@@ -145,6 +106,28 @@ dominant_group_order <- function(raw_mean_matrix) {
     dominant_gp_count = dominant_gp_count,
     dominant_group_position = dominant_group_position
   )
+}
+
+level2_to_level1_map <- function(meta, groups, level1_order) {
+  mapping <- unique(data.frame(
+    group = as.character(meta$annotation_level2),
+    level1 = as.character(meta$annotation_level1),
+    stringsAsFactors = FALSE
+  ))
+  if (anyDuplicated(mapping$group)) {
+    stop("Each annotation_level2 label must map to exactly one annotation_level1 label.")
+  }
+
+  group_level1 <- mapping$level1[match(groups, mapping$group)]
+  names(group_level1) <- groups
+  if (anyNA(group_level1) || any(!group_level1 %in% level1_order)) {
+    stop("Every displayed level2 group must map to the Figure 1 level1 order.")
+  }
+  group_level1
+}
+
+level2_column_order <- function(groups, group_level1, level1_order) {
+  order(match(group_level1[groups], level1_order), groups)
 }
 
 palette_for_groups <- function(groups, palette, label) {
@@ -180,6 +163,19 @@ filter_raw_mean_matrix <- function(raw_matrix, raw_mean_cutoff) {
   filtered_raw
 }
 
+filter_centered_mean_matrix <- function(centered_matrix, centered_mean_cutoff) {
+  supported_entries <- centered_matrix >= centered_mean_cutoff
+  keep_gp <- rowSums(supported_entries) > 0L
+  keep_group <- colSums(supported_entries[keep_gp, , drop = FALSE]) > 0L
+  filtered_centered <- centered_matrix[keep_gp, keep_group, drop = FALSE]
+
+  if (nrow(filtered_centered) == 0L || ncol(filtered_centered) < 2L) {
+    stop("The centered-mean filter must retain at least one GP and two groups.")
+  }
+
+  filtered_centered
+}
+
 subset_group_counts <- function(group_counts, groups) {
   group_index <- match(groups, group_counts$group)
   if (anyNA(group_index)) {
@@ -188,10 +184,17 @@ subset_group_counts <- function(group_counts, groups) {
   group_counts[group_index, , drop = FALSE]
 }
 
-write_raw_filter_summary <- function(full_matrix, filtered_matrix, raw_mean_cutoff, filename) {
+write_filter_summary <- function(
+    full_matrix,
+    filtered_matrix,
+    filter_basis,
+    filter_value,
+    filename
+) {
   write.csv(
     data.frame(
-      raw_mean_cutoff = raw_mean_cutoff,
+      filter_basis = filter_basis,
+      filter_value = filter_value,
       full_gp_count = nrow(full_matrix),
       retained_gp_count = nrow(filtered_matrix),
       full_group_count = ncol(full_matrix),
@@ -213,7 +216,10 @@ render_heatmap <- function(
     raw_limit = NULL,
     row_order = NULL,
     column_order = NULL,
-    order_description = NULL
+    order_description = NULL,
+    centered_limit = NULL,
+    group_level1 = NULL,
+    level1_palette = NULL
 ) {
   if (!identical(colnames(matrix), group_counts$group)) {
     stop("Matrix columns and group-count labels are not aligned.")
@@ -238,34 +244,64 @@ render_heatmap <- function(
       c("#FFFFFF", "#FCAE91", "#99000D")
     )
     legend_at <- c(0, raw_limit / 2, raw_limit)
-  } else {
+  } else if (identical(scale_label, "Within-GP normalized mean loading")) {
     color_fun <- circlize::colorRamp2(
       c(0, 0.5, 1),
       c("#FFFFFF", "#FCAE91", "#99000D")
     )
     legend_at <- c(0, 0.5, 1)
+  } else if (identical(scale_label, "Row-centered mean loading")) {
+    color_fun <- circlize::colorRamp2(
+      c(-centered_limit, 0, centered_limit),
+      c("#2166AC", "#FFFFFF", "#B2182B")
+    )
+    legend_at <- c(-centered_limit, 0, centered_limit)
+  } else {
+    stop("Unsupported scale label: ", scale_label)
   }
 
   heatmap_width_mm <- max(180, ncol(matrix) * 4.2)
-  heatmap_height_mm <- max(480, nrow(matrix) * 3.0)
+  heatmap_height_mm <- max(160, nrow(matrix) * 3.5)
   pdf_width_in <- (heatmap_width_mm + 130) / 25.4
-  pdf_height_in <- (heatmap_height_mm + 120) / 25.4
+  pdf_height_in <- (heatmap_height_mm + 90) / 25.4
+  cell_width_mm <- heatmap_width_mm / ncol(matrix)
+  cell_height_mm <- heatmap_height_mm / nrow(matrix)
+  row_label_fontsize <- min(14, max(9, floor(cell_height_mm * 2.8)))
+  column_label_fontsize <- min(14, max(9, floor(cell_width_mm * 2.8)))
 
-  column_annotation <- ComplexHeatmap::HeatmapAnnotation(
-    group = factor(colnames(matrix), levels = colnames(matrix)),
-    col = list(group = group_palette),
-    show_legend = FALSE,
-    annotation_name_side = "left",
-    annotation_height = grid::unit(4, "mm")
-  )
+  if (is.null(group_level1)) {
+    column_annotation <- ComplexHeatmap::HeatmapAnnotation(
+      group = factor(colnames(matrix), levels = colnames(matrix)),
+      col = list(group = group_palette),
+      show_legend = FALSE,
+      annotation_name_side = "left",
+      annotation_name_gp = grid::gpar(fontsize = 10, fontface = "bold"),
+      annotation_height = grid::unit(4, "mm")
+    )
+  } else {
+    group_level1 <- group_level1[colnames(matrix)]
+    if (anyNA(group_level1) || is.null(level1_palette)) {
+      stop("Level2 heatmaps require complete level1 annotations and a palette.")
+    }
+    column_annotation <- ComplexHeatmap::HeatmapAnnotation(
+      level1 = factor(group_level1, levels = names(level1_palette)),
+      group = factor(colnames(matrix), levels = colnames(matrix)),
+      col = list(level1 = level1_palette, group = group_palette),
+      show_legend = FALSE,
+      annotation_name_side = "left",
+      annotation_name_gp = grid::gpar(fontsize = 10, fontface = "bold"),
+      annotation_height = grid::unit(c(4, 4), "mm")
+    )
+  }
   column_title <- if (is.null(order_description)) {
     paste0(scale_label, ": all GPs by healthy non-thymocyte ", group_label)
   } else {
-    short_scale_label <- if (identical(scale_label, "Raw mean loading")) {
-      "Raw GP mean loading"
-    } else {
-      "Normalized GP mean loading"
-    }
+    short_scale_label <- switch(
+      scale_label,
+      "Raw mean loading" = "Raw GP mean loading",
+      "Within-GP normalized mean loading" = "Normalized GP mean loading",
+      "Row-centered mean loading" = "Row-centered GP mean loading"
+    )
     paste0(
       short_scale_label, ": ", group_label,
       "\n", order_description
@@ -286,16 +322,18 @@ render_heatmap <- function(
     column_order = column_order,
     top_annotation = column_annotation,
     column_title = column_title,
-    column_title_gp = grid::gpar(fontsize = 13, fontface = "bold"),
+    column_title_gp = grid::gpar(fontsize = 16, fontface = "bold"),
     row_title = "GP",
-    row_title_gp = grid::gpar(fontsize = 10),
-    row_names_gp = grid::gpar(fontsize = 6),
-    column_names_gp = grid::gpar(fontsize = 5),
-    column_names_rot = 45,
+    row_title_gp = grid::gpar(fontsize = 12),
+    row_names_gp = grid::gpar(fontsize = row_label_fontsize),
+    column_names_gp = grid::gpar(fontsize = column_label_fontsize),
+    column_names_rot = 90,
     heatmap_legend_param = list(
       title = scale_label,
       at = legend_at,
-      labels = format(legend_at, trim = TRUE, scientific = FALSE)
+      labels = format(legend_at, trim = TRUE, scientific = FALSE),
+      title_gp = grid::gpar(fontsize = 11, fontface = "bold"),
+      labels_gp = grid::gpar(fontsize = 10)
     ),
     width = grid::unit(heatmap_width_mm, "mm"),
     height = grid::unit(heatmap_height_mm, "mm"),
@@ -317,30 +355,6 @@ render_heatmap <- function(
     width_in = pdf_width_in,
     height_in = pdf_height_in
   )
-}
-
-write_triangular_order_csv <- function(matrix, triangular_order, filename) {
-  row_table <- data.frame(
-    dimension = "GP row",
-    order = seq_len(nrow(matrix)),
-    label = rownames(matrix)[triangular_order$row_order],
-    visible_count = unname(triangular_order$row_visible_count[triangular_order$row_order]),
-    total_entries = ncol(matrix),
-    rightmost_visible_column = unname(triangular_order$rightmost_visible_column[triangular_order$row_order]),
-    rarity_score = unname(triangular_order$row_rarity_score[triangular_order$row_order]),
-    support_cutoff = triangular_order$support_cutoff
-  )
-  column_table <- data.frame(
-    dimension = "Group column",
-    order = seq_len(ncol(matrix)),
-    label = colnames(matrix)[triangular_order$column_order],
-    visible_count = unname(triangular_order$column_visible_count[triangular_order$column_order]),
-    total_entries = nrow(matrix),
-    rightmost_visible_column = NA_integer_,
-    rarity_score = NA_real_,
-    support_cutoff = triangular_order$support_cutoff
-  )
-  write.csv(rbind(row_table, column_table), filename, row.names = FALSE, quote = FALSE)
 }
 
 write_dominant_group_order_csv <- function(matrix, dominant_order, filename) {
@@ -415,12 +429,15 @@ organ_raw <- organ_result$matrix
 level2_raw <- level2_result$matrix
 organ_normalized <- normalize_by_gp_max(organ_raw)
 level2_normalized <- normalize_by_gp_max(level2_raw)
-support_cutoff <- 0.50
-organ_triangular <- triangular_first_order(organ_normalized, support_cutoff)
-level2_triangular <- triangular_first_order(level2_normalized, support_cutoff)
+organ_centered <- center_by_gp_mean(organ_raw)
+level2_centered <- center_by_gp_mean(level2_raw)
+level1_order <- c("CD8", "CD4", "Treg", "gdT", "CD8aa", "Tz", "DN", "DP")
+level2_group_level1 <- level2_to_level1_map(
+  meta_reference, colnames(level2_raw), level1_order
+)
 organ_dominant <- dominant_group_order(organ_raw)
-level2_dominant <- dominant_group_order(level2_raw)
 raw_dominant_cutoff <- 0.1
+centered_dominant_cutoff <- 0.01
 organ_raw_dominant_filtered <- filter_raw_mean_matrix(organ_raw, raw_dominant_cutoff)
 level2_raw_dominant_filtered <- filter_raw_mean_matrix(level2_raw, raw_dominant_cutoff)
 organ_normalized_dominant_filtered <- organ_normalized[
@@ -433,8 +450,35 @@ level2_normalized_dominant_filtered <- level2_normalized[
   colnames(level2_raw_dominant_filtered),
   drop = FALSE
 ]
+organ_centered_dominant_filtered <- filter_centered_mean_matrix(
+  organ_centered, centered_dominant_cutoff
+)
+level2_centered_dominant_filtered <- filter_centered_mean_matrix(
+  level2_centered, centered_dominant_cutoff
+)
 organ_raw_dominant_filtered_order <- dominant_group_order(organ_raw_dominant_filtered)
-level2_raw_dominant_filtered_order <- dominant_group_order(level2_raw_dominant_filtered)
+level2_raw_dominant_filtered_order <- dominant_group_order(
+  level2_raw_dominant_filtered,
+  level2_column_order(
+    colnames(level2_raw_dominant_filtered), level2_group_level1, level1_order
+  )
+)
+level2_centered_full_order <- dominant_group_order(
+  level2_raw,
+  level2_column_order(colnames(level2_raw), level2_group_level1, level1_order)
+)
+organ_centered_dominant_filtered_order <- dominant_group_order(
+  organ_centered_dominant_filtered
+)
+level2_centered_dominant_filtered_order <- dominant_group_order(
+  level2_centered_dominant_filtered,
+  level2_column_order(
+    colnames(level2_centered_dominant_filtered), level2_group_level1, level1_order
+  )
+)
+
+organ_centered_supported <- organ_centered_dominant_filtered >= centered_dominant_cutoff
+level2_centered_supported <- level2_centered_dominant_filtered >= centered_dominant_cutoff
 
 stopifnot(
   nrow(organ_raw) == 200L,
@@ -444,7 +488,15 @@ stopifnot(
   identical(dimnames(organ_raw_dominant_filtered), dimnames(organ_normalized_dominant_filtered)),
   identical(dimnames(level2_raw_dominant_filtered), dimnames(level2_normalized_dominant_filtered)),
   all(apply(organ_raw_dominant_filtered, 1L, max) >= raw_dominant_cutoff),
-  all(apply(level2_raw_dominant_filtered, 1L, max) >= raw_dominant_cutoff)
+  all(apply(level2_raw_dominant_filtered, 1L, max) >= raw_dominant_cutoff),
+  all(rowSums(organ_centered_supported) > 0L),
+  all(rowSums(level2_centered_supported) > 0L),
+  all(colSums(organ_centered_supported) > 0L),
+  all(colSums(level2_centered_supported) > 0L),
+  "GP37" %in% rownames(organ_centered_dominant_filtered),
+  "GP37" %in% rownames(level2_centered_dominant_filtered),
+  max(abs(rowMeans(organ_centered))) < 1e-12,
+  max(abs(rowMeans(level2_centered))) < 1e-12
 )
 
 organ_palette <- palette_for_groups(
@@ -467,11 +519,28 @@ level2_raw_dominant_filtered_counts <- subset_group_counts(
 )
 organ_raw_dominant_filtered_palette <- organ_palette[colnames(organ_raw_dominant_filtered)]
 level2_raw_dominant_filtered_palette <- level2_palette[colnames(level2_raw_dominant_filtered)]
+organ_centered_dominant_filtered_counts <- subset_group_counts(
+  organ_result$counts,
+  colnames(organ_centered_dominant_filtered)
+)
+level2_centered_dominant_filtered_counts <- subset_group_counts(
+  level2_result$counts,
+  colnames(level2_centered_dominant_filtered)
+)
+organ_centered_dominant_filtered_palette <- organ_palette[colnames(organ_centered_dominant_filtered)]
+level2_centered_dominant_filtered_palette <- level2_palette[colnames(level2_centered_dominant_filtered)]
+level1_palette <- ZemmourLib::immgent_colors$level1[level1_order]
 
-write_matrix_csv(organ_raw, file.path(output_dir, "organ_simplified_raw_mean_loading_matrix.csv"))
-write_matrix_csv(organ_normalized, file.path(output_dir, "organ_simplified_row_normalized_mean_loading_matrix.csv"))
-write_matrix_csv(level2_raw, file.path(output_dir, "annotation_level2_raw_mean_loading_matrix.csv"))
-write_matrix_csv(level2_normalized, file.path(output_dir, "annotation_level2_row_normalized_mean_loading_matrix.csv"))
+write_matrix_csv(organ_centered, file.path(output_dir, "organ_simplified_row_centered_mean_loading_matrix.csv"))
+write_matrix_csv(level2_centered, file.path(output_dir, "annotation_level2_row_centered_mean_loading_matrix.csv"))
+write_matrix_csv(
+  organ_raw_dominant_filtered,
+  file.path(output_dir, "organ_simplified_raw_mean_loading_raw_mean_ge_0.1_dominant_group_matrix.csv")
+)
+write_matrix_csv(
+  level2_raw_dominant_filtered,
+  file.path(output_dir, "annotation_level2_raw_mean_loading_raw_mean_ge_0.1_dominant_group_matrix.csv")
+)
 write_matrix_csv(
   organ_normalized_dominant_filtered,
   file.path(output_dir, "organ_simplified_row_normalized_mean_loading_raw_mean_ge_0.1_dominant_group_matrix.csv")
@@ -480,28 +549,16 @@ write_matrix_csv(
   level2_normalized_dominant_filtered,
   file.path(output_dir, "annotation_level2_row_normalized_mean_loading_raw_mean_ge_0.1_dominant_group_matrix.csv")
 )
+write_matrix_csv(
+  organ_centered_dominant_filtered,
+  file.path(output_dir, "organ_simplified_row_centered_mean_loading_centered_mean_ge_0.01_dominant_group_matrix.csv")
+)
+write_matrix_csv(
+  level2_centered_dominant_filtered,
+  file.path(output_dir, "annotation_level2_row_centered_mean_loading_centered_mean_ge_0.01_dominant_group_matrix.csv")
+)
 write.csv(organ_result$counts, file.path(output_dir, "organ_simplified_group_cell_counts.csv"), row.names = FALSE, quote = FALSE)
 write.csv(level2_result$counts, file.path(output_dir, "annotation_level2_group_cell_counts.csv"), row.names = FALSE, quote = FALSE)
-write_triangular_order_csv(
-  organ_normalized,
-  organ_triangular,
-  file.path(output_dir, "organ_simplified_triangular_order.csv")
-)
-write_triangular_order_csv(
-  level2_normalized,
-  level2_triangular,
-  file.path(output_dir, "annotation_level2_triangular_order.csv")
-)
-write_dominant_group_order_csv(
-  organ_raw,
-  organ_dominant,
-  file.path(output_dir, "organ_simplified_dominant_group_order.csv")
-)
-write_dominant_group_order_csv(
-  level2_raw,
-  level2_dominant,
-  file.path(output_dir, "annotation_level2_dominant_group_order.csv")
-)
 write_dominant_group_order_csv(
   organ_raw_dominant_filtered,
   organ_raw_dominant_filtered_order,
@@ -512,115 +569,89 @@ write_dominant_group_order_csv(
   level2_raw_dominant_filtered_order,
   file.path(output_dir, "annotation_level2_raw_mean_ge_0.1_dominant_group_order.csv")
 )
-write_raw_filter_summary(
+write_dominant_group_order_csv(
+  organ_centered_dominant_filtered,
+  organ_centered_dominant_filtered_order,
+  file.path(output_dir, "organ_simplified_centered_mean_ge_0.01_dominant_group_order.csv")
+)
+write_dominant_group_order_csv(
+  level2_centered_dominant_filtered,
+  level2_centered_dominant_filtered_order,
+  file.path(output_dir, "annotation_level2_centered_mean_ge_0.01_dominant_group_order.csv")
+)
+write_filter_summary(
   organ_raw,
   organ_raw_dominant_filtered,
+  "raw mean cutoff",
   raw_dominant_cutoff,
   file.path(output_dir, "organ_simplified_raw_mean_ge_0.1_dominant_group_filter_summary.csv")
 )
-write_raw_filter_summary(
+write_filter_summary(
   level2_raw,
   level2_raw_dominant_filtered,
+  "raw mean cutoff",
   raw_dominant_cutoff,
   file.path(output_dir, "annotation_level2_raw_mean_ge_0.1_dominant_group_filter_summary.csv")
 )
+write_filter_summary(
+  organ_centered,
+  organ_centered_dominant_filtered,
+  "centered mean cutoff",
+  centered_dominant_cutoff,
+  file.path(output_dir, "organ_simplified_centered_mean_ge_0.01_dominant_group_filter_summary.csv")
+)
+write_filter_summary(
+  level2_centered,
+  level2_centered_dominant_filtered,
+  "centered mean cutoff",
+  centered_dominant_cutoff,
+  file.path(output_dir, "annotation_level2_centered_mean_ge_0.01_dominant_group_filter_summary.csv")
+)
 
 raw_limit <- max(c(organ_raw, level2_raw))
+centered_limit <- max(abs(c(organ_centered, level2_centered)))
 
-organ_raw_draw <- render_heatmap(
-  organ_raw,
+centered_full_description <- "all 200 GPs; dominant-group blocks (within block: dominance gap)"
+organ_centered_full_draw <- render_heatmap(
+  organ_centered,
   organ_result$counts,
   organ_palette,
   "tissue (organ_simplified)",
-  "Raw mean loading",
-  file.path(output_dir, "organ_simplified_raw_mean_loading_heatmap.pdf"),
-  raw_limit
+  "Row-centered mean loading",
+  file.path(output_dir, "organ_simplified_row_centered_mean_loading_full_dominant_group_heatmap.pdf"),
+  row_order = organ_dominant$row_order,
+  column_order = organ_dominant$column_order,
+  order_description = centered_full_description,
+  centered_limit = centered_limit
 )
-write_order_csv(organ_raw, organ_raw_draw, file.path(output_dir, "organ_simplified_raw_mean_loading"))
-
-organ_normalized_draw <- render_heatmap(
-  organ_normalized,
-  organ_result$counts,
-  organ_palette,
-  "tissue (organ_simplified)",
-  "Within-GP normalized mean loading",
-  file.path(output_dir, "organ_simplified_row_normalized_mean_loading_heatmap.pdf")
+write_order_csv(
+  organ_centered,
+  organ_centered_full_draw,
+  file.path(output_dir, "organ_simplified_row_centered_mean_loading_full_dominant_group")
 )
-write_order_csv(organ_normalized, organ_normalized_draw, file.path(output_dir, "organ_simplified_row_normalized_mean_loading"))
 
-level2_raw_draw <- render_heatmap(
-  level2_raw,
+level2_centered_full_description <- paste0(
+  "all 200 GPs; level2 columns: Figure 1 level1 order (CD8, CD4, Treg, gdT, CD8aa, Tz, DN, DP); ",
+  "alphabetical within level1; GP rows: dominant-group blocks"
+)
+level2_centered_full_draw <- render_heatmap(
+  level2_centered,
   level2_result$counts,
   level2_palette,
   "cluster (annotation_level2)",
-  "Raw mean loading",
-  file.path(output_dir, "annotation_level2_raw_mean_loading_heatmap.pdf"),
-  raw_limit
+  "Row-centered mean loading",
+  file.path(output_dir, "annotation_level2_row_centered_mean_loading_full_level1_order_heatmap.pdf"),
+  row_order = level2_centered_full_order$row_order,
+  column_order = level2_centered_full_order$column_order,
+  order_description = level2_centered_full_description,
+  centered_limit = centered_limit,
+  group_level1 = level2_group_level1,
+  level1_palette = level1_palette
 )
-write_order_csv(level2_raw, level2_raw_draw, file.path(output_dir, "annotation_level2_raw_mean_loading"))
-
-level2_normalized_draw <- render_heatmap(
-  level2_normalized,
-  level2_result$counts,
-  level2_palette,
-  "cluster (annotation_level2)",
-  "Within-GP normalized mean loading",
-  file.path(output_dir, "annotation_level2_row_normalized_mean_loading_heatmap.pdf")
-)
-write_order_csv(level2_normalized, level2_normalized_draw, file.path(output_dir, "annotation_level2_row_normalized_mean_loading"))
-
-triangular_description <- paste0(
-  "triangular-first ordering (relative support >= ", support_cutoff, ")"
-)
-
-organ_raw_triangular_draw <- render_heatmap(
-  organ_raw,
-  organ_result$counts,
-  organ_palette,
-  "tissue (organ_simplified)",
-  "Raw mean loading",
-  file.path(output_dir, "organ_simplified_raw_mean_loading_triangular_heatmap.pdf"),
-  raw_limit,
-  organ_triangular$row_order,
-  organ_triangular$column_order,
-  triangular_description
-)
-
-organ_normalized_triangular_draw <- render_heatmap(
-  organ_normalized,
-  organ_result$counts,
-  organ_palette,
-  "tissue (organ_simplified)",
-  "Within-GP normalized mean loading",
-  file.path(output_dir, "organ_simplified_row_normalized_mean_loading_triangular_heatmap.pdf"),
-  row_order = organ_triangular$row_order,
-  column_order = organ_triangular$column_order,
-  order_description = triangular_description
-)
-
-level2_raw_triangular_draw <- render_heatmap(
-  level2_raw,
-  level2_result$counts,
-  level2_palette,
-  "cluster (annotation_level2)",
-  "Raw mean loading",
-  file.path(output_dir, "annotation_level2_raw_mean_loading_triangular_heatmap.pdf"),
-  raw_limit,
-  level2_triangular$row_order,
-  level2_triangular$column_order,
-  triangular_description
-)
-
-level2_normalized_triangular_draw <- render_heatmap(
-  level2_normalized,
-  level2_result$counts,
-  level2_palette,
-  "cluster (annotation_level2)",
-  "Within-GP normalized mean loading",
-  file.path(output_dir, "annotation_level2_row_normalized_mean_loading_triangular_heatmap.pdf"),
-  row_order = level2_triangular$row_order,
-  column_order = level2_triangular$column_order,
-  order_description = triangular_description
+write_order_csv(
+  level2_centered,
+  level2_centered_full_draw,
+  file.path(output_dir, "annotation_level2_row_centered_mean_loading_full_level1_order")
 )
 
 dominant_group_description <- "dominant-group blocks (within block: dominance gap)"
@@ -664,7 +695,13 @@ level2_raw_dominant_draw <- render_heatmap(
   raw_limit,
   level2_raw_dominant_filtered_order$row_order,
   level2_raw_dominant_filtered_order$column_order,
-  filtered_dominant_group_description
+  paste0(
+    "level2 columns: Figure 1 level1 order (CD8, CD4, Treg, gdT, CD8aa, Tz, DN, DP); ",
+    "alphabetical within level1; GP rows: dominant-group blocks; focus: raw mean >= ",
+    raw_dominant_cutoff, " filter"
+  ),
+  group_level1 = level2_group_level1,
+  level1_palette = level1_palette
 )
 
 level2_normalized_dominant_draw <- render_heatmap(
@@ -676,7 +713,48 @@ level2_normalized_dominant_draw <- render_heatmap(
   file.path(output_dir, "annotation_level2_row_normalized_mean_loading_dominant_group_heatmap.pdf"),
   row_order = level2_raw_dominant_filtered_order$row_order,
   column_order = level2_raw_dominant_filtered_order$column_order,
-  order_description = filtered_dominant_group_description
+  order_description = paste0(
+    "level2 columns: Figure 1 level1 order (CD8, CD4, Treg, gdT, CD8aa, Tz, DN, DP); ",
+    "alphabetical within level1; GP rows: dominant-group blocks; focus: raw mean >= ",
+    raw_dominant_cutoff, " filter"
+  ),
+  group_level1 = level2_group_level1,
+  level1_palette = level1_palette
+)
+
+organ_centered_dominant_draw <- render_heatmap(
+  organ_centered_dominant_filtered,
+  organ_centered_dominant_filtered_counts,
+  organ_centered_dominant_filtered_palette,
+  "tissue (organ_simplified)",
+  "Row-centered mean loading",
+  file.path(output_dir, "organ_simplified_row_centered_mean_loading_dominant_group_heatmap.pdf"),
+  row_order = organ_centered_dominant_filtered_order$row_order,
+  column_order = organ_centered_dominant_filtered_order$column_order,
+  order_description = paste0(
+    dominant_group_description,
+    "; focus: centered mean >= ", centered_dominant_cutoff, " filter"
+  ),
+  centered_limit = centered_limit
+)
+
+level2_centered_dominant_draw <- render_heatmap(
+  level2_centered_dominant_filtered,
+  level2_centered_dominant_filtered_counts,
+  level2_centered_dominant_filtered_palette,
+  "cluster (annotation_level2)",
+  "Row-centered mean loading",
+  file.path(output_dir, "annotation_level2_row_centered_mean_loading_dominant_group_heatmap.pdf"),
+  row_order = level2_centered_dominant_filtered_order$row_order,
+  column_order = level2_centered_dominant_filtered_order$column_order,
+  order_description = paste0(
+    "level2 columns: Figure 1 level1 order (CD8, CD4, Treg, gdT, CD8aa, Tz, DN, DP); ",
+    "alphabetical within level1; GP rows: dominant-group blocks; focus: centered mean >= ",
+    centered_dominant_cutoff, " filter"
+  ),
+  centered_limit = centered_limit,
+  group_level1 = level2_group_level1,
+  level1_palette = level1_palette
 )
 
 summary_lines <- c(
@@ -686,21 +764,22 @@ summary_lines <- c(
   paste("Observed organ_simplified groups:", ncol(organ_raw)),
   paste("Observed annotation_level2 groups:", ncol(level2_raw)),
   paste("Shared raw-mean color maximum:", format(raw_limit, digits = 8)),
-  "Clustering: Euclidean distance with complete linkage on both rows and columns.",
+  paste("Shared centered color maximum:", format(centered_limit, digits = 8)),
   "Normalized matrices: each GP row divided by its maximum group mean.",
-  paste("Triangular support cutoff:", support_cutoff),
-  "Triangular ordering: columns by decreasing support; rows by rightmost support boundary, support count, and rarity score.",
-  paste("Organ triangular right-boundary increases:", organ_triangular$row_right_boundary_increases),
-  paste("Level2 triangular right-boundary increases:", level2_triangular$row_right_boundary_increases),
-  "Dominant-group ordering: columns by number of dominant GPs; rows grouped by dominant group and ordered by decreasing dominance gap.",
-  paste("Organ dominant groups represented:", sum(organ_dominant$dominant_gp_count > 0L)),
-  paste("Level2 dominant groups represented:", sum(level2_dominant$dominant_gp_count > 0L)),
+  "Centered matrices: each GP row has its mean across groups subtracted.",
+  "Tissue dominant-group ordering: columns by number of dominant GPs; rows grouped by dominant group and ordered by decreasing dominance gap.",
+  "Final level2 ordering: Figure 1 level1 order (CD8, CD4, Treg, gdT, CD8aa, Tz, DN, DP), alphabetized within level1; rows grouped by dominant level2.",
   paste("Final raw dominant heatmap cutoff:", raw_dominant_cutoff),
+  paste("Final centered dominant heatmap cutoff:", centered_dominant_cutoff),
   paste("Filtered tissue raw dominant heatmap:", nrow(organ_raw_dominant_filtered), "GPs x", ncol(organ_raw_dominant_filtered), "groups"),
   paste("Filtered level2 raw dominant heatmap:", nrow(level2_raw_dominant_filtered), "GPs x", ncol(level2_raw_dominant_filtered), "groups"),
-  "Final raw and normalized dominant-group heatmaps share the raw-filtered rows, columns, and order for each grouping.",
-  paste("Organ PDF dimensions (inches):", round(organ_raw_draw$width_in, 1), "x", round(organ_raw_draw$height_in, 1)),
-  paste("Level2 PDF dimensions (inches):", round(level2_raw_draw$width_in, 1), "x", round(level2_raw_draw$height_in, 1))
+  paste("Filtered tissue centered dominant heatmap:", nrow(organ_centered_dominant_filtered), "GPs x", ncol(organ_centered_dominant_filtered), "groups"),
+  paste("Filtered level2 centered dominant heatmap:", nrow(level2_centered_dominant_filtered), "GPs x", ncol(level2_centered_dominant_filtered), "groups"),
+  "Final raw and normalized dominant-group heatmaps share their raw-filtered rows, columns, and order; centered heatmaps use independent positive centered mean >= 0.01 filtering and ordering.",
+  paste("Full centered tissue heatmap:", nrow(organ_centered), "GPs x", ncol(organ_centered), "groups"),
+  paste("Full centered level2 heatmap:", nrow(level2_centered), "GPs x", ncol(level2_centered), "groups"),
+  paste("Filtered tissue PDF dimensions (inches):", round(organ_raw_dominant_draw$width_in, 1), "x", round(organ_raw_dominant_draw$height_in, 1)),
+  paste("Filtered level2 PDF dimensions (inches):", round(level2_raw_dominant_draw$width_in, 1), "x", round(level2_raw_dominant_draw$height_in, 1))
 )
 writeLines(summary_lines, file.path(output_dir, "heatmap_summary.txt"))
 

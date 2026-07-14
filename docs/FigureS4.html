@@ -363,7 +363,7 @@ mean-loading heatmaps</h1>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -374,8 +374,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -384,17 +384,17 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-13
+<strong>Last updated:</strong> 2026-07-14
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong>
-<code>immgenT-GP-analysis/analysis/</code> <span
+<code>figs4_publish_clean/analysis/</code> <span
 class="glyphicon glyphicon-question-sign" aria-hidden="true"
 title="This is the local directory in which the code in this file was executed.">
 </span>
@@ -414,21 +414,18 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
-changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges"
+<div id="strongRMarkdownfilestronguptodate"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R
-Markdown file created these results, you’ll want to first commit it to
-the Git repo. If you’re still working on the analysis, you can ignore
-this warning. When you’re finished, you can run
-<code>wflow_publish</code> to commit the R Markdown file and build the
-HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
 </div>
 </div>
 </div>
@@ -519,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec2b3360b38a0c1dcd0068b24e02311b9db0dbc34targetblankc2b3360a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedb2469bcf5422a6650b9aa6c9cd87b9ccba2b4detargetblankdb2469ba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c2b3360b38a0c1dcd0068b24e02311b9db0dbc34" target="_blank">c2b3360</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/db2469bcf5422a6650b9aa6c9cd87b9ccba2b4de" target="_blank">db2469b</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec2b3360b38a0c1dcd0068b24e02311b9db0dbc34targetblankc2b3360a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedb2469bcf5422a6650b9aa6c9cd87b9ccba2b4detargetblankdb2469ba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -537,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c2b3360b38a0c1dcd0068b24e02311b9db0dbc34" target="_blank">c2b3360</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/db2469bcf5422a6650b9aa6c9cd87b9ccba2b4de" target="_blank">db2469b</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -551,55 +548,7 @@ depends on. Below is the status of the Git repository when the results
 were generated:
 </p>
 <pre><code>
-Ignored files:
-    Ignored:    .DS_Store
-    Ignored:    .claude/
-    Ignored:    analysis/.DS_Store
-    Ignored:    analysis/.Rhistory
-    Ignored:    analysis/assets/.DS_Store
-    Ignored:    code/.DS_Store
-    Ignored:    data
-    Ignored:    figures/.DS_Store
-    Ignored:    figures/final-selected/.DS_Store
-    Ignored:    figures/final-selected/bits/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure 1/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure 2/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure 3/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure 4/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure 6/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure 7/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure S1/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure S2/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure S3/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure S6/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure S7/.DS_Store
-    Ignored:    figures/generated/.DS_Store
-    Ignored:    figures/generated/Figure 5/
-    Ignored:    figures/generated/Figure 7/
-    Ignored:    figures/generated/Figure 8/
-    Ignored:    figures/generated/Figure 9/
-    Ignored:    tmp/
-
-Untracked files:
-    Untracked:  analysis/FigureS4.Rmd
-    Untracked:  analysis/assets/FigureS4/
-    Untracked:  code/other/
-    Untracked:  experiments/
-    Untracked:  figures/generated/Figure S4/
-    Untracked:  log/
-    Untracked:  plan/
-    Untracked:  script/FigureS4.R
-    Untracked:  tables/
-
-Unstaged changes:
-    Modified:   analysis/Figure6.Rmd
-    Modified:   analysis/Methods_FlashierFit.Rmd
-    Modified:   analysis/assets/Figure6/6b.png
-    Modified:   analysis/index.Rmd
-    Modified:   figures/generated/Figure 6/6b.pdf
-    Modified:   script/Figure3.R
-    Modified:   script/Figure6.R
-
+working directory clean
 </code></pre>
 <p>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not
@@ -614,20 +563,118 @@ have uncommitted changes.
 </div>
 <div id="versions" class="tab-pane fade">
 <p>
-There are no past versions. Publish this analysis with
-<code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/FigureS4.Rmd</code>) and HTML
+(<code>docs/FigureS4.html</code>) files. If you’ve configured a remote
+Git repository (see <code>?wflow_git_remote</code>), click on the
+hyperlinks in the table below to view the files as they were in that
+past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/db2469bcf5422a6650b9aa6c9cd87b9ccba2b4de/analysis/FigureS4.Rmd" target="_blank">db2469b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-14
+</td>
+<td>
+Prepare Figure S4 centered heatmaps
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/db2469bcf5422a6650b9aa6c9cd87b9ccba2b4de/docs/FigureS4.html" target="_blank">db2469b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-14
+</td>
+<td>
+Prepare Figure S4 centered heatmaps
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/c344aaac0f40cec3809038031fd2a44e7e90baf7/analysis/FigureS4.Rmd" target="_blank">c344aaa</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-13
+</td>
+<td>
+Add Figure S4 mean-loading heatmaps
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/c344aaac0f40cec3809038031fd2a44e7e90baf7/docs/FigureS4.html" target="_blank">c344aaa</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-13
+</td>
+<td>
+Add Figure S4 mean-loading heatmaps
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
 </div>
 <p>Figure S4 is produced by <a
 href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS4.R"><code>script/FigureS4.R</code></a>.
-The page provides raw and within-GP-normalized alternatives as clickable
-tabs for each panel; no display choice has been finalized. The code is
-shown for reference and is not re-executed on this page. All panels use
-healthy non-thymocyte cells (<code>condition_broad == "healthy"</code>
-and <code>annotation_level1 != "thymocyte"</code>).</p>
+The page provides raw, within-GP-normalized, and row-centered
+alternatives as clickable tabs for each panel; no display choice has
+been finalized. The code is shown for reference and is not re-executed
+on this page. All panels use healthy non-thymocyte cells
+(<code>condition_broad == "healthy"</code> and
+<code>annotation_level1 != "thymocyte"</code>).</p>
 <div id="setup-filtering-and-ordering" class="section level2">
 <h2>Setup, filtering, and ordering</h2>
 <pre class="r"><code># Figure S4. Healthy non-thymocyte GP mean-loading heatmaps.
@@ -635,10 +682,11 @@ and <code>annotation_level1 != "thymocyte"</code>).</p>
 # Panel S4a: tissue (organ_simplified).
 # Panel S4b: cluster (annotation_level2).
 #
-# Each panel has raw and within-GP normalized alternatives. Both alternatives
-# use the same raw-mean-filtered GP/group set and dominant-group order so they
-# can be compared directly. The normalized matrix is calculated before
-# filtering, and every retained GP has a raw mean maximum &gt;= 0.1.
+# Raw and within-GP normalized alternatives use the same raw-mean-filtered
+# GP/group set. The row-centered alternatives are independently filtered from
+# their full centered matrices using positive centered mean loading &gt;= 0.01.
+# Level2 columns follow Figure 1&#39;s level1 order, with level2 labels
+# alphabetized within each level1 block.
 
 suppressPackageStartupMessages({
   library(ComplexHeatmap)
@@ -679,6 +727,10 @@ normalize_by_gp_max &lt;- function(mean_matrix) {
   sweep(mean_matrix, 1L, row_max, &quot;/&quot;)
 }
 
+center_by_gp_mean &lt;- function(mean_matrix) {
+  sweep(mean_matrix, 1L, rowMeans(mean_matrix), &quot;-&quot;)
+}
+
 filter_raw_mean_matrix &lt;- function(raw_matrix, raw_mean_cutoff) {
   keep_gp &lt;- rowSums(raw_matrix &gt;= raw_mean_cutoff) &gt; 0L
   filtered_raw &lt;- raw_matrix[keep_gp, , drop = FALSE]
@@ -691,7 +743,19 @@ filter_raw_mean_matrix &lt;- function(raw_matrix, raw_mean_cutoff) {
   filtered_raw
 }
 
-dominant_group_order &lt;- function(raw_mean_matrix) {
+filter_centered_mean_matrix &lt;- function(centered_matrix, centered_mean_cutoff) {
+  supported_entries &lt;- centered_matrix &gt;= centered_mean_cutoff
+  keep_gp &lt;- rowSums(supported_entries) &gt; 0L
+  keep_group &lt;- colSums(supported_entries[keep_gp, , drop = FALSE]) &gt; 0L
+  filtered_centered &lt;- centered_matrix[keep_gp, keep_group, drop = FALSE]
+
+  if (nrow(filtered_centered) == 0L || ncol(filtered_centered) &lt; 2L) {
+    stop(&quot;The centered-mean filter must retain at least one GP and two groups.&quot;)
+  }
+  filtered_centered
+}
+
+dominant_group_order &lt;- function(raw_mean_matrix, fixed_column_order = NULL) {
   gp_number &lt;- suppressWarnings(as.integer(sub(&quot;^GP&quot;, &quot;&quot;, rownames(raw_mean_matrix))))
   if (ncol(raw_mean_matrix) &lt; 2L || anyNA(gp_number)) {
     stop(&quot;Dominant-group ordering requires at least two groups and GP&lt;number&gt; row names.&quot;)
@@ -701,8 +765,20 @@ dominant_group_order &lt;- function(raw_mean_matrix) {
   dominant_mean &lt;- raw_mean_matrix[cbind(seq_len(nrow(raw_mean_matrix)), dominant_index)]
   second_mean &lt;- apply(raw_mean_matrix, 1L, function(values) sort(values, decreasing = TRUE)[2L])
   dominance_gap &lt;- dominant_mean - second_mean
-  dominant_gp_count &lt;- tabulate(dominant_index, nbins = ncol(raw_mean_matrix))
-  column_order &lt;- order(-dominant_gp_count, -colMeans(raw_mean_matrix), colnames(raw_mean_matrix))
+
+  if (is.null(fixed_column_order)) {
+    dominant_gp_count &lt;- tabulate(dominant_index, nbins = ncol(raw_mean_matrix))
+    column_order &lt;- order(-dominant_gp_count, -colMeans(raw_mean_matrix), colnames(raw_mean_matrix))
+  } else {
+    if (
+      length(fixed_column_order) != ncol(raw_mean_matrix) ||
+      !identical(sort(fixed_column_order), seq_len(ncol(raw_mean_matrix)))
+    ) {
+      stop(&quot;The fixed column order must be a complete permutation.&quot;)
+    }
+    column_order &lt;- fixed_column_order
+  }
+
   dominant_group_position &lt;- match(dominant_index, column_order)
   row_order &lt;- order(dominant_group_position, -dominance_gap, -dominant_mean, gp_number)
 
@@ -711,6 +787,28 @@ dominant_group_order &lt;- function(raw_mean_matrix) {
   }
 
   list(row_order = row_order, column_order = column_order)
+}
+
+level2_to_level1_map &lt;- function(meta, groups, level1_order) {
+  mapping &lt;- unique(data.frame(
+    group = as.character(meta$annotation_level2),
+    level1 = as.character(meta$annotation_level1),
+    stringsAsFactors = FALSE
+  ))
+  if (anyDuplicated(mapping$group)) {
+    stop(&quot;Each annotation_level2 label must map to exactly one annotation_level1 label.&quot;)
+  }
+
+  group_level1 &lt;- mapping$level1[match(groups, mapping$group)]
+  names(group_level1) &lt;- groups
+  if (anyNA(group_level1) || any(!group_level1 %in% level1_order)) {
+    stop(&quot;Every displayed level2 group must map to the Figure 1 level1 order.&quot;)
+  }
+  group_level1
+}
+
+level2_column_order &lt;- function(groups, group_level1, level1_order) {
+  order(match(group_level1[groups], level1_order), groups)
 }
 
 palette_for_groups &lt;- function(groups, palette, label) {
@@ -727,10 +825,14 @@ render_heatmap &lt;- function(
     group_label,
     scale_label,
     filename,
-    raw_limit,
     row_order,
     column_order,
-    raw_mean_cutoff
+    raw_mean_cutoff,
+    raw_limit = NULL,
+    centered_limit = NULL,
+    group_level1 = NULL,
+    level1_palette = NULL,
+    order_description = NULL
 ) {
   if (
     length(row_order) != nrow(matrix) || length(column_order) != ncol(matrix) ||
@@ -746,36 +848,68 @@ render_heatmap &lt;- function(
       c(&quot;#FFFFFF&quot;, &quot;#FCAE91&quot;, &quot;#99000D&quot;)
     )
     legend_at &lt;- c(0, raw_limit / 2, raw_limit)
-  } else {
+  } else if (identical(scale_label, &quot;Within-GP normalized mean loading&quot;)) {
     color_fun &lt;- circlize::colorRamp2(
       c(0, 0.5, 1),
       c(&quot;#FFFFFF&quot;, &quot;#FCAE91&quot;, &quot;#99000D&quot;)
     )
     legend_at &lt;- c(0, 0.5, 1)
+  } else if (identical(scale_label, &quot;Row-centered mean loading&quot;)) {
+    color_fun &lt;- circlize::colorRamp2(
+      c(-centered_limit, 0, centered_limit),
+      c(&quot;#2166AC&quot;, &quot;#FFFFFF&quot;, &quot;#B2182B&quot;)
+    )
+    legend_at &lt;- c(-centered_limit, 0, centered_limit)
+  } else {
+    stop(&quot;Unsupported scale label: &quot;, scale_label)
   }
 
   heatmap_width_mm &lt;- max(180, ncol(matrix) * 4.2)
-  heatmap_height_mm &lt;- max(480, nrow(matrix) * 3.0)
+  heatmap_height_mm &lt;- max(160, nrow(matrix) * 3.5)
   pdf_width_in &lt;- (heatmap_width_mm + 130) / 25.4
-  pdf_height_in &lt;- (heatmap_height_mm + 120) / 25.4
-  order_description &lt;- paste0(
-    &quot;dominant-group blocks (within block: dominance gap); focus: raw mean &gt;= &quot;,
-    raw_mean_cutoff, &quot; filter&quot;
-  )
-
-  column_annotation &lt;- ComplexHeatmap::HeatmapAnnotation(
-    group = factor(colnames(matrix), levels = colnames(matrix)),
-    col = list(group = group_palette),
-    show_legend = FALSE,
-    annotation_name_side = &quot;left&quot;,
-    annotation_height = grid::unit(4, &quot;mm&quot;)
-  )
-
-  short_scale_label &lt;- if (identical(scale_label, &quot;Raw mean loading&quot;)) {
-    &quot;Raw GP mean loading&quot;
-  } else {
-    &quot;Normalized GP mean loading&quot;
+  pdf_height_in &lt;- (heatmap_height_mm + 90) / 25.4
+  cell_width_mm &lt;- heatmap_width_mm / ncol(matrix)
+  cell_height_mm &lt;- heatmap_height_mm / nrow(matrix)
+  row_label_fontsize &lt;- min(14, max(9, floor(cell_height_mm * 2.8)))
+  column_label_fontsize &lt;- min(14, max(9, floor(cell_width_mm * 2.8)))
+  if (is.null(order_description)) {
+    order_description &lt;- paste0(
+      &quot;dominant-group blocks (within block: dominance gap); focus: raw mean &gt;= &quot;,
+      raw_mean_cutoff, &quot; filter&quot;
+    )
   }
+
+  if (is.null(group_level1)) {
+    column_annotation &lt;- ComplexHeatmap::HeatmapAnnotation(
+      group = factor(colnames(matrix), levels = colnames(matrix)),
+      col = list(group = group_palette),
+      show_legend = FALSE,
+      annotation_name_side = &quot;left&quot;,
+      annotation_name_gp = grid::gpar(fontsize = 10, fontface = &quot;bold&quot;),
+      annotation_height = grid::unit(4, &quot;mm&quot;)
+    )
+  } else {
+    group_level1 &lt;- group_level1[colnames(matrix)]
+    if (anyNA(group_level1) || is.null(level1_palette)) {
+      stop(&quot;Level2 heatmaps require complete level1 annotations and a palette.&quot;)
+    }
+    column_annotation &lt;- ComplexHeatmap::HeatmapAnnotation(
+      level1 = factor(group_level1, levels = names(level1_palette)),
+      group = factor(colnames(matrix), levels = colnames(matrix)),
+      col = list(level1 = level1_palette, group = group_palette),
+      show_legend = FALSE,
+      annotation_name_side = &quot;left&quot;,
+      annotation_name_gp = grid::gpar(fontsize = 10, fontface = &quot;bold&quot;),
+      annotation_height = grid::unit(c(4, 4), &quot;mm&quot;)
+    )
+  }
+
+  short_scale_label &lt;- switch(
+    scale_label,
+    &quot;Raw mean loading&quot; = &quot;Raw GP mean loading&quot;,
+    &quot;Within-GP normalized mean loading&quot; = &quot;Normalized GP mean loading&quot;,
+    &quot;Row-centered mean loading&quot; = &quot;Row-centered GP mean loading&quot;
+  )
 
   heatmap &lt;- ComplexHeatmap::Heatmap(
     matrix,
@@ -787,16 +921,18 @@ render_heatmap &lt;- function(
     column_order = column_order,
     top_annotation = column_annotation,
     column_title = paste0(short_scale_label, &quot;: &quot;, group_label, &quot;\n&quot;, order_description),
-    column_title_gp = grid::gpar(fontsize = 13, fontface = &quot;bold&quot;),
+    column_title_gp = grid::gpar(fontsize = 16, fontface = &quot;bold&quot;),
     row_title = &quot;GP&quot;,
-    row_title_gp = grid::gpar(fontsize = 10),
-    row_names_gp = grid::gpar(fontsize = 6),
-    column_names_gp = grid::gpar(fontsize = 5),
-    column_names_rot = 45,
+    row_title_gp = grid::gpar(fontsize = 12),
+    row_names_gp = grid::gpar(fontsize = row_label_fontsize),
+    column_names_gp = grid::gpar(fontsize = column_label_fontsize),
+    column_names_rot = 90,
     heatmap_legend_param = list(
       title = scale_label,
       at = legend_at,
-      labels = format(legend_at, trim = TRUE, scientific = FALSE)
+      labels = format(legend_at, trim = TRUE, scientific = FALSE),
+      title_gp = grid::gpar(fontsize = 11, fontface = &quot;bold&quot;),
+      labels_gp = grid::gpar(fontsize = 10)
     ),
     width = grid::unit(heatmap_width_mm, &quot;mm&quot;),
     height = grid::unit(heatmap_height_mm, &quot;mm&quot;),
@@ -828,34 +964,78 @@ if (ncol(L_reference) != 200L || nrow(L_reference) != nrow(meta_reference) || an
 }
 
 raw_mean_cutoff &lt;- 0.1
+centered_mean_cutoff &lt;- 0.01
+level1_order &lt;- c(&quot;CD8&quot;, &quot;CD4&quot;, &quot;Treg&quot;, &quot;gdT&quot;, &quot;CD8aa&quot;, &quot;Tz&quot;, &quot;DN&quot;, &quot;DP&quot;)
 organ_result &lt;- mean_loading_by_group(L_reference, meta_reference$organ_simplified)
 level2_result &lt;- mean_loading_by_group(L_reference, meta_reference$annotation_level2)
 organ_raw &lt;- organ_result$matrix
 level2_raw &lt;- level2_result$matrix
 organ_normalized &lt;- normalize_by_gp_max(organ_raw)
 level2_normalized &lt;- normalize_by_gp_max(level2_raw)
+organ_centered &lt;- center_by_gp_mean(organ_raw)
+level2_centered &lt;- center_by_gp_mean(level2_raw)
 raw_limit &lt;- max(c(organ_raw, level2_raw))
+centered_limit &lt;- max(abs(c(organ_centered, level2_centered)))
 
 organ_raw_filtered &lt;- filter_raw_mean_matrix(organ_raw, raw_mean_cutoff)
 level2_raw_filtered &lt;- filter_raw_mean_matrix(level2_raw, raw_mean_cutoff)
 organ_normalized_filtered &lt;- organ_normalized[
-  rownames(organ_raw_filtered),
-  colnames(organ_raw_filtered),
-  drop = FALSE
+  rownames(organ_raw_filtered), colnames(organ_raw_filtered), drop = FALSE
 ]
 level2_normalized_filtered &lt;- level2_normalized[
-  rownames(level2_raw_filtered),
-  colnames(level2_raw_filtered),
-  drop = FALSE
+  rownames(level2_raw_filtered), colnames(level2_raw_filtered), drop = FALSE
 ]
+organ_centered_filtered &lt;- filter_centered_mean_matrix(organ_centered, centered_mean_cutoff)
+level2_centered_filtered &lt;- filter_centered_mean_matrix(level2_centered, centered_mean_cutoff)
+
+level2_group_level1 &lt;- level2_to_level1_map(
+  meta_reference, colnames(level2_raw), level1_order
+)
 organ_order &lt;- dominant_group_order(organ_raw_filtered)
-level2_order &lt;- dominant_group_order(level2_raw_filtered)
+level2_order &lt;- dominant_group_order(
+  level2_raw_filtered,
+  level2_column_order(
+    colnames(level2_raw_filtered), level2_group_level1, level1_order
+  )
+)
+organ_centered_order &lt;- dominant_group_order(organ_centered_filtered)
+level2_centered_order &lt;- dominant_group_order(
+  level2_centered_filtered,
+  level2_column_order(
+    colnames(level2_centered_filtered), level2_group_level1, level1_order
+  )
+)
+level2_order_description &lt;- paste0(
+  &quot;level2 columns: Figure 1 level1 order (CD8, CD4, Treg, gdT, CD8aa, Tz, DN, DP); &quot;,
+  &quot;alphabetical within level1; GP rows: dominant-group blocks; focus: raw mean &gt;= &quot;,
+  raw_mean_cutoff, &quot; filter&quot;
+)
+organ_centered_order_description &lt;- paste0(
+  &quot;dominant-group blocks (within block: dominance gap); focus: centered mean &gt;= &quot;,
+  centered_mean_cutoff, &quot; filter&quot;
+)
+level2_centered_order_description &lt;- paste0(
+  &quot;level2 columns: Figure 1 level1 order (CD8, CD4, Treg, gdT, CD8aa, Tz, DN, DP); &quot;,
+  &quot;alphabetical within level1; GP rows: dominant-group blocks; focus: centered mean &gt;= &quot;,
+  centered_mean_cutoff, &quot; filter&quot;
+)
+
+organ_centered_supported &lt;- organ_centered_filtered &gt;= centered_mean_cutoff
+level2_centered_supported &lt;- level2_centered_filtered &gt;= centered_mean_cutoff
 
 stopifnot(
   identical(dimnames(organ_raw_filtered), dimnames(organ_normalized_filtered)),
   identical(dimnames(level2_raw_filtered), dimnames(level2_normalized_filtered)),
   all(apply(organ_raw_filtered, 1L, max) &gt;= raw_mean_cutoff),
-  all(apply(level2_raw_filtered, 1L, max) &gt;= raw_mean_cutoff)
+  all(apply(level2_raw_filtered, 1L, max) &gt;= raw_mean_cutoff),
+  all(rowSums(organ_centered_supported) &gt; 0L),
+  all(rowSums(level2_centered_supported) &gt; 0L),
+  all(colSums(organ_centered_supported) &gt; 0L),
+  all(colSums(level2_centered_supported) &gt; 0L),
+  &quot;GP37&quot; %in% rownames(organ_centered_filtered),
+  &quot;GP37&quot; %in% rownames(level2_centered_filtered),
+  max(abs(rowMeans(organ_centered))) &lt; 1e-12,
+  max(abs(rowMeans(level2_centered))) &lt; 1e-12
 )
 
 organ_palette &lt;- palette_for_groups(
@@ -867,19 +1047,79 @@ level2_palette &lt;- palette_for_groups(
   colnames(level2_raw_filtered),
   ZemmourLib::immgent_colors$level2,
   &quot;annotation_level2&quot;
-)</code></pre>
+)
+organ_centered_palette &lt;- palette_for_groups(
+  colnames(organ_centered_filtered),
+  ZemmourLib::immgent_colors$organ_simplified,
+  &quot;organ_simplified&quot;
+)
+level2_centered_palette &lt;- palette_for_groups(
+  colnames(level2_centered_filtered),
+  ZemmourLib::immgent_colors$level2,
+  &quot;annotation_level2&quot;
+)
+level1_palette &lt;- ZemmourLib::immgent_colors$level1[level1_order]</code></pre>
 </div>
 <div id="figs4a" class="section level2 tabset">
 <h2 class="tabset">(a) Tissue mean loading</h2>
-<p>Both alternatives retain the same 31 GPs and 18
-<code>organ_simplified</code> tissues. GPs are retained only when a
-tissue has raw mean loading &gt;= 0.1; the dominant-group order is
-calculated on that filtered raw matrix. The normalized values are
-calculated before filtering, so each displayed GP has a raw mean maximum
-of at least 0.1.</p>
+<p>The raw and normalized alternatives retain the same 31 GPs and 18
+<code>organ_simplified</code> tissues. They use raw mean loading &gt;=
+0.1 for filtering and a dominant-group order calculated on that filtered
+raw matrix. The centered alternative is filtered independently after
+row-centering: it retains 70 GPs and all 18 tissues. Rows and columns
+are kept when they contain at least one centered mean loading &gt;=
+0.01.</p>
 <div id="raw-mean-loading" class="section level3">
 <h3>Raw mean loading</h3>
 <p><img src="assets/FigureS4/S4a_raw_mean_loading.png" width="100%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-S4a_raw_mean_loading">
+Past versions of S4a_raw_mean_loading.png
+</button>
+</p>
+<div id="fig-S4a_raw_mean_loading" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/db2469bcf5422a6650b9aa6c9cd87b9ccba2b4de/docs/assets/FigureS4/S4a_raw_mean_loading.png" target="_blank">db2469b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-14
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/c344aaac0f40cec3809038031fd2a44e7e90baf7/docs/assets/FigureS4/S4a_raw_mean_loading.png" target="_blank">c344aaa</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div class="figcaption">
 <p><strong>Fig. S4a, raw alternative.</strong> Mean GP loading across
 healthy non-thymocyte tissues. Rows and columns follow dominant-group
@@ -891,6 +1131,54 @@ within a block by dominance gap.</p>
 <div id="within-gp-normalized-mean-loading" class="section level3">
 <h3>Within-GP normalized mean loading</h3>
 <p><img src="assets/FigureS4/S4a_normalized_mean_loading.png" width="100%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-S4a_normalized_mean_loading">
+Past versions of S4a_normalized_mean_loading.png
+</button>
+</p>
+<div id="fig-S4a_normalized_mean_loading" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/db2469bcf5422a6650b9aa6c9cd87b9ccba2b4de/docs/assets/FigureS4/S4a_normalized_mean_loading.png" target="_blank">db2469b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-14
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/c344aaac0f40cec3809038031fd2a44e7e90baf7/docs/assets/FigureS4/S4a_normalized_mean_loading.png" target="_blank">c344aaa</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div class="figcaption">
 <p><strong>Fig. S4a, normalized alternative.</strong> The same retained
 GPs, tissues, and dominant-group order as the raw view, with each GP
@@ -898,88 +1186,297 @@ divided by its largest raw tissue mean before filtering. This view
 emphasizes relative tissue preference.</p>
 </div>
 </div>
+<div id="row-centered-mean-loading" class="section level3">
+<h3>Row-centered mean loading</h3>
+<p><img src="assets/FigureS4/S4a_centered_mean_loading.png" width="100%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-S4a_centered_mean_loading">
+Past versions of S4a_centered_mean_loading.png
+</button>
+</p>
+<div id="fig-S4a_centered_mean_loading" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/db2469bcf5422a6650b9aa6c9cd87b9ccba2b4de/docs/assets/FigureS4/S4a_centered_mean_loading.png" target="_blank">db2469b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="figcaption">
+<p><strong>Fig. S4a, centered alternative.</strong> For each GP, the
+mean loading across tissues is subtracted from every tissue mean. Rows
+and columns are retained independently when they contain at least one
+centered mean &gt;= 0.01, then arranged by a new dominant-group order.
+This cutoff retains GP37 and its mammary-gland-specific signal.</p>
+</div>
+</div>
 </div>
 <div id="figs4b" class="section level2 tabset">
 <h2 class="tabset">(b) Level2 mean loading</h2>
-<p>Both alternatives retain the same 64 GPs and 107
-<code>annotation_level2</code> clusters. The same raw-mean cutoff and
-dominant-group ordering rule are used as in panel (a). Every displayed
-GP has a raw mean maximum of at least 0.1.</p>
+<p>The raw and normalized alternatives retain the same 64 GPs and 107
+<code>annotation_level2</code> clusters using raw mean loading &gt;=
+0.1. The centered alternative is filtered independently after
+row-centering, retaining 112 GPs and all 107 clusters. Rows and columns
+are kept when they contain at least one centered mean loading &gt;=
+0.01. For every level2 view, displayed columns are fixed to the Figure 1
+level1 sequence (<code>CD8</code>, <code>CD4</code>, <code>Treg</code>,
+<code>gdT</code>, <code>CD8aa</code>, <code>Tz</code>, <code>DN</code>,
+then <code>DP</code>) and are alphabetized within each level1 block. GPs
+are arranged into dominant-level2 blocks using the corresponding view’s
+retained matrix. The colored top strips show level1 and level2
+annotations.</p>
 <div id="raw-mean-loading-1" class="section level3">
 <h3>Raw mean loading</h3>
 <p><img src="assets/FigureS4/S4b_raw_mean_loading.png" width="100%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-S4b_raw_mean_loading">
+Past versions of S4b_raw_mean_loading.png
+</button>
+</p>
+<div id="fig-S4b_raw_mean_loading" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/db2469bcf5422a6650b9aa6c9cd87b9ccba2b4de/docs/assets/FigureS4/S4b_raw_mean_loading.png" target="_blank">db2469b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-14
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/c344aaac0f40cec3809038031fd2a44e7e90baf7/docs/assets/FigureS4/S4b_raw_mean_loading.png" target="_blank">c344aaa</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div class="figcaption">
 <p><strong>Fig. S4b, raw alternative.</strong> Mean GP loading across
-healthy non-thymocyte level2 clusters. Clusters and GPs use the filtered
-dominant-group order.</p>
+healthy non-thymocyte level2 clusters, with level2 columns grouped by
+the Figure 1 level1 order.</p>
 </div>
 </div>
 <div id="within-gp-normalized-mean-loading-1" class="section level3">
 <h3>Within-GP normalized mean loading</h3>
 <p><img src="assets/FigureS4/S4b_normalized_mean_loading.png" width="100%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-S4b_normalized_mean_loading">
+Past versions of S4b_normalized_mean_loading.png
+</button>
+</p>
+<div id="fig-S4b_normalized_mean_loading" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/db2469bcf5422a6650b9aa6c9cd87b9ccba2b4de/docs/assets/FigureS4/S4b_normalized_mean_loading.png" target="_blank">db2469b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-14
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/c344aaac0f40cec3809038031fd2a44e7e90baf7/docs/assets/FigureS4/S4b_normalized_mean_loading.png" target="_blank">c344aaa</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div class="figcaption">
 <p><strong>Fig. S4b, normalized alternative.</strong> The same retained
-GPs, level2 clusters, and dominant-group order as the raw view, with
-within-GP normalization applied before filtering.</p>
+GPs, level2 clusters, and Figure 1 level1-first order as the raw view,
+with within-GP normalization applied before filtering.</p>
+</div>
+</div>
+<div id="row-centered-mean-loading-1" class="section level3">
+<h3>Row-centered mean loading</h3>
+<p><img src="assets/FigureS4/S4b_centered_mean_loading.png" width="100%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-S4b_centered_mean_loading">
+Past versions of S4b_centered_mean_loading.png
+</button>
+</p>
+<div id="fig-S4b_centered_mean_loading" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/db2469bcf5422a6650b9aa6c9cd87b9ccba2b4de/docs/assets/FigureS4/S4b_centered_mean_loading.png" target="_blank">db2469b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="figcaption">
+<p><strong>Fig. S4b, centered alternative.</strong> For each GP, the
+mean loading across level2 clusters is subtracted from every cluster
+mean. Rows and columns are retained independently when they contain at
+least one centered mean &gt;= 0.01; retained level2 columns keep the
+Figure 1 level1-first order.</p>
 </div>
 </div>
 </div>
 <div id="panel-rendering" class="section level2">
 <h2>Panel rendering</h2>
 <pre class="r"><code>render_heatmap(
-  organ_raw_filtered,
-  organ_palette,
-  &quot;tissue (organ_simplified)&quot;,
-  &quot;Raw mean loading&quot;,
+  organ_raw_filtered, organ_palette, &quot;tissue (organ_simplified)&quot;, &quot;Raw mean loading&quot;,
   file.path(figure_path, &quot;S4a_raw_mean_loading.pdf&quot;),
-  raw_limit,
-  organ_order$row_order,
-  organ_order$column_order,
-  raw_mean_cutoff
+  organ_order$row_order, organ_order$column_order, raw_mean_cutoff, raw_limit = raw_limit
 )
 render_heatmap(
-  organ_normalized_filtered,
-  organ_palette,
-  &quot;tissue (organ_simplified)&quot;,
+  organ_normalized_filtered, organ_palette, &quot;tissue (organ_simplified)&quot;,
   &quot;Within-GP normalized mean loading&quot;,
   file.path(figure_path, &quot;S4a_normalized_mean_loading.pdf&quot;),
-  raw_limit,
-  organ_order$row_order,
-  organ_order$column_order,
-  raw_mean_cutoff
+  organ_order$row_order, organ_order$column_order, raw_mean_cutoff
 )
 render_heatmap(
-  level2_raw_filtered,
-  level2_palette,
-  &quot;cluster (annotation_level2)&quot;,
-  &quot;Raw mean loading&quot;,
+  organ_centered_filtered, organ_centered_palette, &quot;tissue (organ_simplified)&quot;,
+  &quot;Row-centered mean loading&quot;,
+  file.path(figure_path, &quot;S4a_centered_mean_loading.pdf&quot;),
+  organ_centered_order$row_order, organ_centered_order$column_order, centered_mean_cutoff,
+  centered_limit = centered_limit, order_description = organ_centered_order_description
+)
+render_heatmap(
+  level2_raw_filtered, level2_palette, &quot;cluster (annotation_level2)&quot;, &quot;Raw mean loading&quot;,
   file.path(figure_path, &quot;S4b_raw_mean_loading.pdf&quot;),
-  raw_limit,
-  level2_order$row_order,
-  level2_order$column_order,
-  raw_mean_cutoff
+  level2_order$row_order, level2_order$column_order, raw_mean_cutoff,
+  raw_limit = raw_limit, group_level1 = level2_group_level1, level1_palette = level1_palette,
+  order_description = level2_order_description
 )
 render_heatmap(
-  level2_normalized_filtered,
-  level2_palette,
-  &quot;cluster (annotation_level2)&quot;,
+  level2_normalized_filtered, level2_palette, &quot;cluster (annotation_level2)&quot;,
   &quot;Within-GP normalized mean loading&quot;,
   file.path(figure_path, &quot;S4b_normalized_mean_loading.pdf&quot;),
-  raw_limit,
-  level2_order$row_order,
-  level2_order$column_order,
-  raw_mean_cutoff
+  level2_order$row_order, level2_order$column_order, raw_mean_cutoff,
+  group_level1 = level2_group_level1, level1_palette = level1_palette,
+  order_description = level2_order_description
+)
+render_heatmap(
+  level2_centered_filtered, level2_centered_palette, &quot;cluster (annotation_level2)&quot;,
+  &quot;Row-centered mean loading&quot;,
+  file.path(figure_path, &quot;S4b_centered_mean_loading.pdf&quot;),
+  level2_centered_order$row_order, level2_centered_order$column_order, centered_mean_cutoff,
+  centered_limit = centered_limit, group_level1 = level2_group_level1,
+  level1_palette = level1_palette, order_description = level2_centered_order_description
 )
 
 write.csv(
   data.frame(
-    panel = c(&quot;S4a&quot;, &quot;S4b&quot;),
-    grouping = c(&quot;organ_simplified&quot;, &quot;annotation_level2&quot;),
-    raw_mean_cutoff = raw_mean_cutoff,
-    full_gp_count = c(nrow(organ_raw), nrow(level2_raw)),
-    retained_gp_count = c(nrow(organ_raw_filtered), nrow(level2_raw_filtered)),
-    full_group_count = c(ncol(organ_raw), ncol(level2_raw)),
-    retained_group_count = c(ncol(organ_raw_filtered), ncol(level2_raw_filtered))
+    panel = c(&quot;S4a&quot;, &quot;S4b&quot;, &quot;S4a&quot;, &quot;S4b&quot;),
+    grouping = c(&quot;organ_simplified&quot;, &quot;annotation_level2&quot;, &quot;organ_simplified&quot;, &quot;annotation_level2&quot;),
+    view = c(&quot;raw_normalized&quot;, &quot;raw_normalized&quot;, &quot;centered&quot;, &quot;centered&quot;),
+    filter_basis = c(
+      &quot;raw mean&quot;, &quot;raw mean&quot;,
+      &quot;positive centered mean&quot;, &quot;positive centered mean&quot;
+    ),
+    filter_cutoff = c(raw_mean_cutoff, raw_mean_cutoff, centered_mean_cutoff, centered_mean_cutoff),
+    centered_definition = &quot;group mean minus mean across groups for each GP&quot;,
+    full_gp_count = c(nrow(organ_raw), nrow(level2_raw), nrow(organ_raw), nrow(level2_raw)),
+    retained_gp_count = c(
+      nrow(organ_raw_filtered), nrow(level2_raw_filtered),
+      nrow(organ_centered_filtered), nrow(level2_centered_filtered)
+    ),
+    full_group_count = c(ncol(organ_raw), ncol(level2_raw), ncol(organ_raw), ncol(level2_raw)),
+    retained_group_count = c(
+      ncol(organ_raw_filtered), ncol(level2_raw_filtered),
+      ncol(organ_centered_filtered), ncol(level2_centered_filtered)
+    )
   ),
   file.path(figure_path, &quot;S4_filter_summary.csv&quot;),
   row.names = FALSE,
@@ -1018,11 +1515,12 @@ loaded via a namespace (and not attached):
  [5] xfun_0.55       stringi_1.8.7   otel_0.2.0      promises_1.5.0
  [9] jsonlite_2.0.0  workflowr_1.7.2 glue_1.8.1      rprojroot_2.1.1
 [13] git2r_0.36.2    htmltools_0.5.9 httpuv_1.6.16   sass_0.4.10
-[17] rmarkdown_2.30  evaluate_1.0.5  jquerylib_0.1.4 tibble_3.3.0
-[21] fastmap_1.2.0   yaml_2.3.12     lifecycle_1.0.5 stringr_1.6.0
-[25] compiler_4.5.1  fs_1.6.6        Rcpp_1.1.1-1.1  pkgconfig_2.0.3
-[29] later_1.4.4     digest_0.6.39   R6_2.6.1        pillar_1.11.1
-[33] magrittr_2.0.5  bslib_0.9.0     tools_4.5.1     cachem_1.1.0   </code></pre>
+[17] rmarkdown_2.30  tibble_3.3.0    evaluate_1.0.5  jquerylib_0.1.4
+[21] fastmap_1.2.0   yaml_2.3.12     lifecycle_1.0.5 whisker_0.4.1
+[25] stringr_1.6.0   compiler_4.5.1  fs_1.6.6        pkgconfig_2.0.3
+[29] Rcpp_1.1.1-1.1  later_1.4.4     digest_0.6.39   R6_2.6.1
+[33] pillar_1.11.1   magrittr_2.0.5  bslib_0.9.0     tools_4.5.1
+[37] cachem_1.1.0   </code></pre>
 </div>
 </div>
 </div>

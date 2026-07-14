@@ -1,2 +1,2 @@
-raw_mean_cutoff,full_gp_count,retained_gp_count,full_group_count,retained_group_count
-0.1,200,64,107,107
+filter_basis,filter_value,full_gp_count,retained_gp_count,full_group_count,retained_group_count
+raw mean cutoff,0.1,200,64,107,107

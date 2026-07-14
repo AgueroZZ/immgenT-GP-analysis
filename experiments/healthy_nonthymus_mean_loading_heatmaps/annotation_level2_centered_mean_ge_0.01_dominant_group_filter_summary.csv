@@ -1,2 +1,2 @@
 filter_basis,filter_value,full_gp_count,retained_gp_count,full_group_count,retained_group_count
-raw mean cutoff,0.1,200,31,18,18
+centered mean cutoff,0.01,200,112,107,107
