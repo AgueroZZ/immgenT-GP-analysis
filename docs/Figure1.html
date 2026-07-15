@@ -362,7 +362,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -373,8 +373,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -387,9 +387,9 @@ aria-hidden="true"></span> </a>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong>
@@ -413,21 +413,18 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
-changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges"
+<div id="strongRMarkdownfilestronguptodate"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of
-the R Markdown file created these results, you’ll want to first commit
-it to the Git repo. If you’re still working on the analysis, you can
-ignore this warning. When you’re finished, you can run
-<code>wflow_publish</code> to commit the R Markdown file and build the
-HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
 </div>
 </div>
 </div>
@@ -518,15 +515,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree3c052d60cb3b40310c8fcae0d1fab43097b0e176targetblank3c052d6a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec7dafe5405cc1200df25efff41a26205cd45d13ctargetblankc7dafe5a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/3c052d60cb3b40310c8fcae0d1fab43097b0e176" target="_blank">3c052d6</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c7dafe5405cc1200df25efff41a26205cd45d13c" target="_blank">c7dafe5</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree3c052d60cb3b40310c8fcae0d1fab43097b0e176targetblank3c052d6a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec7dafe5405cc1200df25efff41a26205cd45d13ctargetblankc7dafe5a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -536,7 +533,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/3c052d60cb3b40310c8fcae0d1fab43097b0e176" target="_blank">3c052d6</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c7dafe5405cc1200df25efff41a26205cd45d13c" target="_blank">c7dafe5</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -585,11 +582,6 @@ Untracked files:
     Untracked:  code/other/topic_wrapper_20250215_alldata_backfit.sh
     Untracked:  experiments/active_metric_comparison/
     Untracked:  experiments/figure6b_sparsity_ordered/
-    Untracked:  experiments/gene_correlation_network/gp_highlight_formal.pdf
-    Untracked:  experiments/gene_correlation_network/gp_highlight_formal.png
-    Untracked:  experiments/gene_correlation_network/gp_highlight_internal.pdf
-    Untracked:  experiments/gene_correlation_network/gp_highlight_internal.png
-    Untracked:  experiments/gene_correlation_network/gp_highlight_selected.R
     Untracked:  experiments/gene_umap_gp_space/
     Untracked:  experiments/protein_threshold_gp_loading_diff/
     Untracked:  experiments/surface_protein_activation_scatter/
@@ -604,10 +596,13 @@ Untracked files:
     Untracked:  tables/
 
 Unstaged changes:
-    Modified:   analysis/Figure1.Rmd
     Modified:   analysis/Methods_FlashierFit.Rmd
     Modified:   analysis/assets/Figure1/1C.png
-    Modified:   experiments/gene_correlation_network/README.md
+    Modified:   experiments/gene_correlation_network/gp_highlight_formal.pdf
+    Modified:   experiments/gene_correlation_network/gp_highlight_formal.png
+    Modified:   experiments/gene_correlation_network/gp_highlight_internal.pdf
+    Modified:   experiments/gene_correlation_network/gp_highlight_internal.png
+    Modified:   experiments/gene_correlation_network/gp_highlight_selected.R
     Modified:   figures/generated/Figure 1/1C.pdf
     Modified:   script/Figure1.R
     Modified:   script/Figure3.R
@@ -655,6 +650,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/c7dafe5405cc1200df25efff41a26205cd45d13c/analysis/Figure1.Rmd" target="_blank">c7dafe5</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-15
+</td>
+<td>
+Switch Figure 1C to GP-highlight gene-program network
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/c7dafe5405cc1200df25efff41a26205cd45d13c/docs/Figure1.html" target="_blank">c7dafe5</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-15
+</td>
+<td>
+Switch Figure 1C to GP-highlight gene-program network
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1109,7 +1138,7 @@ p_1C &lt;- ggraph(g, layout = &quot;manual&quot;, x = lay[nm, &quot;x&quot;], y 
   scale_y_continuous(expand = expansion(mult = 0.08)) +
   theme_void(base_size = 12) +
   theme(plot.margin = margin(10, 10, 10, 10), legend.position = &quot;none&quot;)
-ggsave(filename = paste0(figure_path, &quot;1C.pdf&quot;), plot = p_1C, width = 20, height = 16)</code></pre>
+ggsave(filename = paste0(figure_path, &quot;1C.pdf&quot;), plot = p_1C, width = 20, height = 20)</code></pre>
 <p><img src="assets/Figure1/1C.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-1C">
@@ -1133,6 +1162,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/c7dafe5405cc1200df25efff41a26205cd45d13c/docs/assets/Figure1/1C.png" target="_blank">c7dafe5</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-15
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/cac4f30c8a6bb816e65dd5f5074fc4790a76f92d/docs/assets/Figure1/1C.png" target="_blank">cac4f30</a>

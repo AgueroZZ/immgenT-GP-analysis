@@ -175,7 +175,7 @@ p_1C <- ggraph(g, layout = "manual", x = lay[nm, "x"], y = lay[nm, "y"]) +
   scale_y_continuous(expand = expansion(mult = 0.08)) +
   theme_void(base_size = 12) +
   theme(plot.margin = margin(10, 10, 10, 10), legend.position = "none")
-ggsave(filename = paste0(figure_path, "1C.pdf"), plot = p_1C, width = 20, height = 16)
+ggsave(filename = paste0(figure_path, "1C.pdf"), plot = p_1C, width = 20, height = 20)
 
 # ============================================================
 # Candidates for 1D-1I: histograms of active-cell / active-gene counts

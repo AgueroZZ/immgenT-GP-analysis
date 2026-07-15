@@ -29,7 +29,7 @@ SIG_THR  <- 0.1
 SEED     <- 1            # layout seed -- fixes the arrangement
 GP_COL   <- "darkgrey"   # non-highlighted GP nodes
 GENE_COL <- "#C7A76C"    # gene nodes (tan)
-CANVAS_W <- 20; CANVAS_H <- 16
+CANVAS_W <- 20; CANVAS_H <- 20
 data_path <- "data/"
 out_dir   <- "experiments/gene_correlation_network/"
 
