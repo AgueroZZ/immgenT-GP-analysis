@@ -107,19 +107,23 @@ seurat_meta_filtered <- seurat_meta_filtered[non_thymo_cells, ]
 protein_mat_normalized_lognorm <- protein_mat_normalized_lognorm[non_thymo_cells]
 
 # ============================================================
-# 1C: gene-program network -- the 200 GPs linked by shared top signature genes.
-# (Replaces the earlier 200-GP x cells loading heatmap.) Each GP is connected to
-# its top up-regulated signature genes; a gene shared by several GPs links them,
-# so the force-directed layout places programs with overlapping signatures near
-# one another. Marker genes are highlighted in color. Method: see the Fig 1C
-# caption in analysis/Figure1.Rmd.
+# 1C: gene-program network -- the 200 GPs linked by their shared top signature
+# genes, with a selected set of GPs highlighted. Each highlighted GP's color runs
+# along its edges to its top signature genes (which are labeled); non-highlighted
+# GPs are grey. Formal version: no legend / no GP-index labels -- the color->GP
+# mapping and interpretation are in the Fig 1C caption (analysis/Figure1.Rmd).
 # ============================================================
 suppressPackageStartupMessages({
   library(igraph); library(tidygraph); library(ggraph)
 })
-N_TOP   <- 10                                     # top up-genes taken per GP
+N_TOP   <- 5                                      # top up-genes taken per GP
 SIG_THR <- 0.1                                    # min per-GP-normalized loading
-MARKERS <- c("Foxp3", "Cd8a", "Cd8b1", "Izumo1r", "Il2ra")   # FR4 = Izumo1r
+GP_HIGHLIGHTS <- c(                               # GP -> highlight color
+  GP68  = "pink2",  GP58  = "orange2", GP35  = "purple", GP171 = "blue",
+  GP1   = "cyan2",  GP56  = "red2",    GP161 = "brown",  GP6   = "green2",
+  GP7   = "green3", GP196 = "yellow3")
+GP_COL   <- "darkgrey"                            # non-highlighted GP nodes
+GENE_COL <- "#C7A76C"                             # gene nodes (tan)
 
 Fn <- F_pm_filtered
 colnames(Fn) <- paste0("GP", seq_len(ncol(Fn)))
@@ -133,64 +137,45 @@ names(top_up) <- GPs
 edges <- do.call(rbind, lapply(GPs, function(g)
   if (length(top_up[[g]])) data.frame(GP = g, Gene = top_up[[g]]) else NULL))
 
-# bipartite GP<->gene graph; a gene shared by several GPs connects those GPs.
-# Keep every GP and all of its top signature genes (nothing filtered out).
+# bipartite GP<->gene graph (every GP + all its top genes); plain FR layout
 gi <- graph_from_data_frame(edges, directed = FALSE)
 g  <- as_tbl_graph(gi, directed = FALSE)
-gp_set  <- unique(edges$GP)
-present <- intersect(MARKERS, V(gi)$name)         # markers present in the graph
-
-# one distinct highlight color per marker (shown via legend, not on-plot text)
-mkcol    <- setNames(c("#e6194B", "#3cb44b", "#4363d8", "#f58231",
-                       "#911eb4")[seq_along(present)], present)
-GP_COL   <- "#5B8CB8"                             # uniform GP ball color (blue)
-GENE_COL <- "#C7A76C"                             # shared-gene dot color (tan)
-
-g <- g %>% activate(nodes) %>% mutate(
-  is_gp   = name %in% gp_set,
-  gp_lab  = ifelse(name %in% gp_set, sub("GP", "", name), ""),
-  marker  = !name %in% gp_set & name %in% present,
-  mk_name = ifelse(!name %in% gp_set & name %in% present, name, NA_character_),
-  gp_size = ifelse(name %in% gp_set, 5.5, NA))    # uniform GP ball size
-g <- g %>% activate(edges) %>% mutate(            # marker edges carry marker color
-  gene_end = ifelse(.N()$marker[from], .N()$name[from],
-              ifelse(.N()$marker[to], .N()$name[to], NA_character_)),
-  is_mk    = !is.na(gene_end),
-  edge_col = ifelse(is_mk, mkcol[gene_end], NA_character_))
-
-# FR layout, radially compressed (pull periphery in) + jittered (split twin GPs)
-set.seed(2)
+gp_set <- unique(edges$GP)
+set.seed(1)
 lay <- layout_with_fr(gi)
-cx <- mean(lay[, 1]); cy <- mean(lay[, 2])
-rr <- sqrt((lay[, 1] - cx)^2 + (lay[, 2] - cy)^2)^0.65
-th <- atan2(lay[, 2] - cy, lay[, 1] - cx)
-lay <- cbind(x = cx + rr * cos(th), y = cy + rr * sin(th))
-jit <- 0.012 * max(diff(range(lay[, 1])), diff(range(lay[, 2])))
-lay[, 1] <- lay[, 1] + rnorm(nrow(lay), 0, jit)
-lay[, 2] <- lay[, 2] + rnorm(nrow(lay), 0, jit)
-rownames(lay) <- V(gi)$name
+colnames(lay) <- c("x", "y"); rownames(lay) <- V(gi)$name
 nm <- g %>% activate(nodes) %>% pull(name)
 
+# highlight selected GPs: color their node + edges, label the genes they connect to
+hl <- intersect(names(GP_HIGHLIGHTS), gp_set)
+hl_genes <- setdiff(unique(unlist(
+  lapply(hl, function(gp) neighbors(gi, gp)$name))), gp_set)
+g <- g %>% activate(nodes) %>% mutate(
+  is_gp = name %in% gp_set,
+  gp_fill = ifelse(is_gp & name %in% hl, unname(GP_HIGHLIGHTS[name]), GP_COL),
+  label_gene = !is_gp & name %in% hl_genes,
+  gene_lab = ifelse(label_gene, name, ""),
+  gp_size = ifelse(is_gp, 3, NA_real_))
+g <- g %>% activate(edges) %>% mutate(
+  gp_end = ifelse(.N()$is_gp[from], .N()$name[from], .N()$name[to]),
+  gp_edge_highlight = gp_end %in% hl,
+  gp_edge_col = ifelse(gp_edge_highlight, unname(GP_HIGHLIGHTS[gp_end]), NA_character_))
+
 p_1C <- ggraph(g, layout = "manual", x = lay[nm, "x"], y = lay[nm, "y"]) +
-  geom_edge_link(aes(filter = !is_mk), color = "black", alpha = 0.22, width = 0.32) +
-  geom_edge_link(aes(filter = is_mk, edge_colour = edge_col), alpha = 0.9, width = 0.7) +
-  geom_node_point(aes(filter = !is_gp & !marker), shape = 16, size = 1.0,
-                  color = GENE_COL, alpha = 0.75) +
-  geom_node_point(aes(filter = is_gp, size = gp_size),
-                  shape = 21, fill = GP_COL, color = "white", stroke = 0.4) +
-  geom_node_text(aes(filter = is_gp, label = gp_lab), color = "grey97", size = 1.9) +
-  geom_node_point(aes(filter = marker, color = mk_name), shape = 16, size = 3.2) +
-  scale_color_manual(values = mkcol, breaks = present, name = "Marker gene",
-                     na.translate = FALSE) +
-  scale_edge_colour_identity() + scale_size_identity() + scale_edge_width_identity() +
-  scale_x_continuous(expand = expansion(mult = 0.03)) +
-  scale_y_continuous(expand = expansion(mult = 0.03)) +
+  geom_edge_link(aes(filter = !gp_edge_highlight), color = "black", alpha = 0.18, width = 0.32) +
+  geom_edge_link(aes(filter = gp_edge_highlight, edge_colour = gp_edge_col), alpha = 0.95, width = 1.25) +
+  geom_node_point(aes(filter = !is_gp), shape = 16, size = 1, color = GENE_COL, alpha = 0.75) +
+  geom_node_point(aes(filter = is_gp, size = gp_size, fill = gp_fill),
+                  shape = 21, color = "white", stroke = 0.5) +
+  geom_node_text(aes(filter = label_gene, label = gene_lab), repel = TRUE,
+                 color = "black", size = 5, fontface = "italic", max.overlaps = Inf) +
+  scale_fill_identity() + scale_edge_colour_identity() +
+  scale_size_identity() + scale_edge_width_identity() +
+  scale_x_continuous(expand = expansion(mult = 0.08)) +
+  scale_y_continuous(expand = expansion(mult = 0.08)) +
   theme_void(base_size = 12) +
-  theme(plot.margin = margin(4, 4, 4, 4), legend.position = "right",
-        legend.title = element_text(face = "bold", size = 12),
-        legend.text  = element_text(face = "italic", size = 10)) +
-  guides(color = guide_legend(override.aes = list(size = 4)))
-ggsave(filename = paste0(figure_path, "1C.pdf"), plot = p_1C, width = 17, height = 14)
+  theme(plot.margin = margin(10, 10, 10, 10), legend.position = "none")
+ggsave(filename = paste0(figure_path, "1C.pdf"), plot = p_1C, width = 20, height = 16)
 
 # ============================================================
 # Candidates for 1D-1I: histograms of active-cell / active-gene counts

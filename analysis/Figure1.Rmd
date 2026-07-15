@@ -43,7 +43,7 @@ This panel is a hand-drawn schematic, not generated from R -- there is no code o
 
 ## (C) Gene-program network {#fig1c}
 
-```{r fig1c-code, code=readLines("../script/Figure1.R")[109:193], eval=FALSE}
+```{r fig1c-code, code=readLines("../script/Figure1.R")[109:178], eval=FALSE}
 ```
 
 ```{r fig1c-img, echo=FALSE, out.width="70%"}
@@ -54,18 +54,24 @@ knitr::include_graphics("assets/Figure1/1C.png")
 **Fig. 1C. Gene-program (GP) network.** A map of the 200 GPs and the signature
 genes they share. Each GP's loadings are first normalized within the GP (divided
 by that GP's maximum absolute loading, so loadings run 0–1), and every GP is
-connected to its **top 10 up-regulated signature genes** (largest positive
-normalized loadings, ≥ 0.1). **Blue balls are GPs** (numbered) and **tan balls
-are genes**; an edge joins a GP to each of its top signature genes, so a gene
-that appears among several GPs' top genes links those GPs. Five **marker genes**
-(legend: *Foxp3, Cd8a, Cd8b1,
-Izumo1r* [FR4], *Il2ra*) are highlighted, each in its own color shared by the
-gene's ball and its edges, indicating which GPs carry that marker.
+connected to its **top 5 up-regulated signature genes** (largest positive
+normalized loadings, ≥ 0.1). **Grey balls are GPs** and **tan balls are genes**;
+an edge joins a GP to each of its top signature genes, so a gene that appears
+among several GPs' top genes links those GPs, and a force-directed layout places
+programs with overlapping signatures near one another. A selected set of GPs is
+**highlighted**, each in its own color carried along its edges to its (labeled)
+top signature genes: GP68 (pink), GP58 (orange), GP35 (purple), GP171 (blue),
+GP1 (cyan), GP56 (red), GP161 (dark red), GP6 (light green), GP7 (green),
+GP196 (yellow). This shows each highlighted program's signature and how programs
+that share genes sit together — e.g. the Treg program GP68 (*Foxp3, Il2ra,
+Izumo1r*) and the CD8 program GP58 (*Cd8a, Cd8b1*) occupy distinct neighborhoods.
+An internal version with a color→GP legend and GP-index labels is kept in
+`experiments/gene_correlation_network/` (`gp_highlight_internal`).
 :::
 
 ## (D) GP1 signature volcano {#fig1d}
 
-```{r fig1d-code, code=readLines("../script/Figure1.R")[294:300], eval=FALSE}
+```{r fig1d-code, code=readLines("../script/Figure1.R")[279:285], eval=FALSE}
 ```
 
 ```{r fig1d-img, echo=FALSE, out.width="50%"}
@@ -78,7 +84,7 @@ knitr::include_graphics("assets/Figure1/1D.png")
 
 ## (E) Active-cell proportion per GP {#fig1e}
 
-```{r fig1e-code, code=readLines("../script/Figure1.R")[204:219], eval=FALSE}
+```{r fig1e-code, code=readLines("../script/Figure1.R")[189:204], eval=FALSE}
 ```
 
 ```{r fig1e-img, echo=FALSE, out.width="50%"}
@@ -91,7 +97,7 @@ knitr::include_graphics("assets/Figure1/1E.png")
 
 ## (F) Active-gene count per GP {#fig1f}
 
-```{r fig1f-code, code=readLines("../script/Figure1.R")[274:283], eval=FALSE}
+```{r fig1f-code, code=readLines("../script/Figure1.R")[259:268], eval=FALSE}
 ```
 
 ```{r fig1f-img, echo=FALSE, out.width="50%"}
@@ -104,7 +110,7 @@ knitr::include_graphics("assets/Figure1/1F.png")
 
 ## (G) Active-GP count by lineage {#fig1g}
 
-```{r fig1g-code, code=readLines("../script/Figure1.R")[239:258], eval=FALSE}
+```{r fig1g-code, code=readLines("../script/Figure1.R")[224:243], eval=FALSE}
 ```
 
 ```{r fig1g-img, echo=FALSE, out.width="50%"}
@@ -117,7 +123,7 @@ knitr::include_graphics("assets/Figure1/1G.png")
 
 ## (H) Active-GP count, activated vs. resting {#fig1h}
 
-```{r fig1h-code, code=readLines("../script/Figure1.R")[221:237], eval=FALSE}
+```{r fig1h-code, code=readLines("../script/Figure1.R")[206:222], eval=FALSE}
 ```
 
 ```{r fig1h-img, echo=FALSE, out.width="50%"}
@@ -130,7 +136,7 @@ knitr::include_graphics("assets/Figure1/1H.png")
 
 ## (I) CD44 vs. active-GP count {#fig1i}
 
-```{r fig1i-code, code=readLines("../script/Figure1.R")[260:272], eval=FALSE}
+```{r fig1i-code, code=readLines("../script/Figure1.R")[245:257], eval=FALSE}
 ```
 
 ```{r fig1i-img, echo=FALSE, out.width="50%"}

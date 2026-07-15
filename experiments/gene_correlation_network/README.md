@@ -28,7 +28,27 @@ All inputs come from the flashier factor matrix `data/F_pm_filtered.rds`
 Built by **`gp_gene_bipartite_up.R [n_top] [drop_df]`** — edit the `MARKERS`
 vector to change which genes are highlighted. `drop_df` = optional filter
 dropping "glue" genes shared by more than `drop_df` GPs (markers exempt);
-**default `Inf` = off** (pure top-`n_top` ≥ 0.1 rule).
+**default `Inf` = off** (pure top-`n_top` ≥ 0.1 rule). This is the version wired
+into `script/Figure1.R` as panel 1C.
+
+## → GP-highlight variant
+
+**`gp_highlight_formal.png` / `.pdf`** (and `gp_highlight_internal.*`) — same
+GP-gene bipartite network, but highlighting a chosen set of **GPs** instead of
+marker genes. Each highlighted GP's color flows to its node and its edges, and
+the genes it connects to are labeled; a chosen GP's signature is read off
+directly and overlaps between GPs are visible.
+
+- **formal** = no legend, no GP-index labels (for figures — the legend squeezes
+  the plot).
+- **internal** = legend + GP-index labels (for the team, to see color → GP).
+- top-5 up genes per GP, plain FR layout (seed 1), large canvas for readable
+  labels.
+
+Built by **`gp_highlight_selected.R`** — refactored into `build_gp_gene_graph()`
+/ `add_gp_highlights()` / `make_gp_plot()`; **to highlight a different GP set,
+edit the `GP_HIGHLIGHTS` (GP → color) vector at the top and rerun. Nothing else
+needs to change.**
 
 Everything else is the exploration trail in **`archive/`** — kept for the record
 of what was tried and why (see Findings below), not needed to read the result.
