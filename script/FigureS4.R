@@ -1,13 +1,11 @@
-# Figure S4. Healthy non-thymocyte GP mean-loading heatmaps.
+# Figure S4. Full row-centered healthy non-thymocyte GP mean-loading heatmaps.
 #
-# Panel S4a: tissue (organ_simplified).
-# Panel S4b: cluster (annotation_level2).
+# Panel S4a: tissue (organ_simplified), all 200 GPs and all tissues.
+# Panel S4b: cluster (annotation_level2), all 200 GPs and all clusters.
 #
-# Raw and within-GP normalized alternatives use the same raw-mean-filtered
-# GP/group set. The row-centered alternatives are independently filtered from
-# their full centered matrices using positive centered mean loading >= 0.01.
-# Level2 columns follow Figure 1's level1 order, with level2 labels
-# alphabetized within each level1 block.
+# The shared centered color scale is fixed at [-0.2, 0.2]. Values outside
+# this range saturate at the endpoint colors. Level2 columns follow Figure 1's
+# level1 order, with level2 labels alphabetized within each level1 block.
 
 suppressPackageStartupMessages({
   library(ComplexHeatmap)
@@ -40,40 +38,8 @@ mean_loading_by_group <- function(L_mat, labels) {
   )
 }
 
-normalize_by_gp_max <- function(mean_matrix) {
-  row_max <- apply(mean_matrix, 1L, max)
-  if (any(!is.finite(row_max)) || any(row_max <= 0)) {
-    stop("Every GP must have a finite positive maximum mean loading.")
-  }
-  sweep(mean_matrix, 1L, row_max, "/")
-}
-
 center_by_gp_mean <- function(mean_matrix) {
   sweep(mean_matrix, 1L, rowMeans(mean_matrix), "-")
-}
-
-filter_raw_mean_matrix <- function(raw_matrix, raw_mean_cutoff) {
-  keep_gp <- rowSums(raw_matrix >= raw_mean_cutoff) > 0L
-  filtered_raw <- raw_matrix[keep_gp, , drop = FALSE]
-  keep_group <- colSums(filtered_raw >= raw_mean_cutoff) > 0L
-  filtered_raw <- filtered_raw[, keep_group, drop = FALSE]
-
-  if (nrow(filtered_raw) == 0L || ncol(filtered_raw) < 2L) {
-    stop("The raw-mean filter must retain at least one GP and two groups.")
-  }
-  filtered_raw
-}
-
-filter_centered_mean_matrix <- function(centered_matrix, centered_mean_cutoff) {
-  supported_entries <- centered_matrix >= centered_mean_cutoff
-  keep_gp <- rowSums(supported_entries) > 0L
-  keep_group <- colSums(supported_entries[keep_gp, , drop = FALSE]) > 0L
-  filtered_centered <- centered_matrix[keep_gp, keep_group, drop = FALSE]
-
-  if (nrow(filtered_centered) == 0L || ncol(filtered_centered) < 2L) {
-    stop("The centered-mean filter must retain at least one GP and two groups.")
-  }
-  filtered_centered
 }
 
 dominant_group_order <- function(raw_mean_matrix, fixed_column_order = NULL) {
@@ -140,20 +106,17 @@ palette_for_groups <- function(groups, palette, label) {
   palette[groups]
 }
 
-render_heatmap <- function(
+render_centered_heatmap <- function(
     matrix,
     group_palette,
     group_label,
-    scale_label,
     filename,
     row_order,
     column_order,
-    raw_mean_cutoff,
-    raw_limit = NULL,
-    centered_limit = NULL,
+    centered_color_limit,
+    order_description,
     group_level1 = NULL,
-    level1_palette = NULL,
-    order_description = NULL
+    level1_palette = NULL
 ) {
   if (
     length(row_order) != nrow(matrix) || length(column_order) != ncol(matrix) ||
@@ -163,27 +126,11 @@ render_heatmap <- function(
     stop("Fixed row and column orders must be complete permutations.")
   }
 
-  if (identical(scale_label, "Raw mean loading")) {
-    color_fun <- circlize::colorRamp2(
-      c(0, raw_limit * 0.15, raw_limit),
-      c("#FFFFFF", "#FCAE91", "#99000D")
-    )
-    legend_at <- c(0, raw_limit / 2, raw_limit)
-  } else if (identical(scale_label, "Within-GP normalized mean loading")) {
-    color_fun <- circlize::colorRamp2(
-      c(0, 0.5, 1),
-      c("#FFFFFF", "#FCAE91", "#99000D")
-    )
-    legend_at <- c(0, 0.5, 1)
-  } else if (identical(scale_label, "Row-centered mean loading")) {
-    color_fun <- circlize::colorRamp2(
-      c(-centered_limit, 0, centered_limit),
-      c("#2166AC", "#FFFFFF", "#B2182B")
-    )
-    legend_at <- c(-centered_limit, 0, centered_limit)
-  } else {
-    stop("Unsupported scale label: ", scale_label)
-  }
+  color_fun <- circlize::colorRamp2(
+    c(-centered_color_limit, 0, centered_color_limit),
+    c("#2166AC", "#FFFFFF", "#B2182B")
+  )
+  legend_at <- c(-centered_color_limit, 0, centered_color_limit)
 
   heatmap_width_mm <- max(180, ncol(matrix) * 4.2)
   heatmap_height_mm <- max(160, nrow(matrix) * 3.5)
@@ -193,12 +140,6 @@ render_heatmap <- function(
   cell_height_mm <- heatmap_height_mm / nrow(matrix)
   row_label_fontsize <- min(14, max(9, floor(cell_height_mm * 2.8)))
   column_label_fontsize <- min(14, max(9, floor(cell_width_mm * 2.8)))
-  if (is.null(order_description)) {
-    order_description <- paste0(
-      "dominant-group blocks (within block: dominance gap); focus: raw mean >= ",
-      raw_mean_cutoff, " filter"
-    )
-  }
 
   if (is.null(group_level1)) {
     column_annotation <- ComplexHeatmap::HeatmapAnnotation(
@@ -225,23 +166,18 @@ render_heatmap <- function(
     )
   }
 
-  short_scale_label <- switch(
-    scale_label,
-    "Raw mean loading" = "Raw GP mean loading",
-    "Within-GP normalized mean loading" = "Normalized GP mean loading",
-    "Row-centered mean loading" = "Row-centered GP mean loading"
-  )
-
   heatmap <- ComplexHeatmap::Heatmap(
     matrix,
-    name = scale_label,
+    name = "Row-centered mean loading",
     col = color_fun,
     cluster_rows = FALSE,
     cluster_columns = FALSE,
     row_order = row_order,
     column_order = column_order,
     top_annotation = column_annotation,
-    column_title = paste0(short_scale_label, ": ", group_label, "\n", order_description),
+    column_title = paste0(
+      "Row-centered GP mean loading: ", group_label, "\n", order_description
+    ),
     column_title_gp = grid::gpar(fontsize = 16, fontface = "bold"),
     row_title = "GP",
     row_title_gp = grid::gpar(fontsize = 12),
@@ -249,7 +185,7 @@ render_heatmap <- function(
     column_names_gp = grid::gpar(fontsize = column_label_fontsize),
     column_names_rot = 90,
     heatmap_legend_param = list(
-      title = scale_label,
+      title = "Row-centered mean loading",
       at = legend_at,
       labels = format(legend_at, trim = TRUE, scientific = FALSE),
       title_gp = grid::gpar(fontsize = 11, fontface = "bold"),
@@ -284,170 +220,90 @@ if (ncol(L_reference) != 200L || nrow(L_reference) != nrow(meta_reference) || an
   stop("The healthy non-thymocyte loading matrix has unexpected dimensions or missing values.")
 }
 
-raw_mean_cutoff <- 0.1
-centered_mean_cutoff <- 0.01
+centered_color_limit <- 0.2
 level1_order <- c("CD8", "CD4", "Treg", "gdT", "CD8aa", "Tz", "DN", "DP")
 organ_result <- mean_loading_by_group(L_reference, meta_reference$organ_simplified)
 level2_result <- mean_loading_by_group(L_reference, meta_reference$annotation_level2)
 organ_raw <- organ_result$matrix
 level2_raw <- level2_result$matrix
-organ_normalized <- normalize_by_gp_max(organ_raw)
-level2_normalized <- normalize_by_gp_max(level2_raw)
 organ_centered <- center_by_gp_mean(organ_raw)
 level2_centered <- center_by_gp_mean(level2_raw)
-raw_limit <- max(c(organ_raw, level2_raw))
-centered_limit <- max(abs(c(organ_centered, level2_centered)))
-
-organ_raw_filtered <- filter_raw_mean_matrix(organ_raw, raw_mean_cutoff)
-level2_raw_filtered <- filter_raw_mean_matrix(level2_raw, raw_mean_cutoff)
-organ_normalized_filtered <- organ_normalized[
-  rownames(organ_raw_filtered), colnames(organ_raw_filtered), drop = FALSE
-]
-level2_normalized_filtered <- level2_normalized[
-  rownames(level2_raw_filtered), colnames(level2_raw_filtered), drop = FALSE
-]
-organ_centered_filtered <- filter_centered_mean_matrix(organ_centered, centered_mean_cutoff)
-level2_centered_filtered <- filter_centered_mean_matrix(level2_centered, centered_mean_cutoff)
 
 level2_group_level1 <- level2_to_level1_map(
   meta_reference, colnames(level2_raw), level1_order
 )
-organ_order <- dominant_group_order(organ_raw_filtered)
+organ_order <- dominant_group_order(organ_raw)
 level2_order <- dominant_group_order(
-  level2_raw_filtered,
-  level2_column_order(
-    colnames(level2_raw_filtered), level2_group_level1, level1_order
-  )
+  level2_raw,
+  level2_column_order(colnames(level2_raw), level2_group_level1, level1_order)
 )
-organ_centered_order <- dominant_group_order(organ_centered_filtered)
-level2_centered_order <- dominant_group_order(
-  level2_centered_filtered,
-  level2_column_order(
-    colnames(level2_centered_filtered), level2_group_level1, level1_order
-  )
-)
-level2_order_description <- paste0(
-  "level2 columns: Figure 1 level1 order (CD8, CD4, Treg, gdT, CD8aa, Tz, DN, DP); ",
-  "alphabetical within level1; GP rows: dominant-group blocks; focus: raw mean >= ",
-  raw_mean_cutoff, " filter"
-)
-organ_centered_order_description <- paste0(
-  "dominant-group blocks (within block: dominance gap); focus: centered mean >= ",
-  centered_mean_cutoff, " filter"
-)
-level2_centered_order_description <- paste0(
-  "level2 columns: Figure 1 level1 order (CD8, CD4, Treg, gdT, CD8aa, Tz, DN, DP); ",
-  "alphabetical within level1; GP rows: dominant-group blocks; focus: centered mean >= ",
-  centered_mean_cutoff, " filter"
-)
-
-organ_centered_supported <- organ_centered_filtered >= centered_mean_cutoff
-level2_centered_supported <- level2_centered_filtered >= centered_mean_cutoff
 
 stopifnot(
-  identical(dimnames(organ_raw_filtered), dimnames(organ_normalized_filtered)),
-  identical(dimnames(level2_raw_filtered), dimnames(level2_normalized_filtered)),
-  all(apply(organ_raw_filtered, 1L, max) >= raw_mean_cutoff),
-  all(apply(level2_raw_filtered, 1L, max) >= raw_mean_cutoff),
-  all(rowSums(organ_centered_supported) > 0L),
-  all(rowSums(level2_centered_supported) > 0L),
-  all(colSums(organ_centered_supported) > 0L),
-  all(colSums(level2_centered_supported) > 0L),
-  "GP37" %in% rownames(organ_centered_filtered),
-  "GP37" %in% rownames(level2_centered_filtered),
+  nrow(organ_centered) == 200L,
+  nrow(level2_centered) == 200L,
+  ncol(organ_centered) == 18L,
+  ncol(level2_centered) == 107L,
   max(abs(rowMeans(organ_centered))) < 1e-12,
   max(abs(rowMeans(level2_centered))) < 1e-12
 )
 
 organ_palette <- palette_for_groups(
-  colnames(organ_raw_filtered),
+  colnames(organ_centered),
   ZemmourLib::immgent_colors$organ_simplified,
   "organ_simplified"
 )
 level2_palette <- palette_for_groups(
-  colnames(level2_raw_filtered),
-  ZemmourLib::immgent_colors$level2,
-  "annotation_level2"
-)
-organ_centered_palette <- palette_for_groups(
-  colnames(organ_centered_filtered),
-  ZemmourLib::immgent_colors$organ_simplified,
-  "organ_simplified"
-)
-level2_centered_palette <- palette_for_groups(
-  colnames(level2_centered_filtered),
+  colnames(level2_centered),
   ZemmourLib::immgent_colors$level2,
   "annotation_level2"
 )
 level1_palette <- ZemmourLib::immgent_colors$level1[level1_order]
 
-render_heatmap(
-  organ_raw_filtered, organ_palette, "tissue (organ_simplified)", "Raw mean loading",
-  file.path(figure_path, "S4a_raw_mean_loading.pdf"),
-  organ_order$row_order, organ_order$column_order, raw_mean_cutoff, raw_limit = raw_limit
-)
-render_heatmap(
-  organ_normalized_filtered, organ_palette, "tissue (organ_simplified)",
-  "Within-GP normalized mean loading",
-  file.path(figure_path, "S4a_normalized_mean_loading.pdf"),
-  organ_order$row_order, organ_order$column_order, raw_mean_cutoff
-)
-render_heatmap(
-  organ_centered_filtered, organ_centered_palette, "tissue (organ_simplified)",
-  "Row-centered mean loading",
+render_centered_heatmap(
+  organ_centered,
+  organ_palette,
+  "tissue (organ_simplified)",
   file.path(figure_path, "S4a_centered_mean_loading.pdf"),
-  organ_centered_order$row_order, organ_centered_order$column_order, centered_mean_cutoff,
-  centered_limit = centered_limit, order_description = organ_centered_order_description
+  organ_order$row_order,
+  organ_order$column_order,
+  centered_color_limit,
+  "all 200 GPs; dominant-group blocks (within block: dominance gap)"
 )
-render_heatmap(
-  level2_raw_filtered, level2_palette, "cluster (annotation_level2)", "Raw mean loading",
-  file.path(figure_path, "S4b_raw_mean_loading.pdf"),
-  level2_order$row_order, level2_order$column_order, raw_mean_cutoff,
-  raw_limit = raw_limit, group_level1 = level2_group_level1, level1_palette = level1_palette,
-  order_description = level2_order_description
-)
-render_heatmap(
-  level2_normalized_filtered, level2_palette, "cluster (annotation_level2)",
-  "Within-GP normalized mean loading",
-  file.path(figure_path, "S4b_normalized_mean_loading.pdf"),
-  level2_order$row_order, level2_order$column_order, raw_mean_cutoff,
-  group_level1 = level2_group_level1, level1_palette = level1_palette,
-  order_description = level2_order_description
-)
-render_heatmap(
-  level2_centered_filtered, level2_centered_palette, "cluster (annotation_level2)",
-  "Row-centered mean loading",
+
+render_centered_heatmap(
+  level2_centered,
+  level2_palette,
+  "cluster (annotation_level2)",
   file.path(figure_path, "S4b_centered_mean_loading.pdf"),
-  level2_centered_order$row_order, level2_centered_order$column_order, centered_mean_cutoff,
-  centered_limit = centered_limit, group_level1 = level2_group_level1,
-  level1_palette = level1_palette, order_description = level2_centered_order_description
+  level2_order$row_order,
+  level2_order$column_order,
+  centered_color_limit,
+  paste0(
+    "all 200 GPs; level2 columns: Figure 1 level1 order ",
+    "(CD8, CD4, Treg, gdT, CD8aa, Tz, DN, DP); ",
+    "alphabetical within level1; GP rows: dominant-group blocks"
+  ),
+  group_level1 = level2_group_level1,
+  level1_palette = level1_palette
 )
 
 write.csv(
   data.frame(
-    panel = c("S4a", "S4b", "S4a", "S4b"),
-    grouping = c("organ_simplified", "annotation_level2", "organ_simplified", "annotation_level2"),
-    view = c("raw_normalized", "raw_normalized", "centered", "centered"),
-    filter_basis = c(
-      "raw mean", "raw mean",
-      "positive centered mean", "positive centered mean"
-    ),
-    filter_cutoff = c(raw_mean_cutoff, raw_mean_cutoff, centered_mean_cutoff, centered_mean_cutoff),
+    panel = c("S4a", "S4b"),
+    grouping = c("organ_simplified", "annotation_level2"),
+    view = "full row-centered mean loading",
+    gp_count = c(nrow(organ_centered), nrow(level2_centered)),
+    group_count = c(ncol(organ_centered), ncol(level2_centered)),
     centered_definition = "group mean minus mean across groups for each GP",
-    full_gp_count = c(nrow(organ_raw), nrow(level2_raw), nrow(organ_raw), nrow(level2_raw)),
-    retained_gp_count = c(
-      nrow(organ_raw_filtered), nrow(level2_raw_filtered),
-      nrow(organ_centered_filtered), nrow(level2_centered_filtered)
-    ),
-    full_group_count = c(ncol(organ_raw), ncol(level2_raw), ncol(organ_raw), ncol(level2_raw)),
-    retained_group_count = c(
-      ncol(organ_raw_filtered), ncol(level2_raw_filtered),
-      ncol(organ_centered_filtered), ncol(level2_centered_filtered)
-    )
+    color_min = -centered_color_limit,
+    color_mid = 0,
+    color_max = centered_color_limit,
+    observed_min = c(min(organ_centered), min(level2_centered)),
+    observed_max = c(max(organ_centered), max(level2_centered))
   ),
-  file.path(figure_path, "S4_filter_summary.csv"),
+  file.path(figure_path, "S4_summary.csv"),
   row.names = FALSE,
   quote = FALSE
 )
 
-message("Wrote Figure S4 heatmaps to ", normalizePath(figure_path))
+message("Wrote final full-centered Figure S4 heatmaps to ", normalizePath(figure_path))

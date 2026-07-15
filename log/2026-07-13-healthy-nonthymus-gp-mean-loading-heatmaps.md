@@ -308,3 +308,31 @@ centered views also remain unfiltered at 200 GPs by 18 tissues and 200 GPs by
 107 level2 clusters. Experiment artifact names now use `centered_mean_ge_0.01`;
 the retired `centered_mean_ge_2sd` matrices, summaries, and order files were
 removed.
+
+## Final full-centered Figure S4 selection
+
+After collaborator review, replaced the exploratory formal alternatives with
+the unfiltered full row-centered matrices. Figure S4a now contains all 200 GPs
+and all 18 `organ_simplified` tissues. Figure S4b contains all 200 GPs and all
+107 `annotation_level2` clusters. No GP row or group column is filtered in the
+formal figure.
+
+The established full-matrix ordering is retained. Tissue columns use the
+dominant-group order, and tissue GP rows are grouped by their dominant raw-mean
+tissue. Level2 columns follow the Figure 1 level1 sequence `CD8, CD4, Treg,
+gdT, CD8aa, Tz, DN, DP`, alphabetized within level1; GP rows are grouped by
+their dominant level2 cluster.
+
+Changed the shared row-centered color mapping from the observed global range to
+a fixed symmetric range of `[-0.2, 0.2]`. Values outside the range saturate at
+the endpoint blue or red, so a centered loading around `0.2` receives the
+deepest red. The observed tissue centered range is approximately `[-0.1720,
+0.3280]`, and the level2 centered range is approximately `[-0.1648, 0.5499]`.
+
+Removed the formal raw and normalized PDFs, PNGs, tabbed analysis sections, and
+filter summary. The formal output directory now contains only two centered PDFs
+and `S4_summary.csv`; each analysis/docs asset directory contains only the two
+matching centered PNGs. Both PDFs are one page and were visually checked for
+the deeper centered colors, complete 200-GP labels, vertical group labels, and
+intact level1/level2 annotation strips. The experiment directory was left
+unchanged.

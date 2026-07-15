@@ -1,5 +1,0 @@
-panel,grouping,view,filter_basis,filter_cutoff,centered_definition,full_gp_count,retained_gp_count,full_group_count,retained_group_count
-S4a,organ_simplified,raw_normalized,raw mean,0.1,group mean minus mean across groups for each GP,200,31,18,18
-S4b,annotation_level2,raw_normalized,raw mean,0.1,group mean minus mean across groups for each GP,200,64,107,107
-S4a,organ_simplified,centered,positive centered mean,0.01,group mean minus mean across groups for each GP,200,70,18,18
-S4b,annotation_level2,centered,positive centered mean,0.01,group mean minus mean across groups for each GP,200,112,107,107

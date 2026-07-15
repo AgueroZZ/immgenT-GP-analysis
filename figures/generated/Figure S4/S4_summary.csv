@@ -1,0 +1,3 @@
+panel,grouping,view,gp_count,group_count,centered_definition,color_min,color_mid,color_max,observed_min,observed_max
+S4a,organ_simplified,full row-centered mean loading,200,18,group mean minus mean across groups for each GP,-0.2,0,0.2,-0.172020728605074,0.328021877246472
+S4b,annotation_level2,full row-centered mean loading,200,107,group mean minus mean across groups for each GP,-0.2,0,0.2,-0.164835723927608,0.549861556594658
