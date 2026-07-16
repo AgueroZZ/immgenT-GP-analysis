@@ -8,25 +8,25 @@ editor_options:
 
 All panels except (B) are produced by
 [`script/Figure1.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure1.R).
-The code below is shown for reference (not re-executed on this page, since
-some steps such as the panel-C heatmap are slow); the images are its
-pre-rendered output.
+The code below is shown for reference (not re-executed on this page, since some
+steps such as the panel-D heatmap are slow); the images are its pre-rendered
+output.
 
 ## Setup
 
 Data loading, shared across all panels below.
 
-```{r fig1-setup1, code=readLines("../script/Figure1.R")[42:68], eval=FALSE}
+```{r fig1-setup1, code=readLines("../script/Figure1.R")[31:57], eval=FALSE}
 ```
 
-Panels E-I additionally restrict to non-thymocyte cells:
+Panels C and D restrict to non-thymocyte cells:
 
-```{r fig1-setup2, code=readLines("../script/Figure1.R")[102:107], eval=FALSE}
+```{r fig1-setup2, code=readLines("../script/Figure1.R")[91:96], eval=FALSE}
 ```
 
 ## (A) Global MDE by lineage {#fig1a}
 
-```{r fig1a-code, code=readLines("../script/Figure1.R")[70:98], eval=FALSE}
+```{r fig1a-code, code=readLines("../script/Figure1.R")[59:87], eval=FALSE}
 ```
 
 ```{r fig1a-img, echo=FALSE, out.width="50%"}
@@ -43,7 +43,7 @@ This panel is a hand-drawn schematic, not generated from R -- there is no code o
 
 ## (C) Gene-program network {#fig1c}
 
-```{r fig1c-code, code=readLines("../script/Figure1.R")[109:178], eval=FALSE}
+```{r fig1c-code, code=readLines("../script/Figure1.R")[98:167], eval=FALSE}
 ```
 
 ```{r fig1c-img, echo=FALSE, out.width="70%"}
@@ -69,80 +69,24 @@ An internal version with a color→GP legend and GP-index labels is kept in
 `experiments/gene_correlation_network/` (`gp_highlight_internal`).
 :::
 
-## (D) GP1 signature volcano {#fig1d}
+## (D) GP loading heatmap {#fig1d}
 
-```{r fig1d-code, code=readLines("../script/Figure1.R")[279:285], eval=FALSE}
+```{r fig1d-code, code=readLines("../script/Figure1.R")[169:252], eval=FALSE}
 ```
 
-```{r fig1d-img, echo=FALSE, out.width="50%"}
+```{r fig1d-img, echo=FALSE, out.width="70%"}
 knitr::include_graphics("assets/Figure1/1D.png")
 ```
 
 ::: {.figcaption}
-**Fig. 1D.** "Signature volcano" plot for one example GP (GP1): each gene's normalized score (x-axis, max |score| = 1) versus its mean shifted-log expression (y-axis), with the top-scoring genes labeled.
-:::
-
-## (E) Active-cell proportion per GP {#fig1e}
-
-```{r fig1e-code, code=readLines("../script/Figure1.R")[189:204], eval=FALSE}
-```
-
-```{r fig1e-img, echo=FALSE, out.width="50%"}
-knitr::include_graphics("assets/Figure1/1E.png")
-```
-
-::: {.figcaption}
-**Fig. 1E.** Histogram of the proportion of cells with high loading (> 0.1) per GP, across all 200 GPs (x-axis on log scale).
-:::
-
-## (F) Active-gene count per GP {#fig1f}
-
-```{r fig1f-code, code=readLines("../script/Figure1.R")[259:268], eval=FALSE}
-```
-
-```{r fig1f-img, echo=FALSE, out.width="50%"}
-knitr::include_graphics("assets/Figure1/1F.png")
-```
-
-::: {.figcaption}
-**Fig. 1F.** Histogram of the number of highly-active genes (|score| > 0.25 of that GP's max) per GP (x-axis on log scale).
-:::
-
-## (G) Active-GP count by lineage {#fig1g}
-
-```{r fig1g-code, code=readLines("../script/Figure1.R")[224:243], eval=FALSE}
-```
-
-```{r fig1g-img, echo=FALSE, out.width="50%"}
-knitr::include_graphics("assets/Figure1/1G.png")
-```
-
-::: {.figcaption}
-**Fig. 1G.** Boxplot of the number of active GPs (loading > 0.1) per cell, grouped by major lineage.
-:::
-
-## (H) Active-GP count, activated vs. resting {#fig1h}
-
-```{r fig1h-code, code=readLines("../script/Figure1.R")[206:222], eval=FALSE}
-```
-
-```{r fig1h-img, echo=FALSE, out.width="50%"}
-knitr::include_graphics("assets/Figure1/1H.png")
-```
-
-::: {.figcaption}
-**Fig. 1H.** Boxplot of the number of active GPs per cell, comparing activated versus resting cells.
-:::
-
-## (I) CD44 vs. active-GP count {#fig1i}
-
-```{r fig1i-code, code=readLines("../script/Figure1.R")[245:257], eval=FALSE}
-```
-
-```{r fig1i-img, echo=FALSE, out.width="50%"}
-knitr::include_graphics("assets/Figure1/1I.png")
-```
-
-::: {.figcaption}
-**Fig. 1I.** Scatter plot of CD44 surface-protein level (log-normalized) against the number of active GPs per cell.
+**Fig. 1D. GP loading heatmap.** Loadings of all 200 GPs (columns) across a
+stratified sample of cells (rows), ordered by lineage then organ; the left
+strips annotate each cell's **cell type** and **organ**, and GP columns are
+clustered by loading similarity. Loadings are clipped at the 99th percentile and
+run white → blue. The same GPs highlighted in the (C) network are marked here in
+the matching colors — a top color bar, a colored/bold column label, and a box
+drawn around each highlighted GP **column** — so a program's cross-cell loading
+pattern can be read alongside its position in the network. Colors: GP68 (pink),
+GP58 (orange), GP35 (purple), GP171 (blue), GP1 (cyan), GP56 (red), GP161
+(dark red), GP6 (light green), GP7 (green), GP196 (yellow).
 :::

@@ -11,13 +11,13 @@
 #        vs all other conditions.
 #   s3h  Bipartite TF-GP network for Gata3, Rorc, Tbx21.
 #
-# Source: ported from Figure_Activation.R (see Figure3.R for the main
-# Figure 3 panels from the same file). Shared curated-GP setup lives in
+# Source: ported from Figure_Activation.R (see Figure4.R for the main
+# Figure 4 panels from the same file). Shared curated-GP setup lives in
 # code/R/activation_shared_setup.R.
 #
 # Panel s3c has no corresponding block in the original script -- it is
 # reconstructed here following the same per-organ threshold-rate pattern
-# used for Figure 4b (script/Figure4.R), applied to GP26 at the
+# used for Figure 5b (script/Figure5.R), applied to GP26 at the
 # caption's stated 0.2 threshold.
 #
 # Required inputs (data/) -- see code/README.md's "Data provenance" table

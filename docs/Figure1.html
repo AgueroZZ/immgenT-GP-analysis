@@ -362,7 +362,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success"
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -373,8 +373,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -383,13 +383,13 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-15
+<strong>Last updated:</strong> 2026-07-16
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 0
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong>
@@ -413,18 +413,21 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
@@ -515,15 +518,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec7dafe5405cc1200df25efff41a26205cd45d13ctargetblankc7dafe5a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec70b79d815ecdff7c5332dae0ffdec710ff3c293targetblankc70b79da">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c7dafe5405cc1200df25efff41a26205cd45d13c" target="_blank">c7dafe5</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c70b79d815ecdff7c5332dae0ffdec710ff3c293" target="_blank">c70b79d</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec7dafe5405cc1200df25efff41a26205cd45d13ctargetblankc7dafe5a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec70b79d815ecdff7c5332dae0ffdec710ff3c293targetblankc70b79da"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -533,7 +536,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c7dafe5405cc1200df25efff41a26205cd45d13c" target="_blank">c7dafe5</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c70b79d815ecdff7c5332dae0ffdec710ff3c293" target="_blank">c70b79d</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -582,6 +585,9 @@ Untracked files:
     Untracked:  code/other/topic_wrapper_20250215_alldata_backfit.sh
     Untracked:  experiments/active_metric_comparison/
     Untracked:  experiments/figure6b_sparsity_ordered/
+    Untracked:  experiments/gene_correlation_network/heatmap_loading.R
+    Untracked:  experiments/gene_correlation_network/heatmap_loading.pdf
+    Untracked:  experiments/gene_correlation_network/heatmap_loading.png
     Untracked:  experiments/gene_umap_gp_space/
     Untracked:  experiments/protein_threshold_gp_loading_diff/
     Untracked:  experiments/surface_protein_activation_scatter/
@@ -596,16 +602,91 @@ Untracked files:
     Untracked:  tables/
 
 Unstaged changes:
+    Modified:   analysis/ExtendedDataTable1.Rmd
+    Modified:   analysis/ExtendedDataTable5.Rmd
+    Modified:   analysis/Figure1.Rmd
+    Unmerged:   analysis/Figure2.Rmd
+    Modified:   analysis/Figure3.Rmd
+    Modified:   analysis/Figure4.Rmd
+    Modified:   analysis/Figure5.Rmd
+    Modified:   analysis/FigureS2.Rmd
+    Modified:   analysis/FigureS3.Rmd
     Modified:   analysis/Methods_FlashierFit.Rmd
-    Modified:   analysis/assets/Figure1/1C.png
-    Modified:   experiments/gene_correlation_network/gp_highlight_formal.pdf
-    Modified:   experiments/gene_correlation_network/gp_highlight_formal.png
-    Modified:   experiments/gene_correlation_network/gp_highlight_internal.pdf
-    Modified:   experiments/gene_correlation_network/gp_highlight_internal.png
-    Modified:   experiments/gene_correlation_network/gp_highlight_selected.R
-    Modified:   figures/generated/Figure 1/1C.pdf
+    Unmerged:   analysis/assets/Figure1/1D.png
+    Modified:   analysis/index.Rmd
+    Modified:   experiments/gene_correlation_network/README.md
     Modified:   script/Figure1.R
+    Unmerged:   script/Figure2.R
     Modified:   script/Figure3.R
+    Modified:   script/Figure4.R
+    Modified:   script/Figure5.R
+    Modified:   script/FigureS2.R
+    Modified:   script/FigureS3.R
+
+Staged changes:
+    Modified:   analysis/Figure3.Rmd
+    Modified:   analysis/Figure4.Rmd
+    New:        analysis/Figure5.Rmd
+    Deleted:    analysis/assets/Figure1/1E.png
+    Deleted:    analysis/assets/Figure1/1F.png
+    Deleted:    analysis/assets/Figure1/1G.png
+    Deleted:    analysis/assets/Figure1/1H.png
+    Deleted:    analysis/assets/Figure1/1I.png
+    Modified:   analysis/assets/Figure2/2A.png
+    Modified:   analysis/assets/Figure2/2B.png
+    Modified:   analysis/assets/Figure2/2C.png
+    Modified:   analysis/assets/Figure2/2D.png
+    Modified:   analysis/assets/Figure2/2E.png
+    Modified:   analysis/assets/Figure2/2F.png
+    Renamed1:   analysis/assets/Figure1/hist_active_cells_per_GP.png
+    Renamed2:   analysis/assets/Figure2/hist_active_cells_per_GP.png
+    Renamed1:   analysis/assets/Figure1/hist_active_genes_prop_per_GP.png
+    Renamed2:   analysis/assets/Figure2/hist_active_genes_prop_per_GP.png
+    Renamed1:   analysis/assets/Figure1/scatter_e_active_cells_vs_genes.png
+    Renamed2:   analysis/assets/Figure2/scatter_e_active_cells_vs_genes.png
+    New:        analysis/assets/Figure3/2A.png
+    New:        analysis/assets/Figure3/2B.png
+    New:        analysis/assets/Figure3/2C.png
+    New:        analysis/assets/Figure3/2D.png
+    New:        analysis/assets/Figure3/2E.png
+    New:        analysis/assets/Figure3/2F.png
+    Renamed1:   analysis/assets/Figure2/2G.png
+    Renamed2:   analysis/assets/Figure3/2G.png
+    Renamed1:   analysis/assets/Figure2/2H.png
+    Renamed2:   analysis/assets/Figure3/2H.png
+    Renamed1:   analysis/assets/Figure2/2I.png
+    Renamed2:   analysis/assets/Figure3/2I.png
+    Renamed1:   analysis/assets/Figure2/2J.png
+    Renamed2:   analysis/assets/Figure3/2J.png
+    Renamed1:   analysis/assets/Figure2/2K.png
+    Renamed2:   analysis/assets/Figure3/2K.png
+    Renamed1:   analysis/assets/Figure2/2L.png
+    Renamed2:   analysis/assets/Figure3/2L.png
+    Renamed1:   analysis/assets/Figure2/2M.png
+    Renamed2:   analysis/assets/Figure3/2M.png
+    Renamed1:   analysis/assets/Figure3/3c.png
+    Renamed2:   analysis/assets/Figure4/3c.png
+    Renamed1:   analysis/assets/Figure3/3d.png
+    Renamed2:   analysis/assets/Figure4/3d.png
+    Renamed1:   analysis/assets/Figure3/3e.png
+    Renamed2:   analysis/assets/Figure4/3e.png
+    Renamed1:   analysis/assets/Figure3/3f.png
+    Renamed2:   analysis/assets/Figure4/3f.png
+    Renamed1:   analysis/assets/Figure3/3g.png
+    Renamed2:   analysis/assets/Figure4/3g.png
+    Renamed1:   analysis/assets/Figure4/4a.png
+    Renamed2:   analysis/assets/Figure5/4a.png
+    Renamed1:   analysis/assets/Figure4/4b.png
+    Renamed2:   analysis/assets/Figure5/4b.png
+    Renamed1:   analysis/assets/Figure4/4c.png
+    Renamed2:   analysis/assets/Figure5/4c.png
+    Renamed1:   analysis/assets/Figure4/4d.png
+    Renamed2:   analysis/assets/Figure5/4d.png
+    Renamed1:   analysis/assets/Figure4/4e.png
+    Renamed2:   analysis/assets/Figure5/4e.png
+    Modified:   script/Figure3.R
+    Modified:   script/Figure4.R
+    New:        script/Figure5.R
 
 </code></pre>
 <p>
@@ -650,6 +731,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/c70b79d815ecdff7c5332dae0ffdec710ff3c293/docs/Figure1.html" target="_blank">c70b79d</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-15
+</td>
+<td>
+Make Fig 1C / GP-highlight figures square (20x20)
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -934,7 +1032,7 @@ Initial commit: immgenT-GP-analysis
 <p>All panels except (B) are produced by <a
 href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure1.R"><code>script/Figure1.R</code></a>.
 The code below is shown for reference (not re-executed on this page,
-since some steps such as the panel-C heatmap are slow); the images are
+since some steps such as the panel-D heatmap are slow); the images are
 its pre-rendered output.</p>
 <div id="setup" class="section level2">
 <h2>Setup</h2>
@@ -966,7 +1064,7 @@ mde_result &lt;- readRDS(paste0(data_path, &quot;umap_result.rds&quot;))
 colnames(mde_result) &lt;- c(&quot;MDE_1&quot;, &quot;MDE_2&quot;)
 mde_result &lt;- mde_result[rownames(L_pm_filtered), ]
 df_mde &lt;- as.data.frame(mde_result)</code></pre>
-<p>Panels E-I additionally restrict to non-thymocyte cells:</p>
+<p>Panels C and D restrict to non-thymocyte cells:</p>
 <pre class="r"><code># Drop thymocytes from all downstream cell-level visualizations (matches
 # Figure_Overview.R).
 non_thymo_cells &lt;- seurat_meta_filtered$cellID[seurat_meta_filtered$annotation_level1 != &quot;thymocyte&quot;]
@@ -1164,6 +1262,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/c70b79d815ecdff7c5332dae0ffdec710ff3c293/docs/assets/Figure1/1C.png" target="_blank">c70b79d</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-15
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/c7dafe5405cc1200df25efff41a26205cd45d13c/docs/assets/Figure1/1C.png" target="_blank">c7dafe5</a>
 </td>
 <td>
@@ -1234,15 +1343,92 @@ labels is kept in <code>experiments/gene_correlation_network/</code>
 </div>
 </div>
 <div id="fig1d" class="section level2">
-<h2>(D) GP1 signature volcano</h2>
-<pre class="r"><code>F_pm_filtered_1d &lt;- readRDS(paste0(data_path, &quot;F_pm_filtered.rds&quot;))
-colnames(F_pm_filtered_1d) &lt;- paste0(&quot;GP&quot;, seq_len(ncol(F_pm_filtered_1d)))
-F_pm_normalized_1d &lt;- normalize_maxabs(F_pm_filtered_1d)
-mean_shifted_log_expr &lt;- readRDS(paste0(data_path, &quot;mean_shifted_log_expr.rds&quot;))
+<h2>(D) GP loading heatmap</h2>
+<pre class="r"><code># ============================================================
+# 1D: giant loading heatmap (200 GP loadings x a stratified cell sample; rows =
+# cells by lineage x organ, columns = GPs clustered). The same GPs highlighted
+# in the 1C network are marked here by a top color bar, a colored/bold column
+# label, and a box around each GP column. See the Fig 1D caption (Figure1.Rmd).
+# ============================================================
+suppressPackageStartupMessages({ library(grid) })
+GP_HIGHLIGHTS &lt;- c(
+  GP68 = &quot;pink2&quot;,  GP58 = &quot;orange2&quot;, GP35 = &quot;purple&quot;, GP171 = &quot;blue&quot;,
+  GP1  = &quot;cyan2&quot;,  GP56 = &quot;red2&quot;,    GP161 = &quot;brown&quot;, GP6  = &quot;green2&quot;,
+  GP7  = &quot;green3&quot;, GP196 = &quot;yellow3&quot;)
 
-p_1D &lt;- plot_gp_signature_volcano(&quot;GP1&quot;, F_pm_normalized_1d, mean_shifted_log_expr, threshold = 0.1, n_label = 47, bg_alpha = 0.2)
-ggsave(filename = paste0(figure_path, &quot;1D.pdf&quot;), plot = p_1D, width = 7, height = 5.5)</code></pre>
-<p><img src="assets/Figure1/1D.png" width="50%" style="display: block; margin: auto;" /></p>
+set.seed(6173)
+MIN_CELLS &lt;- 20; N_SAMPLE &lt;- 80; TOP_ORGANS &lt;- 5; K_ANCHOR &lt;- 5
+level1_order &lt;- c(&quot;CD8&quot;, &quot;CD4&quot;, &quot;Treg&quot;, &quot;gdT&quot;, &quot;CD8aa&quot;, &quot;Tz&quot;, &quot;DN&quot;)
+organs_all &lt;- as.character(unique(seurat_meta_filtered$organ_simplified))
+ln_match &lt;- organs_all[grepl(&quot;^LN$|lymph&quot;, organs_all, ignore.case = TRUE)]
+spleen_match &lt;- organs_all[grepl(&quot;spleen&quot;, organs_all, ignore.case = TRUE)]
+organ_order &lt;- c(spleen_match, ln_match, sort(setdiff(organs_all, c(ln_match, spleen_match))))
+
+top_organ_combos &lt;- seurat_meta_filtered |&gt;
+  dplyr::filter(annotation_level1 %in% level1_order) |&gt;
+  dplyr::count(annotation_level1, organ_simplified) |&gt;
+  dplyr::group_by(annotation_level1) |&gt;
+  dplyr::slice_max(n, n = TOP_ORGANS, with_ties = FALSE) |&gt;
+  dplyr::ungroup() |&gt; dplyr::select(annotation_level1, organ_simplified)
+sampled_random &lt;- seurat_meta_filtered |&gt;
+  dplyr::filter(annotation_level1 %in% level1_order) |&gt;
+  dplyr::inner_join(top_organ_combos, by = c(&quot;annotation_level1&quot;, &quot;organ_simplified&quot;)) |&gt;
+  dplyr::group_by(annotation_level1, organ_simplified) |&gt;
+  dplyr::filter(dplyr::n() &gt;= MIN_CELLS) |&gt;
+  dplyr::slice_sample(n = N_SAMPLE) |&gt; dplyr::ungroup()
+anchor_cellids &lt;- apply(L_pm_filtered, 2, function(x)
+  rownames(L_pm_filtered)[order(x, decreasing = TRUE)[seq_len(K_ANCHOR)]]) |&gt; as.vector() |&gt; unique()
+anchor_meta &lt;- seurat_meta_filtered |&gt;
+  dplyr::filter(cellID %in% anchor_cellids, annotation_level1 %in% level1_order) |&gt;
+  dplyr::inner_join(top_organ_combos, by = c(&quot;annotation_level1&quot;, &quot;organ_simplified&quot;))
+all_meta &lt;- dplyr::bind_rows(sampled_random, anchor_meta) |&gt;
+  dplyr::distinct(cellID, .keep_all = TRUE) |&gt;
+  dplyr::arrange(factor(annotation_level1, levels = level1_order),
+                 factor(organ_simplified, levels = organ_order))
+
+L_sampled &lt;- L_pm_filtered[all_meta$cellID, ]
+clip_val &lt;- quantile(L_sampled, 0.99)
+L_display &lt;- pmin(L_sampled, clip_val)
+colnames(L_display) &lt;- gsub(&quot;^K&quot;, &quot;GP&quot;, colnames(L_display))
+col_fun &lt;- colorRamp2(c(0, clip_val / 2, clip_val), c(&quot;white&quot;, &quot;#4393c3&quot;, &quot;#08306b&quot;))
+level1_present &lt;- intersect(level1_order, as.character(unique(all_meta$annotation_level1)))
+organ_present &lt;- intersect(organ_order, as.character(unique(all_meta$organ_simplified)))
+row_ann &lt;- rowAnnotation(
+  Cell_Type = factor(as.character(all_meta$annotation_level1), levels = level1_present),
+  Organ = factor(as.character(all_meta$organ_simplified), levels = organ_present),
+  col = list(Cell_Type = ZemmourLib::immgent_colors$level1[level1_present],
+             Organ = ZemmourLib::immgent_colors$organ_simplified[organ_present]),
+  annotation_name_gp = gpar(fontsize = 8),
+  annotation_legend_param = list(Cell_Type = list(title = &quot;Cell Type&quot;), Organ = list(title = &quot;Organ&quot;)))
+
+gpn      &lt;- colnames(L_display)
+hl_val   &lt;- ifelse(gpn %in% names(GP_HIGHLIGHTS), gpn, NA_character_)
+lab_col  &lt;- ifelse(gpn %in% names(GP_HIGHLIGHTS), GP_HIGHLIGHTS[gpn], &quot;grey55&quot;)
+lab_fs   &lt;- ifelse(gpn %in% names(GP_HIGHLIGHTS), 9, 4)
+lab_face &lt;- ifelse(gpn %in% names(GP_HIGHLIGHTS), 2, 1)
+top_ann &lt;- HeatmapAnnotation(
+  `Highlighted GP` = hl_val, col = list(`Highlighted GP` = GP_HIGHLIGHTS),
+  na_col = &quot;white&quot;, simple_anno_size = unit(4, &quot;mm&quot;), annotation_name_gp = gpar(fontsize = 8),
+  annotation_legend_param = list(`Highlighted GP` = list(title = &quot;Highlighted GP&quot;,
+    at = names(GP_HIGHLIGHTS), labels = names(GP_HIGHLIGHTS))))
+ht_1D &lt;- Heatmap(
+  L_display, name = &quot;Loading&quot;, col = col_fun, left_annotation = row_ann, top_annotation = top_ann,
+  cluster_rows = FALSE, cluster_columns = TRUE,
+  clustering_distance_columns = &quot;euclidean&quot;, clustering_method_columns = &quot;ward.D2&quot;,
+  show_row_names = FALSE,
+  column_names_gp = gpar(col = lab_col, fontsize = lab_fs, fontface = lab_face),
+  column_title = &quot;Gene Programs (GPs)&quot;, column_title_gp = gpar(fontsize = 11, fontface = &quot;bold&quot;),
+  use_raster = TRUE, raster_quality = 3, border = FALSE,
+  heatmap_legend_param = list(title = &quot;Loading&quot;, direction = &quot;vertical&quot;))
+pdf(paste0(figure_path, &quot;1D.pdf&quot;), width = 15, height = 20, useDingbats = FALSE)
+ht_drawn &lt;- draw(ht_1D, merge_legend = TRUE)
+co &lt;- column_order(ht_drawn); disp &lt;- colnames(L_display)[co]; n_col_ht &lt;- length(co)
+decorate_heatmap_body(&quot;Loading&quot;, {
+  for (gp in names(GP_HIGHLIGHTS)) { j &lt;- which(disp == gp)
+    if (length(j)) grid.rect(x = (j - 0.5) / n_col_ht, y = 0.5, width = 1.4 / n_col_ht, height = 1,
+                             gp = gpar(col = GP_HIGHLIGHTS[gp], fill = NA, lwd = 2.5)) } })
+dev.off()</code></pre>
+<p><img src="assets/Figure1/1D.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-1D">
 Past versions of 1D.png
@@ -1292,390 +1478,18 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 1D.</strong> “Signature volcano” plot for one example GP
-(GP1): each gene’s normalized score (x-axis, max |score| = 1) versus its
-mean shifted-log expression (y-axis), with the top-scoring genes
-labeled.</p>
-</div>
-</div>
-<div id="fig1e" class="section level2">
-<h2>(E) Active-cell proportion per GP</h2>
-<pre class="r"><code>L_pm_norm_col &lt;- L_pm_filtered / matrix(apply(L_pm_filtered, 2, function(x) max(x)), nrow = nrow(L_pm_filtered), ncol = ncol(L_pm_filtered), byrow = TRUE)
-gp_active_cell_counts &lt;- colSums((L_pm_norm_col) &gt; 1e-1)
-
-pdf(paste0(figure_path, &quot;hist_active_cells_per_GP.pdf&quot;), width = 6, height = 4, useDingbats = FALSE)
-hist(gp_active_cell_counts, breaks = 100, xlab = &quot;Number of highly active cells per GP&quot;, main = &quot;Histogram of highly active cells per GP&quot;, freq = TRUE)
-dev.off()
-
-gp_active_cell_prop &lt;- gp_active_cell_counts / nrow(L_pm_norm_col)
-p_1E &lt;- ggplot(data.frame(prop = gp_active_cell_prop), aes(x = prop)) +
-  geom_histogram(bins = 40, fill = &quot;steelblue&quot;, color = &quot;white&quot;) +
-  scale_x_log10(labels = scales::label_percent()) +
-  annotation_logticks(sides = &quot;b&quot;) +
-  labs(x = &quot;Proportion of highly active cells per GP (log scale)&quot;, y = &quot;Count&quot;,
-       title = &quot;Histogram of highly active cells per GP (proportion)&quot;) +
-  theme_minimal(base_size = 13)
-ggsave(filename = paste0(figure_path, &quot;1E.pdf&quot;), plot = p_1E, width = 6, height = 4, dpi = 300)</code></pre>
-<p><img src="assets/Figure1/1E.png" width="50%" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-1E">
-Past versions of 1E.png
-</button>
-</p>
-<div id="fig-1E" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/c2b3360b38a0c1dcd0068b24e02311b9db0dbc34/docs/assets/Figure1/1E.png" target="_blank">c2b3360</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-13
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/78e3bbad835aff2b513ff86f600f6b01b2beb5e3/docs/assets/Figure1/1E.png" target="_blank">78e3bba</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/06b2461eba2147f353f2ce082bdebe22f5dcee26/docs/assets/Figure1/1E.png" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="figcaption">
-<p><strong>Fig. 1E.</strong> Histogram of the proportion of cells with
-high loading (&gt; 0.1) per GP, across all 200 GPs (x-axis on log
-scale).</p>
-</div>
-</div>
-<div id="fig1f" class="section level2">
-<h2>(F) Active-gene count per GP</h2>
-<pre class="r"><code>F_pm_norm_col &lt;- F_pm_filtered / matrix(apply(F_pm_filtered, 2, function(x) max(abs(x))), nrow = nrow(F_pm_filtered), ncol = ncol(F_pm_filtered), byrow = TRUE)
-gp_active_gene_counts &lt;- colSums(abs(F_pm_norm_col) &gt; 0.25)
-p_1F &lt;- ggplot(data.frame(count = gp_active_gene_counts), aes(x = count)) +
-  geom_histogram(bins = 40, fill = &quot;steelblue&quot;, color = &quot;white&quot;) +
-  scale_x_log10(labels = scales::label_comma()) +
-  annotation_logticks(sides = &quot;b&quot;) +
-  labs(x = &quot;Number of highly active genes per GP (log scale)&quot;, y = &quot;Count&quot;,
-       title = &quot;Histogram of highly active genes per GP&quot;) +
-  theme_minimal(base_size = 13)
-ggsave(filename = paste0(figure_path, &quot;1F.pdf&quot;), plot = p_1F, width = 6, height = 4, dpi = 300)</code></pre>
-<p><img src="assets/Figure1/1F.png" width="50%" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-1F">
-Past versions of 1F.png
-</button>
-</p>
-<div id="fig-1F" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/c2b3360b38a0c1dcd0068b24e02311b9db0dbc34/docs/assets/Figure1/1F.png" target="_blank">c2b3360</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-13
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/78e3bbad835aff2b513ff86f600f6b01b2beb5e3/docs/assets/Figure1/1F.png" target="_blank">78e3bba</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/06b2461eba2147f353f2ce082bdebe22f5dcee26/docs/assets/Figure1/1F.png" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="figcaption">
-<p><strong>Fig. 1F.</strong> Histogram of the number of highly-active
-genes (|score| &gt; 0.25 of that GP’s max) per GP (x-axis on log
-scale).</p>
-</div>
-</div>
-<div id="fig1g" class="section level2">
-<h2>(G) Active-GP count by lineage</h2>
-<pre class="r"><code>gp_active_cell_counts_level1 &lt;- dplyr::bind_rows(lapply(level1_order, function(grp) {
-  cells_grp &lt;- seurat_meta_filtered$cellID[seurat_meta_filtered$annotation_level1 == grp]
-  L_grp &lt;- L_pm_filtered[seurat_meta_filtered$cellID %in% cells_grp, , drop = FALSE]
-  data.frame(Group = grp, Active_Cell_Counts = rowSums(L_grp &gt; 1e-1))
-}))
-group_counts &lt;- gp_active_cell_counts_level1 %&gt;%
-  group_by(Group) %&gt;%
-  summarise(n = n(), .groups = &quot;drop&quot;) %&gt;%
-  mutate(Group_Label = paste0(Group, &quot;\n(n=&quot;, n, &quot;)&quot;)) %&gt;%
-  mutate(Group = factor(Group, levels = level1_order)) %&gt;%
-  arrange(Group) %&gt;%
-  mutate(Group_Label = factor(Group_Label, levels = Group_Label))
-plot_df_g &lt;- gp_active_cell_counts_level1 %&gt;% left_join(group_counts, by = &quot;Group&quot;)
-p_1G &lt;- ggplot(plot_df_g, aes(x = Group_Label, y = Active_Cell_Counts, fill = Group)) +
-  geom_boxplot(outlier.size = 0.4, width = 0.6, alpha = 0.8, color = &quot;gray40&quot;) +
-  scale_fill_manual(values = ZemmourLib::immgent_colors$level1) +
-  labs(title = &quot;Active Gene Programs per Group&quot;, x = &quot;Cell Group (Annotation Level 1)&quot;, y = &quot;Number of highly active GPs&quot;) +
-  theme_minimal(base_size = 13) +
-  theme(plot.title = element_text(face = &quot;bold&quot;, size = 14, hjust = 0.5), plot.subtitle = element_text(size = 11, color = &quot;gray30&quot;, hjust = 0.5), axis.text.x = element_text(size = 11, angle = 45, hjust = 1), axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 13, face = &quot;bold&quot;), legend.position = &quot;none&quot;, panel.grid.minor = element_blank())
-ggsave(filename = paste0(figure_path, &quot;1G.pdf&quot;), plot = p_1G, width = 6, height = 4, dpi = 300) # boxplot_active_cells_per_GP_level1</code></pre>
-<p><img src="assets/Figure1/1G.png" width="50%" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-1G">
-Past versions of 1G.png
-</button>
-</p>
-<div id="fig-1G" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/78e3bbad835aff2b513ff86f600f6b01b2beb5e3/docs/assets/Figure1/1G.png" target="_blank">78e3bba</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/06b2461eba2147f353f2ce082bdebe22f5dcee26/docs/assets/Figure1/1G.png" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="figcaption">
-<p><strong>Fig. 1G.</strong> Boxplot of the number of active GPs
-(loading &gt; 0.1) per cell, grouped by major lineage.</p>
-</div>
-</div>
-<div id="fig1h" class="section level2">
-<h2>(H) Active-GP count, activated vs. resting</h2>
-<pre class="r"><code>cells_activated &lt;- seurat_meta_filtered$cellID[seurat_meta_filtered$annotation_level2_group == &quot;activated&quot;]
-L_pm_activated &lt;- L_pm_filtered[seurat_meta_filtered$cellID %in% cells_activated, ]
-gp_active_cell_counts_activated &lt;- rowSums(L_pm_activated &gt; 1e-1)
-cells_resting &lt;- seurat_meta_filtered$cellID[seurat_meta_filtered$annotation_level2_group == &quot;resting&quot;]
-L_pm_resting &lt;- L_pm_filtered[seurat_meta_filtered$cellID %in% cells_resting, ]
-gp_active_cell_counts_resting &lt;- rowSums(L_pm_resting &gt; 1e-1)
-gp_active_cell_counts_df &lt;- data.frame(
-  Group = c(rep(&quot;Activated&quot;, length(gp_active_cell_counts_activated)), rep(&quot;Resting&quot;, length(gp_active_cell_counts_resting))),
-  Active_Cell_Counts = c(gp_active_cell_counts_activated, gp_active_cell_counts_resting)
-)
-p_1H &lt;- ggplot(gp_active_cell_counts_df, aes(x = Group, y = Active_Cell_Counts, fill = Group)) +
-  geom_boxplot(outlier.size = 0.4, width = 0.6, alpha = 0.8, color = &quot;gray40&quot;) +
-  scale_fill_manual(values = c(&quot;Activated&quot; = &quot;#1f78b4&quot;, &quot;Resting&quot; = &quot;#e31a1c&quot;)) +
-  labs(title = &quot;&quot;, x = &quot;&quot;, y = &quot;Number of highly active GPs&quot;) +
-  theme_minimal(base_size = 13) +
-  theme(plot.title = element_text(face = &quot;bold&quot;, size = 14, hjust = 0.5), axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 13, face = &quot;bold&quot;), legend.position = &quot;none&quot;)
-ggsave(filename = paste0(figure_path, &quot;1H.pdf&quot;), plot = p_1H, width = 6, height = 4, dpi = 300) # boxplot_active_cells_per_GP</code></pre>
-<p><img src="assets/Figure1/1H.png" width="50%" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-1H">
-Past versions of 1H.png
-</button>
-</p>
-<div id="fig-1H" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/78e3bbad835aff2b513ff86f600f6b01b2beb5e3/docs/assets/Figure1/1H.png" target="_blank">78e3bba</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/06b2461eba2147f353f2ce082bdebe22f5dcee26/docs/assets/Figure1/1H.png" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="figcaption">
-<p><strong>Fig. 1H.</strong> Boxplot of the number of active GPs per
-cell, comparing activated versus resting cells.</p>
-</div>
-</div>
-<div id="fig1i" class="section level2">
-<h2>(I) CD44 vs. active-GP count</h2>
-<pre class="r"><code>gp_active_cell_counts_all &lt;- rowSums(L_pm_filtered &gt; 1e-1)
-gp_cd44_df &lt;- data.frame(CD44_Protein_Level = protein_mat_normalized_lognorm, Active_GP_Counts = gp_active_cell_counts_all)
-set.seed(123)
-df_nz &lt;- gp_cd44_df %&gt;% dplyr::filter(CD44_Protein_Level &gt; 0)
-df_nz &lt;- df_nz %&gt;% sample_n(min(10000, nrow(df_nz)))
-R &lt;- cor(df_nz$CD44_Protein_Level, df_nz$Active_GP_Counts, use = &quot;complete.obs&quot;)
-p_1I &lt;- ggplot(df_nz, aes(CD44_Protein_Level, Active_GP_Counts)) +
-  geom_point(alpha = 0.1, size = 0.7) +
-  geom_smooth(method = &quot;lm&quot;, se = TRUE) +
-  labs(title = &quot;CD44 Protein Level vs Number of Active GPs&quot;, x = &quot;CD44 Protein Level (log-normalized)&quot;, y = &quot;Number of Active GPs&quot;) +
-  annotate(&quot;text&quot;, x = min(df_nz$CD44_Protein_Level, na.rm = TRUE) + 0.5, y = max(df_nz$Active_GP_Counts, na.rm = TRUE) - 1, label = paste0(&quot;R = &quot;, round(R, 2)), size = 4) +
-  theme_minimal(base_size = 13)
-ggsave(filename = paste0(figure_path, &quot;1I.pdf&quot;), plot = p_1I, width = 6, height = 4, dpi = 300) # scatterplot_CD44_vs_active_GPs</code></pre>
-<p><img src="assets/Figure1/1I.png" width="50%" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-1I">
-Past versions of 1I.png
-</button>
-</p>
-<div id="fig-1I" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/78e3bbad835aff2b513ff86f600f6b01b2beb5e3/docs/assets/Figure1/1I.png" target="_blank">78e3bba</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/06b2461eba2147f353f2ce082bdebe22f5dcee26/docs/assets/Figure1/1I.png" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="figcaption">
-<p><strong>Fig. 1I.</strong> Scatter plot of CD44 surface-protein level
-(log-normalized) against the number of active GPs per cell.</p>
+<p><strong>Fig. 1D. GP loading heatmap.</strong> Loadings of all 200 GPs
+(columns) across a stratified sample of cells (rows), ordered by lineage
+then organ; the left strips annotate each cell’s <strong>cell
+type</strong> and <strong>organ</strong>, and GP columns are clustered
+by loading similarity. Loadings are clipped at the 99th percentile and
+run white → blue. The same GPs highlighted in the (C) network are marked
+here in the matching colors — a top color bar, a colored/bold column
+label, and a box drawn around each highlighted GP
+<strong>column</strong> — so a program’s cross-cell loading pattern can
+be read alongside its position in the network. Colors: GP68 (pink), GP58
+(orange), GP35 (purple), GP171 (blue), GP1 (cyan), GP56 (red), GP161
+(dark red), GP6 (light green), GP7 (green), GP196 (yellow).</p>
 </div>
 <br>
 <p>

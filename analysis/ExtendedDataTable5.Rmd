@@ -39,8 +39,8 @@ DT::datatable(
 T-cell activation, computed separately in CD4 and CD8: `mean_change_loadings`
 (activated minus resting mean loading), `AveExpr` (mean loading over
 activated + resting cells), `d` (standardized mean difference = change / pooled
-loading SD, the statistic plotted in Figure 3a), and `Ratio_CD8_CD4` (ratio of
+loading SD, the statistic plotted in Figure 4a), and `Ratio_CD8_CD4` (ratio of
 the CD8 to CD4 mean loading change). This reproduces the `GP_activation_summary`
-of Figure 3a; note that the `d_CD4` / `d_CD8` columns replace the retired
+of Figure 4a; note that the `d_CD4` / `d_CD8` columns replace the retired
 limma-style `z_CD4` / `z_CD8` of the earlier table version.
 :::

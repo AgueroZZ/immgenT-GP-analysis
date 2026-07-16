@@ -12,7 +12,7 @@
 <meta name="author" content="Ziang Zhang" />
 
 
-<title>Figure 3: GPs associated with T-cell activation</title>
+<title>Figure 3: GPs and lineages</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -353,8 +353,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Figure 3: GPs associated with T-cell
-activation</h1>
+<h1 class="title toc-ignore">Figure 3: GPs and lineages</h1>
 <h4 class="author">Ziang Zhang</h4>
 
 </div>
@@ -363,7 +362,7 @@ activation</h1>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success"
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -374,8 +373,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -384,13 +383,13 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-03
+<strong>Last updated:</strong> 2026-07-16
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 0
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong>
@@ -414,18 +413,21 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has staged changes. To know which version of the
+R Markdown file created these results, you’ll want to first commit it to
+the Git repo. If you’re still working on the analysis, you can ignore
+this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
@@ -516,15 +518,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedb7a5cd819f20a186c7037c4ae9582f271a640f4targetblankdb7a5cda">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec70b79d815ecdff7c5332dae0ffdec710ff3c293targetblankc70b79da">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/db7a5cd819f20a186c7037c4ae9582f271a640f4" target="_blank">db7a5cd</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c70b79d815ecdff7c5332dae0ffdec710ff3c293" target="_blank">c70b79d</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedb7a5cd819f20a186c7037c4ae9582f271a640f4targetblankdb7a5cda"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec70b79d815ecdff7c5332dae0ffdec710ff3c293targetblankc70b79da"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +536,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/db7a5cd819f20a186c7037c4ae9582f271a640f4" target="_blank">db7a5cd</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c70b79d815ecdff7c5332dae0ffdec710ff3c293" target="_blank">c70b79d</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -549,12 +551,15 @@ were generated:
 </p>
 <pre><code>
 Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .claude/
     Ignored:    analysis/.DS_Store
     Ignored:    analysis/.Rhistory
     Ignored:    analysis/assets/.DS_Store
-    Ignored:    code 2/
-    Ignored:    code/pipeline 2/
+    Ignored:    code/.DS_Store
     Ignored:    data
+    Ignored:    experiments/.DS_Store
+    Ignored:    figures/.DS_Store
     Ignored:    figures/final-selected/.DS_Store
     Ignored:    figures/final-selected/bits/.DS_Store
     Ignored:    figures/final-selected/bits/Figure 1/.DS_Store
@@ -568,90 +573,120 @@ Ignored files:
     Ignored:    figures/final-selected/bits/Figure S3/.DS_Store
     Ignored:    figures/final-selected/bits/Figure S6/.DS_Store
     Ignored:    figures/final-selected/bits/Figure S7/.DS_Store
-    Ignored:    figures/generated/Figure 1 2/
+    Ignored:    figures/generated/.DS_Store
     Ignored:    figures/generated/Figure 5/
     Ignored:    figures/generated/Figure 7/
     Ignored:    figures/generated/Figure 8/
     Ignored:    figures/generated/Figure 9/
-    Ignored:    figures/generated/Figure S1 2/
-    Ignored:    figures/generated/Figure S2 2/
-    Ignored:    figures/generated/Figure S3 2/
-    Ignored:    figures/generated/Figure S6 2/
+    Ignored:    tmp/
 
 Untracked files:
-    Untracked:  code/pipeline/01b_filter_cells.R
+    Untracked:  code/other/topic_flashier_20250212.R
+    Untracked:  code/other/topic_wrapper_20250215_alldata_backfit.sh
+    Untracked:  experiments/active_metric_comparison/
+    Untracked:  experiments/figure6b_sparsity_ordered/
+    Untracked:  experiments/gene_correlation_network/heatmap_loading.R
+    Untracked:  experiments/gene_correlation_network/heatmap_loading.pdf
+    Untracked:  experiments/gene_correlation_network/heatmap_loading.png
+    Untracked:  experiments/gene_umap_gp_space/
+    Untracked:  experiments/protein_threshold_gp_loading_diff/
+    Untracked:  experiments/surface_protein_activation_scatter/
+    Untracked:  log/2026-07-13-surface-protein-activation-scatter.md
+    Untracked:  log/2026-07-15-protein-threshold-gp-loading-diff-tables.md
+    Untracked:  plan/2026-07-13-active-cell-gene-metrics-exploration.md
+    Untracked:  plan/2026-07-13-surface-protein-activation-scatter.md
+    Untracked:  plan/2026-07-13_figure6b_triangular_order_plan.md
+    Untracked:  plan/2026-07-13_figure6b_wide_gp_columns_formal_plan.md
+    Untracked:  plan/2026-07-14_figure6b_heatmap_typography_plan.md
+    Untracked:  plan/2026-07-15-protein-threshold-gp-loading-diff-tables.md
+    Untracked:  tables/
 
 Unstaged changes:
-    Modified:   code/README.md
-    Modified:   code/pipeline/02_compute_auc.R
-    Modified:   code/pipeline/04_protein_projection.R
-    Modified:   figures/generated/Figure 1/1A.pdf
-    Modified:   figures/generated/Figure 1/1C.pdf
-    Modified:   figures/generated/Figure 1/1D.pdf
-    Modified:   figures/generated/Figure 1/1E.pdf
-    Modified:   figures/generated/Figure 1/1F.pdf
-    Modified:   figures/generated/Figure 1/1G.pdf
-    Modified:   figures/generated/Figure 1/1H.pdf
-    Modified:   figures/generated/Figure 1/1I.pdf
-    Modified:   figures/generated/Figure 1/hist_active_cells_per_GP.pdf
-    Modified:   figures/generated/Figure 1/hist_active_genes_prop_per_GP.pdf
-    Modified:   figures/generated/Figure 1/scatter_e_active_cells_vs_genes.pdf
-    Modified:   figures/generated/Figure 2/2A.pdf
-    Modified:   figures/generated/Figure 2/2B.pdf
-    Modified:   figures/generated/Figure 2/2C.pdf
-    Modified:   figures/generated/Figure 2/2D.pdf
-    Modified:   figures/generated/Figure 2/2E.pdf
-    Modified:   figures/generated/Figure 2/2F.pdf
-    Modified:   figures/generated/Figure 2/2G.pdf
-    Modified:   figures/generated/Figure 2/2H.pdf
-    Modified:   figures/generated/Figure 2/2I.pdf
-    Modified:   figures/generated/Figure 2/2J.pdf
-    Modified:   figures/generated/Figure 2/2K.pdf
-    Modified:   figures/generated/Figure 2/2L.pdf
-    Modified:   figures/generated/Figure 2/2M.pdf
-    Modified:   figures/generated/Figure 3/3c.pdf
-    Modified:   figures/generated/Figure 3/3d.pdf
-    Modified:   figures/generated/Figure 3/3e.pdf
-    Modified:   figures/generated/Figure 3/3f.pdf
-    Modified:   figures/generated/Figure 3/3g.pdf
-    Modified:   figures/generated/Figure 4/4a.pdf
-    Modified:   figures/generated/Figure 4/4b.pdf
-    Modified:   figures/generated/Figure 4/4c.pdf
-    Modified:   figures/generated/Figure 4/4d.pdf
-    Modified:   figures/generated/Figure 4/4e.pdf
-    Modified:   figures/generated/Figure 6/6b.pdf
-    Modified:   figures/generated/Figure 6/6c.pdf
-    Modified:   figures/generated/Figure 6/6d.pdf
-    Modified:   figures/generated/Figure 6/6e.pdf
-    Modified:   figures/generated/Figure 6/6f.pdf
-    Modified:   figures/generated/Figure 6/6g.pdf
-    Modified:   figures/generated/Figure 6/6h.pdf
-    Modified:   figures/generated/Figure 6/6i.pdf
-    Modified:   figures/generated/Figure 6/6j.pdf
-    Modified:   figures/generated/Figure 6/6k.pdf
-    Modified:   figures/generated/Figure S1/S1A.pdf
-    Modified:   figures/generated/Figure S1/S1B.pdf
-    Modified:   figures/generated/Figure S1/S1C.pdf
-    Modified:   figures/generated/Figure S1/S1D.pdf
-    Modified:   figures/generated/Figure S2/S2A.pdf
-    Modified:   figures/generated/Figure S2/S2B.pdf
-    Modified:   figures/generated/Figure S2/S2C.pdf
-    Modified:   figures/generated/Figure S3/s3c.pdf
-    Modified:   figures/generated/Figure S3/s3d.pdf
-    Modified:   figures/generated/Figure S3/s3e.pdf
-    Modified:   figures/generated/Figure S3/s3f.pdf
-    Modified:   figures/generated/Figure S3/s3g.pdf
-    Modified:   figures/generated/Figure S3/s3h.pdf
+    Modified:   analysis/ExtendedDataTable1.Rmd
+    Modified:   analysis/ExtendedDataTable5.Rmd
+    Modified:   analysis/Figure1.Rmd
+    Unmerged:   analysis/Figure2.Rmd
+    Modified:   analysis/Figure3.Rmd
+    Modified:   analysis/Figure4.Rmd
+    Modified:   analysis/Figure5.Rmd
+    Modified:   analysis/FigureS2.Rmd
+    Modified:   analysis/FigureS3.Rmd
+    Modified:   analysis/Methods_FlashierFit.Rmd
+    Unmerged:   analysis/assets/Figure1/1D.png
+    Modified:   analysis/index.Rmd
+    Modified:   experiments/gene_correlation_network/README.md
     Modified:   script/Figure1.R
-    Modified:   script/Figure2.R
+    Unmerged:   script/Figure2.R
     Modified:   script/Figure3.R
     Modified:   script/Figure4.R
-    Modified:   script/Figure6.R
-    Modified:   script/FigureS1.R
+    Modified:   script/Figure5.R
     Modified:   script/FigureS2.R
     Modified:   script/FigureS3.R
-    Modified:   script/FigureS6.R
-    Modified:   script/TableS1.R
+
+Staged changes:
+    Modified:   analysis/Figure3.Rmd
+    Modified:   analysis/Figure4.Rmd
+    New:        analysis/Figure5.Rmd
+    Deleted:    analysis/assets/Figure1/1E.png
+    Deleted:    analysis/assets/Figure1/1F.png
+    Deleted:    analysis/assets/Figure1/1G.png
+    Deleted:    analysis/assets/Figure1/1H.png
+    Deleted:    analysis/assets/Figure1/1I.png
+    Modified:   analysis/assets/Figure2/2A.png
+    Modified:   analysis/assets/Figure2/2B.png
+    Modified:   analysis/assets/Figure2/2C.png
+    Modified:   analysis/assets/Figure2/2D.png
+    Modified:   analysis/assets/Figure2/2E.png
+    Modified:   analysis/assets/Figure2/2F.png
+    Renamed1:   analysis/assets/Figure1/hist_active_cells_per_GP.png
+    Renamed2:   analysis/assets/Figure2/hist_active_cells_per_GP.png
+    Renamed1:   analysis/assets/Figure1/hist_active_genes_prop_per_GP.png
+    Renamed2:   analysis/assets/Figure2/hist_active_genes_prop_per_GP.png
+    Renamed1:   analysis/assets/Figure1/scatter_e_active_cells_vs_genes.png
+    Renamed2:   analysis/assets/Figure2/scatter_e_active_cells_vs_genes.png
+    New:        analysis/assets/Figure3/2A.png
+    New:        analysis/assets/Figure3/2B.png
+    New:        analysis/assets/Figure3/2C.png
+    New:        analysis/assets/Figure3/2D.png
+    New:        analysis/assets/Figure3/2E.png
+    New:        analysis/assets/Figure3/2F.png
+    Renamed1:   analysis/assets/Figure2/2G.png
+    Renamed2:   analysis/assets/Figure3/2G.png
+    Renamed1:   analysis/assets/Figure2/2H.png
+    Renamed2:   analysis/assets/Figure3/2H.png
+    Renamed1:   analysis/assets/Figure2/2I.png
+    Renamed2:   analysis/assets/Figure3/2I.png
+    Renamed1:   analysis/assets/Figure2/2J.png
+    Renamed2:   analysis/assets/Figure3/2J.png
+    Renamed1:   analysis/assets/Figure2/2K.png
+    Renamed2:   analysis/assets/Figure3/2K.png
+    Renamed1:   analysis/assets/Figure2/2L.png
+    Renamed2:   analysis/assets/Figure3/2L.png
+    Renamed1:   analysis/assets/Figure2/2M.png
+    Renamed2:   analysis/assets/Figure3/2M.png
+    Renamed1:   analysis/assets/Figure3/3c.png
+    Renamed2:   analysis/assets/Figure4/3c.png
+    Renamed1:   analysis/assets/Figure3/3d.png
+    Renamed2:   analysis/assets/Figure4/3d.png
+    Renamed1:   analysis/assets/Figure3/3e.png
+    Renamed2:   analysis/assets/Figure4/3e.png
+    Renamed1:   analysis/assets/Figure3/3f.png
+    Renamed2:   analysis/assets/Figure4/3f.png
+    Renamed1:   analysis/assets/Figure3/3g.png
+    Renamed2:   analysis/assets/Figure4/3g.png
+    Renamed1:   analysis/assets/Figure4/4a.png
+    Renamed2:   analysis/assets/Figure5/4a.png
+    Renamed1:   analysis/assets/Figure4/4b.png
+    Renamed2:   analysis/assets/Figure5/4b.png
+    Renamed1:   analysis/assets/Figure4/4c.png
+    Renamed2:   analysis/assets/Figure5/4c.png
+    Renamed1:   analysis/assets/Figure4/4d.png
+    Renamed2:   analysis/assets/Figure5/4d.png
+    Renamed1:   analysis/assets/Figure4/4e.png
+    Renamed2:   analysis/assets/Figure5/4e.png
+    Modified:   script/Figure3.R
+    Modified:   script/Figure4.R
+    New:        script/Figure5.R
 
 </code></pre>
 <p>
@@ -701,13 +736,30 @@ Message
 html
 </td>
 <td>
-<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/827c89bb68d46edabd11ed0710b3521b18c9eff8/docs/Figure3.html" target="_blank">827c89b</a>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/92021bffd83748fb85fed21cf4e1cbd02841d2bc/docs/Figure3.html" target="_blank">92021bf</a>
 </td>
 <td>
 Ziang Zhang
 </td>
 <td>
 2026-07-03
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/827c89bb68d46edabd11ed0710b3521b18c9eff8/docs/Figure3.html" target="_blank">827c89b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-02
 </td>
 <td>
 Build site.
@@ -724,7 +776,7 @@ Rmd
 Ziang Zhang
 </td>
 <td>
-2026-07-03
+2026-07-02
 </td>
 <td>
 Add data provenance notes to each script; remove conversational
@@ -857,554 +909,445 @@ Initial commit: immgenT-GP-analysis
 </div>
 </div>
 <p>All panels are produced by <a
-href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure3.R"><code>script/Figure3.R</code></a>,
-which shares its curated GP set with <a href="FigureS3.html">Figure
-S3</a> via <code>code/R/activation_shared_setup.R</code>. The code below
-is shown for reference (not re-executed on this page); the images are
-its pre-rendered output.</p>
+href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure3.R"><code>script/Figure3.R</code></a>.
+The code below is shown for reference (not re-executed on this page);
+the images are its pre-rendered output.</p>
 <div id="setup" class="section level2">
 <h2>Setup</h2>
 <p>Data loading, shared across all panels below.</p>
-<pre class="r"><code># Figure 3. GPs associated with T-cell activation.
+<pre class="r"><code># Figure 3. GPs and lineages.
 #
-# Panels produced (see figures/Figure3_Activation/Figure3_caption.md for the
-# full caption text -- lettered a-e there, but relettered c-g in the final
-# figures/final-selected/bits/Figure 3/ bundle; this script uses the final
-# c-g lettering to match):
-#   3c  Standardized mean difference (d) in GP loading, activated vs resting,
-#       CD4 (x) vs CD8 (y); curated GPs colored by semantic group and labeled.
-#   3d  GP-gene signature network: each curated GP linked to its top 5
-#       positively/negatively regulated genes.
-#   3e  Bipartite TF-GP network for the curated activation GPs.
-#   3f  Heatmap of log2FC in mean GP loading across experimental conditions,
-#       for activated CD4/CD8 cells.
-#   3g  Heatmap of mean GP loading per Level-2 sub-lineage, across the 7
-#       T-cell lineages.
+# Panels produced (see figures/final-selected/bits/Figure 3/Figure2_caption.md
+# for the full caption text):
+#   2A  Swarm plot of per-GP AUC (predicting major lineage), up-regulated
+#       GPs only, with GP3/22/29 force-highlighted.
+#   2B  Structure plot of 6 lineage-defining GPs across major lineages.
+#   2C,2E,2G  GP loading on the global MDE, for GP68, GP30, GP58.
+#   2D,2F,2H  Per-gene view (score vs. mean expression) for GP68, GP30, GP58.
+#   2I  MDE restricted to gdT/CD8aa/DN, colored by lineage.
+#   2J,2K,2L  GP loading on the gdT/CD8aa/DN MDE, for GP22, GP29, GP3.
+#   2M  Heatmap of top-30 gene scores for GP3, GP22, GP29.
 #
-# Source: ported from Figure_Activation.R, which also produced the
-# Figure S3 panels (see FigureS3.R) from the same curated GP set and cell
-# groupings -- that shared setup now lives in
-# code/R/activation_shared_setup.R, sourced by both scripts.
+# Source: ported from Figure_Lineage.R, which also produced the
+# Figure S2 panels (see FigureS2.R) from the same L_pm_filtered/MDE setup.
+#
+# Panels 2C/2E/2G (GP68/30/58 on the *global* MDE) have no direct
+# equivalent in the original script -- Figure_Lineage.R only plots
+# GP68/30/58-defined structure/boxplots, never their global-MDE loading.
+# Reconstructed here with the same plot_loadings_on_mde() styling used for
+# panels 2J/2K/2L (the closest in-script precedent).
+#
+# Panels 2D/2F/2H and 2M are NOT from the original pre-refactor analysis
+# code at all -- they&#39;re generated by the separate &quot;immgen-signature&quot;
+# Shiny app (see code/R/volcano_helpers.R and code/R/cross_gp_helpers.R
+# headers for the full provenance notes).
 #
 # Required inputs (data/) -- see code/README.md&#39;s &quot;Data provenance&quot; table
 # for the full picture:
-#   L_pm_filtered.rds, F_pm_filtered.rds     [code/pipeline/01b_filter_cells.R]
 #   igt1_96_..._ADTonly.Rds                  [primary input Seurat object]
+#   L_pm_filtered.rds, F_pm_filtered.rds     [code/pipeline/01b_filter_cells.R]
+#   umap_result.rds                          [gap, no producer script here]
+#   level_1_AUC_list_figure_no_thymocytes_healthy.rds [code/pipeline/02_compute_auc.R]
+#   mean_shifted_log_expr.rds                [gap, no producer script here]
 
 library(ggplot2)
 library(ggrepel)
 library(dplyr)
-library(tidygraph)
-library(ggraph)
+library(tidyr)
+library(tibble)
+library(scattermore)
 library(pheatmap)
-library(scales)
+library(fastTopics) # structure_plot()
 
 data_path &lt;- &quot;data/&quot;
 figure_path &lt;- &quot;figures/generated/Figure 3/&quot;
-source(&quot;code/R/plot_utils.R&quot;) # scale_cols()
-source(&quot;code/R/tf_network.R&quot;) # optimize_bipartite_order(), plot_tf_gp_network_v2()
+source(&quot;code/R/plot_utils.R&quot;) # lineage_colors()
+source(&quot;code/R/lineage_plots.R&quot;) # plot_gp_swarm(), plot_loadings_on_mde()
+source(&quot;code/R/volcano_helpers.R&quot;) # plot_gp_signature_volcano(), normalize_maxabs()
+source(&quot;code/R/cross_gp_helpers.R&quot;) # plot_cross_gp_heatmap()
 
 # ============================================================
 # Load data
 # ============================================================
+seurat_meta &lt;- readRDS(paste0(
+  data_path,
+  &quot;igt1_96_withtotalvi20260206_clean_ADTonly.Rds&quot;
+))@meta.data
 L_pm_filtered &lt;- readRDS(paste0(data_path, &quot;L_pm_filtered.rds&quot;))
-colnames(L_pm_filtered) &lt;- paste0(&quot;GP&quot;, seq_len(ncol(L_pm_filtered)))
-F_pm_filtered &lt;- readRDS(paste0(data_path, &quot;F_pm_filtered.rds&quot;))
-colnames(F_pm_filtered) &lt;- paste0(&quot;GP&quot;, seq_len(ncol(F_pm_filtered)))
-seurat_meta &lt;- readRDS(paste0(data_path, &quot;igt1_96_withtotalvi20260206_clean_ADTonly.Rds&quot;))@meta.data
 seurat_meta_filtered &lt;- seurat_meta[rownames(L_pm_filtered), ]
+mde_result &lt;- readRDS(paste0(data_path, &quot;umap_result.rds&quot;))
+colnames(mde_result) &lt;- c(&quot;MDE_1&quot;, &quot;MDE_2&quot;)
+mde_result &lt;- mde_result[rownames(L_pm_filtered), ]
+df_mde &lt;- as.data.frame(mde_result)
+level_1_AUC_list &lt;- readRDS(paste0(data_path, &quot;level_1_AUC_list_figure_no_thymocytes_healthy.rds&quot;))
 
-source(&quot;code/R/activation_shared_setup.R&quot;)</code></pre>
+# Rename K## to GP## for display consistency
+colnames(L_pm_filtered) &lt;- gsub(&quot;^K&quot;, &quot;GP&quot;, colnames(L_pm_filtered))
+colnames(level_1_AUC_list$auc) &lt;- gsub(
+  &quot;^K&quot;,
+  &quot;GP&quot;,
+  colnames(level_1_AUC_list$auc)
+)</code></pre>
 </div>
-<div id="fig3c" class="section level2">
-<h2>(3c) Activation effect, CD4 vs. CD8</h2>
+<div id="fig2a" class="section level2">
+<h2>(A) AUC swarm plot by lineage</h2>
 <pre class="r"><code># ============================================================
-# 3a: Standardized mean difference, activated vs resting, CD4 vs CD8
+# 2A: AUC swarm, up-regulated GPs only, GP3/22/29 forced highlight
 # ============================================================
-d_thr &lt;- 0.15
-ratio_cutoff &lt;- 3
+selected_lineage_in_order &lt;- c(&quot;CD8&quot;, &quot;CD4&quot;, &quot;Treg&quot;, &quot;gdT&quot;, &quot;CD8aa&quot;, &quot;Tz&quot;, &quot;DN&quot;)
+level_1_categories &lt;- as.character(unique(
+  seurat_meta_filtered$annotation_level1
+))
 
-GP_activation_summary &lt;- diff_factors_merged %&gt;%
-  dplyr::inner_join(d_factors_merged %&gt;% dplyr::select(SYMBOL, d_CD4, d_CD8), by = &quot;SYMBOL&quot;) %&gt;%
-  dplyr::mutate(Ratio_CD8_CD4 = mean_change_loadings_CD8 / mean_change_loadings_CD4) %&gt;%
-  dplyr::select(GP = SYMBOL, mean_change_loadings_CD4, mean_change_loadings_CD8, AveExpr_CD4, AveExpr_CD8, d_CD4, d_CD8, Ratio_CD8_CD4)
+mean_loading_matrix &lt;- t(sapply(level_1_categories, function(cat) {
+  cells_in_cat &lt;- which(seurat_meta_filtered$annotation_level1 == cat)
+  colMeans(L_pm_filtered[cells_in_cat, , drop = FALSE], na.rm = TRUE)
+}))
+mean_loading_matrix_selected &lt;- mean_loading_matrix[selected_lineage_in_order, ]
 
-# Colour every GP using the same four-category rule (ratio + sign + magnitude
-# gate via d_thr). Curated GPs (GPs_of_interest) override with their fixed
-# manual highlight_colors; non-curated GPs are classified automatically.
-# Only the curated GPs are labelled, to keep the plot readable.
-manual_curated_df &lt;- GP_activation_summary %&gt;%
-  dplyr::mutate(
-    auto_color = dplyr::case_when(
-      abs(Ratio_CD8_CD4) &gt; ratio_cutoff &amp; abs(d_CD8) &gt; d_thr ~ &quot;darkorange2&quot;,
-      abs(Ratio_CD8_CD4) &lt; 1 / ratio_cutoff &amp; abs(d_CD4) &gt; d_thr ~ &quot;blue&quot;,
-      abs(Ratio_CD8_CD4) &gt; 1 / ratio_cutoff &amp; abs(Ratio_CD8_CD4) &lt; ratio_cutoff &amp; d_CD4 &gt; d_thr &amp; d_CD8 &gt; d_thr ~ &quot;darkred&quot;,
-      abs(Ratio_CD8_CD4) &gt; 1 / ratio_cutoff &amp; abs(Ratio_CD8_CD4) &lt; ratio_cutoff &amp; d_CD4 &lt; -d_thr &amp; d_CD8 &lt; -d_thr ~ &quot;darkgreen&quot;,
-      TRUE ~ &quot;black&quot;
-    ),
-    point_color = ifelse(GP %in% GPs_of_interest, highlight_colors[GP], auto_color)
+non_thymocyte_cells &lt;- which(
+  seurat_meta_filtered$annotation_level1 != &quot;thymocyte&quot;
+)
+mean_loading_vec &lt;- colMeans(
+  L_pm_filtered[non_thymocyte_cells, , drop = FALSE],
+  na.rm = TRUE
+)
+
+AUC_mat_selected &lt;- level_1_AUC_list$auc[selected_lineage_in_order, ]
+
+p_2A &lt;- plot_gp_swarm(
+  AUC_mat_selected,
+  loading_mat = mean_loading_matrix,
+  overall_loading_vec = mean_loading_vec,
+  filter_positive = TRUE,
+  forced_highlights = list(
+    gdT = c(&quot;GP22&quot;, &quot;GP29&quot;, &quot;GP3&quot;),
+    CD8aa = c(&quot;GP22&quot;, &quot;GP29&quot;, &quot;GP3&quot;),
+    DN = c(&quot;GP22&quot;, &quot;GP29&quot;, &quot;GP3&quot;)
+  ),
+  top_k_labels = 1,
+  threshold_line = 0.5,
+  title = &quot;Up-regulated GP Predictive Performance (AUC)&quot;,
+  subtitle = &quot;Up-regulated GPs (Loading &gt;= Overall Mean); triangles mark forced highlights that are down-regulated&quot;,
+  y_label = &quot;Area Under the Curve (AUC)&quot;,
+  italic_subtitle = TRUE
+)
+ggsave(
+  filename = paste0(figure_path, &quot;2A.pdf&quot;),
+  plot = p_2A,
+  width = 10,
+  height = 6
+)</code></pre>
+<p><img src="assets/Figure3/2A.png" width="60%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 3A.</strong> Swarm plot of per-GP predictive performance
+(one-vs-rest AUC, computed on healthy non-thymocyte cells) across the
+seven major lineages (CD8, CD4, Treg, gdT, CD8aa, Tz, DN). Only
+up-regulated GPs (mean loading &gt;= the overall mean) are plotted as
+circles; triangles mark forced-highlight GPs (GP3, GP22, GP29) that are
+down-regulated in gdT, CD8aa, and DN; the dashed line marks AUC = 0.5,
+and the most predictive GP per lineage is labeled.</p>
+</div>
+</div>
+<div id="fig2b" class="section level2">
+<h2>(B) Structure plot of lineage-defining GPs</h2>
+<pre class="r"><code># ============================================================
+# 2B: Structure plot of 6 lineage-defining GPs
+# ============================================================
+set.seed(1234)
+color_coding &lt;- ZemmourLib::immgent_colors$level1
+level1_category_to_factor &lt;- c(
+  &quot;Treg&quot; = &quot;GP68&quot;,
+  &quot;CD8&quot; = &quot;GP58&quot;,
+  &quot;Tz&quot; = &quot;GP30&quot;,
+  &quot;DN&quot; = &quot;GP22&quot;,
+  &quot;CD8aa&quot; = &quot;GP29&quot;,
+  &quot;gdT&quot; = &quot;GP3&quot;
+)
+fit2 &lt;- L_pm_filtered[, level1_category_to_factor, drop = FALSE]
+cell_type &lt;- seurat_meta[rownames(fit2), &quot;annotation_level1&quot;]
+cells &lt;- which(cell_type == &quot;CD4&quot; | cell_type == &quot;CD8&quot;)
+cells &lt;- sample(cells, 1e5)
+cells &lt;- sort(c(
+  cells,
+  which(
+    cell_type != &quot;CD4&quot; &amp;
+      cell_type != &quot;CD8&quot; &amp;
+      cell_type != &quot;thymocyte&quot; &amp;
+      cell_type != &quot;DP&quot;
   )
+))
 
-p_3a &lt;- ggplot(manual_curated_df, aes(x = d_CD4, y = d_CD8)) +
-  geom_abline(slope = 1, intercept = 0, linetype = &quot;dashed&quot;, color = &quot;red&quot;) +
-  geom_hline(yintercept = 0, linetype = &quot;dashed&quot;, color = &quot;blue&quot;) +
-  geom_vline(xintercept = 0, linetype = &quot;dashed&quot;, color = &quot;blue&quot;) +
-  geom_point(aes(color = point_color), size = 2) +
-  ggrepel::geom_text_repel(
-    data = filter(manual_curated_df, GP %in% GPs_of_interest),
-    aes(label = GP, color = point_color),
-    max.overlaps = Inf, size = 3.5, box.padding = 0.35, point.padding = 0.5, segment.color = &quot;grey50&quot;
+p_2B &lt;- structure_plot(
+  fit2[cells, ],
+  gap = 40,
+  n = 10000,
+  colors = color_coding[names(level1_category_to_factor)],
+  grouping = cell_type[cells]
+) +
+  labs(y = &quot;membership&quot;, color = &quot;&quot;, fill = &quot;&quot;) +
+  guides(fill = guide_legend(nrow = 1), color = guide_legend(nrow = 1)) +
+  theme(
+    legend.position = &quot;bottom&quot;,
+    legend.direction = &quot;horizontal&quot;,
+    legend.box = &quot;horizontal&quot;,
+    axis.text.x = element_text(size = 10, angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 12),
+    axis.title = element_text(size = 14, face = &quot;bold&quot;),
+    legend.text = element_text(size = 12),
+    legend.title = element_text(size = 13)
+  )
+ggsave(
+  filename = paste0(figure_path, &quot;2B.pdf&quot;),
+  plot = p_2B,
+  width = 10,
+  height = 6,
+  dpi = 300
+)</code></pre>
+<p><img src="assets/Figure3/2B.png" width="60%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 3B.</strong> Structure plot of the membership (GP
+loading) of six lineage-defining GPs (GP58, GP68, GP30, GP3, GP29, GP22)
+across cells grouped by major lineages (CD8, CD4, Treg, gdT, CD8aa, Tz,
+DN); CD4 and CD8 cells are subsampled for visualization.</p>
+</div>
+</div>
+<div id="fig2c" class="section level2">
+<h2>(C) GP68 loading on the global MDE</h2>
+<pre class="r"><code>p_2C &lt;- plot_loadings_on_mde(
+  mde = df_mde,
+  loading = L_pm_filtered[rownames(df_mde), &quot;GP68&quot;],
+  factor_num = 68,
+  size = 0.6,
+  bg_alpha = 0.1,
+  bg_color = &quot;grey90&quot;
+)
+ggsave(
+  filename = paste0(figure_path, &quot;2C.pdf&quot;),
+  plot = p_2C,
+  width = 5,
+  height = 4
+)</code></pre>
+<p><img src="assets/Figure3/2C.png" width="40%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 3C.</strong> GP68 loading projected onto the global MDE
+embedding; each point is a cell, colored by its loading for GP68.</p>
+</div>
+</div>
+<div id="fig2d" class="section level2">
+<h2>(D) GP68 signature volcano</h2>
+<pre class="r"><code>F_pm_filtered_2d &lt;- readRDS(paste0(data_path, &quot;F_pm_filtered.rds&quot;))
+colnames(F_pm_filtered_2d) &lt;- paste0(&quot;GP&quot;, seq_len(ncol(F_pm_filtered_2d)))
+F_pm_normalized_2d &lt;- normalize_maxabs(F_pm_filtered_2d)
+mean_shifted_log_expr &lt;- readRDS(paste0(data_path, &quot;mean_shifted_log_expr.rds&quot;))
+
+p_2D &lt;- plot_gp_signature_volcano(
+  &quot;GP68&quot;,
+  F_pm_normalized_2d,
+  mean_shifted_log_expr,
+  threshold = 0.1,
+  n_label = 100,
+  bg_alpha = 0.2
+)
+ggsave(
+  filename = paste0(figure_path, &quot;2D.pdf&quot;),
+  plot = p_2D,
+  width = 7,
+  height = 5.5
+)</code></pre>
+<p><img src="assets/Figure3/2D.png" width="40%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 3D.</strong> Per-gene view of GP68: each gene’s score in
+the GP (x-axis, scaled so the maximum |score| = 1) versus its mean
+shifted-log expression (y-axis); top genes are labeled.</p>
+</div>
+</div>
+<div id="fig2e" class="section level2">
+<h2>(E) GP30 loading on the global MDE</h2>
+<pre class="r"><code>p_2E &lt;- plot_loadings_on_mde(
+  mde = df_mde,
+  loading = L_pm_filtered[rownames(df_mde), &quot;GP30&quot;],
+  factor_num = 30,
+  size = 0.6,
+  bg_alpha = 0.1,
+  bg_color = &quot;grey90&quot;
+)
+ggsave(
+  filename = paste0(figure_path, &quot;2E.pdf&quot;),
+  plot = p_2E,
+  width = 5,
+  height = 4
+)</code></pre>
+<p><img src="assets/Figure3/2E.png" width="40%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 3E.</strong> GP30 loading projected onto the global MDE
+embedding; each point is a cell, colored by its loading for GP30.</p>
+</div>
+</div>
+<div id="fig2f" class="section level2">
+<h2>(F) GP30 signature volcano</h2>
+<pre class="r"><code>p_2F &lt;- plot_gp_signature_volcano(
+  &quot;GP30&quot;,
+  F_pm_normalized_2d,
+  mean_shifted_log_expr,
+  threshold = 0.1,
+  n_label = 100,
+  bg_alpha = 0.2
+)
+ggsave(
+  filename = paste0(figure_path, &quot;2F.pdf&quot;),
+  plot = p_2F,
+  width = 7,
+  height = 5.5
+)</code></pre>
+<p><img src="assets/Figure3/2F.png" width="40%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 3F.</strong> Per-gene view of GP30: each gene’s score in
+the GP (x-axis, scaled so the maximum |score| = 1) versus its mean
+shifted-log expression (y-axis); top genes are labeled.</p>
+</div>
+</div>
+<div id="fig2g" class="section level2">
+<h2>(G) GP58 loading on the global MDE</h2>
+<pre class="r"><code>p_2G &lt;- plot_loadings_on_mde(
+  mde = df_mde,
+  loading = L_pm_filtered[rownames(df_mde), &quot;GP58&quot;],
+  factor_num = 58,
+  size = 0.6,
+  bg_alpha = 0.1,
+  bg_color = &quot;grey90&quot;
+)
+ggsave(
+  filename = paste0(figure_path, &quot;2G.pdf&quot;),
+  plot = p_2G,
+  width = 5,
+  height = 4
+)</code></pre>
+<p><img src="assets/Figure3/2G.png" width="40%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 3G.</strong> GP58 loading projected onto the global MDE
+embedding; each point is a cell, colored by its loading for GP58.</p>
+</div>
+</div>
+<div id="fig2h" class="section level2">
+<h2>(H) GP58 signature volcano</h2>
+<pre class="r"><code>p_2H &lt;- plot_gp_signature_volcano(
+  &quot;GP58&quot;,
+  F_pm_normalized_2d,
+  mean_shifted_log_expr,
+  threshold = 0.1,
+  n_label = 83,
+  bg_alpha = 0.2
+)
+ggsave(
+  filename = paste0(figure_path, &quot;2H.pdf&quot;),
+  plot = p_2H,
+  width = 7,
+  height = 5.5
+)</code></pre>
+<p><img src="assets/Figure3/2H.png" width="40%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 3H.</strong> Per-gene view of GP58: each gene’s score in
+the GP (x-axis, scaled so the maximum |score| = 1) versus its mean
+shifted-log expression (y-axis); top genes are labeled.</p>
+</div>
+</div>
+<div id="fig2i" class="section level2">
+<h2>(I) gdT/CD8aa/DN MDE by lineage</h2>
+<pre class="r"><code>gcd_lineages &lt;- c(&quot;gdT&quot;, &quot;CD8aa&quot;, &quot;DN&quot;)
+gcd_cells &lt;- seurat_meta_filtered$cellID[
+  seurat_meta_filtered$annotation_level1 %in%
+    gcd_lineages &amp;
+    !(seurat_meta_filtered$annotation_level2_group %in%
+      c(&quot;proliferating&quot;, &quot;miniverse&quot;))
+]
+df_mde_gcd &lt;- df_mde[gcd_cells, ]
+df_mde_gcd$annotation_level1 &lt;- factor(
+  seurat_meta_filtered[gcd_cells, &quot;annotation_level1&quot;],
+  levels = gcd_lineages
+)
+
+p_2I &lt;- ggplot(df_mde_gcd, aes(x = MDE_1, y = MDE_2)) +
+  scattermore::geom_scattermore(
+    aes(color = annotation_level1),
+    pointsize = 1.2
   ) +
-  scale_color_identity() +
-  # Signed (pseudo-)log axes: d is signed, so a plain log drops negatives/zeros.
-  scale_x_continuous(trans = scales::pseudo_log_trans(sigma = 0.15), breaks = c(-1, -0.5, -0.2, -0.1, 0, 0.1, 0.2, 0.5, 1)) +
-  scale_y_continuous(trans = scales::pseudo_log_trans(sigma = 0.15), breaks = c(-1, -0.5, -0.2, -0.1, 0, 0.1, 0.2, 0.5, 1)) +
-  coord_equal(xlim = c(-1.6, 1.6), ylim = c(-1.6, 1.6)) +
+  scale_color_manual(values = lineage_colors()[gcd_lineages]) +
+  coord_equal() +
+  theme_classic() +
   labs(
-    x = &quot;Standardized Mean Difference (d) for CD4 Activated vs Resting&quot;,
-    y = &quot;Standardized Mean Difference (d) for CD8 Activated vs Resting&quot;,
-    title = &quot;GPs colored by semantic category (curated set labeled)&quot;
+    title = &quot;MDE: gdT / CD8aa / DN&quot;,
+    x = &quot;MDE 1&quot;,
+    y = &quot;MDE 2&quot;,
+    color = &quot;Cell Type&quot;
   ) +
-  theme_minimal()
-ggsave(filename = paste0(figure_path, &quot;3c.pdf&quot;), plot = p_3a, width = 8, height = 7)</code></pre>
-<p><img src="assets/Figure3/3c.png" width="50%" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-3c">
-Past versions of 3c.png
-</button>
-</p>
-<div id="fig-3c" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/06b2461eba2147f353f2ce082bdebe22f5dcee26/docs/assets/Figure3/3c.png" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+  theme(
+    legend.text = element_text(size = 10),
+    legend.key.size = unit(1.5, &quot;lines&quot;)
+  ) +
+  guides(color = guide_legend(override.aes = list(size = 4)))
+ggsave(
+  filename = paste0(figure_path, &quot;2I.pdf&quot;),
+  plot = p_2I,
+  width = 5,
+  height = 5
+)</code></pre>
+<p><img src="assets/Figure3/2I.png" width="40%" style="display: block; margin: auto;" /></p>
 <div class="figcaption">
-<p><strong>Fig. 3c.</strong> Standardized mean difference (<em>d</em>)
-in GP loading between activated and resting cells, comparing CD4
-(x-axis) and CD8 (y-axis); for each GP, <em>d</em> is the
-activated-minus-resting difference in mean loading divided by that GP’s
-loading SD pooled over all activated and resting CD4/CD8 cells. Points
-are colored based on whether they are highly up-regulated in both
-CD4/CD8 activation, down-regulated in both, or only in CD4 or CD8
-activation; GPs not meeting these criteria are shown in black, and only
-the curated set is labeled.</p>
+<p><strong>Fig. 3I.</strong> MDE restricted to gdT, CD8aa, and DN cells
+(excluding proliferating and miniverse subsets), colored by lineage.</p>
 </div>
 </div>
-<div id="fig3d" class="section level2">
-<h2>(3d) GP-gene signature network</h2>
-<pre class="r"><code># ============================================================
-# 3b: GP-gene signature network
-# ============================================================
-set.seed(42)
-F_pm_filtered_norm_subset &lt;- F_pm_filtered_norm[, GPs_of_interest, drop = FALSE]
-top_5_pos &lt;- apply(F_pm_filtered_norm_subset, 2, function(x) {
-  idx &lt;- order(abs(x), decreasing = TRUE)[1:5]
-  idx &lt;- idx[x[idx] &gt; 0]
-  names(x)[idx]
-})
-top_5_neg &lt;- apply(F_pm_filtered_norm_subset, 2, function(x) {
-  idx &lt;- order(abs(x), decreasing = TRUE)[1:5]
-  idx &lt;- idx[x[idx] &lt; 0]
-  names(x)[idx]
-})
-names(top_5_pos) &lt;- GPs_of_interest
-names(top_5_neg) &lt;- GPs_of_interest
-
-pos_edges &lt;- stack(top_5_pos) %&gt;% dplyr::rename(Gene = values, GP = ind) %&gt;% dplyr::mutate(Type = &quot;Positive&quot;, Color = &quot;red&quot;)
-neg_edges &lt;- stack(top_5_neg) %&gt;% dplyr::rename(Gene = values, GP = ind) %&gt;% dplyr::mutate(Type = &quot;Negative&quot;, Color = &quot;blue&quot;)
-all_edges &lt;- dplyr::bind_rows(pos_edges, neg_edges) %&gt;% dplyr::filter(Gene != &quot;&quot; &amp; !is.na(Gene))
-all_edges_sorted &lt;- all_edges %&gt;% dplyr::arrange(Type, GP, Gene)
-
-gp_group_df &lt;- data.frame(
-  name = names(highlight_colors),
-  ManualGroup = dplyr::case_when(
-    highlight_colors == &quot;blue&quot; ~ &quot;CD4 only&quot;,
-    highlight_colors == &quot;darkorange2&quot; ~ &quot;CD8 only&quot;,
-    highlight_colors == &quot;darkgreen&quot; ~ &quot;both down&quot;,
-    highlight_colors == &quot;darkred&quot; ~ &quot;both up&quot;,
+<div id="fig2jl" class="section level2">
+<h2>(J-L) GP22, GP29, GP3 loading on the gdT/CD8aa/DN MDE</h2>
+<pre class="r"><code>gp_letter &lt;- c(&quot;GP22&quot; = &quot;2J&quot;, &quot;GP29&quot; = &quot;2K&quot;, &quot;GP3&quot; = &quot;2L&quot;)
+for (gp_name in names(gp_letter)) {
+  gp_num &lt;- as.numeric(sub(&quot;^GP&quot;, &quot;&quot;, gp_name))
+  p_loading &lt;- plot_loadings_on_mde(
+    mde = df_mde_gcd[, c(&quot;MDE_1&quot;, &quot;MDE_2&quot;)],
+    loading = L_pm_filtered[gcd_cells, gp_name],
+    factor_num = gp_num,
+    size = 0.6,
+    bg_alpha = 0.1,
+    bg_color = &quot;grey90&quot;
   )
-)
-manual_colors_palette &lt;- c(&quot;CD4 only&quot; = &quot;blue&quot;, &quot;CD8 only&quot; = &quot;darkorange2&quot;, &quot;both down&quot; = &quot;darkgreen&quot;, &quot;both up&quot; = &quot;darkred&quot;, &quot;Gene&quot; = &quot;#666666&quot;)
-
-graph &lt;- tidygraph::as_tbl_graph(all_edges_sorted) %&gt;%
-  tidygraph::activate(nodes) %&gt;%
-  dplyr::mutate(
-    NodeGroup = ifelse(name %in% all_edges$GP, &quot;GP&quot;, &quot;Gene&quot;),
-    Importance = tidygraph::centrality_degree()
-  ) %&gt;%
-  dplyr::left_join(gp_group_df, by = &quot;name&quot;) %&gt;%
-  dplyr::mutate(
-    ColorGroup = ifelse(NodeGroup == &quot;Gene&quot;, &quot;Gene&quot;, ManualGroup),
-    gp_label = ifelse(NodeGroup == &quot;GP&quot;, name, &quot;&quot;)
+  ggsave(
+    filename = paste0(figure_path, gp_letter[gp_name], &quot;.pdf&quot;),
+    plot = p_loading,
+    width = 5,
+    height = 4
   )
-
-set.seed(2)
-p_3b &lt;- ggraph(graph, layout = &quot;stress&quot;) +
-  geom_edge_link(aes(color = Color), alpha = 0.4, width = 0.6) +
-  geom_node_point(aes(filter = (NodeGroup == &quot;Gene&quot;), color = ColorGroup), shape = 16, size = 2, alpha = 0.8) +
-  geom_node_point(aes(filter = (NodeGroup == &quot;GP&quot;), color = ColorGroup), shape = 15, size = 10, alpha = 0.7) +
-  geom_node_text(aes(filter = (NodeGroup == &quot;GP&quot;), label = gp_label), color = &quot;white&quot;, fontface = &quot;bold&quot;, size = 3) +
-  geom_node_text(aes(filter = (NodeGroup == &quot;Gene&quot;), label = name), repel = TRUE, size = 2.5, color = &quot;black&quot;, max.overlaps = 20) +
-  scale_edge_color_identity() +
-  scale_color_manual(name = &quot;GP Types&quot;, values = manual_colors_palette, breaks = c(&quot;CD4 only&quot;, &quot;CD8 only&quot;, &quot;both down&quot;, &quot;both up&quot;)) +
-  theme_void() +
-  labs(title = &quot;GP-Gene Signature Network&quot;, subtitle = &quot;Nodes colored by manual GP classification&quot;, caption = &quot;Red edges: Positive | Blue edges: Negative&quot;) +
-  theme(legend.position = &quot;bottom&quot;, legend.title = element_text(face = &quot;bold&quot;), plot.margin = margin(10, 10, 10, 10)) +
-  guides(color = guide_legend(override.aes = list(size = 5, shape = 15)))
-ggsave(filename = paste0(figure_path, &quot;3d.pdf&quot;), plot = p_3b, width = 10, height = 10)</code></pre>
-<p><img src="assets/Figure3/3d.png" width="50%" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-3d">
-Past versions of 3d.png
-</button>
-</p>
-<div id="fig-3d" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/06b2461eba2147f353f2ce082bdebe22f5dcee26/docs/assets/Figure3/3d.png" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+}</code></pre>
+<p><img src="assets/Figure3/2J.png" width="30%" style="display: block; margin: auto;" /><img src="assets/Figure3/2K.png" width="30%" style="display: block; margin: auto;" /><img src="assets/Figure3/2L.png" width="30%" style="display: block; margin: auto;" /></p>
 <div class="figcaption">
-<p><strong>Fig. 3d.</strong> GP-gene signature network in which each GP
-is linked to its 5 most regulated marker genes (per-GP-normalized gene
-scores); edges are colored by the score sign (red, positive; blue,
-negative).</p>
+<p><strong>Fig. 3J-L.</strong> GP loading on the same gdT/CD8aa/DN MDE
+for GP22 (J), GP29 (K), and GP3 (L).</p>
 </div>
 </div>
-<div id="fig3e" class="section level2">
-<h2>(3e) TF-GP network</h2>
-<pre class="r"><code># ============================================================
-# 3c: Bipartite TF-GP network
-# ============================================================
-mm &lt;- org.Mm.eg.db::org.Mm.eg.db
-go2eg &lt;- as.list(org.Mm.eg.db::org.Mm.egGO2ALLEGS)
-tf_symbols &lt;- AnnotationDbi::select(mm, keys = unique(unlist(go2eg)), columns = &quot;SYMBOL&quot;, keytype = &quot;ENTREZID&quot;)
-tf &lt;- c(
-  sort(tf_symbols$SYMBOL[tf_symbols$ENTREZID %in% unique(go2eg[[&quot;GO:0003700&quot;]])]),
-  &quot;Tox&quot;, &quot;Tox2&quot;, &quot;Tox3&quot;, &quot;Tox4&quot;
-) %&gt;% sort() %&gt;% unique()
+<div id="fig2m" class="section level2">
+<h2>(M) Top-30 gene score heatmap for GP3/GP29/GP22</h2>
+<pre class="r"><code>F_pm_filtered_2m &lt;- readRDS(paste0(data_path, &quot;F_pm_filtered.rds&quot;))
+colnames(F_pm_filtered_2m) &lt;- paste0(&quot;GP&quot;, seq_len(ncol(F_pm_filtered_2m)))
+F_pm_norm_2m &lt;- normalize_maxabs(F_pm_filtered_2m)
+common_genes_2m &lt;- intersect(rownames(F_pm_norm_2m), names(mean_shifted_log_expr))
 
-F_sub_tf &lt;- F_pm_filtered_norm[, GPs_of_interest, drop = FALSE]
-tf_gp_threshold &lt;- 0.25
-tf_in_F &lt;- intersect(tf, rownames(F_sub_tf))
-tf_max_score &lt;- apply(F_sub_tf[tf_in_F, , drop = FALSE], 1, max, na.rm = TRUE)
-selected_tfs &lt;- sort(names(tf_max_score)[tf_max_score &gt; tf_gp_threshold])
+gps_2m &lt;- c(&quot;GP3&quot;, &quot;GP29&quot;, &quot;GP22&quot;)
+mat_2m &lt;- F_pm_norm_2m[common_genes_2m, gps_2m, drop = FALSE]
 
-# Top-to-bottom group order in the network: both-up -&gt; CD8-only -&gt; both-down -&gt; CD4-only
-gp_color_group_order &lt;- c(&quot;darkred&quot;, &quot;darkorange2&quot;, &quot;darkgreen&quot;, &quot;blue&quot;)
-
-tf_network_plot &lt;- plot_tf_gp_network_v2(
-  F = F_sub_tf,
-  selected_tfs = selected_tfs,
-  tf_gp_threshold = tf_gp_threshold,
-  top_genes_per_gp = 5,
-  gp_colors = highlight_colors,
-  gp_group_order = gp_color_group_order,
-  optimize_layout = TRUE,
-  barycenter_iter = 12,
-  gp_spacing = 1.5,
-  node_size_tf = 6,
-  node_size_gp = 5,
-  label_size_tf = 4.5,
-  label_size_gp = 4,
-  label_size_gene = 3.4
+p_2M &lt;- plot_cross_gp_heatmap(
+  mat_2m, gps_2m,
+  feat_label = &quot;Gene&quot;, n_genes = 30, direction = &quot;both&quot;,
+  threshold = 0.05, colorscheme = &quot;bwr&quot;, cluster_r = TRUE, cluster_c = FALSE,
+  pin_top = c(&quot;Fcer1g&quot;, &quot;Ccl5&quot;, &quot;Cd7&quot;)
 )
-plot_height_tf &lt;- min(60, max(12, length(selected_tfs) * 0.35, length(GPs_of_interest) * 1.5 * 0.55 + 2))
-ggsave(filename = paste0(figure_path, &quot;3e.pdf&quot;), plot = tf_network_plot, width = 18, height = plot_height_tf, limitsize = FALSE)</code></pre>
-<p><img src="assets/Figure3/3e.png" width="50%" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-3e">
-Past versions of 3e.png
-</button>
-</p>
-<div id="fig-3e" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/06b2461eba2147f353f2ce082bdebe22f5dcee26/docs/assets/Figure3/3e.png" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+ph_2m &lt;- max(4, 2 + 30 * 0.14)
+pw_2m &lt;- max(5, 3 + length(gps_2m) * 0.8)
+ggsave(filename = paste0(figure_path, &quot;2M.pdf&quot;), plot = p_2M, width = pw_2m, height = ph_2m)</code></pre>
+<p><img src="assets/Figure3/2M.png" width="40%" style="display: block; margin: auto;" /></p>
 <div class="figcaption">
-<p><strong>Fig. 3e.</strong> Bipartite transcription factor (TF)-GP
-network: TFs (<a href="GO:0003700" class="uri">GO:0003700</a>
-DNA-binding TFs plus the Tox family) with a normalized score exceeding
-0.25 in any curated GP are connected to those GPs by directed edges
-(width proportional to the normalized score, color identifying the TF);
-the top 5 positively regulated genes per GP are listed beside each GP
-node.</p>
-</div>
-</div>
-<div id="fig3f" class="section level2">
-<h2>(3f) Log2FC heatmap across conditions</h2>
-<pre class="r"><code># ============================================================
-# 3d: log2FC heatmap of activated CD4+CD8 cells across conditions,
-#     relative to the per-GP mean across all CD4/CD8 cells
-# ============================================================
-act_keep &lt;- seurat_meta_filtered$annotation_level1 %in% c(&quot;CD4&quot;, &quot;CD8&quot;) &amp; seurat_meta_filtered$annotation_level2_group == &quot;activated&quot;
-meta_act &lt;- seurat_meta_filtered[act_keep, ]
-L_act &lt;- L_subset[act_keep, , drop = FALSE]
-
-min_cells_cond &lt;- 50
-cd_lin &lt;- table(meta_act$condition_detailed_simplified, meta_act$annotation_level1)
-cond_keep &lt;- rownames(cd_lin)[cd_lin[, &quot;CD4&quot;] &gt;= min_cells_cond &amp; cd_lin[, &quot;CD8&quot;] &gt;= min_cells_cond]
-
-cd_br &lt;- table(meta_act$condition_detailed_simplified, meta_act$condition_broad)
-cd_to_broad &lt;- setNames(colnames(cd_br)[apply(cd_br, 1, which.max)], rownames(cd_br))[cond_keep]
-
-# Column order: `healthy` broad first (with `baseline` as its first condition)
-broad_rank &lt;- ifelse(cd_to_broad == &quot;healthy&quot;, 0L, 1L)
-within_broad_rank &lt;- ifelse(cd_to_broad == &quot;healthy&quot; &amp; cond_keep == &quot;baseline&quot;, 0L, 1L)
-col_order_cond &lt;- order(broad_rank, cd_to_broad, within_broad_rank, cond_keep)
-cond_keep &lt;- cond_keep[col_order_cond]
-cd_to_broad &lt;- cd_to_broad[cond_keep]
-
-mean_mat_cond &lt;- vapply(cond_keep, function(cond) colMeans(L_act[meta_act$condition_detailed_simplified == cond, , drop = FALSE]), numeric(ncol(L_act)))
-mean_mat_cond &lt;- mean_mat_cond[gp_row_order, , drop = FALSE]
-broad_levels &lt;- unique(cd_to_broad)
-col_anno_cond &lt;- data.frame(condition_broad = factor(cd_to_broad, levels = broad_levels), row.names = colnames(mean_mat_cond))
-row_label_cols &lt;- group_colors[gp_to_group[gp_row_order]]
-
-pc_lfc &lt;- 1e-10
-cap_lfc &lt;- 2
-cd4cd8_idx &lt;- seurat_meta_filtered$annotation_level1 %in% c(&quot;CD4&quot;, &quot;CD8&quot;)
-L_cd4cd8 &lt;- L_subset[cd4cd8_idx, , drop = FALSE]
-mu_lfc_mean &lt;- colMeans(L_cd4cd8, na.rm = TRUE)[rownames(mean_mat_cond)]
-lfc_mat_mean &lt;- log2((mean_mat_cond + pc_lfc) / (mu_lfc_mean + pc_lfc))
-lfc_mat_mean &lt;- pmax(pmin(lfc_mat_mean, cap_lfc), -cap_lfc)
-
-ph_cond_lfc_mean &lt;- pheatmap(
-  lfc_mat_mean, cluster_rows = FALSE, cluster_cols = FALSE,
-  color = colorRampPalette(c(&quot;#7A0177&quot;, &quot;black&quot;, &quot;#FFD700&quot;))(101),
-  breaks = seq(-cap_lfc, cap_lfc, length.out = 102),
-  annotation_col = col_anno_cond,
-  gaps_row = head(cumsum(lengths(gp_groups)), -1),
-  gaps_col = head(cumsum(rle(as.character(cd_to_broad))$lengths), -1),
-  main = &quot;log2FC vs per-GP MEAN across all CD4/CD8 (activated CD4+CD8 by condition_detailed_simplified)&quot;,
-  silent = TRUE
-)
-row_idx_lfc_m &lt;- which(ph_cond_lfc_mean$gtable$layout$name == &quot;row_names&quot;)
-ph_cond_lfc_mean$gtable$grobs[[row_idx_lfc_m]]$gp$col &lt;- row_label_cols
-
-pdf(paste0(figure_path, &quot;3f.pdf&quot;), width = max(8, 0.18 * ncol(lfc_mat_mean) + 4), height = 6)
-grid::grid.draw(ph_cond_lfc_mean$gtable)
-invisible(dev.off())</code></pre>
-<p><img src="assets/Figure3/3f.png" width="50%" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-3f">
-Past versions of 3f.png
-</button>
-</p>
-<div id="fig-3f" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/06b2461eba2147f353f2ce082bdebe22f5dcee26/docs/assets/Figure3/3f.png" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="figcaption">
-<p><strong>Fig. 3f.</strong> Heatmap of log2 fold-change in mean GP
-loading across experimental conditions for activated CD4 and CD8 cells,
-computed relative to each GP’s mean loading across all CD4/CD8 cells
-(resting and activated, all conditions) and capped at +-2, with a small
-pseudocount (1e-10) added to stabilize computation; columns are
-conditions with &gt;=50 activated CD4 and &gt;=50 activated CD8 cells,
-grouped and annotated by broad condition category, with color from
-purple (low) through black (no change) to gold (high).</p>
-</div>
-</div>
-<div id="fig3g" class="section level2">
-<h2>(3g) Mean loading by sub-lineage</h2>
-<pre class="r"><code># ============================================================
-# 3e: Mean GP loading per Level-2 sub-lineage (built before 3d since 3d
-#     reuses gp_row_order/group_colors computed here)
-# ============================================================
-keep_cells &lt;- seurat_meta_filtered$annotation_level1 %in% lineages
-meta_sub &lt;- seurat_meta_filtered[keep_cells, ]
-L_keep &lt;- L_subset[keep_cells, , drop = FALSE]
-
-l2_counts &lt;- table(meta_sub$annotation_level2)
-l2_keep &lt;- names(l2_counts)[l2_counts &gt;= 50]
-# Drop the &quot;P&quot; cluster and any &quot;w...&quot; clusters (wM, wW, etc.) across all lineages
-l2_stripped &lt;- sub(&quot;^[^._]+[._]&quot;, &quot;&quot;, l2_keep)
-exclude_l2 &lt;- l2_stripped == &quot;P&quot; | grepl(&quot;^w&quot;, l2_stripped, ignore.case = TRUE) | grepl(&quot;[._]w&quot;, l2_keep, ignore.case = TRUE)
-l2_keep &lt;- l2_keep[!exclude_l2]
-
-mean_mat &lt;- vapply(l2_keep, function(l2) colMeans(L_keep[meta_sub$annotation_level2 == l2, , drop = FALSE]), numeric(ncol(L_keep)))
-l2_to_l1 &lt;- vapply(l2_keep, function(l2) as.character(meta_sub$annotation_level1[meta_sub$annotation_level2 == l2][1]), character(1))
-col_order &lt;- order(match(l2_to_l1, lineages), l2_keep)
-mean_mat &lt;- mean_mat[gp_row_order, col_order]
-l2_to_l1 &lt;- l2_to_l1[col_order]
-
-immgen_cols &lt;- ZemmourLib::immgent_colors
-col_anno &lt;- data.frame(Lineage = factor(l2_to_l1, levels = lineages), row.names = colnames(mean_mat))
-anno_colors_mean &lt;- list(Lineage = immgen_cols$level1[lineages])
-row_label_cols &lt;- group_colors[gp_to_group[gp_row_order]]
-col_label_cols &lt;- immgen_cols$level2[colnames(mean_mat)]
-col_label_cols[is.na(col_label_cols)] &lt;- &quot;black&quot;
-
-ph &lt;- pheatmap(
-  mean_mat, cluster_rows = FALSE, cluster_cols = FALSE,
-  color = colorRampPalette(c(&quot;white&quot;, &quot;red&quot;))(200),
-  annotation_col = col_anno, annotation_colors = anno_colors_mean,
-  gaps_row = head(cumsum(lengths(gp_groups)), -1),
-  gaps_col = head(cumsum(rle(l2_to_l1)$lengths), -1),
-  main = &quot;Average loading of Figure 3 GPs per Level-2 sub-lineage&quot;,
-  silent = TRUE
-)
-row_idx &lt;- which(ph$gtable$layout$name == &quot;row_names&quot;)
-col_idx &lt;- which(ph$gtable$layout$name == &quot;col_names&quot;)
-ph$gtable$grobs[[row_idx]]$gp$col &lt;- row_label_cols
-ph$gtable$grobs[[col_idx]]$gp$col &lt;- col_label_cols
-
-pdf(paste0(figure_path, &quot;3g.pdf&quot;), width = 11, height = 5.5)
-grid::grid.draw(ph$gtable)
-invisible(dev.off())</code></pre>
-<p><img src="assets/Figure3/3g.png" width="50%" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-3g">
-Past versions of 3g.png
-</button>
-</p>
-<div id="fig-3g" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/06b2461eba2147f353f2ce082bdebe22f5dcee26/docs/assets/Figure3/3g.png" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="figcaption">
-<p><strong>Fig. 3g.</strong> Heatmap of mean GP loading per Level-2
-sub-lineage across the seven T-cell lineages (CD8, CD4, Treg, gdT,
-CD8aa, Tz, DN; sub-types with &gt;=50 cells), with the top bar denoting
-parent lineage and color from white (low) to red (high).</p>
+<p><strong>Fig. 3M.</strong> Heatmap of the top 30 gene scores across
+GP3, GP29, and GP22 (blue, negative; red, positive), with Fcer1g, Ccl5,
+and Cd7 pinned to the top rows.</p>
 </div>
 <br>
 <p>
@@ -1426,7 +1369,7 @@ LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlap
 locale:
 [1] en_CA/en_CA/en_CA/C/en_CA/en_CA
 
-time zone: Asia/Tokyo
+time zone: Asia/Shanghai
 tzcode source: internal
 
 attached base packages:

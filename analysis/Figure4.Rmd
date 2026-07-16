@@ -1,5 +1,5 @@
 ---
-title: "Figure 4: GPs and tissue"
+title: "Figure 4: GPs associated with T-cell activation"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -7,78 +7,80 @@ editor_options:
 ---
 
 All panels are produced by
-[`script/Figure4.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure4.R).
-The code below is shown for reference (not re-executed on this page); the
-images are its pre-rendered output.
+[`script/Figure4.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure4.R),
+which shares its curated GP set with [Figure S3](FigureS3.html) via
+`code/R/activation_shared_setup.R`. The code below is shown for
+reference (not re-executed on this page); the images are its pre-rendered
+output.
 
 ## Setup
 
 Data loading, shared across all panels below.
 
-```{r fig4-setup, code=readLines("../script/Figure4.R")[1:91], eval=FALSE}
+```{r fig3-setup, code=readLines("../script/Figure4.R")[1:50], eval=FALSE}
 ```
 
-## (a) Max AUC: organ vs. lineage {#fig4a}
+## (3c) Activation effect, CD4 vs. CD8 {#fig3c}
 
-```{r fig4a-code, code=readLines("../script/Figure4.R")[92:180], eval=FALSE}
+```{r fig3c-code, code=readLines("../script/Figure4.R")[52:100], eval=FALSE}
 ```
 
-```{r fig4a-img, echo=FALSE, out.width="60%"}
-knitr::include_graphics("assets/Figure4/4a.png")
+```{r fig3c-img, echo=FALSE, out.width="50%"}
+knitr::include_graphics("assets/Figure4/3c.png")
 ```
 
 ::: {.figcaption}
-**Fig. 4a.** Per-GP maximum AUC for predicting organ of origin (x-axis) versus lineage (y-axis); each point is one GP and the dashed line marks equal performance. Categories with too few cells are dropped (lineage < 1,000 cells, organ < 100 cells). GPs reaching AUC > 0.9 on either axis are highlighted -- red below the diagonal (better at organ; organ-specific) labeled with their top organs, blue above the diagonal (better at lineage) labeled with their top lineages (up to three categories each, AUC > 0.85).
+**Fig. 4c.** Standardized mean difference (*d*) in GP loading between activated and resting cells, comparing CD4 (x-axis) and CD8 (y-axis); for each GP, *d* is the activated-minus-resting difference in mean loading divided by that GP's loading SD pooled over all activated and resting CD4/CD8 cells. Points are colored based on whether they are highly up-regulated in both CD4/CD8 activation, down-regulated in both, or only in CD4 or CD8 activation; GPs not meeting these criteria are shown in black, and only the curated set is labeled.
 :::
 
-## (b) GP37+ rate in mammary gland vs. elsewhere {#fig4b}
+## (3d) GP-gene signature network {#fig3d}
 
-```{r fig4b-code, code=readLines("../script/Figure4.R")[247:341], eval=FALSE}
+```{r fig3d-code, code=readLines("../script/Figure4.R")[102:161], eval=FALSE}
 ```
 
-```{r fig4b-img, echo=FALSE, out.width="60%"}
-knitr::include_graphics("assets/Figure4/4b.png")
+```{r fig3d-img, echo=FALSE, out.width="50%"}
+knitr::include_graphics("assets/Figure4/3d.png")
 ```
 
 ::: {.figcaption}
-**Fig. 4b.** GP37+ rate by lineage in mammary gland versus the same lineage elsewhere. A cell is GP37+ if its GP37 loading exceeds the organ-specific optimal threshold from the AUC analysis. For each lineage, the solid bar is the fraction of mammary-gland cells of that lineage that are GP37+ and the faded bar is the fraction of the same lineage outside mammary gland; bars are colored by lineage and ordered by in-organ rate, and lineages with < 100 cells in mammary gland are dropped.
+**Fig. 4d.** GP-gene signature network in which each GP is linked to its 5 most regulated marker genes (per-GP-normalized gene scores); edges are colored by the score sign (red, positive; blue, negative).
 :::
 
-## (c) Marker genes of the 7 organ-specific GPs {#fig4c}
+## (3e) TF-GP network {#fig3e}
 
-```{r fig4c-code, code=readLines("../script/Figure4.R")[390:492], eval=FALSE}
+```{r fig3e-code, code=readLines("../script/Figure4.R")[163:200], eval=FALSE}
 ```
 
-```{r fig4c-img, echo=FALSE, out.width="60%"}
-knitr::include_graphics("assets/Figure4/4c.png")
+```{r fig3e-img, echo=FALSE, out.width="50%"}
+knitr::include_graphics("assets/Figure4/3e.png")
 ```
 
 ::: {.figcaption}
-**Fig. 4c.** Marker genes of the seven organ-specific GPs. Genes are the union of the top 20 positively scoring genes per GP (score > 0.25 on the max-abs-scaled gene-score matrix), ordered diagonally by each gene's dominant GP and then by descending score. Left, expression dot plot across 14 organs in which dot size is the percent of cells expressing the gene and color is mean expression z-scored across organs (capped at +-2.5); right, heatmap of the per-GP scaled gene scores for the same genes across the seven GPs, centered at zero (blue, negative; red, positive).
+**Fig. 4e.** Bipartite transcription factor (TF)-GP network: TFs (GO:0003700 DNA-binding TFs plus the Tox family) with a normalized score exceeding 0.25 in any curated GP are connected to those GPs by directed edges (width proportional to the normalized score, color identifying the TF); the top 5 positively regulated genes per GP are listed beside each GP node.
 :::
 
-## (d) Max AUC: organ vs. cluster {#fig4d}
+## (3f) Log2FC heatmap across conditions {#fig3f}
 
-```{r fig4d-code, code=readLines("../script/Figure4.R")[181:246], eval=FALSE}
+```{r fig3f-code, code=readLines("../script/Figure4.R")[248:299], eval=FALSE}
 ```
 
-```{r fig4d-img, echo=FALSE, out.width="60%"}
-knitr::include_graphics("assets/Figure4/4d.png")
+```{r fig3f-img, echo=FALSE, out.width="50%"}
+knitr::include_graphics("assets/Figure4/3f.png")
 ```
 
 ::: {.figcaption}
-**Fig. 4d.** As in (a), but predictive performance is measured against clusters obtained from ImmgenT-cosmo (y-axis; clusters with < 100 cells dropped). All GPs are shown in grey; the seven organ-specific GPs (GP3, GP6, GP11, GP26, GP29, GP37, GP177) are highlighted in red and labeled with their best clusters, while a contrasting set of cluster-specific GPs (high cluster AUC, low organ AUC) is highlighted in blue; the dashed line marks equal performance.
+**Fig. 4f.** Heatmap of log2 fold-change in mean GP loading across experimental conditions for activated CD4 and CD8 cells, computed relative to each GP's mean loading across all CD4/CD8 cells (resting and activated, all conditions) and capped at +-2, with a small pseudocount (1e-10) added to stabilize computation; columns are conditions with >=50 activated CD4 and >=50 activated CD8 cells, grouped and annotated by broad condition category, with color from purple (low) through black (no change) to gold (high).
 :::
 
-## (e) Organ, GP, and cluster alluvial diagram {#fig4e}
+## (3g) Mean loading by sub-lineage {#fig3g}
 
-```{r fig4e-code, code=readLines("../script/Figure4.R")[342:389], eval=FALSE}
+```{r fig3g-code, code=readLines("../script/Figure4.R")[202:246], eval=FALSE}
 ```
 
-```{r fig4e-img, echo=FALSE, out.width="80%"}
-knitr::include_graphics("assets/Figure4/4e.png")
+```{r fig3g-img, echo=FALSE, out.width="50%"}
+knitr::include_graphics("assets/Figure4/3g.png")
 ```
 
 ::: {.figcaption}
-**Fig. 4e.** Alluvial diagram of GP+ cells linking organ of origin, GP, and ImmgenT-cosmo cluster. For each of the seven organ-specific GPs, GP+ cells (loading above that GP's best-organ threshold) are subsampled to <=300 per GP and traced from their organ of origin through the GP to their cluster; flows are colored by GP (using each GP's best-predicted organ color), flows representing fewer than 5 cells are dropped, and a cell may appear under more than one GP. Axis width denotes the number of GP+ cells.
+**Fig. 4g.** Heatmap of mean GP loading per Level-2 sub-lineage across the seven T-cell lineages (CD8, CD4, Treg, gdT, CD8aa, Tz, DN; sub-types with >=50 cells), with the top bar denoting parent lineage and color from white (low) to red (high).
 :::

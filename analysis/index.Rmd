@@ -15,9 +15,10 @@ produced it, the figure itself, and a short caption explaining what it shows.
 ## Main figures
 
 + [Figure 1: Overview](Figure1.html)
-+ [Figure 2: GPs and lineages](Figure2.html)
-+ [Figure 3: GPs associated with T-cell activation](Figure3.html)
-+ [Figure 4: GPs and tissue](Figure4.html)
++ [Figure 2: Active cells and genes in gene programs](Figure2.html)
++ [Figure 3: GPs and lineages](Figure3.html)
++ [Figure 4: GPs associated with T-cell activation](Figure4.html)
++ [Figure 5: GPs and tissue](Figure5.html)
 + [Figure 6: Linking GPs to proteins](Figure6.html)
 
 ## Supplementary figures

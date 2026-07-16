@@ -9,8 +9,8 @@
 #   S2C  Boxplots of CD8A/CD8B log-normalized CITE-seq protein expression in
 #        CD8 cells, resting vs activated.
 #
-# Source: ported from Figure_Lineage.R (see Figure2.R for the main
-# Figure 2 panels from the same file).
+# Source: ported from Figure_Lineage.R (see Figure3.R for the main
+# Figure 3 panels from the same file).
 #
 # Required inputs (data/) -- see code/README.md's "Data provenance" table
 # for the full picture:

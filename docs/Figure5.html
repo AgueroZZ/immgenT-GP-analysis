@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Ziang Zhang" />
+
+
+<title>Figure 5: GPs and tissue</title>
+
+<script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="custom.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">immgenT-GP-analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Overview</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/AgueroZZ/immgenT-GP-analysis">source</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Figure 5: GPs and tissue</h1>
+<h4 class="author">Ziang Zhang</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2026-07-16
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong>
+<code>immgenT-GP-analysis/analysis/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.2). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown file has staged changes. To know which version of the
+R Markdown file created these results, you’ll want to first commit it to
+the Git repo. If you’re still working on the analysis, you can ignore
+this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed1code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(1)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed1code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(1)</code> was run prior to running the
+code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec70b79d815ecdff7c5332dae0ffdec710ff3c293targetblankc70b79da">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c70b79d815ecdff7c5332dae0ffdec710ff3c293" target="_blank">c70b79d</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec70b79d815ecdff7c5332dae0ffdec710ff3c293targetblankc70b79da"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c70b79d815ecdff7c5332dae0ffdec710ff3c293" target="_blank">c70b79d</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .claude/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis/.Rhistory
+    Ignored:    analysis/assets/.DS_Store
+    Ignored:    code/.DS_Store
+    Ignored:    data
+    Ignored:    experiments/.DS_Store
+    Ignored:    figures/.DS_Store
+    Ignored:    figures/final-selected/.DS_Store
+    Ignored:    figures/final-selected/bits/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure 1/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure 2/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure 3/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure 4/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure 6/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure 7/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure S1/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure S2/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure S3/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure S6/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure S7/.DS_Store
+    Ignored:    figures/generated/.DS_Store
+    Ignored:    figures/generated/Figure 5/
+    Ignored:    figures/generated/Figure 7/
+    Ignored:    figures/generated/Figure 8/
+    Ignored:    figures/generated/Figure 9/
+    Ignored:    tmp/
+
+Untracked files:
+    Untracked:  code/other/topic_flashier_20250212.R
+    Untracked:  code/other/topic_wrapper_20250215_alldata_backfit.sh
+    Untracked:  experiments/active_metric_comparison/
+    Untracked:  experiments/figure6b_sparsity_ordered/
+    Untracked:  experiments/gene_correlation_network/heatmap_loading.R
+    Untracked:  experiments/gene_correlation_network/heatmap_loading.pdf
+    Untracked:  experiments/gene_correlation_network/heatmap_loading.png
+    Untracked:  experiments/gene_umap_gp_space/
+    Untracked:  experiments/protein_threshold_gp_loading_diff/
+    Untracked:  experiments/surface_protein_activation_scatter/
+    Untracked:  log/2026-07-13-surface-protein-activation-scatter.md
+    Untracked:  log/2026-07-15-protein-threshold-gp-loading-diff-tables.md
+    Untracked:  plan/2026-07-13-active-cell-gene-metrics-exploration.md
+    Untracked:  plan/2026-07-13-surface-protein-activation-scatter.md
+    Untracked:  plan/2026-07-13_figure6b_triangular_order_plan.md
+    Untracked:  plan/2026-07-13_figure6b_wide_gp_columns_formal_plan.md
+    Untracked:  plan/2026-07-14_figure6b_heatmap_typography_plan.md
+    Untracked:  plan/2026-07-15-protein-threshold-gp-loading-diff-tables.md
+    Untracked:  tables/
+
+Unstaged changes:
+    Modified:   analysis/ExtendedDataTable1.Rmd
+    Modified:   analysis/ExtendedDataTable5.Rmd
+    Modified:   analysis/Figure1.Rmd
+    Unmerged:   analysis/Figure2.Rmd
+    Modified:   analysis/Figure3.Rmd
+    Modified:   analysis/Figure4.Rmd
+    Modified:   analysis/Figure5.Rmd
+    Modified:   analysis/FigureS2.Rmd
+    Modified:   analysis/FigureS3.Rmd
+    Modified:   analysis/Methods_FlashierFit.Rmd
+    Unmerged:   analysis/assets/Figure1/1D.png
+    Modified:   analysis/index.Rmd
+    Modified:   experiments/gene_correlation_network/README.md
+    Modified:   script/Figure1.R
+    Unmerged:   script/Figure2.R
+    Modified:   script/Figure3.R
+    Modified:   script/Figure4.R
+    Modified:   script/Figure5.R
+    Modified:   script/FigureS2.R
+    Modified:   script/FigureS3.R
+
+Staged changes:
+    Modified:   analysis/Figure3.Rmd
+    Modified:   analysis/Figure4.Rmd
+    New:        analysis/Figure5.Rmd
+    Deleted:    analysis/assets/Figure1/1E.png
+    Deleted:    analysis/assets/Figure1/1F.png
+    Deleted:    analysis/assets/Figure1/1G.png
+    Deleted:    analysis/assets/Figure1/1H.png
+    Deleted:    analysis/assets/Figure1/1I.png
+    Modified:   analysis/assets/Figure2/2A.png
+    Modified:   analysis/assets/Figure2/2B.png
+    Modified:   analysis/assets/Figure2/2C.png
+    Modified:   analysis/assets/Figure2/2D.png
+    Modified:   analysis/assets/Figure2/2E.png
+    Modified:   analysis/assets/Figure2/2F.png
+    Renamed1:   analysis/assets/Figure1/hist_active_cells_per_GP.png
+    Renamed2:   analysis/assets/Figure2/hist_active_cells_per_GP.png
+    Renamed1:   analysis/assets/Figure1/hist_active_genes_prop_per_GP.png
+    Renamed2:   analysis/assets/Figure2/hist_active_genes_prop_per_GP.png
+    Renamed1:   analysis/assets/Figure1/scatter_e_active_cells_vs_genes.png
+    Renamed2:   analysis/assets/Figure2/scatter_e_active_cells_vs_genes.png
+    New:        analysis/assets/Figure3/2A.png
+    New:        analysis/assets/Figure3/2B.png
+    New:        analysis/assets/Figure3/2C.png
+    New:        analysis/assets/Figure3/2D.png
+    New:        analysis/assets/Figure3/2E.png
+    New:        analysis/assets/Figure3/2F.png
+    Renamed1:   analysis/assets/Figure2/2G.png
+    Renamed2:   analysis/assets/Figure3/2G.png
+    Renamed1:   analysis/assets/Figure2/2H.png
+    Renamed2:   analysis/assets/Figure3/2H.png
+    Renamed1:   analysis/assets/Figure2/2I.png
+    Renamed2:   analysis/assets/Figure3/2I.png
+    Renamed1:   analysis/assets/Figure2/2J.png
+    Renamed2:   analysis/assets/Figure3/2J.png
+    Renamed1:   analysis/assets/Figure2/2K.png
+    Renamed2:   analysis/assets/Figure3/2K.png
+    Renamed1:   analysis/assets/Figure2/2L.png
+    Renamed2:   analysis/assets/Figure3/2L.png
+    Renamed1:   analysis/assets/Figure2/2M.png
+    Renamed2:   analysis/assets/Figure3/2M.png
+    Renamed1:   analysis/assets/Figure3/3c.png
+    Renamed2:   analysis/assets/Figure4/3c.png
+    Renamed1:   analysis/assets/Figure3/3d.png
+    Renamed2:   analysis/assets/Figure4/3d.png
+    Renamed1:   analysis/assets/Figure3/3e.png
+    Renamed2:   analysis/assets/Figure4/3e.png
+    Renamed1:   analysis/assets/Figure3/3f.png
+    Renamed2:   analysis/assets/Figure4/3f.png
+    Renamed1:   analysis/assets/Figure3/3g.png
+    Renamed2:   analysis/assets/Figure4/3g.png
+    Renamed1:   analysis/assets/Figure4/4a.png
+    Renamed2:   analysis/assets/Figure5/4a.png
+    Renamed1:   analysis/assets/Figure4/4b.png
+    Renamed2:   analysis/assets/Figure5/4b.png
+    Renamed1:   analysis/assets/Figure4/4c.png
+    Renamed2:   analysis/assets/Figure5/4c.png
+    Renamed1:   analysis/assets/Figure4/4d.png
+    Renamed2:   analysis/assets/Figure5/4d.png
+    Renamed1:   analysis/assets/Figure4/4e.png
+    Renamed2:   analysis/assets/Figure5/4e.png
+    Modified:   script/Figure3.R
+    Modified:   script/Figure4.R
+    New:        script/Figure5.R
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with
+<code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<p>All panels are produced by <a
+href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure5.R"><code>script/Figure5.R</code></a>.
+The code below is shown for reference (not re-executed on this page);
+the images are its pre-rendered output.</p>
+<div id="setup" class="section level2">
+<h2>Setup</h2>
+<p>Data loading, shared across all panels below.</p>
+<pre class="r"><code># Figure 5. GPs and tissue.
+#
+# Panels produced (see figures/final-selected/bits/Figure 5/Figure_Organ_caption.md
+# for the full caption text):
+#   4a  Max AUC (organ) vs max AUC (level-1 lineage) scatter, per GP.
+#   4b  GP37+ rate by lineage, mammary gland vs. the same lineage elsewhere.
+#   4c  Marker genes of the 7 organ-specific GPs: expression dotplot across
+#       organs (left) + per-GP gene-score heatmap (right), combined.
+#   4d  As 4a, but organ AUC vs Level-2 (fine-grained sub-lineage/cluster)
+#       AUC, with the 7 organ-specific GPs (red) and a contrasting
+#       cluster-specific set (blue) highlighted.
+#   4e  Alluvial diagram: organ of origin -&gt; GP -&gt; Level-2 cell type, for
+#       GP+ cells of the 7 organ-specific GPs.
+#
+# Source: ported from Figure_Organ.R, which mixed these 5 panels with
+# other exploratory analyses (extra AUC scatter variants, per-organ ROC
+# curves, a broken/undefined-object &quot;gp_decomposition.pdf&quot; panel) that are
+# dropped here since they don&#39;t correspond to a final figure panel.
+#
+# Required inputs (data/) -- see code/README.md&#39;s &quot;Data provenance&quot; table
+# for the full picture:
+#   L_pm_filtered.rds, F_pm_filtered.rds     [code/pipeline/01b_filter_cells.R]
+#   igt1_96_..._ADTonly.Rds                  [primary input Seurat object]
+#   shifted_log_counts_subset.rds            [gap, no producer script here]
+#   level_1_AUC_list_figure_no_thymocytes_healthy.rds,
+#   level_2_AUC_list_figure_no_thymocytes_healthy.rds,
+#   organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds
+#     [code/pipeline/02_compute_auc.R]
+
+library(ggplot2)
+library(ggrepel)
+library(patchwork)
+library(dplyr)
+library(tidyr)
+library(purrr)
+library(tibble)
+library(Matrix)
+library(viridis)
+library(cowplot)
+library(ggalluvial)
+
+data_path &lt;- &quot;data/&quot;
+figure_path &lt;- &quot;figures/generated/Figure 5/&quot;
+
+# ============================================================
+# Load data (healthy, non-thymocyte reference)
+# ============================================================
+level_1_AUC_list &lt;- readRDS(paste0(
+  data_path, &quot;level_1_AUC_list_figure_no_thymocytes_healthy.rds&quot;
+))
+level_2_AUC_list &lt;- readRDS(paste0(
+  data_path, &quot;level_2_AUC_list_figure_no_thymocytes_healthy.rds&quot;
+))
+organ_AUC_list &lt;- readRDS(paste0(
+  data_path, &quot;organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds&quot;
+))
+# Read from the Seurat object directly, not the stale cached seurat_meta.rds
+# (see code/R/setup_data.R for why).
+seurat_meta &lt;- readRDS(paste0(
+  data_path, &quot;igt1_96_withtotalvi20260206_clean_ADTonly.Rds&quot;
+))@meta.data
+L_pm_filtered &lt;- readRDS(paste0(data_path, &quot;L_pm_filtered.rds&quot;))
+seurat_meta_filtered &lt;- seurat_meta[rownames(L_pm_filtered), ]
+
+# Rename K## to GP## for display consistency
+colnames(L_pm_filtered) &lt;- gsub(&quot;^K&quot;, &quot;GP&quot;, colnames(L_pm_filtered))
+colnames(level_1_AUC_list$auc) &lt;- gsub(&quot;^K&quot;, &quot;GP&quot;, colnames(level_1_AUC_list$auc))
+colnames(level_2_AUC_list$auc) &lt;- gsub(&quot;^K&quot;, &quot;GP&quot;, colnames(level_2_AUC_list$auc))
+colnames(level_2_AUC_list$threshold) &lt;- gsub(&quot;^K&quot;, &quot;GP&quot;, colnames(level_2_AUC_list$threshold))
+colnames(organ_AUC_list$auc) &lt;- gsub(&quot;^K&quot;, &quot;GP&quot;, colnames(organ_AUC_list$auc))
+colnames(organ_AUC_list$threshold) &lt;- gsub(&quot;^K&quot;, &quot;GP&quot;, colnames(organ_AUC_list$threshold))
+
+# Restrict reference to healthy, non-thymocyte cells
+seurat_meta_filtered_no_thymocytes_healthy &lt;- seurat_meta_filtered %&gt;%
+  filter(annotation_level1 != &quot;thymocyte&quot;, condition_broad == &quot;healthy&quot;)
+
+# The 7 organ-specific GPs highlighted throughout this figure (caption 4d/4e)
+gps_of_interest &lt;- c(&quot;GP3&quot;, &quot;GP6&quot;, &quot;GP11&quot;, &quot;GP26&quot;, &quot;GP29&quot;, &quot;GP37&quot;, &quot;GP177&quot;)
+
+# Labels a highlighted point with its top categories above `threshold` AUC.
+top_cats_label &lt;- function(factor_name, auc_matrix, positive_mask, threshold = 0.85, n = 3) {
+  vals &lt;- auc_matrix[, factor_name]
+  vals &lt;- vals[positive_mask[, factor_name]]
+  vals &lt;- sort(vals[vals &gt; threshold], decreasing = TRUE)
+  cats &lt;- names(vals)[seq_len(min(n, length(vals)))]
+  if (length(cats) == 0) return(factor_name)
+  paste0(factor_name, &quot;:\n&quot;, paste(cats, collapse = &quot;\n&quot;))
+}
+
+# ============================================================
+# 4a: Max AUC Organ vs Level-1</code></pre>
+</div>
+<div id="fig4a" class="section level2">
+<h2>(a) Max AUC: organ vs. lineage</h2>
+<pre class="r"><code># ============================================================
+level_1_small_count &lt;- table(seurat_meta_filtered_no_thymocytes_healthy$annotation_level1)
+level_1_small_count &lt;- names(level_1_small_count[level_1_small_count &lt; 1000])
+level_1_AUC &lt;- level_1_AUC_list$auc
+level_1_AUC &lt;- level_1_AUC[!rownames(level_1_AUC) %in% level_1_small_count, ]
+
+organ_AUC &lt;- organ_AUC_list$auc
+organ_small_count &lt;- table(seurat_meta_filtered_no_thymocytes_healthy$organ_simplified)
+organ_small_count &lt;- names(organ_small_count[organ_small_count &lt; 100])
+organ_AUC &lt;- organ_AUC[!rownames(organ_AUC) %in% organ_small_count, ]
+
+# Positivity masks: mean loading in category &gt; overall mean -&gt; high loading predicts membership
+healthy_cells &lt;- rownames(seurat_meta_filtered_no_thymocytes_healthy)
+L_healthy &lt;- L_pm_filtered[healthy_cells, ]
+overall_mean &lt;- colMeans(L_healthy, na.rm = TRUE)
+
+level_1_cat_mean &lt;- t(sapply(rownames(level_1_AUC), function(cat) {
+  idx &lt;- seurat_meta_filtered_no_thymocytes_healthy$annotation_level1 == cat
+  colMeans(L_healthy[idx, , drop = FALSE], na.rm = TRUE)
+}))
+level_1_AUC_positive &lt;- sweep(level_1_cat_mean, 2, overall_mean, &quot;-&quot;) &gt; 0
+
+organ_cat_mean &lt;- t(sapply(rownames(organ_AUC), function(cat) {
+  idx &lt;- seurat_meta_filtered_no_thymocytes_healthy$organ_simplified == cat
+  colMeans(L_healthy[idx, , drop = FALSE], na.rm = TRUE)
+}))
+organ_AUC_positive &lt;- sweep(organ_cat_mean, 2, overall_mean, &quot;-&quot;) &gt; 0
+
+level_1_AUC_masked &lt;- level_1_AUC
+level_1_AUC_masked[!level_1_AUC_positive] &lt;- NA
+level_1_AUC_max &lt;- apply(level_1_AUC_masked, 2, max, na.rm = TRUE)
+level_1_AUC_max_name &lt;- apply(level_1_AUC_masked, 2, function(x) rownames(level_1_AUC_masked)[which.max(x)])
+o &lt;- order(level_1_AUC_max, decreasing = TRUE)
+table_level_1_AUC &lt;- data.frame(
+  Factor = colnames(level_1_AUC)[o], Max_AUC = level_1_AUC_max[o], Annotation = level_1_AUC_max_name[o]
+)
+
+organ_AUC_masked &lt;- organ_AUC
+organ_AUC_masked[!organ_AUC_positive] &lt;- NA
+organ_AUC_max &lt;- apply(organ_AUC_masked, 2, max, na.rm = TRUE)
+organ_AUC_max_name &lt;- apply(organ_AUC_masked, 2, function(x) rownames(organ_AUC_masked)[which.max(x)])
+
+max_AUC_df &lt;- data.frame(
+  Factor = table_level_1_AUC$Factor,
+  annotation_Level1 = table_level_1_AUC$Annotation,
+  annotation_Organ = organ_AUC_max_name[match(table_level_1_AUC$Factor, names(organ_AUC_max))],
+  Max_AUC_Organ = organ_AUC_max[match(table_level_1_AUC$Factor, names(organ_AUC_max))],
+  Max_AUC_Level1 = table_level_1_AUC$Max_AUC
+)
+df &lt;- max_AUC_df %&gt;% mutate(residual = Max_AUC_Level1 - Max_AUC_Organ, abs_res = abs(residual))
+
+# Factors to highlight: AUC &gt; 0.9 in at least one axis (organ or level-1)
+highlighted_factors &lt;- df %&gt;%
+  filter(is.finite(residual), Max_AUC_Organ &gt; 0.9 | Max_AUC_Level1 &gt; 0.9) %&gt;%
+  pull(Factor)
+
+label_above &lt;- df %&gt;%
+  filter(Factor %in% highlighted_factors, residual &gt; 0) %&gt;%
+  mutate(nudge_x = -0.035, label_text = sapply(Factor, top_cats_label, auc_matrix = level_1_AUC, positive_mask = level_1_AUC_positive))
+label_below &lt;- df %&gt;%
+  filter(Factor %in% highlighted_factors, residual &lt;= 0) %&gt;%
+  mutate(nudge_x = 0.035, label_text = sapply(Factor, top_cats_label, auc_matrix = organ_AUC, positive_mask = organ_AUC_positive))
+
+p_4a &lt;- ggplot(df, aes(Max_AUC_Organ, Max_AUC_Level1)) +
+  geom_point(alpha = 0.3, size = 1.8) +
+  geom_point(data = label_above, color = &quot;#1f78b4&quot;, alpha = 0.8, size = 1.8) +
+  geom_point(data = label_below, color = &quot;#e31a1c&quot;, alpha = 0.8, size = 1.8) +
+  geom_abline(slope = 1, intercept = 0, linetype = &quot;dashed&quot;, color = &quot;black&quot;) +
+  coord_cartesian(xlim = c(0.46, 1.04), ylim = c(0.5, 1.02), expand = FALSE) +
+  labs(x = &quot;Max AUC (Organ Simplified)&quot;, y = &quot;Max AUC (Level-1)&quot;, title = &quot;Max AUC: Organ vs Level-1&quot;) +
+  theme_minimal(base_size = 13) +
+  geom_text_repel(
+    data = label_above, aes(label = label_text), color = &quot;#1f78b4&quot;, size = 2.5, lineheight = 0.85,
+    direction = &quot;y&quot;, nudge_x = label_above$nudge_x, segment.color = &quot;#1f78b4&quot;,
+    arrow = arrow(length = unit(0.008, &quot;npc&quot;), type = &quot;closed&quot;, angle = 20),
+    force = 3, force_pull = 0.1, box.padding = 0.4, point.padding = 0.15,
+    max.time = 10, max.iter = 2e4, max.overlaps = 20, min.segment.length = 0.01, segment.alpha = 0.7
+  ) +
+  geom_text_repel(
+    data = label_below, aes(label = label_text), color = &quot;#e31a1c&quot;, size = 2.5, lineheight = 0.85,
+    direction = &quot;y&quot;, nudge_x = label_below$nudge_x, segment.color = &quot;#e31a1c&quot;,
+    arrow = arrow(length = unit(0.008, &quot;npc&quot;), type = &quot;closed&quot;, angle = 20),
+    force = 3, force_pull = 0.1, box.padding = 0.4, point.padding = 0.15,
+    max.time = 10, max.iter = 2e4, max.overlaps = 20, min.segment.length = 0.01, segment.alpha = 0.7
+  )
+ggsave(filename = paste0(figure_path, &quot;4a.pdf&quot;), plot = p_4a, width = 8, height = 8, dpi = 300)
+
+# ============================================================
+# 4d prep: Max AUC Organ vs Level-2</code></pre>
+<p><img src="assets/Figure5/4a.png" width="60%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 5a.</strong> Per-GP maximum AUC for predicting organ of
+origin (x-axis) versus lineage (y-axis); each point is one GP and the
+dashed line marks equal performance. Categories with too few cells are
+dropped (lineage &lt; 1,000 cells, organ &lt; 100 cells). GPs reaching
+AUC &gt; 0.9 on either axis are highlighted – red below the diagonal
+(better at organ; organ-specific) labeled with their top organs, blue
+above the diagonal (better at lineage) labeled with their top lineages
+(up to three categories each, AUC &gt; 0.85).</p>
+</div>
+</div>
+<div id="fig4b" class="section level2">
+<h2>(b) GP37+ rate in mammary gland vs. elsewhere</h2>
+<pre class="r"><code># ============================================================
+plot_gp_threshold_group_activation_rate &lt;- function(
+  gp, organ, threshold, loading_mat, organ_info, group_info,
+  group_label = &quot;Level-2&quot;, base_size = 13, min_in_organ = 10,
+  group_colors = ZemmourLib::immgent_colors$level2, fallback_group_color = &quot;grey60&quot;,
+  reference = c(&quot;not_in_group&quot;, &quot;not_in_organ&quot;)
+) {
+  reference &lt;- match.arg(reference)
+  if (!gp %in% colnames(loading_mat)) stop(sprintf(&quot;GP &#39;%s&#39; not found in loading matrix.&quot;, gp))
+  if (!organ %in% organ_info) stop(sprintf(&quot;Organ &#39;%s&#39; not found in organ_info.&quot;, organ))
+
+  loading &lt;- loading_mat[, gp]
+  keep &lt;- !(is.na(loading) | is.na(organ_info) | is.na(group_info))
+  loading &lt;- loading[keep]
+  organ_info &lt;- organ_info[keep]
+  group_info &lt;- as.character(group_info[keep])
+
+  in_organ &lt;- organ_info == organ
+  positive &lt;- loading &gt; threshold
+  group_levels &lt;- sort(unique(group_info))
+
+  rate_df &lt;- data.frame(
+    group = group_levels,
+    n_in_organ = vapply(group_levels, function(l) sum(group_info == l &amp; in_organ), integer(1)),
+    n_pos_in_organ = vapply(group_levels, function(l) sum(group_info == l &amp; in_organ &amp; positive), integer(1))
+  )
+
+  if (reference == &quot;not_in_group&quot;) {
+    rate_df$n_ref &lt;- vapply(group_levels, function(l) sum(group_info != l &amp; in_organ), integer(1))
+    rate_df$n_pos_ref &lt;- vapply(group_levels, function(l) sum(group_info != l &amp; in_organ &amp; positive), integer(1))
+    ref_label &lt;- &quot;Not in group (same organ)&quot;
+    title_vs &lt;- sprintf(&quot;%s vs. same-organ non-group&quot;, organ)
+  } else {
+    rate_df$n_ref &lt;- vapply(group_levels, function(l) sum(group_info == l &amp; !in_organ), integer(1))
+    rate_df$n_pos_ref &lt;- vapply(group_levels, function(l) sum(group_info == l &amp; !in_organ &amp; positive), integer(1))
+    ref_label &lt;- &quot;Not in organ (same group)&quot;
+    title_vs &lt;- sprintf(&quot;%s vs. same-group non-organ&quot;, organ)
+  }
+
+  rate_df$rate_in_organ &lt;- rate_df$n_pos_in_organ / rate_df$n_in_organ
+  rate_df$rate_ref &lt;- rate_df$n_pos_ref / rate_df$n_ref
+  rate_df &lt;- rate_df[rate_df$n_in_organ &gt;= min_in_organ, , drop = FALSE]
+  if (nrow(rate_df) == 0) stop(sprintf(&quot;No %s type has &gt;= %d cells in &#39;%s&#39;.&quot;, group_label, min_in_organ, organ))
+
+  long_df &lt;- data.frame(
+    group = rep(rate_df$group, 2),
+    type = factor(rep(c(&quot;In organ&quot;, ref_label), each = nrow(rate_df)), levels = c(&quot;In organ&quot;, ref_label)),
+    rate = c(rate_df$rate_in_organ, rate_df$rate_ref)
+  )
+  level_order &lt;- rate_df$group[order(rate_df$rate_in_organ, decreasing = TRUE)]
+  long_df$group &lt;- factor(long_df$group, levels = level_order)
+
+  fill_values &lt;- group_colors[as.character(level_order)]
+  missing_colors &lt;- is.na(fill_values)
+  if (any(missing_colors)) {
+    fill_values[missing_colors] &lt;- fallback_group_color
+    warning(sprintf(
+      &quot;%s annotations missing from group_colors and colored %s: %s&quot;,
+      group_label, fallback_group_color, paste(level_order[missing_colors], collapse = &quot;, &quot;)
+    ))
+  }
+  alpha_vals &lt;- c(1, 0.35)
+  names(alpha_vals) &lt;- c(&quot;In organ&quot;, ref_label)
+
+  ggplot(long_df, aes(x = group, y = rate, fill = group, alpha = type)) +
+    geom_col(position = position_dodge(width = 0.8), width = 0.75, color = &quot;grey35&quot;, linewidth = 0.15) +
+    scale_fill_manual(values = fill_values, guide = &quot;none&quot;) +
+    scale_alpha_manual(values = alpha_vals, guide = guide_legend(override.aes = list(fill = &quot;grey40&quot;))) +
+    labs(
+      x = sprintf(&quot;%s annotation&quot;, group_label),
+      y = sprintf(&quot;Proportion of cells with %s &gt; %.3g&quot;, gp, threshold),
+      alpha = NULL,
+      title = sprintf(&quot;%s+ rate by %s: %s&quot;, gp, group_label, title_vs),
+      subtitle = sprintf(&quot;threshold = %.3g; %s types with &lt; %d cells in %s dropped&quot;, threshold, group_label, min_in_organ, organ)
+    ) +
+    theme_minimal(base_size = base_size) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = &quot;top&quot;)
+}
+
+p_4b &lt;- plot_gp_threshold_group_activation_rate(
+  gp = &quot;GP37&quot;,
+  organ = &quot;mammary gland&quot;,
+  threshold = organ_AUC_list$threshold[&quot;mammary gland&quot;, &quot;GP37&quot;],
+  min_in_organ = 100,
+  loading_mat = L_pm_filtered[rownames(seurat_meta_filtered_no_thymocytes_healthy), ],
+  organ_info = seurat_meta_filtered_no_thymocytes_healthy$organ_simplified,
+  group_info = seurat_meta_filtered_no_thymocytes_healthy$annotation_level1,
+  group_label = &quot;Level-1&quot;,
+  group_colors = ZemmourLib::immgent_colors$level1,
+  reference = &quot;not_in_organ&quot;
+)
+ggsave(filename = paste0(figure_path, &quot;4b.pdf&quot;), plot = p_4b, width = 8, height = 5, dpi = 300)
+
+# ============================================================
+# 4e: alluvial, organ -&gt; GP -&gt; Level-2, for GP+ cells of the</code></pre>
+<p><img src="assets/Figure5/4b.png" width="60%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 5b.</strong> GP37+ rate by lineage in mammary gland
+versus the same lineage elsewhere. A cell is GP37+ if its GP37 loading
+exceeds the organ-specific optimal threshold from the AUC analysis. For
+each lineage, the solid bar is the fraction of mammary-gland cells of
+that lineage that are GP37+ and the faded bar is the fraction of the
+same lineage outside mammary gland; bars are colored by lineage and
+ordered by in-organ rate, and lineages with &lt; 100 cells in mammary
+gland are dropped.</p>
+</div>
+</div>
+<div id="fig4c" class="section level2">
+<h2>(c) Marker genes of the 7 organ-specific GPs</h2>
+<pre class="r"><code>#     heatmap, combined
+# ============================================================
+F_pm_filtered &lt;- readRDS(paste0(data_path, &quot;F_pm_filtered.rds&quot;))
+colnames(F_pm_filtered) &lt;- gsub(&quot;^F&quot;, &quot;GP&quot;, colnames(F_pm_filtered))
+D_scale &lt;- diag(1 / apply(F_pm_filtered, 2, function(x) max(abs(x), na.rm = TRUE)))
+F_pm_scaled &lt;- F_pm_filtered %*% D_scale
+colnames(F_pm_scaled) &lt;- colnames(F_pm_filtered)
+
+n_top_genes &lt;- 20
+min_loading &lt;- 0.25
+F_sub &lt;- F_pm_scaled[, gps_of_interest, drop = FALSE]
+selected_genes &lt;- lapply(gps_of_interest, function(gp) {
+  vals &lt;- F_sub[, gp]
+  names(sort(vals[vals &gt; min_loading], decreasing = TRUE))[seq_len(min(n_top_genes, sum(vals &gt; min_loading)))]
+})
+selected_genes &lt;- unique(unlist(selected_genes))
+
+# Diagonal gene ordering by dominant GP (highest loading); used by both panels
+GP_orders &lt;- c(&quot;GP37&quot;, &quot;GP26&quot;, &quot;GP6&quot;, &quot;GP177&quot;, &quot;GP3&quot;, &quot;GP29&quot;, &quot;GP11&quot;)
+dominant_gp &lt;- apply(F_sub[selected_genes, , drop = FALSE], 1, function(x) GP_orders[which.max(x[GP_orders])])
+dominant_loading &lt;- mapply(function(g, gp) F_sub[g, gp], selected_genes, dominant_gp)
+gene_order_df &lt;- data.frame(Gene = selected_genes, dominant_gp = factor(dominant_gp, levels = GP_orders), loading = dominant_loading, stringsAsFactors = FALSE)
+gene_order_df &lt;- gene_order_df[order(gene_order_df$dominant_gp, -gene_order_df$loading), ]
+heatmap_gene_order &lt;- gene_order_df$Gene
+
+expr &lt;- readRDS(paste0(data_path, &quot;shifted_log_counts_subset.rds&quot;)) # rows = cells, cols = genes
+tissue_order &lt;- c(
+  &quot;mammary gland&quot;, &quot;submandibular gland&quot;, &quot;skin&quot;, &quot;small intestine epi&quot;, &quot;colon epi&quot;,
+  &quot;small intestine LP&quot;, &quot;colon LP&quot;, &quot;peritoneal cavity&quot;, &quot;placenta&quot;, &quot;liver&quot;, &quot;lung&quot;,
+  &quot;kidney&quot;, &quot;spleen&quot;, &quot;LN&quot;
+)
+features &lt;- rev(colnames(expr))
+meta_use &lt;- seurat_meta_filtered_no_thymocytes_healthy[rownames(expr), , drop = FALSE]
+keep_cells &lt;- meta_use$organ_simplified %in% tissue_order
+expr_use &lt;- expr[keep_cells, features, drop = FALSE]
+meta_use &lt;- meta_use[keep_cells, , drop = FALSE]
+meta_use$organ_simplified &lt;- factor(meta_use$organ_simplified, levels = tissue_order)
+
+# sparse-safe: returns both avg.exp and pct.exp in one pass (matches Seurat DotPlot)
+dot_stats &lt;- function(mat) {
+  avg_exp &lt;- if (inherits(mat, &quot;sparseMatrix&quot;)) {
+    mat2 &lt;- mat
+    mat2@x &lt;- expm1(mat2@x)
+    Matrix::colMeans(mat2)
+  } else {
+    colMeans(expm1(mat))
+  }
+  list(avg.exp = as.numeric(avg_exp), pct.exp = as.numeric(Matrix::colMeans(mat &gt; 0)))
+}
+
+all_tissues &lt;- unique(as.character(meta_use$organ_simplified))
+dot_df_all &lt;- map_dfr(all_tissues, function(tissue) {
+  stats &lt;- dot_stats(expr_use[meta_use$organ_simplified == tissue, features, drop = FALSE])
+  tibble(features.plot = features, id = tissue, avg.exp = stats$avg.exp)
+})
+global_stats &lt;- dot_df_all |&gt;
+  dplyr::group_by(features.plot) |&gt;
+  dplyr::summarise(g_mean = mean(avg.exp), g_sd = sd(avg.exp), .groups = &quot;drop&quot;)
+
+tissues_present &lt;- tissue_order[tissue_order %in% as.character(meta_use$organ_simplified)]
+dot_df_scaled &lt;- map_dfr(tissues_present, function(tissue) {
+  stats &lt;- dot_stats(expr_use[meta_use$organ_simplified == tissue, features, drop = FALSE])
+  tibble(features.plot = features, id = tissue, avg.exp = stats$avg.exp, pct.exp = stats$pct.exp)
+}) |&gt;
+  dplyr::mutate(pct.exp = pct.exp * 100, id = factor(id, levels = tissues_present)) |&gt;
+  dplyr::left_join(global_stats, by = &quot;features.plot&quot;) |&gt;
+  dplyr::mutate(avg.exp.z = pmax(pmin((avg.exp - g_mean) / g_sd, 2.5), -2.5)) |&gt;
+  # rev() because coord_flip() inverts factor level order (first level ends up at the bottom)
+  dplyr::mutate(features.plot = factor(features.plot, levels = rev(heatmap_gene_order)))
+
+p_scaled &lt;- ggplot(dot_df_scaled, aes(x = features.plot, y = id)) +
+  geom_point(aes(size = pct.exp, color = avg.exp.z)) +
+  scale_size(range = c(0, 6)) +
+  scale_color_distiller(palette = &quot;RdBu&quot;, limits = c(-2.5, 2.5), direction = -1, name = &quot;Avg Exp\n(Z-score)&quot;) +
+  coord_flip() +
+  cowplot::theme_cowplot() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), axis.title.x = element_blank(), axis.title.y = element_blank()) +
+  guides(size = guide_legend(title = &quot;Percent Expressed&quot;))
+
+plot_df_hm &lt;- as.data.frame(F_sub[heatmap_gene_order, , drop = FALSE])
+plot_df_hm$Gene &lt;- rownames(plot_df_hm)
+plot_df_hm &lt;- tidyr::pivot_longer(plot_df_hm, cols = -Gene, names_to = &quot;GP&quot;, values_to = &quot;Loading&quot;)
+plot_df_hm$GP &lt;- factor(plot_df_hm$GP, levels = GP_orders)
+plot_df_hm$Gene &lt;- factor(plot_df_hm$Gene, levels = rev(heatmap_gene_order))
+limit_hm &lt;- max(abs(plot_df_hm$Loading), na.rm = TRUE)
+
+p_gene_heatmap &lt;- ggplot(plot_df_hm, aes(x = GP, y = Gene, fill = Loading)) +
+  geom_tile() +
+  scale_fill_gradient2(low = &quot;steelblue&quot;, mid = &quot;white&quot;, high = &quot;firebrick&quot;, midpoint = 0, limits = c(-limit_hm, limit_hm), name = &quot;Loading&quot;) +
+  labs(title = &quot;Top positive genes per organ GP&quot;, x = NULL, y = NULL) +
+  theme_minimal(base_size = 9) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 9), axis.text.y = element_text(size = 8), panel.grid = element_blank(), plot.title = element_text(face = &quot;bold&quot;, size = 11))
+
+# Side-by-side: gene vs tissue (dotplot, wider) | gene vs GP (heatmap, narrower)
+p_4c &lt;- (p_scaled + (p_gene_heatmap + theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.title.y = element_blank()))) +
+  plot_layout(widths = c(2, 1), guides = &quot;collect&quot;) &amp;
+  theme(legend.position = &quot;bottom&quot;)
+
+pdf(paste0(figure_path, &quot;4c.pdf&quot;), width = 10, height = 16, useDingbats = FALSE)
+print(p_4c)
+dev.off()
+NA
+NA</code></pre>
+<p><img src="assets/Figure5/4c.png" width="60%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 5c.</strong> Marker genes of the seven organ-specific
+GPs. Genes are the union of the top 20 positively scoring genes per GP
+(score &gt; 0.25 on the max-abs-scaled gene-score matrix), ordered
+diagonally by each gene’s dominant GP and then by descending score.
+Left, expression dot plot across 14 organs in which dot size is the
+percent of cells expressing the gene and color is mean expression
+z-scored across organs (capped at +-2.5); right, heatmap of the per-GP
+scaled gene scores for the same genes across the seven GPs, centered at
+zero (blue, negative; red, positive).</p>
+</div>
+</div>
+<div id="fig4d" class="section level2">
+<h2>(d) Max AUC: organ vs. cluster</h2>
+<pre class="r"><code># ============================================================
+level_2_AUC &lt;- level_2_AUC_list$auc
+level_2_small_count &lt;- table(seurat_meta_filtered_no_thymocytes_healthy$annotation_level2)
+level_2_small_count &lt;- names(level_2_small_count[level_2_small_count &lt; 100])
+level_2_AUC &lt;- level_2_AUC[!rownames(level_2_AUC) %in% level_2_small_count, ]
+
+level_2_cat_mean &lt;- t(sapply(rownames(level_2_AUC), function(cat) {
+  idx &lt;- seurat_meta_filtered_no_thymocytes_healthy$annotation_level2 == cat
+  colMeans(L_healthy[idx, , drop = FALSE], na.rm = TRUE)
+}))
+level_2_AUC_positive &lt;- sweep(level_2_cat_mean, 2, overall_mean, &quot;-&quot;) &gt; 0
+
+# 4d/4e reuse `organ_AUC_max_name`, but recomputed against the Level-2
+# category-count filter to match the original script&#39;s exact numbers.
+organ_AUC_masked_l2 &lt;- organ_AUC
+organ_AUC_positive_l2 &lt;- sweep(
+  t(sapply(rownames(organ_AUC), function(cat) {
+    idx &lt;- seurat_meta_filtered_no_thymocytes_healthy$organ_simplified == cat
+    colMeans(L_healthy[idx, , drop = FALSE], na.rm = TRUE)
+  })),
+  2, overall_mean, &quot;-&quot;
+) &gt; 0
+organ_AUC_masked_l2[!organ_AUC_positive_l2] &lt;- NA
+organ_AUC_max &lt;- apply(organ_AUC_masked_l2, 2, max, na.rm = TRUE)
+organ_AUC_max_name &lt;- apply(organ_AUC_masked_l2, 2, function(x) rownames(organ_AUC_masked_l2)[which.max(x)])
+
+# ============================================================
+# 4d: Max AUC Organ vs Level-2, 7 organ-specific GPs (red) vs.
+#     contrasting cluster-specific GPs (blue) highlighted
+# ============================================================
+seven_gp_df &lt;- df |&gt;
+  dplyr::filter(Factor %in% gps_of_interest) |&gt;
+  dplyr::mutate(label_text = sapply(Factor, top_cats_label, auc_matrix = level_2_AUC, positive_mask = level_2_AUC_positive, threshold = 0.9, n = 3))
+
+top_left_gps &lt;- c(&quot;GP14&quot;, &quot;GP36&quot;, &quot;GP16&quot;, &quot;GP151&quot;, &quot;GP21&quot;, &quot;GP122&quot;, &quot;GP2&quot;, &quot;GP171&quot;, &quot;GP5&quot;, &quot;GP13&quot;)
+top_left_df &lt;- df |&gt;
+  dplyr::filter(Factor %in% top_left_gps) |&gt;
+  dplyr::mutate(label_text = sapply(Factor, top_cats_label, auc_matrix = level_2_AUC, positive_mask = level_2_AUC_positive, threshold = 0.9, n = 3))
+
+p_4d &lt;- ggplot(df, aes(Max_AUC_Organ, Max_AUC_Level1)) +
+  geom_point(alpha = 0.2, size = 1.5, color = &quot;grey60&quot;) +
+  geom_point(data = top_left_df, color = &quot;#1f78b4&quot;, size = 2.2, alpha = 0.9) +
+  geom_text_repel(
+    data = top_left_df, aes(label = label_text), color = &quot;#1f78b4&quot;, lineheight = 0.85, size = 2.5,
+    direction = &quot;y&quot;, nudge_x = -0.1, segment.color = &quot;#1f78b4&quot;,
+    arrow = arrow(length = unit(0.008, &quot;npc&quot;), type = &quot;closed&quot;, angle = 20),
+    force = 4, force_pull = 0.05, box.padding = 0.5, point.padding = 0.15,
+    max.time = 10, max.iter = 2e4, max.overlaps = 30, min.segment.length = 0.01, segment.alpha = 0.7
+  ) +
+  geom_point(data = seven_gp_df, color = &quot;#e31a1c&quot;, size = 2.2, alpha = 0.9) +
+  geom_text_repel(
+    data = seven_gp_df, aes(label = label_text), color = &quot;#e31a1c&quot;, size = 2.5, lineheight = 0.85,
+    direction = &quot;y&quot;, nudge_x = 0.18, xlim = c(1.0, NA), segment.color = &quot;#e31a1c&quot;,
+    arrow = arrow(length = unit(0.008, &quot;npc&quot;), type = &quot;closed&quot;, angle = 20),
+    force = 6, force_pull = 0.02, box.padding = 0.6, point.padding = 0.15,
+    max.time = 10, max.iter = 2e4, max.overlaps = 30, min.segment.length = 0.01, segment.alpha = 0.7
+  ) +
+  geom_abline(slope = 1, intercept = 0, linetype = &quot;dashed&quot;, color = &quot;black&quot;) +
+  coord_cartesian(xlim = c(0.46, 1.04), ylim = c(0.5, 1.02), expand = FALSE, clip = &quot;off&quot;) +
+  labs(x = &quot;Max AUC (Organ Simplified)&quot;, y = &quot;Max AUC (Level-2)&quot;, title = &quot;Max AUC: Organ vs Level-2 - organ-specific GPs&quot;) +
+  theme_minimal(base_size = 13) +
+  theme(plot.margin = margin(10, 80, 10, 80))
+ggsave(filename = paste0(figure_path, &quot;4d.pdf&quot;), plot = p_4d, width = 8, height = 8, dpi = 300)
+
+# ============================================================
+# 4b: GP37+ rate by lineage, mammary gland vs. elsewhere</code></pre>
+<p><img src="assets/Figure5/4d.png" width="60%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 5d.</strong> As in (a), but predictive performance is
+measured against clusters obtained from ImmgenT-cosmo (y-axis; clusters
+with &lt; 100 cells dropped). All GPs are shown in grey; the seven
+organ-specific GPs (GP3, GP6, GP11, GP26, GP29, GP37, GP177) are
+highlighted in red and labeled with their best clusters, while a
+contrasting set of cluster-specific GPs (high cluster AUC, low organ
+AUC) is highlighted in blue; the dashed line marks equal
+performance.</p>
+</div>
+</div>
+<div id="fig4e" class="section level2">
+<h2>(e) Organ, GP, and cluster alluvial diagram</h2>
+<pre class="r"><code>#     7 organ-specific GPs
+# ============================================================
+best_organ_per_gp &lt;- organ_AUC_max_name[gps_of_interest]
+gp_thresholds &lt;- mapply(function(gp, organ) organ_AUC_list$threshold[organ, gp], gps_of_interest, best_organ_per_gp)
+names(gp_thresholds) &lt;- gps_of_interest
+
+n_cap_gp &lt;- 300
+set.seed(42)
+alluvial_rows &lt;- lapply(gps_of_interest, function(gp) {
+  positive_idx &lt;- L_healthy[, gp] &gt; gp_thresholds[gp]
+  meta_pos &lt;- seurat_meta_filtered_no_thymocytes_healthy[positive_idx, ]
+  d &lt;- data.frame(gp_program = gp, organ = meta_pos$organ_simplified, level2 = meta_pos$annotation_level2, stringsAsFactors = FALSE)
+  if (nrow(d) &gt; n_cap_gp) d &lt;- dplyr::slice_sample(d, n = n_cap_gp)
+  d
+})
+
+count_df &lt;- do.call(rbind, alluvial_rows) |&gt;
+  dplyr::count(organ, gp_program, level2, name = &quot;n&quot;) |&gt;
+  dplyr::filter(!is.na(organ), !is.na(level2), n &gt;= 5)
+
+organ_order &lt;- count_df |&gt; dplyr::summarise(total = sum(n), .by = organ) |&gt; dplyr::arrange(dplyr::desc(total)) |&gt; dplyr::pull(organ)
+level2_order &lt;- count_df |&gt; dplyr::summarise(total = sum(n), .by = level2) |&gt; dplyr::arrange(dplyr::desc(total)) |&gt; dplyr::pull(level2)
+
+count_df &lt;- count_df |&gt;
+  dplyr::mutate(
+    organ = factor(organ, levels = rev(organ_order)),
+    gp_program = factor(gp_program, levels = rev(gps_of_interest)),
+    level2 = factor(level2, levels = rev(level2_order))
+  )
+
+gp_colors &lt;- ZemmourLib::immgent_colors$organ_simplified[unname(best_organ_per_gp)]
+gp_colors[is.na(gp_colors)] &lt;- &quot;grey60&quot;
+names(gp_colors) &lt;- gps_of_interest
+
+p_4e &lt;- ggplot(count_df, aes(axis1 = organ, axis2 = gp_program, axis3 = level2, y = n)) +
+  ggalluvial::geom_alluvium(aes(fill = gp_program), width = 1 / 4, alpha = 0.6, knot.pos = 0.4) +
+  ggalluvial::geom_stratum(width = 1 / 4, fill = &quot;grey92&quot;, color = &quot;grey50&quot;, linewidth = 0.3) +
+  ggplot2::geom_text(stat = ggalluvial::StatStratum, aes(label = after_stat(stratum)), size = 3, angle = 90) +
+  scale_fill_manual(values = gp_colors, guide = &quot;none&quot;) +
+  scale_x_discrete(limits = c(&quot;Organ&quot;, &quot;GP&quot;, &quot;Level-2&quot;), expand = c(0.12, 0.12)) +
+  labs(y = &quot;Number of GP+ cells&quot;, title = &quot;GP+ cells: organ origin and cell type&quot;) +
+  theme_minimal(base_size = 12) +
+  theme(panel.grid = element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank()) +
+  coord_flip()
+ggsave(filename = paste0(figure_path, &quot;4e.pdf&quot;), plot = p_4e, width = 20, height = 10, dpi = 300)
+
+# ============================================================
+# 4c: organ marker genes - expression dotplot + per-GP gene-score</code></pre>
+<p><img src="assets/Figure5/4e.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 5e.</strong> Alluvial diagram of GP+ cells linking organ
+of origin, GP, and ImmgenT-cosmo cluster. For each of the seven
+organ-specific GPs, GP+ cells (loading above that GP’s best-organ
+threshold) are subsampled to &lt;=300 per GP and traced from their organ
+of origin through the GP to their cluster; flows are colored by GP
+(using each GP’s best-predicted organ color), flows representing fewer
+than 5 cells are dropped, and a cell may appear under more than one GP.
+Axis width denotes the number of GP+ cells.</p>
+</div>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.5.1 (2025-06-13)
+Platform: aarch64-apple-darwin20
+Running under: macOS Sequoia 15.6.1
+
+Matrix products: default
+BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_CA/en_CA/en_CA/C/en_CA/en_CA
+
+time zone: Asia/Shanghai
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+ [1] vctrs_0.7.3     cli_3.6.6       knitr_1.50      rlang_1.2.0    
+ [5] xfun_0.55       stringi_1.8.7   otel_0.2.0      promises_1.5.0 
+ [9] jsonlite_2.0.0  workflowr_1.7.2 glue_1.8.1      rprojroot_2.1.1
+[13] git2r_0.36.2    htmltools_0.5.9 httpuv_1.6.16   sass_0.4.10    
+[17] rmarkdown_2.30  evaluate_1.0.5  jquerylib_0.1.4 tibble_3.3.0   
+[21] fastmap_1.2.0   yaml_2.3.12     lifecycle_1.0.5 stringr_1.6.0  
+[25] compiler_4.5.1  fs_1.6.6        Rcpp_1.1.1-1.1  pkgconfig_2.0.3
+[29] later_1.4.4     digest_0.6.39   R6_2.6.1        pillar_1.11.1  
+[33] magrittr_2.0.5  bslib_0.9.0     tools_4.5.1     cachem_1.1.0   </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -8,7 +8,7 @@ editor_options:
 
 All panels are produced by
 [`script/FigureS2.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS2.R),
-which shares its source data setup with [Figure 2](Figure2.html). The code
+which shares its source data setup with [Figure 3](Figure3.html). The code
 below is shown for reference (not re-executed on this page); the images are
 its pre-rendered output.
 
