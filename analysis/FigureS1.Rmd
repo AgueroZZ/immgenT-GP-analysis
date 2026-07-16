@@ -81,7 +81,7 @@ knitr::include_graphics("assets/FigureS1/S1D.png")
 
 ## (E) Active-gene vs. active-cell proportion per GP {#figs1e}
 
-```{r figs1e-code, code=readLines("../script/FigureS1.R")[165:195], eval=FALSE}
+```{r figs1e-code, code=readLines("../script/FigureS1.R")[165:194], eval=FALSE}
 ```
 
 ```{r figs1e-img, echo=FALSE, out.width="60%"}
@@ -89,5 +89,5 @@ knitr::include_graphics("assets/FigureS1/S1E.png")
 ```
 
 ::: {.figcaption}
-**Fig. S1E.** For each GP, the expected number of active genes (x-axis) versus the expected proportion of active cells (y-axis), taken directly from the EBMF-learned point-mass prior of each factor (the mixture weight on the non-zero component, `1 - pi0`, with the gene x-axis rescaled to a count by the total number of genes) rather than from a hard threshold on the fitted matrices. Both axes on log scale; each dot is one of the 200 GPs. GPs that are active in more genes tend also to be active in more cells.
+**Fig. S1E.** For each GP, the number of active genes (x-axis) versus the proportion of active cells (y-axis), using the same hard-threshold definitions as Figure 2: a gene is active in a GP if its per-GP-normalized score exceeds 0.25 in absolute value, and a cell is active if its per-GP-normalized loading exceeds 0.1; computed over non-thymocyte cells. Both axes on log scale; each dot is one of the 200 GPs.
 :::

@@ -10,11 +10,11 @@
 #        vs. variance-of-per-IGT-mean-loading (y), spleen-standard subset.
 #   S1D  Heatmap of per-IGT mean loading for the 10 highest-variance GPs from
 #        S1C (IGTs with >= 500 spleen-standard cells only).
-#   S1E  Scatter of the EBMF-learned expected NUMBER of active genes (x) vs.
-#        expected proportion of active cells (y) per GP -- from the (1 - pi0)
-#        sparsity parameter of each factor's point-mass prior (times the total
-#        gene count for the x-axis), not a hard threshold on the fitted
-#        matrices. One dot per GP.
+#   S1E  Scatter of the NUMBER of active genes (x) vs. proportion of active
+#        cells (y) per GP, using the same hard-threshold definitions as Figure 2
+#        (|normalized score| > 0.25 for genes; normalized loading > 0.1 for
+#        cells), over non-thymocyte cells -- not the EBMF sparsity prior. One
+#        dot per GP.
 #
 # Source: S1A/S1B ported from Figure_Saturation.R; S1C/S1D from
 # Figure_batch.R (panels a/b only -- that script's `plot_gp_loading()`
@@ -163,23 +163,22 @@ pheatmap(
 dev.off()
 
 # ============================================================
-# S1E: EBMF sparsity scatter -- expected proportion of active genes (x)
-# vs. expected proportion of active cells (y) per GP, taken directly from
-# each factor's point-mass prior weight (p = 1 - pi0).
-# (Same quantities as Figure 1's scatter_e_active_cells_vs_genes panel,
-# re-drawn here in ggplot with log-log axes.)
+# S1E: active-gene vs active-cell scatter per GP, using the SAME hard-threshold
+# definitions as Figure 2 (per-GP-normalized): number of active genes = count of
+# genes with |score| > 0.25 of the GP's max; proportion of active cells = fraction
+# of cells with loading > 0.1 of the GP's max. Non-thymocyte cells, matching
+# Figure 2. (Replaces the earlier EBMF-sparsity-prior version.)
 # ============================================================
-load(paste0(data_path, "flashier_snmf_fitted_prior.rda"))
-n_genes  <- nrow(readRDS(paste0(data_path, "F_pm_filtered.rds")))  # total genes in the factorization
+non_thymo_s1e <- seurat_meta_filtered$cellID[seurat_meta_filtered$annotation_level1 != "thymocyte"]
+L_s1e <- L_pm_filtered[non_thymo_s1e, ]
+L_norm_s1e <- L_s1e / matrix(apply(L_s1e, 2, max), nrow = nrow(L_s1e), ncol = ncol(L_s1e), byrow = TRUE)
+prop_cells <- colSums(L_norm_s1e > 0.1) / nrow(L_norm_s1e)   # proportion of active cells per GP
 
-n_gp     <- length(flashier_snmf_fitted_prior$L_ghat)
-l_pi_vec <- sapply(seq_len(n_gp), function(i) flashier_snmf_fitted_prior$L_ghat[[i]]$pi[1])
-f_pi_vec <- sapply(seq_len(n_gp), function(i) flashier_snmf_fitted_prior$F_ghat[[i]]$pi[1])
-p_cells     <- 1 - l_pi_vec               # expected proportion of active cells per GP
-n_genes_act <- (1 - f_pi_vec) * n_genes   # expected NUMBER of active genes per GP
+F_s1e <- readRDS(paste0(data_path, "F_pm_filtered.rds"))
+F_norm_s1e <- F_s1e / matrix(apply(F_s1e, 2, function(x) max(abs(x))), nrow = nrow(F_s1e), ncol = ncol(F_s1e), byrow = TRUE)
+n_genes_act <- colSums(abs(F_norm_s1e) > 0.25)               # number of active genes per GP
 
-scatter_df_s1e <- data.frame(n_genes = n_genes_act, prop_cells = p_cells)
-
+scatter_df_s1e <- data.frame(n_genes = n_genes_act, prop_cells = prop_cells)
 pct_breaks <- c(0.0001, 0.001, 0.01, 0.05, 0.1, 0.3, 0.5, 1)
 p_S1E <- ggplot(scatter_df_s1e, aes(x = n_genes, y = prop_cells)) +
   geom_point(size = 2, alpha = 0.7, color = "steelblue") +
@@ -187,9 +186,9 @@ p_S1E <- ggplot(scatter_df_s1e, aes(x = n_genes, y = prop_cells)) +
   scale_y_log10(breaks = pct_breaks, labels = function(x) paste0(x * 100, "%")) +
   annotation_logticks(sides = "bl") +
   labs(
-    x = "Expected number of active genes per GP (log scale)",
-    y = "Expected proportion of active cells per GP (log scale)",
-    title = "Expected active genes vs. active-cell proportion per GP\n(EBMF sparsity priors)"
+    x = "Number of active genes per GP (log scale)",
+    y = "Proportion of active cells per GP (log scale)",
+    title = "Active genes vs. active-cell proportion per GP"
   ) +
   theme_minimal(base_size = 13)
 ggsave(paste0(figure_path, "S1E.pdf"), plot = p_S1E, width = 6, height = 5, dpi = 300)
