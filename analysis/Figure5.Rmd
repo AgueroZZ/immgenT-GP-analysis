@@ -54,7 +54,7 @@ knitr::include_graphics("assets/Figure5/5c.png")
 ```
 
 ::: {.figcaption}
-**Fig. 5c.** Marker genes of the seven organ-specific GPs. Genes are the union of the top 20 positively scoring genes per GP (score > 0.25 on the max-abs-scaled gene-score matrix), ordered diagonally by each gene's dominant GP and then by descending score. Left, expression dot plot across 14 organs in which dot size is the percent of cells expressing the gene and color is mean expression z-scored across organs (capped at +-2.5); right, heatmap of the per-GP scaled gene scores for the same genes across the seven GPs, centered at zero (blue, negative; red, positive).
+**Fig. 5c.** Marker genes of the seven organ-specific GPs. Genes are the union of the top 20 positively scoring genes per GP (score > 0.25 on the max-abs-scaled gene-score matrix), ordered diagonally by each gene's dominant GP and then by descending score. Left, heatmap of mean expression across 14 organs, **centered** per gene (each gene's across-organ mean subtracted; not standardized / not divided by SD), with color clipped at the 95th percentile of the centered magnitude so mid-range genes stay visible; right, heatmap of the per-GP scaled gene scores for the same genes across the seven GPs, centered at zero (blue, negative; red, positive).
 :::
 
 ## (d) Max AUC: organ vs. cluster {#fig4d}

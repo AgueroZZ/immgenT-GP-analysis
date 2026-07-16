@@ -453,18 +453,20 @@ dot_df_scaled <- map_dfr(tissues_present, function(tissue) {
 }) |>
   dplyr::mutate(pct.exp = pct.exp * 100, id = factor(id, levels = tissues_present)) |>
   dplyr::left_join(global_stats, by = "features.plot") |>
-  dplyr::mutate(avg.exp.z = pmax(pmin((avg.exp - g_mean) / g_sd, 2.5), -2.5)) |>
+  dplyr::mutate(avg.exp.c = avg.exp - g_mean) |>  # center only (no standardization)
   # rev() because coord_flip() inverts factor level order (first level ends up at the bottom)
   dplyr::mutate(features.plot = factor(features.plot, levels = rev(heatmap_gene_order)))
 
+# colour clipped at the 95th percentile of |centered value| so mid-range genes
+# stay visible (a few high-expression genes otherwise dominate the scale)
+lim_c <- as.numeric(quantile(abs(dot_df_scaled$avg.exp.c), 0.95, na.rm = TRUE))
 p_scaled <- ggplot(dot_df_scaled, aes(x = features.plot, y = id)) +
-  geom_point(aes(size = pct.exp, color = avg.exp.z)) +
-  scale_size(range = c(0, 6)) +
-  scale_color_distiller(palette = "RdBu", limits = c(-2.5, 2.5), direction = -1, name = "Avg Exp\n(Z-score)") +
+  geom_tile(aes(fill = avg.exp.c)) +
+  scale_fill_gradient2(low = "steelblue", mid = "white", high = "firebrick", midpoint = 0,
+                       limits = c(-lim_c, lim_c), oob = scales::squish, name = "Avg Exp\n(centered)") +
   coord_flip() +
   cowplot::theme_cowplot() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), axis.title.x = element_blank(), axis.title.y = element_blank()) +
-  guides(size = guide_legend(title = "Percent Expressed"))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), axis.title.x = element_blank(), axis.title.y = element_blank())
 
 plot_df_hm <- as.data.frame(F_sub[heatmap_gene_order, , drop = FALSE])
 plot_df_hm$Gene <- rownames(plot_df_hm)
