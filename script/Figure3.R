@@ -114,7 +114,7 @@ p_2A <- plot_gp_swarm(
   italic_subtitle = TRUE
 )
 ggsave(
-  filename = paste0(figure_path, "2A.pdf"),
+  filename = paste0(figure_path, "3A.pdf"),
   plot = p_2A,
   width = 10,
   height = 6
@@ -167,7 +167,7 @@ p_2B <- structure_plot(
     legend.title = element_text(size = 13)
   )
 ggsave(
-  filename = paste0(figure_path, "2B.pdf"),
+  filename = paste0(figure_path, "3B.pdf"),
   plot = p_2B,
   width = 10,
   height = 6,
@@ -186,7 +186,7 @@ p_2C <- plot_loadings_on_mde(
   bg_color = "grey90"
 )
 ggsave(
-  filename = paste0(figure_path, "2C.pdf"),
+  filename = paste0(figure_path, "3C.pdf"),
   plot = p_2C,
   width = 5,
   height = 4
@@ -201,7 +201,7 @@ p_2E <- plot_loadings_on_mde(
   bg_color = "grey90"
 )
 ggsave(
-  filename = paste0(figure_path, "2E.pdf"),
+  filename = paste0(figure_path, "3E.pdf"),
   plot = p_2E,
   width = 5,
   height = 4
@@ -216,7 +216,7 @@ p_2G <- plot_loadings_on_mde(
   bg_color = "grey90"
 )
 ggsave(
-  filename = paste0(figure_path, "2G.pdf"),
+  filename = paste0(figure_path, "3G.pdf"),
   plot = p_2G,
   width = 5,
   height = 4
@@ -244,7 +244,7 @@ p_2D <- plot_gp_signature_volcano(
   bg_alpha = 0.2
 )
 ggsave(
-  filename = paste0(figure_path, "2D.pdf"),
+  filename = paste0(figure_path, "3D.pdf"),
   plot = p_2D,
   width = 7,
   height = 5.5
@@ -259,7 +259,7 @@ p_2F <- plot_gp_signature_volcano(
   bg_alpha = 0.2
 )
 ggsave(
-  filename = paste0(figure_path, "2F.pdf"),
+  filename = paste0(figure_path, "3F.pdf"),
   plot = p_2F,
   width = 7,
   height = 5.5
@@ -274,7 +274,7 @@ p_2H <- plot_gp_signature_volcano(
   bg_alpha = 0.2
 )
 ggsave(
-  filename = paste0(figure_path, "2H.pdf"),
+  filename = paste0(figure_path, "3H.pdf"),
   plot = p_2H,
   width = 7,
   height = 5.5
@@ -317,7 +317,7 @@ p_2I <- ggplot(df_mde_gcd, aes(x = MDE_1, y = MDE_2)) +
   ) +
   guides(color = guide_legend(override.aes = list(size = 4)))
 ggsave(
-  filename = paste0(figure_path, "2I.pdf"),
+  filename = paste0(figure_path, "3I.pdf"),
   plot = p_2I,
   width = 5,
   height = 5
@@ -372,4 +372,4 @@ p_2M <- plot_cross_gp_heatmap(
 )
 ph_2m <- max(4, 2 + 30 * 0.14)
 pw_2m <- max(5, 3 + length(gps_2m) * 0.8)
-ggsave(filename = paste0(figure_path, "2M.pdf"), plot = p_2M, width = pw_2m, height = ph_2m)
+ggsave(filename = paste0(figure_path, "3M.pdf"), plot = p_2M, width = pw_2m, height = ph_2m)

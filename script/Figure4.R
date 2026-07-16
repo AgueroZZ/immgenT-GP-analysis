@@ -141,7 +141,7 @@ p_3a <- ggplot(manual_curated_df, aes(x = d_CD4, y = d_CD8)) +
   ) +
   theme_minimal()
 ggsave(
-  filename = paste0(figure_path, "3c.pdf"),
+  filename = paste0(figure_path, "4c.pdf"),
   plot = p_3a,
   width = 8,
   height = 7
@@ -251,7 +251,7 @@ p_3b <- ggraph(graph, layout = "stress") +
   ) +
   guides(color = guide_legend(override.aes = list(size = 5, shape = 15)))
 ggsave(
-  filename = paste0(figure_path, "3d.pdf"),
+  filename = paste0(figure_path, "4d.pdf"),
   plot = p_3b,
   width = 10,
   height = 10
@@ -310,7 +310,7 @@ plot_height_tf <- min(
   max(12, length(selected_tfs) * 0.35, length(GPs_of_interest) * 1.5 * 0.55 + 2)
 )
 ggsave(
-  filename = paste0(figure_path, "3e.pdf"),
+  filename = paste0(figure_path, "4e.pdf"),
   plot = tf_network_plot,
   width = 18,
   height = plot_height_tf,
@@ -381,7 +381,7 @@ col_idx <- which(ph$gtable$layout$name == "col_names")
 ph$gtable$grobs[[row_idx]]$gp$col <- row_label_cols
 ph$gtable$grobs[[col_idx]]$gp$col <- col_label_cols
 
-pdf(paste0(figure_path, "3g.pdf"), width = 11, height = 5.5)
+pdf(paste0(figure_path, "4g.pdf"), width = 11, height = 5.5)
 grid::grid.draw(ph$gtable)
 invisible(dev.off())
 
@@ -464,7 +464,7 @@ row_idx_lfc_m <- which(ph_cond_lfc_mean$gtable$layout$name == "row_names")
 ph_cond_lfc_mean$gtable$grobs[[row_idx_lfc_m]]$gp$col <- row_label_cols
 
 pdf(
-  paste0(figure_path, "3f.pdf"),
+  paste0(figure_path, "4f.pdf"),
   width = max(8, 0.18 * ncol(lfc_mat_mean) + 4),
   height = 6
 )

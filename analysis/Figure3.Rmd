@@ -24,7 +24,7 @@ Data loading, shared across all panels below.
 ```
 
 ```{r fig2a-img, echo=FALSE, out.width="60%"}
-knitr::include_graphics("assets/Figure3/2A.png")
+knitr::include_graphics("assets/Figure3/3A.png")
 ```
 
 ::: {.figcaption}
@@ -37,7 +37,7 @@ knitr::include_graphics("assets/Figure3/2A.png")
 ```
 
 ```{r fig2b-img, echo=FALSE, out.width="60%"}
-knitr::include_graphics("assets/Figure3/2B.png")
+knitr::include_graphics("assets/Figure3/3B.png")
 ```
 
 ::: {.figcaption}
@@ -50,7 +50,7 @@ knitr::include_graphics("assets/Figure3/2B.png")
 ```
 
 ```{r fig2c-img, echo=FALSE, out.width="40%"}
-knitr::include_graphics("assets/Figure3/2C.png")
+knitr::include_graphics("assets/Figure3/3C.png")
 ```
 
 ::: {.figcaption}
@@ -63,7 +63,7 @@ knitr::include_graphics("assets/Figure3/2C.png")
 ```
 
 ```{r fig2d-img, echo=FALSE, out.width="40%"}
-knitr::include_graphics("assets/Figure3/2D.png")
+knitr::include_graphics("assets/Figure3/3D.png")
 ```
 
 ::: {.figcaption}
@@ -76,7 +76,7 @@ knitr::include_graphics("assets/Figure3/2D.png")
 ```
 
 ```{r fig2e-img, echo=FALSE, out.width="40%"}
-knitr::include_graphics("assets/Figure3/2E.png")
+knitr::include_graphics("assets/Figure3/3E.png")
 ```
 
 ::: {.figcaption}
@@ -89,7 +89,7 @@ knitr::include_graphics("assets/Figure3/2E.png")
 ```
 
 ```{r fig2f-img, echo=FALSE, out.width="40%"}
-knitr::include_graphics("assets/Figure3/2F.png")
+knitr::include_graphics("assets/Figure3/3F.png")
 ```
 
 ::: {.figcaption}
@@ -102,7 +102,7 @@ knitr::include_graphics("assets/Figure3/2F.png")
 ```
 
 ```{r fig2g-img, echo=FALSE, out.width="40%"}
-knitr::include_graphics("assets/Figure3/2G.png")
+knitr::include_graphics("assets/Figure3/3G.png")
 ```
 
 ::: {.figcaption}
@@ -115,7 +115,7 @@ knitr::include_graphics("assets/Figure3/2G.png")
 ```
 
 ```{r fig2h-img, echo=FALSE, out.width="40%"}
-knitr::include_graphics("assets/Figure3/2H.png")
+knitr::include_graphics("assets/Figure3/3H.png")
 ```
 
 ::: {.figcaption}
@@ -128,7 +128,7 @@ knitr::include_graphics("assets/Figure3/2H.png")
 ```
 
 ```{r fig2i-img, echo=FALSE, out.width="40%"}
-knitr::include_graphics("assets/Figure3/2I.png")
+knitr::include_graphics("assets/Figure3/3I.png")
 ```
 
 ::: {.figcaption}
@@ -141,7 +141,7 @@ knitr::include_graphics("assets/Figure3/2I.png")
 ```
 
 ```{r fig2jl-img, echo=FALSE, out.width="30%"}
-knitr::include_graphics(c("assets/Figure3/2J.png", "assets/Figure3/2K.png", "assets/Figure3/2L.png"))
+knitr::include_graphics(c("assets/Figure3/3J.png", "assets/Figure3/3K.png", "assets/Figure3/3L.png"))
 ```
 
 ::: {.figcaption}
@@ -154,7 +154,7 @@ knitr::include_graphics(c("assets/Figure3/2J.png", "assets/Figure3/2K.png", "ass
 ```
 
 ```{r fig2m-img, echo=FALSE, out.width="40%"}
-knitr::include_graphics("assets/Figure3/2M.png")
+knitr::include_graphics("assets/Figure3/3M.png")
 ```
 
 ::: {.figcaption}

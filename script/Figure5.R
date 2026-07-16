@@ -174,7 +174,7 @@ p_4a <- ggplot(df, aes(Max_AUC_Organ, Max_AUC_Level1)) +
     force = 3, force_pull = 0.1, box.padding = 0.4, point.padding = 0.15,
     max.time = 10, max.iter = 2e4, max.overlaps = 20, min.segment.length = 0.01, segment.alpha = 0.7
   )
-ggsave(filename = paste0(figure_path, "4a.pdf"), plot = p_4a, width = 8, height = 8, dpi = 300)
+ggsave(filename = paste0(figure_path, "5a.pdf"), plot = p_4a, width = 8, height = 8, dpi = 300)
 
 # ============================================================
 # 4d prep: Max AUC Organ vs Level-2
@@ -240,7 +240,7 @@ p_4d <- ggplot(df, aes(Max_AUC_Organ, Max_AUC_Level1)) +
   labs(x = "Max AUC (Organ Simplified)", y = "Max AUC (Level-2)", title = "Max AUC: Organ vs Level-2 - organ-specific GPs") +
   theme_minimal(base_size = 13) +
   theme(plot.margin = margin(10, 80, 10, 80))
-ggsave(filename = paste0(figure_path, "4d.pdf"), plot = p_4d, width = 8, height = 8, dpi = 300)
+ggsave(filename = paste0(figure_path, "5d.pdf"), plot = p_4d, width = 8, height = 8, dpi = 300)
 
 # ============================================================
 # 4b: GP37+ rate by lineage, mammary gland vs. elsewhere
@@ -335,7 +335,7 @@ p_4b <- plot_gp_threshold_group_activation_rate(
   group_colors = ZemmourLib::immgent_colors$level1,
   reference = "not_in_organ"
 )
-ggsave(filename = paste0(figure_path, "4b.pdf"), plot = p_4b, width = 8, height = 5, dpi = 300)
+ggsave(filename = paste0(figure_path, "5b.pdf"), plot = p_4b, width = 8, height = 5, dpi = 300)
 
 # ============================================================
 # 4e: alluvial, organ -> GP -> Level-2, for GP+ cells of the
@@ -383,7 +383,7 @@ p_4e <- ggplot(count_df, aes(axis1 = organ, axis2 = gp_program, axis3 = level2, 
   theme_minimal(base_size = 12) +
   theme(panel.grid = element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank()) +
   coord_flip()
-ggsave(filename = paste0(figure_path, "4e.pdf"), plot = p_4e, width = 20, height = 10, dpi = 300)
+ggsave(filename = paste0(figure_path, "5e.pdf"), plot = p_4e, width = 20, height = 10, dpi = 300)
 
 # ============================================================
 # 4c: organ marker genes - expression dotplot + per-GP gene-score
@@ -485,6 +485,6 @@ p_4c <- (p_scaled + (p_gene_heatmap + theme(axis.text.y = element_blank(), axis.
   plot_layout(widths = c(2, 1), guides = "collect") &
   theme(legend.position = "bottom")
 
-pdf(paste0(figure_path, "4c.pdf"), width = 10, height = 16, useDingbats = FALSE)
+pdf(paste0(figure_path, "5c.pdf"), width = 10, height = 16, useDingbats = FALSE)
 print(p_4c)
 dev.off()
