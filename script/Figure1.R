@@ -228,16 +228,21 @@ hl_val   <- ifelse(gpn %in% names(GP_HIGHLIGHTS), gpn, NA_character_)
 lab_col  <- ifelse(gpn %in% names(GP_HIGHLIGHTS), GP_HIGHLIGHTS[gpn], "grey55")
 lab_fs   <- ifelse(gpn %in% names(GP_HIGHLIGHTS), 9, 4)
 lab_face <- ifelse(gpn %in% names(GP_HIGHLIGHTS), 2, 1)
+# Publication version: only the highlighted GP columns keep an index label
+# (background GP indices dropped), and the highlighted-GP legend is hidden -- the
+# colour->GP mapping is given in the Fig 1D caption. The full-label, legended
+# version for collaborators lives in experiments/gene_correlation_network/
+# (heatmap_loading.*).
 top_ann <- HeatmapAnnotation(
   `Highlighted GP` = hl_val, col = list(`Highlighted GP` = GP_HIGHLIGHTS),
   na_col = "white", simple_anno_size = unit(4, "mm"), annotation_name_gp = gpar(fontsize = 8),
-  annotation_legend_param = list(`Highlighted GP` = list(title = "Highlighted GP",
-    at = names(GP_HIGHLIGHTS), labels = names(GP_HIGHLIGHTS))))
+  show_legend = FALSE)
 ht_1D <- Heatmap(
   L_display, name = "Loading", col = col_fun, left_annotation = row_ann, top_annotation = top_ann,
   cluster_rows = FALSE, cluster_columns = TRUE,
   clustering_distance_columns = "euclidean", clustering_method_columns = "ward.D2",
   show_row_names = FALSE,
+  column_labels = ifelse(gpn %in% names(GP_HIGHLIGHTS), gpn, ""),
   column_names_gp = gpar(col = lab_col, fontsize = lab_fs, fontface = lab_face),
   column_title = "Gene Programs (GPs)", column_title_gp = gpar(fontsize = 11, fontface = "bold"),
   use_raster = TRUE, raster_quality = 3, border = FALSE,

@@ -71,7 +71,7 @@ An internal version with a color→GP legend and GP-index labels is kept in
 
 ## (D) GP loading heatmap {#fig1d}
 
-```{r fig1d-code, code=readLines("../script/Figure1.R")[169:252], eval=FALSE}
+```{r fig1d-code, code=readLines("../script/Figure1.R")[169:257], eval=FALSE}
 ```
 
 ```{r fig1d-img, echo=FALSE, out.width="70%"}
@@ -83,10 +83,13 @@ knitr::include_graphics("assets/Figure1/1D.png")
 stratified sample of cells (rows), ordered by lineage then organ; the left
 strips annotate each cell's **cell type** and **organ**, and GP columns are
 clustered by loading similarity. Loadings are clipped at the 99th percentile and
-run white → blue. The same GPs highlighted in the (C) network are marked here in
-the matching colors — a top color bar, a colored/bold column label, and a box
-drawn around each highlighted GP **column** — so a program's cross-cell loading
-pattern can be read alongside its position in the network. Colors: GP68 (pink),
-GP58 (orange), GP35 (purple), GP171 (blue), GP1 (cyan), GP56 (red), GP161
-(dark red), GP6 (light green), GP7 (green), GP196 (yellow).
+run white → blue. Only the GPs highlighted in the (C) network are marked and
+labeled here (background GP column indices are omitted); each is shown in its
+matching color via a top color bar, a colored column label, and a box drawn
+around its **column**, so a program's cross-cell loading pattern can be read
+alongside its position in the network. Colors: GP68 (pink), GP58 (orange),
+GP35 (purple), GP171 (blue), GP1 (cyan), GP56 (red), GP161 (dark red), GP6
+(light green), GP7 (green), GP196 (yellow). A fully-labeled version with a
+color→GP legend (all 200 GP indices) is kept for reference in
+`experiments/gene_correlation_network/` (`heatmap_loading`).
 :::

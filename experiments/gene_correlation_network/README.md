@@ -50,15 +50,20 @@ Built by **`gp_highlight_selected.R`** — refactored into `build_gp_gene_graph(
 edit the `GP_HIGHLIGHTS` (GP → color) vector at the top and rerun. Nothing else
 needs to change.**
 
-## → Loading heatmap (older Fig 1C, reproduced)
+## → Loading heatmap (now Figure 1D)
 
-**`heatmap_loading.png` / `.pdf`** — the previous Fig 1C: giant heatmap of all 200
-GP loadings across a stratified cell sample (rows = cells ordered by lineage ×
-organ, columns = GPs clustered by similarity). The **same GPs highlighted in the
-GP-gene network** are marked here in the matching colors — via a top annotation
-bar, colored/bold column labels, and a box drawn around each highlighted GP
-**column** (GPs are columns in this heatmap). Built by **`heatmap_loading.R`**
-(edit the `GP_HIGHLIGHTS` map to match the network).
+**`heatmap_loading.png` / `.pdf`** — giant heatmap of all 200 GP loadings across a
+stratified cell sample (rows = cells ordered by lineage × organ, columns = GPs
+clustered by similarity). The **same GPs highlighted in the GP-gene network** are
+marked in the matching colors — a top annotation bar, colored/bold column labels,
+and a box around each highlighted GP **column** (GPs are columns here). Built by
+**`heatmap_loading.R`** (edit the `GP_HIGHLIGHTS` map to match the network).
+
+This is the **internal version** (all 200 GP indices labeled + a color→GP
+legend), for collaborators. The **publication version** used in the paper as
+**Figure 1D** (`script/Figure1.R`, panel 1D) is the same heatmap but with the
+background GP indices dropped and the highlighted-GP legend removed — only the
+highlighted GPs are labeled.
 
 Everything else is the exploration trail in **`archive/`** — kept for the record
 of what was tried and why (see Findings below), not needed to read the result.
