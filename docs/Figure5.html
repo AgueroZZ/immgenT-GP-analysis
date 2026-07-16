@@ -518,15 +518,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec78e3cda5daf1677d4fa4c862ba207e842dc6c3etargetblankc78e3cda">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree3577da1314e0b658cbf4fd27f459ded4dd3dd88etargetblank3577da1a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c78e3cda5daf1677d4fa4c862ba207e842dc6c3e" target="_blank">c78e3cd</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/3577da1314e0b658cbf4fd27f459ded4dd3dd88e" target="_blank">3577da1</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec78e3cda5daf1677d4fa4c862ba207e842dc6c3etargetblankc78e3cda"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree3577da1314e0b658cbf4fd27f459ded4dd3dd88etargetblank3577da1a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -536,7 +536,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c78e3cda5daf1677d4fa4c862ba207e842dc6c3e" target="_blank">c78e3cd</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/3577da1314e0b658cbf4fd27f459ded4dd3dd88e" target="_blank">3577da1</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -556,6 +556,7 @@ Ignored files:
     Ignored:    analysis/.DS_Store
     Ignored:    analysis/.Rhistory
     Ignored:    analysis/assets/.DS_Store
+    Ignored:    analysis/site_libs/
     Ignored:    code/.DS_Store
     Ignored:    data
     Ignored:    experiments/.DS_Store
@@ -698,6 +699,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/3577da1314e0b658cbf4fd27f459ded4dd3dd88e/analysis/Figure5.Rmd" target="_blank">3577da1</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-17
+</td>
+<td>
+Fig 5c: center-only (no standardization), left panel as heatmap
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/3577da1314e0b658cbf4fd27f459ded4dd3dd88e/docs/Figure5.html" target="_blank">3577da1</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-17
+</td>
+<td>
+Fig 5c: center-only (no standardization), left panel as heatmap
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1230,13 +1265,12 @@ dot_df_scaled &lt;- map_dfr(tissues_present, function(tissue) {
   # rev() because coord_flip() inverts factor level order (first level ends up at the bottom)
   dplyr::mutate(features.plot = factor(features.plot, levels = rev(heatmap_gene_order)))
 
-# colour clipped at the 95th percentile of |centered value| so mid-range genes
-# stay visible (a few high-expression genes otherwise dominate the scale)
-lim_c &lt;- as.numeric(quantile(abs(dot_df_scaled$avg.exp.c), 0.95, na.rm = TRUE))
+# colour clipped to [-1, 1] so mid-range genes stay visible (a few high-expression
+# genes otherwise dominate the scale)
 p_scaled &lt;- ggplot(dot_df_scaled, aes(x = features.plot, y = id)) +
   geom_tile(aes(fill = avg.exp.c)) +
   scale_fill_gradient2(low = &quot;steelblue&quot;, mid = &quot;white&quot;, high = &quot;firebrick&quot;, midpoint = 0,
-                       limits = c(-lim_c, lim_c), oob = scales::squish, name = &quot;Avg Exp\n(centered)&quot;) +
+                       limits = c(-1, 1), oob = scales::squish, name = &quot;Avg Exp\n(centered)&quot;) +
   coord_flip() +
   cowplot::theme_cowplot() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), axis.title.x = element_blank(), axis.title.y = element_blank())
@@ -1288,6 +1322,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/3577da1314e0b658cbf4fd27f459ded4dd3dd88e/docs/assets/Figure5/5c.png" target="_blank">3577da1</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-17
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/2873ad24b49a4e522ffd5332f22a1e706eeb7083/docs/assets/Figure5/5c.png" target="_blank">2873ad2</a>
 </td>
 <td>
@@ -1308,11 +1353,10 @@ GPs. Genes are the union of the top 20 positively scoring genes per GP
 diagonally by each gene’s dominant GP and then by descending score.
 Left, heatmap of mean expression across 14 organs,
 <strong>centered</strong> per gene (each gene’s across-organ mean
-subtracted; not standardized / not divided by SD), with color clipped at
-the 95th percentile of the centered magnitude so mid-range genes stay
-visible; right, heatmap of the per-GP scaled gene scores for the same
-genes across the seven GPs, centered at zero (blue, negative; red,
-positive).</p>
+subtracted; not standardized / not divided by SD), with color clipped to
+[-1, 1] so mid-range genes stay visible; right, heatmap of the per-GP
+scaled gene scores for the same genes across the seven GPs, centered at
+zero (blue, negative; red, positive).</p>
 </div>
 </div>
 <div id="fig4d" class="section level2">
