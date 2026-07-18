@@ -3,7 +3,7 @@
 # Panels produced (see figures/final-selected/bits/Figure S3/FigureS3_caption.md
 # for the full caption text; captioned A-F there but the final files are
 # lettered s3c-s3h -- this script uses that final lettering):
-#   s3c  Fraction of cells per organ with GP26 loading > 0.2, sorted descending.
+#   s3c  Fraction of activated CD4/CD8 cells per organ with GP26 > 0.1, sorted.
 #   s3d  GSEA dot plot relating the activation GPs to curated gene sets.
 #   s3e  Fraction of activated CD4 cells with GP79 loading > 0.1, by condition.
 #   s3f  Per-cell log2FC heatmap of activation GPs vs resting baseline.
@@ -15,10 +15,10 @@
 # Figure 4 panels from the same file). Shared curated-GP setup lives in
 # code/R/activation_shared_setup.R.
 #
-# Panel s3c has no corresponding block in the original script -- it is
-# reconstructed here following the same per-organ threshold-rate pattern
-# used for Figure 5b (script/Figure5.R), applied to GP26 at the
-# caption's stated 0.2 threshold.
+# Panel s3c is computed on activated CD4/CD8 cells only (annotation_level1 in
+# {CD4, CD8} and annotation_level2_group == "activated"): the per-organ fraction
+# with GP26 loading > 0.1. This exactly reproduces the collaborator's panel
+# (all 22 organ rates match to the decimal); see the s3c block below.
 #
 # Required inputs (data/) -- see code/README.md's "Data provenance" table
 # for the full picture:
@@ -52,27 +52,41 @@ df_sig <- read.csv(paste0(data_path, "GSEA_signatures_select_toplot.csv"), heade
 source("code/R/activation_shared_setup.R")
 
 # ============================================================
-# s3c: Fraction of cells per organ with GP26 loading > 0.2
-# (reconstructed -- see header note)
+# s3c: Fraction of activated CD4/CD8 cells per organ with GP26 loading > 0.1
 # ============================================================
+act_cd4_cd8 <- seurat_meta_filtered$annotation_level1 %in% c("CD4", "CD8") &
+  seurat_meta_filtered$annotation_level2_group == "activated"
 gp26_organ_df <- data.frame(
-  organ = seurat_meta_filtered$organ_simplified,
-  gp26_high = L_pm_filtered[, "GP26"] > 0.2,
-  stringsAsFactors = FALSE
+  organ = seurat_meta_filtered$organ_simplified[act_cd4_cd8],
+  gp26_high = L_pm_filtered[act_cd4_cd8, "GP26"] > 0.1
 ) %>%
   filter(!is.na(organ), organ != "") %>%
   group_by(organ) %>%
   summarise(n_cells = n(), proportion_gp26_high = mean(gp26_high), .groups = "drop") %>%
   arrange(desc(proportion_gp26_high)) %>%
-  mutate(organ = factor(organ, levels = organ))
+  mutate(organ = factor(organ, levels = organ),
+         pct = 100 * proportion_gp26_high,
+         pct_lab = sub("\\.0%$", "%", sprintf("%.1f%%", pct)))  # e.g. 99%, 98.7%
 
-p_s3c <- ggplot(gp26_organ_df, aes(x = organ, y = proportion_gp26_high)) +
-  geom_col(fill = "#4C72B0", color = "grey20", width = 0.7, linewidth = 0.2) +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1), expand = expansion(mult = c(0, 0.06))) +
-  labs(x = NULL, y = "Proportion of cells with GP26 > 0.2", title = "GP26+ rate by organ") +
+# abbreviate a few long organ names to match the published panel
+organ_abbrev <- c("submandibular gland" = "submand. gland",
+                  "mammary gland"       = "mam. gland",
+                  "small intestine epi" = "sm intestine epi",
+                  "small intestine LP"  = "sm intestine LP",
+                  "peritoneal cavity"   = "perit. cav.")
+
+p_s3c <- ggplot(gp26_organ_df, aes(x = organ, y = pct)) +
+  geom_col(fill = "#4C72B0", width = 0.7) +
+  geom_text(aes(label = pct_lab), vjust = -0.4, size = 3, color = "grey20") +
+  scale_x_discrete(labels = function(x) ifelse(x %in% names(organ_abbrev), organ_abbrev[x], x)) +
+  scale_y_continuous(breaks = c(0, 50, 100), labels = c("0", "50%", "100"),
+                     expand = expansion(mult = c(0, 0.10))) +
+  labs(x = NULL, y = "Proportion activated (loading > 0.1) (%)",
+       title = "Activation of GP26 (threshold = 0.1) across Organ") +
   theme_classic(base_size = 12) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), plot.title = element_text(face = "bold", hjust = 0.5))
-ggsave(filename = paste0(figure_path, "s3c.pdf"), plot = p_s3c, width = 6, height = 4.5)
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.title = element_text(hjust = 0.5))
+ggsave(filename = paste0(figure_path, "s3c.pdf"), plot = p_s3c, width = 9, height = 4.8)
 
 # ============================================================
 # s3d: GSEA dot plot for the activation GPs

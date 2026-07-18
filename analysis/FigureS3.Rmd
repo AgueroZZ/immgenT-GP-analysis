@@ -20,7 +20,7 @@ output.
 
 ## (s3c) GP26+ rate by organ {#figs3c}
 
-```{r figs3c-code, code=readLines("../script/FigureS3.R")[54:75], eval=FALSE}
+```{r figs3c-code, code=readLines("../script/FigureS3.R")[54:89], eval=FALSE}
 ```
 
 ```{r figs3c-img, echo=FALSE, out.width="32%"}
@@ -28,12 +28,12 @@ knitr::include_graphics("assets/FigureS3/s3c.png")
 ```
 
 ::: {.figcaption}
-**Fig. S3c.** Bar plot of the fraction of cells in each organ (organ_simplified) with GP26 loading above 0.2, sorted from highest to lowest.
+**Fig. S3c.** Bar plot of the fraction of **activated CD4/CD8 cells** in each organ (`organ_simplified`) with GP26 loading above **0.1**, sorted from highest to lowest. Activated cells are those with `annotation_level2_group == "activated"` among the CD4 and CD8 lineages.
 :::
 
 ## (s3d) GSEA dot plot {#figs3d}
 
-```{r figs3d-code, code=readLines("../script/FigureS3.R")[77:96], eval=FALSE}
+```{r figs3d-code, code=readLines("../script/FigureS3.R")[91:110], eval=FALSE}
 ```
 
 ```{r figs3d-img, echo=FALSE, out.width="32%"}
@@ -46,7 +46,7 @@ knitr::include_graphics("assets/FigureS3/s3d.png")
 
 ## (s3e) GP79+ rate across conditions {#figs3e}
 
-```{r figs3e-code, code=readLines("../script/FigureS3.R")[137:190], eval=FALSE}
+```{r figs3e-code, code=readLines("../script/FigureS3.R")[151:204], eval=FALSE}
 ```
 
 ```{r figs3e-img, echo=FALSE, out.width="49%"}
@@ -59,7 +59,7 @@ knitr::include_graphics("assets/FigureS3/s3e.png")
 
 ## (s3f) Per-cell log2FC heatmap {#figs3f}
 
-```{r figs3f-code, code=readLines("../script/FigureS3.R")[275:398], eval=FALSE}
+```{r figs3f-code, code=readLines("../script/FigureS3.R")[289:412], eval=FALSE}
 ```
 
 ```{r figs3f-img, echo=FALSE, out.width="100%"}
@@ -72,7 +72,7 @@ knitr::include_graphics("assets/FigureS3/s3f.png")
 
 ## (s3g) GP57+ rate, cancer vs. other conditions {#figs3g}
 
-```{r figs3g-code, code=readLines("../script/FigureS3.R")[98:135], eval=FALSE}
+```{r figs3g-code, code=readLines("../script/FigureS3.R")[112:149], eval=FALSE}
 ```
 
 ```{r figs3g-img, echo=FALSE, out.width="49%"}
@@ -85,7 +85,7 @@ knitr::include_graphics("assets/FigureS3/s3g.png")
 
 ## (s3h) TF-GP network for Gata3/Rorc/Tbx21 {#figs3h}
 
-```{r figs3h-code, code=readLines("../script/FigureS3.R")[192:273], eval=FALSE}
+```{r figs3h-code, code=readLines("../script/FigureS3.R")[206:287], eval=FALSE}
 ```
 
 ```{r figs3h-img, echo=FALSE, out.width="49%"}
