@@ -386,8 +386,7 @@ p_4e <- ggplot(count_df, aes(axis1 = organ, axis2 = gp_program, axis3 = level2, 
 ggsave(filename = paste0(figure_path, "5e.pdf"), plot = p_4e, width = 20, height = 10, dpi = 300)
 
 # ============================================================
-# 4c: organ marker genes - expression dotplot + per-GP gene-score
-#     heatmap, combined
+# 5c: organ marker genes - per-GP gene-score heatmap
 # ============================================================
 F_pm_filtered <- readRDS(paste0(data_path, "F_pm_filtered.rds"))
 colnames(F_pm_filtered) <- gsub("^F", "GP", colnames(F_pm_filtered))
@@ -404,68 +403,13 @@ selected_genes <- lapply(gps_of_interest, function(gp) {
 })
 selected_genes <- unique(unlist(selected_genes))
 
-# Diagonal gene ordering by dominant GP (highest loading); used by both panels
+# Diagonal gene ordering by dominant GP (highest loading)
 GP_orders <- c("GP37", "GP26", "GP6", "GP177", "GP3", "GP29", "GP11")
 dominant_gp <- apply(F_sub[selected_genes, , drop = FALSE], 1, function(x) GP_orders[which.max(x[GP_orders])])
 dominant_loading <- mapply(function(g, gp) F_sub[g, gp], selected_genes, dominant_gp)
 gene_order_df <- data.frame(Gene = selected_genes, dominant_gp = factor(dominant_gp, levels = GP_orders), loading = dominant_loading, stringsAsFactors = FALSE)
 gene_order_df <- gene_order_df[order(gene_order_df$dominant_gp, -gene_order_df$loading), ]
 heatmap_gene_order <- gene_order_df$Gene
-
-expr <- readRDS(paste0(data_path, "shifted_log_counts_subset.rds")) # rows = cells, cols = genes
-tissue_order <- c(
-  "mammary gland", "submandibular gland", "skin", "small intestine epi", "colon epi",
-  "small intestine LP", "colon LP", "peritoneal cavity", "placenta", "liver", "lung",
-  "kidney", "spleen", "LN"
-)
-features <- rev(colnames(expr))
-meta_use <- seurat_meta_filtered_no_thymocytes_healthy[rownames(expr), , drop = FALSE]
-keep_cells <- meta_use$organ_simplified %in% tissue_order
-expr_use <- expr[keep_cells, features, drop = FALSE]
-meta_use <- meta_use[keep_cells, , drop = FALSE]
-meta_use$organ_simplified <- factor(meta_use$organ_simplified, levels = tissue_order)
-
-# sparse-safe: returns both avg.exp and pct.exp in one pass (matches Seurat DotPlot)
-dot_stats <- function(mat) {
-  avg_exp <- if (inherits(mat, "sparseMatrix")) {
-    mat2 <- mat
-    mat2@x <- expm1(mat2@x)
-    Matrix::colMeans(mat2)
-  } else {
-    colMeans(expm1(mat))
-  }
-  list(avg.exp = as.numeric(avg_exp), pct.exp = as.numeric(Matrix::colMeans(mat > 0)))
-}
-
-all_tissues <- unique(as.character(meta_use$organ_simplified))
-dot_df_all <- map_dfr(all_tissues, function(tissue) {
-  stats <- dot_stats(expr_use[meta_use$organ_simplified == tissue, features, drop = FALSE])
-  tibble(features.plot = features, id = tissue, avg.exp = stats$avg.exp)
-})
-global_stats <- dot_df_all |>
-  dplyr::group_by(features.plot) |>
-  dplyr::summarise(g_mean = mean(avg.exp), g_sd = sd(avg.exp), .groups = "drop")
-
-tissues_present <- tissue_order[tissue_order %in% as.character(meta_use$organ_simplified)]
-dot_df_scaled <- map_dfr(tissues_present, function(tissue) {
-  stats <- dot_stats(expr_use[meta_use$organ_simplified == tissue, features, drop = FALSE])
-  tibble(features.plot = features, id = tissue, avg.exp = stats$avg.exp, pct.exp = stats$pct.exp)
-}) |>
-  dplyr::mutate(pct.exp = pct.exp * 100, id = factor(id, levels = tissues_present)) |>
-  dplyr::left_join(global_stats, by = "features.plot") |>
-  dplyr::mutate(avg.exp.c = avg.exp - g_mean) |>  # center only (no standardization)
-  # rev() because coord_flip() inverts factor level order (first level ends up at the bottom)
-  dplyr::mutate(features.plot = factor(features.plot, levels = rev(heatmap_gene_order)))
-
-# colour clipped to [-1, 1] so mid-range genes stay visible (a few high-expression
-# genes otherwise dominate the scale)
-p_scaled <- ggplot(dot_df_scaled, aes(x = features.plot, y = id)) +
-  geom_tile(aes(fill = avg.exp.c)) +
-  scale_fill_gradient2(low = "steelblue", mid = "white", high = "firebrick", midpoint = 0,
-                       limits = c(-1, 1), oob = scales::squish, name = "Avg Exp\n(centered)") +
-  coord_flip() +
-  cowplot::theme_cowplot() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), axis.title.x = element_blank(), axis.title.y = element_blank())
 
 plot_df_hm <- as.data.frame(F_sub[heatmap_gene_order, , drop = FALSE])
 plot_df_hm$Gene <- rownames(plot_df_hm)
@@ -481,11 +425,6 @@ p_gene_heatmap <- ggplot(plot_df_hm, aes(x = GP, y = Gene, fill = Loading)) +
   theme_minimal(base_size = 9) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 9), axis.text.y = element_text(size = 8), panel.grid = element_blank(), plot.title = element_text(face = "bold", size = 11))
 
-# Side-by-side: gene vs tissue (dotplot, wider) | gene vs GP (heatmap, narrower)
-p_4c <- (p_scaled + (p_gene_heatmap + theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.title.y = element_blank()))) +
-  plot_layout(widths = c(2, 1), guides = "collect") &
-  theme(legend.position = "bottom")
-
-pdf(paste0(figure_path, "5c.pdf"), width = 10, height = 16, useDingbats = FALSE)
-print(p_4c)
+pdf(paste0(figure_path, "5c.pdf"), width = 5, height = 16, useDingbats = FALSE)
+print(p_gene_heatmap)
 dev.off()

@@ -383,7 +383,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-17
+<strong>Last updated:</strong> 2026-07-18
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -518,15 +518,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree3577da1314e0b658cbf4fd27f459ded4dd3dd88etargetblank3577da1a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreea18012ddb8fe59e7aa9116c932d90d55af1ad985targetblanka18012da">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/3577da1314e0b658cbf4fd27f459ded4dd3dd88e" target="_blank">3577da1</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/a18012ddb8fe59e7aa9116c932d90d55af1ad985" target="_blank">a18012d</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree3577da1314e0b658cbf4fd27f459ded4dd3dd88etargetblank3577da1a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreea18012ddb8fe59e7aa9116c932d90d55af1ad985targetblanka18012da"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -536,7 +536,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/3577da1314e0b658cbf4fd27f459ded4dd3dd88e" target="_blank">3577da1</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/a18012ddb8fe59e7aa9116c932d90d55af1ad985" target="_blank">a18012d</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -556,7 +556,6 @@ Ignored files:
     Ignored:    analysis/.DS_Store
     Ignored:    analysis/.Rhistory
     Ignored:    analysis/assets/.DS_Store
-    Ignored:    analysis/site_libs/
     Ignored:    code/.DS_Store
     Ignored:    data
     Ignored:    experiments/.DS_Store
@@ -613,8 +612,10 @@ Untracked files:
 
 Unstaged changes:
     Modified:   analysis/Figure5.Rmd
+    Modified:   analysis/FigureS3.Rmd
     Modified:   analysis/Methods_FlashierFit.Rmd
     Modified:   analysis/assets/Figure5/5c.png
+    Modified:   analysis/assets/FigureS3/s3c.png
     Modified:   figures/generated/Figure 1/1A.pdf
     Modified:   figures/generated/Figure 1/1C.pdf
     Modified:   figures/generated/Figure 1/1D.pdf
@@ -654,7 +655,14 @@ Unstaged changes:
     Modified:   figures/generated/Figure S1/S1C.pdf
     Modified:   figures/generated/Figure S1/S1D.pdf
     Modified:   figures/generated/Figure S1/S1E.pdf
+    Modified:   figures/generated/Figure S3/s3c.pdf
+    Modified:   figures/generated/Figure S3/s3d.pdf
+    Modified:   figures/generated/Figure S3/s3e.pdf
+    Modified:   figures/generated/Figure S3/s3f.pdf
+    Modified:   figures/generated/Figure S3/s3g.pdf
+    Modified:   figures/generated/Figure S3/s3h.pdf
     Modified:   script/Figure5.R
+    Modified:   script/FigureS3.R
 
 </code></pre>
 <p>
@@ -699,6 +707,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/a18012ddb8fe59e7aa9116c932d90d55af1ad985/analysis/Figure5.Rmd" target="_blank">a18012d</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-17
+</td>
+<td>
+Fig 5c: clip centered-expression color scale to [-1, 1]
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/a18012ddb8fe59e7aa9116c932d90d55af1ad985/docs/Figure5.html" target="_blank">a18012d</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-17
+</td>
+<td>
+Fig 5c: clip centered-expression color scale to [-1, 1]
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1195,7 +1237,8 @@ gland are dropped.</p>
 </div>
 <div id="fig4c" class="section level2">
 <h2>(c) Marker genes of the 7 organ-specific GPs</h2>
-<pre class="r"><code>#     heatmap, combined
+<pre class="r"><code># ============================================================
+# 5c: organ marker genes - per-GP gene-score heatmap
 # ============================================================
 F_pm_filtered &lt;- readRDS(paste0(data_path, &quot;F_pm_filtered.rds&quot;))
 colnames(F_pm_filtered) &lt;- gsub(&quot;^F&quot;, &quot;GP&quot;, colnames(F_pm_filtered))
@@ -1212,68 +1255,13 @@ selected_genes &lt;- lapply(gps_of_interest, function(gp) {
 })
 selected_genes &lt;- unique(unlist(selected_genes))
 
-# Diagonal gene ordering by dominant GP (highest loading); used by both panels
+# Diagonal gene ordering by dominant GP (highest loading)
 GP_orders &lt;- c(&quot;GP37&quot;, &quot;GP26&quot;, &quot;GP6&quot;, &quot;GP177&quot;, &quot;GP3&quot;, &quot;GP29&quot;, &quot;GP11&quot;)
 dominant_gp &lt;- apply(F_sub[selected_genes, , drop = FALSE], 1, function(x) GP_orders[which.max(x[GP_orders])])
 dominant_loading &lt;- mapply(function(g, gp) F_sub[g, gp], selected_genes, dominant_gp)
 gene_order_df &lt;- data.frame(Gene = selected_genes, dominant_gp = factor(dominant_gp, levels = GP_orders), loading = dominant_loading, stringsAsFactors = FALSE)
 gene_order_df &lt;- gene_order_df[order(gene_order_df$dominant_gp, -gene_order_df$loading), ]
 heatmap_gene_order &lt;- gene_order_df$Gene
-
-expr &lt;- readRDS(paste0(data_path, &quot;shifted_log_counts_subset.rds&quot;)) # rows = cells, cols = genes
-tissue_order &lt;- c(
-  &quot;mammary gland&quot;, &quot;submandibular gland&quot;, &quot;skin&quot;, &quot;small intestine epi&quot;, &quot;colon epi&quot;,
-  &quot;small intestine LP&quot;, &quot;colon LP&quot;, &quot;peritoneal cavity&quot;, &quot;placenta&quot;, &quot;liver&quot;, &quot;lung&quot;,
-  &quot;kidney&quot;, &quot;spleen&quot;, &quot;LN&quot;
-)
-features &lt;- rev(colnames(expr))
-meta_use &lt;- seurat_meta_filtered_no_thymocytes_healthy[rownames(expr), , drop = FALSE]
-keep_cells &lt;- meta_use$organ_simplified %in% tissue_order
-expr_use &lt;- expr[keep_cells, features, drop = FALSE]
-meta_use &lt;- meta_use[keep_cells, , drop = FALSE]
-meta_use$organ_simplified &lt;- factor(meta_use$organ_simplified, levels = tissue_order)
-
-# sparse-safe: returns both avg.exp and pct.exp in one pass (matches Seurat DotPlot)
-dot_stats &lt;- function(mat) {
-  avg_exp &lt;- if (inherits(mat, &quot;sparseMatrix&quot;)) {
-    mat2 &lt;- mat
-    mat2@x &lt;- expm1(mat2@x)
-    Matrix::colMeans(mat2)
-  } else {
-    colMeans(expm1(mat))
-  }
-  list(avg.exp = as.numeric(avg_exp), pct.exp = as.numeric(Matrix::colMeans(mat &gt; 0)))
-}
-
-all_tissues &lt;- unique(as.character(meta_use$organ_simplified))
-dot_df_all &lt;- map_dfr(all_tissues, function(tissue) {
-  stats &lt;- dot_stats(expr_use[meta_use$organ_simplified == tissue, features, drop = FALSE])
-  tibble(features.plot = features, id = tissue, avg.exp = stats$avg.exp)
-})
-global_stats &lt;- dot_df_all |&gt;
-  dplyr::group_by(features.plot) |&gt;
-  dplyr::summarise(g_mean = mean(avg.exp), g_sd = sd(avg.exp), .groups = &quot;drop&quot;)
-
-tissues_present &lt;- tissue_order[tissue_order %in% as.character(meta_use$organ_simplified)]
-dot_df_scaled &lt;- map_dfr(tissues_present, function(tissue) {
-  stats &lt;- dot_stats(expr_use[meta_use$organ_simplified == tissue, features, drop = FALSE])
-  tibble(features.plot = features, id = tissue, avg.exp = stats$avg.exp, pct.exp = stats$pct.exp)
-}) |&gt;
-  dplyr::mutate(pct.exp = pct.exp * 100, id = factor(id, levels = tissues_present)) |&gt;
-  dplyr::left_join(global_stats, by = &quot;features.plot&quot;) |&gt;
-  dplyr::mutate(avg.exp.c = avg.exp - g_mean) |&gt;  # center only (no standardization)
-  # rev() because coord_flip() inverts factor level order (first level ends up at the bottom)
-  dplyr::mutate(features.plot = factor(features.plot, levels = rev(heatmap_gene_order)))
-
-# colour clipped to [-1, 1] so mid-range genes stay visible (a few high-expression
-# genes otherwise dominate the scale)
-p_scaled &lt;- ggplot(dot_df_scaled, aes(x = features.plot, y = id)) +
-  geom_tile(aes(fill = avg.exp.c)) +
-  scale_fill_gradient2(low = &quot;steelblue&quot;, mid = &quot;white&quot;, high = &quot;firebrick&quot;, midpoint = 0,
-                       limits = c(-1, 1), oob = scales::squish, name = &quot;Avg Exp\n(centered)&quot;) +
-  coord_flip() +
-  cowplot::theme_cowplot() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), axis.title.x = element_blank(), axis.title.y = element_blank())
 
 plot_df_hm &lt;- as.data.frame(F_sub[heatmap_gene_order, , drop = FALSE])
 plot_df_hm$Gene &lt;- rownames(plot_df_hm)
@@ -1289,13 +1277,8 @@ p_gene_heatmap &lt;- ggplot(plot_df_hm, aes(x = GP, y = Gene, fill = Loading)) +
   theme_minimal(base_size = 9) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 9), axis.text.y = element_text(size = 8), panel.grid = element_blank(), plot.title = element_text(face = &quot;bold&quot;, size = 11))
 
-# Side-by-side: gene vs tissue (dotplot, wider) | gene vs GP (heatmap, narrower)
-p_4c &lt;- (p_scaled + (p_gene_heatmap + theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.title.y = element_blank()))) +
-  plot_layout(widths = c(2, 1), guides = &quot;collect&quot;) &amp;
-  theme(legend.position = &quot;bottom&quot;)
-
-pdf(paste0(figure_path, &quot;5c.pdf&quot;), width = 10, height = 16, useDingbats = FALSE)
-print(p_4c)
+pdf(paste0(figure_path, &quot;5c.pdf&quot;), width = 5, height = 16, useDingbats = FALSE)
+print(p_gene_heatmap)
 dev.off()</code></pre>
 <p><img src="assets/Figure5/5c.png" width="60%" style="display: block; margin: auto;" /></p>
 <p>
@@ -1320,6 +1303,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/a18012ddb8fe59e7aa9116c932d90d55af1ad985/docs/assets/Figure5/5c.png" target="_blank">a18012d</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-17
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/3577da1314e0b658cbf4fd27f459ded4dd3dd88e/docs/assets/Figure5/5c.png" target="_blank">3577da1</a>
@@ -1351,12 +1345,8 @@ Ziang Zhang
 GPs. Genes are the union of the top 20 positively scoring genes per GP
 (score &gt; 0.25 on the max-abs-scaled gene-score matrix), ordered
 diagonally by each gene’s dominant GP and then by descending score.
-Left, heatmap of mean expression across 14 organs,
-<strong>centered</strong> per gene (each gene’s across-organ mean
-subtracted; not standardized / not divided by SD), with color clipped to
-[-1, 1] so mid-range genes stay visible; right, heatmap of the per-GP
-scaled gene scores for the same genes across the seven GPs, centered at
-zero (blue, negative; red, positive).</p>
+Heatmap of the per-GP scaled gene scores for these genes across the
+seven GPs, centered at zero (blue, negative; red, positive).</p>
 </div>
 </div>
 <div id="fig4d" class="section level2">
@@ -1525,7 +1515,7 @@ p_4e &lt;- ggplot(count_df, aes(axis1 = organ, axis2 = gp_program, axis3 = level
 ggsave(filename = paste0(figure_path, &quot;5e.pdf&quot;), plot = p_4e, width = 20, height = 10, dpi = 300)
 
 # ============================================================
-# 4c: organ marker genes - expression dotplot + per-GP gene-score</code></pre>
+# 5c: organ marker genes - per-GP gene-score heatmap</code></pre>
 <p><img src="assets/Figure5/5e.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-5e">
