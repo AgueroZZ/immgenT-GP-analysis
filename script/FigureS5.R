@@ -116,6 +116,15 @@ hex <- vapply(l1pal, function(cc) {
 pal_df <- data.frame(level1 = names(hex), color = unname(hex), stringsAsFactors = FALSE)
 
 ## ---- write outputs ----
+# cell -> level1/level2 for all L_pm_filtered cells; consumed by FigureS5_rematch.py
+# to define common cells and clusters (avoids any machine-specific path).
+fwrite(data.frame(
+  cellID            = rownames(L),
+  annotation_level1 = as.character(meta$annotation_level1),
+  annotation_level2 = as.character(meta$annotation_level2),
+  stringsAsFactors  = FALSE
+), file.path(outdir, "S5_cell_metadata.csv.gz"))
+
 fwrite(data.frame(level2_cluster = rownames(ebmf_means), ebmf_means, check.names = FALSE),
        file.path(outdir, "S5_ebmf_raw_means_level2.csv"))
 fwrite(data.frame(level2_cluster = rownames(rqvi_means), rqvi_means, check.names = FALSE),

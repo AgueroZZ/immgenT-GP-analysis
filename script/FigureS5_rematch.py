@@ -25,7 +25,6 @@ Run: <miniforge>/envs/pyenv/bin/python script/FigureS5_rematch.py
 """
 from __future__ import annotations
 
-import csv
 from pathlib import Path
 
 import h5py
@@ -38,8 +37,8 @@ FIG_DIR = Path("figures/generated/Figure S5")
 PKG = Path("data/rqvi_loading/RQVI_EBMF_heatmap_data_v1/data")
 EBMF_H5AD = PKG / "ebmf_cell_loadings.h5ad"
 ALL_H5AD = PKG / "rqvi_all_10seeds_cell_loadings.h5ad"
-OUR_CELLS = Path("/private/tmp/claude-501/-Users-ziangzhang-Desktop-Immgen-immgenT-GP-analysis/"
-                 "c8df43b6-c668-4f73-8b74-79373075c6fe/scratchpad/our_cells.csv")
+# cell -> annotation table written by FigureS5.R (run step 1 first)
+CELL_META = FIG_DIR / "S5_cell_metadata.csv.gz"
 FACTORS = [f"F{k}" for k in range(1, 201)]
 
 
@@ -73,11 +72,9 @@ def _cluster_means(mat, codes, n_clusters):
 
 def main() -> None:
     # our L_pm_filtered cells -> annotation (no filtering yet)
-    cell_l1, cell_l2 = {}, {}
-    with open(OUR_CELLS) as fh:
-        for row in csv.DictReader(fh):
-            cell_l1[row["cellID"]] = row["annotation_level1"]
-            cell_l2[row["cellID"]] = row["annotation_level2"]
+    meta = pd.read_csv(CELL_META, dtype=str)
+    cell_l1 = dict(zip(meta["cellID"], meta["annotation_level1"]))
+    cell_l2 = dict(zip(meta["cellID"], meta["annotation_level2"]))
 
     # EBMF (F1..F200, dense) and RQVI all-2560 (sparse), same cell order
     fe = h5py.File(EBMF_H5AD, "r")
