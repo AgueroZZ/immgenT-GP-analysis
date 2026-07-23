@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Ziang Zhang" />
+
+
+<title>Figure S5: EBMF vs matched-RQVI factor comparison across level2 clusters</title>
+
+<script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="custom.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">immgenT-GP-analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Overview</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/AgueroZZ/immgenT-GP-analysis">source</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Figure S5: EBMF vs matched-RQVI factor
+comparison across level2 clusters</h1>
+<h4 class="author">Ziang Zhang</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2026-07-23
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong>
+<code>immgenT-GP-analysis/analysis/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.2). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed1code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(1)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed1code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(1)</code> was run prior to running the
+code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeb9f4f589ed5adb45373bb5f587671d6ea6e7668ctargetblankb9f4f58a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/b9f4f589ed5adb45373bb5f587671d6ea6e7668c" target="_blank">b9f4f58</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeb9f4f589ed5adb45373bb5f587671d6ea6e7668ctargetblankb9f4f58a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/b9f4f589ed5adb45373bb5f587671d6ea6e7668c" target="_blank">b9f4f58</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .claude/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis/.Rhistory
+    Ignored:    analysis/assets/.DS_Store
+    Ignored:    code/.DS_Store
+    Ignored:    data
+    Ignored:    experiments/.DS_Store
+    Ignored:    figures/.DS_Store
+    Ignored:    figures/final-selected/.DS_Store
+    Ignored:    figures/final-selected/bits/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure 1/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure 2/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure 3/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure 4/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure 6/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure 7/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure S1/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure S2/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure S3/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure S6/.DS_Store
+    Ignored:    figures/final-selected/bits/Figure S7/.DS_Store
+    Ignored:    figures/generated/.DS_Store
+    Ignored:    figures/generated/Figure 1/.DS_Store
+    Ignored:    figures/generated/Figure 2/.DS_Store
+    Ignored:    tmp/
+
+Untracked files:
+    Untracked:  code/other/topic_flashier_20250212.R
+    Untracked:  code/other/topic_wrapper_20250215_alldata_backfit.sh
+    Untracked:  experiments/active_metric_comparison/
+    Untracked:  experiments/figure6b_sparsity_ordered/
+    Untracked:  experiments/gene_umap_gp_space/
+    Untracked:  experiments/protein_threshold_gp_loading_diff/
+    Untracked:  experiments/surface_protein_activation_scatter/
+    Untracked:  figures/generated/Figure 1/1B.pdf
+    Untracked:  figures/generated/Figure 3/3A.pdf
+    Untracked:  figures/generated/Figure 3/3B.pdf
+    Untracked:  figures/generated/Figure 3/3H.pdf
+    Untracked:  figures/generated/Figure 3/3I.pdf
+    Untracked:  figures/generated/Figure 3/3J.pdf
+    Untracked:  figures/generated/Figure 3/3K.pdf
+    Untracked:  figures/generated/Figure 3/3L.pdf
+    Untracked:  figures/generated/Figure 3/3M.pdf
+    Untracked:  figures/generated/Figure 4/4f.pdf
+    Untracked:  figures/generated/Figure 4/4g.pdf
+    Untracked:  figures/generated/Figure 5/
+    Untracked:  figures/generated/Figure 6/6a.pdf
+    Untracked:  figures/generated/Figure 7/
+    Untracked:  log/2026-07-13-surface-protein-activation-scatter.md
+    Untracked:  log/2026-07-15-protein-threshold-gp-loading-diff-tables.md
+    Untracked:  plan/2026-07-13-active-cell-gene-metrics-exploration.md
+    Untracked:  plan/2026-07-13-surface-protein-activation-scatter.md
+    Untracked:  plan/2026-07-13_figure6b_triangular_order_plan.md
+    Untracked:  plan/2026-07-13_figure6b_wide_gp_columns_formal_plan.md
+    Untracked:  plan/2026-07-14_figure6b_heatmap_typography_plan.md
+    Untracked:  plan/2026-07-15-protein-threshold-gp-loading-diff-tables.md
+    Untracked:  tables/
+
+Unstaged changes:
+    Modified:   analysis/Methods_FlashierFit.Rmd
+    Modified:   figures/generated/Figure 1/1A.pdf
+    Modified:   figures/generated/Figure 1/1C.pdf
+    Modified:   figures/generated/Figure 1/1D.pdf
+    Deleted:    figures/generated/Figure 1/1E.pdf
+    Deleted:    figures/generated/Figure 1/1F.pdf
+    Deleted:    figures/generated/Figure 1/1G.pdf
+    Deleted:    figures/generated/Figure 1/1H.pdf
+    Deleted:    figures/generated/Figure 1/1I.pdf
+    Deleted:    figures/generated/Figure 1/hist_active_cells_per_GP.pdf
+    Deleted:    figures/generated/Figure 1/hist_active_genes_prop_per_GP.pdf
+    Deleted:    figures/generated/Figure 1/scatter_e_active_cells_vs_genes.pdf
+    Modified:   figures/generated/Figure 2/2A.pdf
+    Modified:   figures/generated/Figure 2/2B.pdf
+    Modified:   figures/generated/Figure 2/2C.pdf
+    Modified:   figures/generated/Figure 2/2D.pdf
+    Modified:   figures/generated/Figure 2/2E.pdf
+    Modified:   figures/generated/Figure 2/2F.pdf
+    Deleted:    figures/generated/Figure 2/2G.pdf
+    Deleted:    figures/generated/Figure 2/2H.pdf
+    Deleted:    figures/generated/Figure 2/2I.pdf
+    Deleted:    figures/generated/Figure 2/2J.pdf
+    Deleted:    figures/generated/Figure 2/2K.pdf
+    Deleted:    figures/generated/Figure 2/2L.pdf
+    Deleted:    figures/generated/Figure 2/2M.pdf
+    Modified:   figures/generated/Figure 3/3c.pdf
+    Modified:   figures/generated/Figure 3/3d.pdf
+    Modified:   figures/generated/Figure 3/3e.pdf
+    Modified:   figures/generated/Figure 3/3f.pdf
+    Modified:   figures/generated/Figure 3/3g.pdf
+    Deleted:    figures/generated/Figure 4/4a.pdf
+    Deleted:    figures/generated/Figure 4/4b.pdf
+    Modified:   figures/generated/Figure 4/4c.pdf
+    Modified:   figures/generated/Figure 4/4d.pdf
+    Modified:   figures/generated/Figure 4/4e.pdf
+    Modified:   figures/generated/Figure S1/S1A.pdf
+    Modified:   figures/generated/Figure S1/S1B.pdf
+    Modified:   figures/generated/Figure S1/S1C.pdf
+    Modified:   figures/generated/Figure S1/S1D.pdf
+    Modified:   figures/generated/Figure S1/S1E.pdf
+    Modified:   figures/generated/Figure S3/s3c.pdf
+    Modified:   figures/generated/Figure S3/s3d.pdf
+    Modified:   figures/generated/Figure S3/s3e.pdf
+    Modified:   figures/generated/Figure S3/s3f.pdf
+    Modified:   figures/generated/Figure S3/s3g.pdf
+    Modified:   figures/generated/Figure S3/s3h.pdf
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/FigureS5.Rmd</code>) and HTML
+(<code>docs/FigureS5.html</code>) files. If you’ve configured a remote
+Git repository (see <code>?wflow_git_remote</code>), click on the
+hyperlinks in the table below to view the files as they were in that
+past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/b9f4f589ed5adb45373bb5f587671d6ea6e7668c/analysis/FigureS5.Rmd" target="_blank">b9f4f58</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-23
+</td>
+<td>
+Add Figure S5: EBMF vs matched-RQVI level2-cluster comparison
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<p>Figure S5 compares the cluster-level activity patterns of the 200
+EBMF gene programs (our flashier fit) with 200 corresponding RQVI
+programs contributed by our collaborator (Tianze, <a
+href="https://github.com/TianzeCompbio/RQVI_GP_figures">TianzeCompbio/RQVI_GP_figures</a>).
+The two heatmaps share the same row order and the same level2-cluster
+columns, so matching biological patterns can be read directly from left
+to right. The visual style follows the collaborator’s figure: two
+white-to-blue <code>Blues</code> heatmaps, per-factor relative loading
+on <code>[0, 1]</code>, broad lineage annotations above the columns, no
+factor identifiers, and a single shared colorbar.</p>
+<p><strong>Design.</strong> Cells are our <code>L_pm_filtered</code>
+cells (those that passed the iterative total-loading filter), restricted
+to non-thymocytes (<code>annotation_level1 != "thymocyte"</code>, all
+conditions), intersected with the cells that carry RQVI loadings. EBMF
+cluster means use our flashier loadings; RQVI cluster means use the
+collaborator’s raw cell-level RQVI loadings. Both are averaged within
+<code>annotation_level2</code> on the same common cells. Each RQVI
+program is placed on the row of its paired EBMF factor; the pairing is a
+one-to-one assignment re-derived on our clustering (see below). The
+collaborator’s EBMF factor <code>F_k</code> was verified to equal our
+flashier <code>GP_k</code> at the cell level (Pearson r = 1.0 for all
+200).</p>
+<div id="pipeline" class="section level2">
+<h2>Pipeline</h2>
+<p>Three steps, run from the repository root (<a
+href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/main/script"><code>script/</code></a>):</p>
+<pre class="bash"><code># 1. cluster-mean matrices + column/palette metadata (uses our L_pm_filtered)
+Rscript script/FigureS5.R
+# 2. re-derive the one-to-one EBMF&lt;-&gt;RQVI matching on our basis
+python script/FigureS5_rematch.py
+# 3. draw the Tianze-style heatmaps
+python script/FigureS5_plot.py</code></pre>
+<p>The Python steps use an environment with <code>matplotlib</code>,
+<code>pandas</code>, <code>scipy</code>, <code>h5py</code>, and
+<code>numpy</code>. The collaborator’s cell-level loading package
+(<code>data/rqvi_loading/RQVI_EBMF_heatmap_data_v1/</code>) provides the
+RQVI and EBMF cell-level loadings; <code>data/</code> is a git-ignored
+symlink and is not tracked here.</p>
+</div>
+<div id="data-cluster-means-on-common-cells" class="section level2">
+<h2>Data: cluster means on common cells</h2>
+<p><code>script/FigureS5.R</code> builds the raw
+<code>annotation_level2</code> cluster-mean matrices for the EBMF
+factors and the matched RQVI programs on the common non-thymocyte cells,
+plus the column order (Figure-1 level1 lineage order, alphabetical
+within lineage) and the lineage color palette.</p>
+<pre class="r"><code># Figure S5 (data step). EBMF vs matched-RQVI level2-cluster comparison.
+#
+# Design (version B, Tianze-style plotting done in script/FigureS5_plot.py):
+#   * Cells: OUR L_pm_filtered cells (passed the iterative total-loading filter),
+#     restricted to non-thymocytes (annotation_level1 != &quot;thymocyte&quot;), ALL
+#     conditions (no healthy-only restriction), intersected with the cells that
+#     have RQVI loadings -&gt; &quot;common cells&quot;.
+#   * EBMF matrix: our flashier loadings L_pm_filtered (GP1..GP200), averaged
+#     within annotation_level2 on the common cells.
+#   * RQVI matrix: Tianze&#39;s 200 matched RQVI programs (raw cell loadings),
+#     averaged within annotation_level2 on the SAME common cells. Each matched
+#     program is placed under the column of its paired EBMF factor. The pairing
+#     is Tianze&#39;s one-to-one match table; F_k == our GP_k (verified at cell level,
+#     cell-level Pearson r = 1.0 for all 200).
+#   * Columns (level2 clusters) are ordered by the Figure-1 level1 lineage order
+#     and alphabetically within each lineage.
+#
+# This script writes raw cluster-mean matrices + column/palette metadata.
+# Row ordering (hierarchical clustering of EBMF), per-factor 0-1 scaling, and
+# the heatmaps are produced by script/FigureS5_plot.py in Tianze&#39;s visual style.
+
+suppressPackageStartupMessages({
+  library(arrow)
+  library(data.table)
+  library(ZemmourLib)
+})
+
+if (!file.exists(&quot;code/R/setup_data.R&quot;)) {
+  stop(&quot;Run this script from the immgenT-GP-analysis repository root.&quot;)
+}
+source(&quot;code/R/setup_data.R&quot;)
+
+outdir &lt;- &quot;figures/generated/Figure S5&quot;
+dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
+
+PKG &lt;- &quot;data/rqvi_loading/RQVI_EBMF_heatmap_data_v1/data&quot;
+parquet_path &lt;- file.path(PKG, &quot;rqvi_matched_200_cell_loadings.parquet&quot;)
+matches_path &lt;- file.path(PKG, &quot;ebmf_rqvi_multiseed_level2_one_to_one_matches.csv&quot;)
+level1_order &lt;- c(&quot;CD8&quot;, &quot;CD4&quot;, &quot;Treg&quot;, &quot;gdT&quot;, &quot;CD8aa&quot;, &quot;Tz&quot;, &quot;DN&quot;, &quot;DP&quot;)
+
+## ---- our EBMF loadings + metadata ----
+gp &lt;- load_gp_data()
+L  &lt;- gp$L_pm_filtered
+colnames(L) &lt;- paste0(&quot;GP&quot;, seq_len(ncol(L)))
+meta &lt;- gp$seurat_meta_filtered
+stopifnot(identical(rownames(L), rownames(meta)), ncol(L) == 200L)
+
+nonthy &lt;- meta$annotation_level1 != &quot;thymocyte&quot;
+if (anyNA(nonthy)) stop(&quot;annotation_level1 has missing values.&quot;)
+
+## ---- matched RQVI cell loadings (200 programs) ----
+pq   &lt;- as.data.frame(arrow::read_parquet(parquet_path))
+prog &lt;- setdiff(colnames(pq), &quot;cell_id&quot;)
+stopifnot(length(prog) == 200L)
+matches &lt;- fread(matches_path)
+f_for &lt;- matches$ebmf_factor[match(prog, matches$rqvi_candidate)]   # &quot;F&lt;k&gt;&quot; per program
+if (anyNA(f_for) || length(unique(f_for)) != 200L) {
+  stop(&quot;Could not map every RQVI program column to a unique EBMF factor.&quot;)
+}
+
+## ---- common cells (non-thymocyte, in L_pm, and with RQVI loading) ----
+our_nonthy_ids &lt;- rownames(L)[nonthy]
+common_ids &lt;- our_nonthy_ids[our_nonthy_ids %in% pq$cell_id]
+grp &lt;- factor(as.character(meta$annotation_level2[match(common_ids, rownames(meta))]))
+grp &lt;- droplevels(grp)
+if (anyNA(grp) || any(as.character(grp) == &quot;&quot;)) stop(&quot;Missing level2 labels on common cells.&quot;)
+
+message(sprintf(&quot;common non-thymocyte cells: %d (healthy %d / non-healthy %d); level2 clusters: %d&quot;,
+                length(common_ids),
+                sum(meta$condition_broad[match(common_ids, rownames(meta))] == &quot;healthy&quot;),
+                sum(meta$condition_broad[match(common_ids, rownames(meta))] != &quot;healthy&quot;),
+                nlevels(grp)))
+
+## ---- EBMF cluster means (columns F1..F200) ----
+Lc &lt;- L[common_ids, , drop = FALSE]
+colnames(Lc) &lt;- paste0(&quot;F&quot;, seq_len(ncol(Lc)))
+esum &lt;- rowsum(Lc, grp)
+ecnt &lt;- as.integer(table(grp)[rownames(esum)])
+ebmf_means &lt;- sweep(esum, 1L, ecnt, &quot;/&quot;)                 # K x 200
+
+## ---- matched-RQVI cluster means (columns F1..F200, same pairing) ----
+pqc &lt;- as.matrix(pq[match(common_ids, pq$cell_id), prog, drop = FALSE])
+colnames(pqc) &lt;- f_for
+pqc &lt;- pqc[, paste0(&quot;F&quot;, seq_len(200)), drop = FALSE]     # reorder to F1..F200
+rsum &lt;- rowsum(pqc, grp)
+rcnt &lt;- as.integer(table(grp)[rownames(rsum)])
+rqvi_means &lt;- sweep(rsum, 1L, rcnt, &quot;/&quot;)
+
+stopifnot(identical(rownames(ebmf_means), rownames(rqvi_means)),
+          identical(ecnt, rcnt),                           # same cells -&gt; same counts
+          nrow(ebmf_means) == 107L, ncol(ebmf_means) == 200L)
+
+## ---- level2 column order (Figure-1 level1 order, alphabetical within) ----
+l2  &lt;- rownames(ebmf_means)
+lmap &lt;- unique(data.frame(level2 = as.character(meta$annotation_level2),
+                          level1 = as.character(meta$annotation_level1),
+                          stringsAsFactors = FALSE))
+if (anyDuplicated(lmap$level2)) stop(&quot;A level2 label maps to multiple level1 labels.&quot;)
+lin &lt;- lmap$level1[match(l2, lmap$level2)]
+if (anyNA(lin) || !all(lin %in% level1_order)) stop(&quot;Unexpected level1 lineage among clusters.&quot;)
+ord &lt;- order(match(lin, level1_order), l2)
+cluster_order &lt;- data.frame(
+  level2_cluster = l2[ord],
+  level1         = lin[ord],
+  display_column = seq_along(ord) - 1L,
+  n_cells        = ecnt[ord],
+  stringsAsFactors = FALSE
+)
+
+## ---- level1 palette (our canonical colors) as hex ----
+l1pal &lt;- ZemmourLib::immgent_colors$level1
+hex &lt;- vapply(l1pal, function(cc) {
+  v &lt;- grDevices::col2rgb(cc)
+  grDevices::rgb(v[1], v[2], v[3], maxColorValue = 255)
+}, character(1))
+pal_df &lt;- data.frame(level1 = names(hex), color = unname(hex), stringsAsFactors = FALSE)
+
+## ---- write outputs ----
+fwrite(data.frame(level2_cluster = rownames(ebmf_means), ebmf_means, check.names = FALSE),
+       file.path(outdir, &quot;S5_ebmf_raw_means_level2.csv&quot;))
+fwrite(data.frame(level2_cluster = rownames(rqvi_means), rqvi_means, check.names = FALSE),
+       file.path(outdir, &quot;S5_rqvi_matched_raw_means_level2.csv&quot;))
+fwrite(cluster_order, file.path(outdir, &quot;S5_cluster_order.csv&quot;))
+fwrite(pal_df,        file.path(outdir, &quot;S5_level1_palette.csv&quot;))
+fwrite(data.frame(
+  metric = c(&quot;common_cells&quot;, &quot;healthy_cells&quot;, &quot;nonhealthy_cells&quot;, &quot;level2_clusters&quot;,
+             &quot;ebmf_factors&quot;, &quot;rqvi_matched_programs&quot;),
+  value  = c(length(common_ids),
+             sum(meta$condition_broad[match(common_ids, rownames(meta))] == &quot;healthy&quot;),
+             sum(meta$condition_broad[match(common_ids, rownames(meta))] != &quot;healthy&quot;),
+             nlevels(grp), 200L, 200L)
+), file.path(outdir, &quot;S5_build_summary.csv&quot;))
+
+message(&quot;Wrote Fig S5 data inputs to &quot;, normalizePath(outdir))</code></pre>
+</div>
+<div id="matching-one-to-one-assignment-collaborators-method-re-applied"
+class="section level2">
+<h2>Matching: one-to-one assignment (collaborator’s method,
+re-applied)</h2>
+<p>The matching is the collaborator’s method applied unchanged to our
+re-aligned data. Each factor’s mean-loading profile is z-scored across
+clusters; the signed Pearson correlation between every EBMF factor and
+every one of the 2,560 seed-specific RQVI candidates (10 seeds x 256
+programs) is <code>EBMF_z^T @ RQVI_z / K</code>; candidates with a
+constant profile are excluded; and a maximum-weight one-to-one
+assignment (<code>scipy.optimize.linear_sum_assignment</code>) pairs
+each EBMF factor with a distinct RQVI candidate so that the total signed
+correlation is maximized. Only the inputs differ from the collaborator’s
+run: our updated <code>annotation_level2</code> clustering and our
+common cell set. The matching uses <strong>all</strong> common cells
+(<code>L_pm_filtered</code> intersect RQVI, 108 level2 clusters
+including the thymocyte cluster); the figure displays the 107
+non-thymocyte clusters.</p>
+<pre class="python"><code>&quot;&quot;&quot;Figure S5 rematch step. Re-derive the one-to-one EBMF&lt;-&gt;RQVI matching on OUR
+basis using Tianze&#39;s exact method, then aggregate the matched RQVI programs onto
+the display clusters.
+
+Matching basis: ALL common cells = our L_pm_filtered cells that also have RQVI
+loadings, WITHOUT a non-thymocyte filter (aligns the two loading matrices
+directly). Clusters = our annotation_level2 (108, including the thymocyte
+cluster). This is the user-preferred alignment; vs a non-thymocyte-only matching
+it changes only ~5/200 pairs and leaves the display-cluster correlation identical.
+
+Display basis: non-thymocyte cells only, our annotation_level2 (107 clusters) --
+this is what Figure S5 shows.
+
+Method (identical to Tianze&#39;s fig_ebmf_rqvi_level2_comparison.py --recompute-matches):
+  1. z-score every factor&#39;s mean-loading profile across clusters,
+  2. signed Pearson r = EBMF_z^T @ RQVI_z / n_clusters,
+  3. drop constant-profile RQVI candidates,
+  4. maximum-weight one-to-one assignment via scipy linear_sum_assignment.
+We only re-apply this method to the re-aligned data; the algorithm is unchanged.
+
+EBMF loadings are read from Tianze&#39;s ebmf_cell_loadings.h5ad, which was verified
+cell-for-cell identical to our L_pm_filtered (F_k == GP_k, cell-level r = 1.0).
+
+Run: &lt;miniforge&gt;/envs/pyenv/bin/python script/FigureS5_rematch.py
+&quot;&quot;&quot;
+from __future__ import annotations
+
+import csv
+from pathlib import Path
+
+import h5py
+import numpy as np
+import pandas as pd
+import scipy.sparse as sp
+from scipy.optimize import linear_sum_assignment
+
+FIG_DIR = Path(&quot;figures/generated/Figure S5&quot;)
+PKG = Path(&quot;data/rqvi_loading/RQVI_EBMF_heatmap_data_v1/data&quot;)
+EBMF_H5AD = PKG / &quot;ebmf_cell_loadings.h5ad&quot;
+ALL_H5AD = PKG / &quot;rqvi_all_10seeds_cell_loadings.h5ad&quot;
+OUR_CELLS = Path(&quot;/private/tmp/claude-501/-Users-ziangzhang-Desktop-Immgen-immgenT-GP-analysis/&quot;
+                 &quot;c8df43b6-c668-4f73-8b74-79373075c6fe/scratchpad/our_cells.csv&quot;)
+FACTORS = [f&quot;F{k}&quot; for k in range(1, 201)]
+
+
+def _h5_index(f, group):
+    g = f[group]
+    key = g.attrs.get(&quot;_index&quot;, &quot;_index&quot;)
+    if isinstance(key, bytes):
+        key = key.decode()
+    return np.array([v.decode() if isinstance(v, (bytes, bytearray)) else str(v) for v in g[key][:]])
+
+
+def _zscore(M):
+    m = M - M.mean(0, keepdims=True)
+    s = M.std(0, ddof=0, keepdims=True)
+    info = s.ravel() &gt; np.finfo(float).eps
+    z = np.zeros_like(M)
+    z[:, info] = m[:, info] / s[:, info]
+    return z, info
+
+
+def _cluster_means(mat, codes, n_clusters):
+    &quot;&quot;&quot;mat: (n_cells x n_features) dense ndarray or scipy sparse; returns (K x n_features).&quot;&quot;&quot;
+    counts = np.bincount(codes, minlength=n_clusters).astype(np.float64)
+    ind = sp.csr_matrix((np.ones(codes.size), (codes, np.arange(codes.size))),
+                        shape=(n_clusters, codes.size))
+    prod = ind @ mat
+    if sp.issparse(prod):
+        prod = np.asarray(prod.todense())
+    return np.asarray(prod, dtype=np.float64) / counts[:, None], counts
+
+
+def main() -&gt; None:
+    # our L_pm_filtered cells -&gt; annotation (no filtering yet)
+    cell_l1, cell_l2 = {}, {}
+    with open(OUR_CELLS) as fh:
+        for row in csv.DictReader(fh):
+            cell_l1[row[&quot;cellID&quot;]] = row[&quot;annotation_level1&quot;]
+            cell_l2[row[&quot;cellID&quot;]] = row[&quot;annotation_level2&quot;]
+
+    # EBMF (F1..F200, dense) and RQVI all-2560 (sparse), same cell order
+    fe = h5py.File(EBMF_H5AD, &quot;r&quot;)
+    obs = _h5_index(fe, &quot;obs&quot;)
+    e_var = _h5_index(fe, &quot;var&quot;)
+    e_pos = {n: i for i, n in enumerate(e_var)}
+    E = fe[&quot;X&quot;][:][:, [e_pos[c] for c in FACTORS]]              # n_obs x 200
+    fe.close()
+
+    fr = h5py.File(ALL_H5AD, &quot;r&quot;)
+    r_obs = _h5_index(fr, &quot;obs&quot;)
+    r_var = _h5_index(fr, &quot;var&quot;)
+    g = fr[&quot;X&quot;]
+    R = sp.csr_matrix((g[&quot;data&quot;][:], g[&quot;indices&quot;][:], g[&quot;indptr&quot;][:]), shape=tuple(g.attrs[&quot;shape&quot;]))
+    fr.close()
+    if not np.array_equal(obs, r_obs):
+        raise ValueError(&quot;EBMF and RQVI cell orders differ&quot;)
+
+    # ---- MATCHING basis: all common cells (no non-thymocyte filter) ----
+    m_mask = np.array([c in cell_l2 for c in obs])
+    m_idx = np.where(m_mask)[0]
+    m_labs = np.array([cell_l2[obs[i]] for i in m_idx])
+    m_clusters = sorted(set(m_labs))
+    m_code = {l: i for i, l in enumerate(m_clusters)}
+    m_codes = np.array([m_code[l] for l in m_labs])
+    K_match = len(m_clusters)
+
+    ebmf_m, _ = _cluster_means(E[m_idx], m_codes, K_match)      # K_match x 200
+    rqvi_m, _ = _cluster_means(R[m_idx], m_codes, K_match)      # K_match x 2560
+    ez, e_info = _zscore(ebmf_m)
+    rz, r_info = _zscore(rqvi_m)
+    if not e_info.all():
+        raise ValueError(&quot;constant EBMF factor on matching basis&quot;)
+    corr = ez.T @ rz / K_match
+    corr[:, ~r_info] = -np.inf
+    cost = np.where(np.isfinite(corr), corr, -1e9)
+    rows, cols = linear_sum_assignment(-cost)
+    if rows.size != 200 or np.unique(cols).size != 200:
+        raise RuntimeError(&quot;assignment did not cover all 200 EBMF factors uniquely&quot;)
+    sel = np.empty(200, dtype=int)
+    sel[rows] = cols
+    match_r = corr[np.arange(200), sel]
+    matched_candidates = r_var[sel]
+    print(f&quot;MATCHING basis: {len(m_idx)} common cells, {K_match} level2 clusters &quot;
+          f&quot;(incl. {sorted(set(m_clusters) - set(cell_l2[c] for c in obs if c in cell_l2 and cell_l1[c] != &#39;thymocyte&#39;))})&quot;)
+
+    # ---- DISPLAY basis: non-thymocyte cells, order from S5_cluster_order.csv ----
+    order = pd.read_csv(FIG_DIR / &quot;S5_cluster_order.csv&quot;).sort_values(&quot;display_column&quot;)
+    disp_clusters = order[&quot;level2_cluster&quot;].astype(str).tolist()
+    d_code = {l: i for i, l in enumerate(disp_clusters)}
+    d_mask = np.array([(c in cell_l2) and (cell_l1[c] != &quot;thymocyte&quot;) for c in obs])
+    d_idx = np.where(d_mask)[0]
+    d_codes = np.array([d_code[cell_l2[obs[i]]] for i in d_idx])
+    rqvi_disp_all, d_counts = _cluster_means(R[d_idx], d_codes, len(disp_clusters))   # 107 x 2560
+    if not np.array_equal(d_counts.astype(int), order[&quot;n_cells&quot;].to_numpy()):
+        raise ValueError(&quot;display cell counts differ from S5_cluster_order&quot;)
+    rematched_disp = rqvi_disp_all[:, sel]                        # 107 x 200
+
+    out = pd.DataFrame(rematched_disp, index=disp_clusters, columns=FACTORS)
+    out.index.name = &quot;level2_cluster&quot;
+    out.to_csv(FIG_DIR / &quot;S5_rqvi_rematched_raw_means_level2.csv&quot;)
+
+    # display-basis correlation for the caption
+    ebmf_disp, _ = _cluster_means(E[d_idx], d_codes, len(disp_clusters))
+    ez_d = _zscore(ebmf_disp)[0]
+    rz_d = _zscore(rematched_disp)[0]
+    disp_r = (ez_d * rz_d).sum(0) / len(disp_clusters)
+
+    shipped = pd.read_csv(PKG / &quot;ebmf_rqvi_multiseed_level2_one_to_one_matches.csv&quot;)
+    shipped_map = dict(zip(shipped[&quot;ebmf_factor&quot;].astype(str), shipped[&quot;rqvi_candidate&quot;].astype(str)))
+    same = sum(matched_candidates[k] == shipped_map.get(f&quot;F{k+1}&quot;) for k in range(200))
+
+    pd.DataFrame({
+        &quot;ebmf_factor&quot;: FACTORS,
+        &quot;rematched_rqvi_candidate&quot;: matched_candidates,
+        &quot;pearson_r_match_basis_108&quot;: match_r,
+        &quot;pearson_r_display_basis_107&quot;: disp_r,
+        &quot;same_as_shipped&quot;: [matched_candidates[k] == shipped_map.get(f&quot;F{k+1}&quot;) for k in range(200)],
+    }).to_csv(FIG_DIR / &quot;S5_rematch_mapping.csv&quot;, index=False)
+
+    print(&quot;=== rematch (matching basis = all common cells, 108 clusters) ===&quot;)
+    print(f&quot;match-basis r:   median {np.median(match_r):.3f}, &gt;=0.5 {100*np.mean(match_r&gt;=0.5):.1f}%, &quot;
+          f&quot;r&lt;0.3 {int((match_r&lt;0.3).sum())}&quot;)
+    print(f&quot;display-basis r: median {np.median(disp_r):.3f}, &gt;=0.5 {100*np.mean(disp_r&gt;=0.5):.1f}%, &quot;
+          f&quot;r&lt;0.3 {int((disp_r&lt;0.3).sum())}&quot;)
+    print(f&quot;pairs identical to Tianze&#39;s shipped matching: {same}/200&quot;)
+    print(f&quot;wrote {FIG_DIR/&#39;S5_rqvi_rematched_raw_means_level2.csv&#39;} and S5_rematch_mapping.csv&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()</code></pre>
+</div>
+<div id="plotting-tianze-style-heatmaps" class="section level2">
+<h2>Plotting: Tianze-style heatmaps</h2>
+<p><code>script/FigureS5_plot.py</code> orders the EBMF rows by
+hierarchical clustering (average linkage, correlation distance, optimal
+leaf ordering), rescales every factor to <code>[0, 1]</code> across
+clusters, and draws the two heatmaps with a shared colorbar. The matched
+RQVI panel reuses the EBMF row order.</p>
+<pre class="python"><code>&quot;&quot;&quot;Figure S5 (plot step). EBMF vs matched-RQVI level2 heatmaps in Tianze&#39;s style.
+
+Reads the raw cluster-mean matrices written by script/FigureS5.R, orders EBMF
+factors by hierarchical clustering (average linkage, correlation distance,
+optimal leaf ordering), scales every factor to [0, 1] across clusters, and draws
+two Blues heatmaps (EBMF | corresponding RQVI) sharing row order, columns, and a
+&quot;Relative loading&quot; colorbar. Plotting helpers are adapted from Tianze&#39;s
+scripts/fig_ebmf_rqvi_level2_comparison.py so the visual style matches.
+
+Run from the repository root:
+    &lt;miniforge&gt;/envs/pyenv/bin/python script/FigureS5_plot.py
+&quot;&quot;&quot;
+from __future__ import annotations
+
+import argparse
+from pathlib import Path
+
+import matplotlib
+
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.colors as mcolors
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from scipy.cluster.hierarchy import leaves_list, linkage
+
+FIG_DIR = Path(&quot;figures/generated/Figure S5&quot;)
+EBMF_MEANS = FIG_DIR / &quot;S5_ebmf_raw_means_level2.csv&quot;
+# Canonical Fig S5 uses the matching re-derived on our basis (FigureS5_rematch.py).
+# To plot the shipped-matching variant instead:
+#   FigureS5_plot.py --rqvi-means &quot;.../S5_rqvi_matched_raw_means_level2.csv&quot; --suffix _shipped
+RQVI_MEANS = FIG_DIR / &quot;S5_rqvi_rematched_raw_means_level2.csv&quot;
+CLUSTER_ORDER = FIG_DIR / &quot;S5_cluster_order.csv&quot;
+LEVEL1_PALETTE = FIG_DIR / &quot;S5_level1_palette.csv&quot;
+SUBFIG_DIR = FIG_DIR / &quot;S5_subfigures&quot;
+
+# populated from S5_level1_palette.csv in main()
+LEVEL1_COLORS: dict[str, str] = {}
+
+
+def _zscore_columns(df: pd.DataFrame) -&gt; pd.DataFrame:
+    values = df.to_numpy(dtype=np.float64)
+    means = values.mean(axis=0, keepdims=True)
+    stds = values.std(axis=0, ddof=0, keepdims=True)
+    informative = stds.ravel() &gt; np.finfo(float).eps
+    if not np.all(informative):
+        raise ValueError(f&quot;constant-profile factors: {df.columns[~informative].tolist()}&quot;)
+    z = (values - means) / stds
+    return pd.DataFrame(z, index=df.index, columns=df.columns)
+
+
+def _scale_columns_to_unit_interval(df: pd.DataFrame) -&gt; pd.DataFrame:
+    values = df.to_numpy(dtype=np.float64)
+    minima = values.min(axis=0, keepdims=True)
+    ranges = values.max(axis=0, keepdims=True) - minima
+    informative = ranges.ravel() &gt; np.finfo(float).eps
+    scaled = np.zeros_like(values)
+    scaled[:, informative] = (values[:, informative] - minima[:, informative]) / ranges[:, informative]
+    return pd.DataFrame(scaled, index=df.index, columns=df.columns)
+
+
+def _group_spans(lineages: list[str]) -&gt; list[tuple[str, int, int]]:
+    spans: list[tuple[str, int, int]] = []
+    start = 0
+    for position in range(1, len(lineages) + 1):
+        if position == len(lineages) or lineages[position] != lineages[start]:
+            spans.append((lineages[start], start, position))
+            start = position
+    return spans
+
+
+def _draw_lineage_strip(ax, cluster_lineages, spans) -&gt; None:
+    categories = list(dict.fromkeys(cluster_lineages))
+    category_to_code = {label: index for index, label in enumerate(categories)}
+    codes = np.asarray([[category_to_code[label] for label in cluster_lineages]])
+    cmap = mcolors.ListedColormap([LEVEL1_COLORS.get(label, &quot;#BDBDBD&quot;) for label in categories])
+    ax.imshow(codes, aspect=&quot;auto&quot;, cmap=cmap, interpolation=&quot;none&quot;)
+    ax.set_xlim(-0.5, len(cluster_lineages) - 0.5)
+    ax.set_xticks([])
+    ax.set_yticks([])
+    for lineage, start, stop in spans:
+        if stop - start &gt;= 4:
+            ax.text((start + stop - 1) / 2, -0.6, lineage, ha=&quot;center&quot;, va=&quot;bottom&quot;,
+                    fontsize=7.5, clip_on=False)
+        if start &gt; 0:
+            ax.axvline(start - 0.5, color=&quot;white&quot;, linewidth=1.0)
+    for spine in ax.spines.values():
+        spine.set_visible(False)
+
+
+def _style_heatmap(ax, spans) -&gt; None:
+    for _, start, _ in spans[1:]:
+        ax.axvline(start - 0.5, color=&quot;#777777&quot;, linewidth=0.35)
+    ax.set_xticks([])
+    ax.set_yticks([])
+    for spine in ax.spines.values():
+        spine.set_color(&quot;#333333&quot;)
+        spine.set_linewidth(0.55)
+
+
+def _set_plot_style() -&gt; None:
+    plt.rcParams.update({
+        &quot;font.family&quot;: &quot;DejaVu Sans&quot;,
+        &quot;font.size&quot;: 9,
+        &quot;pdf.fonttype&quot;: 42,
+        &quot;ps.fonttype&quot;: 42,
+        &quot;figure.dpi&quot;: 300,
+        &quot;savefig.dpi&quot;: 300,
+    })
+
+
+def _plot_heatmap_subfigure(matrix, cluster_lineages, ylabel, ylabel_on_right, output_pdf) -&gt; None:
+    _set_plot_style()
+    cmap = plt.get_cmap(&quot;Blues&quot;)
+    norm = mcolors.Normalize(vmin=0.0, vmax=1.0)
+    spans = _group_spans(cluster_lineages)
+    fig = plt.figure(figsize=(5.1, 7.8), facecolor=&quot;white&quot;)
+    grid = fig.add_gridspec(2, 1, height_ratios=[0.18, 7.6], hspace=0.02)
+    ax_strip = fig.add_subplot(grid[0, 0])
+    ax_heatmap = fig.add_subplot(grid[1, 0])
+    _draw_lineage_strip(ax_strip, cluster_lineages, spans)
+    ax_heatmap.imshow(matrix, aspect=&quot;auto&quot;, interpolation=&quot;none&quot;, cmap=cmap, norm=norm, rasterized=True)
+    _style_heatmap(ax_heatmap, spans)
+    ax_heatmap.set_ylabel(ylabel, fontsize=10, labelpad=8)
+    if ylabel_on_right:
+        ax_heatmap.yaxis.set_label_position(&quot;right&quot;)
+        fig.subplots_adjust(left=0.04, right=0.86, top=0.95, bottom=0.04)
+    else:
+        fig.subplots_adjust(left=0.14, right=0.96, top=0.95, bottom=0.04)
+    output_pdf.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(output_pdf, dpi=300, bbox_inches=&quot;tight&quot;)
+    plt.close(fig)
+
+
+def _plot_shared_colorbar(output_pdf) -&gt; None:
+    _set_plot_style()
+    cmap = plt.get_cmap(&quot;Blues&quot;)
+    norm = mcolors.Normalize(vmin=0.0, vmax=1.0)
+    scalar_mappable = plt.cm.ScalarMappable(norm=norm, cmap=cmap)
+    fig = plt.figure(figsize=(2.1, 0.48), facecolor=&quot;white&quot;)
+    colorbar_axis = fig.add_axes([0.08, 0.54, 0.84, 0.27])
+    colorbar = fig.colorbar(scalar_mappable, cax=colorbar_axis, orientation=&quot;horizontal&quot;, ticks=[0.0, 0.5, 1.0])
+    colorbar.set_label(&quot;Relative loading&quot;, fontsize=8, labelpad=2)
+    colorbar.ax.tick_params(labelsize=7, length=2, pad=1)
+    colorbar.outline.set_linewidth(0.45)
+    output_pdf.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(output_pdf, dpi=300, bbox_inches=&quot;tight&quot;, pad_inches=0.02)
+    plt.close(fig)
+
+
+def _plot(ebmf_plot, rqvi_plot, cluster_lineages, output_pdf, output_png) -&gt; None:
+    _set_plot_style()
+    cmap = plt.get_cmap(&quot;Blues&quot;)
+    norm = mcolors.Normalize(vmin=0.0, vmax=1.0)
+    fig = plt.figure(figsize=(10.8, 7.8), facecolor=&quot;white&quot;)
+    grid = fig.add_gridspec(2, 3, height_ratios=[0.18, 7.6], width_ratios=[1.0, 0.14, 1.0],
+                            hspace=0.02, wspace=0.0)
+    ax_strip_ebmf = fig.add_subplot(grid[0, 0])
+    ax_ebmf = fig.add_subplot(grid[1, 0])
+    ax_strip_rqvi = fig.add_subplot(grid[0, 2])
+    ax_rqvi = fig.add_subplot(grid[1, 2])
+    spans = _group_spans(cluster_lineages)
+    _draw_lineage_strip(ax_strip_ebmf, cluster_lineages, spans)
+    _draw_lineage_strip(ax_strip_rqvi, cluster_lineages, spans)
+    ax_ebmf.imshow(ebmf_plot, aspect=&quot;auto&quot;, interpolation=&quot;none&quot;, cmap=cmap, norm=norm, rasterized=True)
+    ax_rqvi.imshow(rqvi_plot, aspect=&quot;auto&quot;, interpolation=&quot;none&quot;, cmap=cmap, norm=norm, rasterized=True)
+    _style_heatmap(ax_ebmf, spans)
+    _style_heatmap(ax_rqvi, spans)
+    ax_ebmf.set_ylabel(&quot;EBMF factors&quot;, fontsize=10, labelpad=8)
+    ax_rqvi.set_ylabel(&quot;Corresponding RQVI factors&quot;, fontsize=10, labelpad=8)
+    ax_rqvi.yaxis.set_label_position(&quot;right&quot;)
+    scalar_mappable = plt.cm.ScalarMappable(norm=norm, cmap=cmap)
+    colorbar_axis = fig.add_axes([0.80, 0.055, 0.12, 0.016])
+    colorbar = fig.colorbar(scalar_mappable, cax=colorbar_axis, orientation=&quot;horizontal&quot;, ticks=[0.0, 0.5, 1.0])
+    colorbar.set_label(&quot;Relative loading&quot;, fontsize=8, labelpad=2)
+    colorbar.ax.tick_params(labelsize=7, length=2, pad=1)
+    colorbar.outline.set_linewidth(0.45)
+    fig.subplots_adjust(left=0.08, right=0.92, top=0.95, bottom=0.09)
+    output_pdf.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(output_pdf, dpi=300, bbox_inches=&quot;tight&quot;)
+    fig.savefig(output_png, dpi=300, bbox_inches=&quot;tight&quot;)
+    plt.close(fig)
+
+
+def main() -&gt; None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(&quot;--rqvi-means&quot;, type=Path, default=RQVI_MEANS,
+                        help=&quot;RQVI cluster-mean CSV to plot on the right panel.&quot;)
+    parser.add_argument(&quot;--suffix&quot;, type=str, default=&quot;&quot;,
+                        help=&quot;Suffix for output filenames (e.g. &#39;_rematched&#39;).&quot;)
+    args = parser.parse_args()
+
+    global LEVEL1_COLORS
+    palette = pd.read_csv(LEVEL1_PALETTE)
+    LEVEL1_COLORS = dict(zip(palette[&quot;level1&quot;].astype(str), palette[&quot;color&quot;].astype(str)))
+
+    cluster_info = pd.read_csv(CLUSTER_ORDER).sort_values(&quot;display_column&quot;)
+    cluster_labels = cluster_info[&quot;level2_cluster&quot;].astype(str).tolist()
+    cluster_lineages = cluster_info[&quot;level1&quot;].astype(str).tolist()
+
+    ebmf_raw = pd.read_csv(EBMF_MEANS, index_col=&quot;level2_cluster&quot;)
+    rqvi_raw = pd.read_csv(args.rqvi_means, index_col=&quot;level2_cluster&quot;)
+    ebmf_raw.index = ebmf_raw.index.astype(str)
+    rqvi_raw.index = rqvi_raw.index.astype(str)
+    if set(cluster_labels) != set(ebmf_raw.index) or set(cluster_labels) != set(rqvi_raw.index):
+        raise ValueError(&quot;cluster labels differ between order file and mean matrices&quot;)
+    ebmf_raw = ebmf_raw.loc[cluster_labels]
+    rqvi_raw = rqvi_raw.loc[cluster_labels]
+    factors = [f&quot;F{k}&quot; for k in range(1, 201)]
+    if ebmf_raw.columns.tolist() != factors or rqvi_raw.columns.tolist() != factors:
+        raise ValueError(&quot;expected columns F1..F200 in both matrices&quot;)
+
+    # row order: hierarchical clustering of z-scored EBMF profiles
+    ebmf_z = _zscore_columns(ebmf_raw)
+    tree = linkage(ebmf_z.to_numpy().T, method=&quot;average&quot;, metric=&quot;correlation&quot;, optimal_ordering=True)
+    display_order = leaves_list(tree)
+
+    ebmf_scaled = _scale_columns_to_unit_interval(ebmf_raw)
+    rqvi_scaled = _scale_columns_to_unit_interval(rqvi_raw)
+    ebmf_plot = ebmf_scaled.to_numpy().T[display_order]
+    rqvi_plot = rqvi_scaled.to_numpy().T[display_order]
+
+    sfx = args.suffix
+    subfig_dir = SUBFIG_DIR if not sfx else SUBFIG_DIR.with_name(SUBFIG_DIR.name + sfx)
+    _plot(ebmf_plot, rqvi_plot, cluster_lineages,
+          FIG_DIR / f&quot;S5_ebmf_rqvi_level2_comparison{sfx}.pdf&quot;,
+          FIG_DIR / f&quot;S5_ebmf_rqvi_level2_comparison{sfx}.png&quot;)
+    _plot_heatmap_subfigure(ebmf_plot, cluster_lineages, &quot;EBMF factors&quot;, False,
+                            subfig_dir / &quot;panel_A_ebmf_factors.pdf&quot;)
+    _plot_heatmap_subfigure(rqvi_plot, cluster_lineages, &quot;Corresponding RQVI factors&quot;, True,
+                            subfig_dir / &quot;panel_B_corresponding_rqvi_factors.pdf&quot;)
+    _plot_shared_colorbar(subfig_dir / &quot;shared_relative_loading_colorbar.pdf&quot;)
+
+    ordered_factors = [factors[i] for i in display_order]
+    pd.DataFrame(ebmf_plot, index=ordered_factors, columns=cluster_labels).to_csv(
+        FIG_DIR / f&quot;S5_ebmf_scaled_display{sfx}.csv&quot;)
+    pd.DataFrame(rqvi_plot, index=ordered_factors, columns=cluster_labels).to_csv(
+        FIG_DIR / f&quot;S5_rqvi_scaled_display{sfx}.csv&quot;)
+
+    print(f&quot;rows: {len(display_order)} factors; cols: {len(cluster_labels)} level2 clusters&quot;)
+    print(f&quot;wrote {FIG_DIR / (&#39;S5_ebmf_rqvi_level2_comparison&#39;+sfx+&#39;.pdf&#39;)} and .png&quot;)
+    print(f&quot;wrote subfigures to {subfig_dir}&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()</code></pre>
+</div>
+<div id="figure" class="section level2">
+<h2>Figure</h2>
+<p><img src="assets/FigureS5/S5_ebmf_rqvi_level2_comparison.png" width="100%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. S5. Cluster-level activity profiles of corresponding
+EBMF and RQVI factors.</strong> EBMF cell loadings (our flashier fit)
+and matched RQVI program loadings were averaged within 107 fine-grained
+<code>annotation_level2</code> clusters, using all non-thymocyte cells
+present in both the filtered EBMF loading matrix and the RQVI analysis
+(n = 629,551 cells). The left heatmap shows 200 EBMF factors ordered by
+hierarchical clustering of their cluster-level profiles. The right
+heatmap shows, on the same row and column order, the RQVI program
+assigned to each EBMF factor by a global one-to-one maximum-correlation
+assignment over all 2,560 candidates (10 seeds x 256 programs),
+re-derived on this clustering using all common cells. Loadings were
+independently rescaled to <code>[0, 1]</code> within each factor for
+display; broad lineage annotations are shown above the columns. The
+median per-factor Pearson correlation across the displayed clusters was
+0.766, and 92.5% of factors had r &gt;= 0.5.</p>
+</div>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.5.1 (2025-06-13)
+Platform: aarch64-apple-darwin20
+Running under: macOS Sequoia 15.6.1
+
+Matrix products: default
+BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_CA/en_CA/en_CA/C/en_CA/en_CA
+
+time zone: Asia/Shanghai
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+ [1] vctrs_0.7.3     cli_3.6.6       knitr_1.50      rlang_1.2.0    
+ [5] xfun_0.55       stringi_1.8.7   otel_0.2.0      promises_1.5.0 
+ [9] jsonlite_2.0.0  workflowr_1.7.2 glue_1.8.1      rprojroot_2.1.1
+[13] git2r_0.36.2    htmltools_0.5.9 httpuv_1.6.16   sass_0.4.10    
+[17] rmarkdown_2.30  evaluate_1.0.5  jquerylib_0.1.4 tibble_3.3.0   
+[21] fastmap_1.2.0   yaml_2.3.12     lifecycle_1.0.5 whisker_0.4.1  
+[25] stringr_1.6.0   compiler_4.5.1  fs_1.6.6        Rcpp_1.1.1-1.1 
+[29] pkgconfig_2.0.3 later_1.4.4     digest_0.6.39   R6_2.6.1       
+[33] pillar_1.11.1   magrittr_2.0.5  bslib_0.9.0     tools_4.5.1    
+[37] cachem_1.1.0   </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
