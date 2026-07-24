@@ -59,10 +59,11 @@ git-ignored symlink and is not tracked here.
 
 ### Cluster means
 
-`script/FigureS5.R` builds the raw `annotation_level2` cluster-mean matrices for
-the EBMF and RQVI programs on the common non-thymocyte cells, together with the
-column order (Figure-1 level1 lineage order, alphabetical within each lineage)
-and the lineage color palette.
+`script/FigureS5.R` builds the raw `annotation_level2` cluster-mean matrix for the
+EBMF programs on the common non-thymocyte cells, together with the column order
+(Figure-1 level1 lineage order, alphabetical within each lineage) and the lineage
+color palette. The matched RQVI cluster means are produced by the matching step
+below.
 
 ```{r figs5-data, code=readLines("../script/FigureS5.R"), eval=FALSE}
 ```
