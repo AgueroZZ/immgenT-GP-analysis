@@ -384,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-23
+<strong>Last updated:</strong> 2026-07-24
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeb9f4f589ed5adb45373bb5f587671d6ea6e7668ctargetblankb9f4f58a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeb138063683652a6ec65ccd4a44e51dc03d2d91f4targetblankb138063a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/b9f4f589ed5adb45373bb5f587671d6ea6e7668c" target="_blank">b9f4f58</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/b138063683652a6ec65ccd4a44e51dc03d2d91f4" target="_blank">b138063</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeb9f4f589ed5adb45373bb5f587671d6ea6e7668ctargetblankb9f4f58a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeb138063683652a6ec65ccd4a44e51dc03d2d91f4targetblankb138063a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/b9f4f589ed5adb45373bb5f587671d6ea6e7668c" target="_blank">b9f4f58</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/b138063683652a6ec65ccd4a44e51dc03d2d91f4" target="_blank">b138063</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -550,7 +550,6 @@ were generated:
 <pre><code>
 Ignored files:
     Ignored:    .DS_Store
-    Ignored:    .claude/
     Ignored:    analysis/.DS_Store
     Ignored:    analysis/.Rhistory
     Ignored:    analysis/assets/.DS_Store
@@ -577,6 +576,7 @@ Ignored files:
     Ignored:    tmp/
 
 Untracked files:
+    Untracked:  .claude/
     Untracked:  code/other/topic_flashier_20250212.R
     Untracked:  code/other/topic_wrapper_20250215_alldata_backfit.sh
     Untracked:  experiments/active_metric_comparison/
@@ -704,6 +704,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/b138063683652a6ec65ccd4a44e51dc03d2d91f4/analysis/FigureS5.Rmd" target="_blank">b138063</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-24
+</td>
+<td>
+Reformat Figure S5 page: lead with the figure, concise methods, link
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/9398c728b594020e2c80f2328cd3d096381f4997/docs/FigureS5.html" target="_blank">9398c72</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-23
+</td>
+<td>
+Publish Figure S5 workflowr page
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/b9f4f589ed5adb45373bb5f587671d6ea6e7668c/analysis/FigureS5.Rmd" target="_blank">b9f4f58</a>
 </td>
 <td>
@@ -723,47 +757,103 @@ Add Figure S5: EBMF vs matched-RQVI level2-cluster comparison
 </div>
 </div>
 </div>
-<p>Figure S5 compares the cluster-level activity patterns of the 200
-EBMF gene programs (our flashier fit) with 200 corresponding RQVI
-programs contributed by our collaborator (Tianze, <a
+<p>Figure S5 compares the cluster-level activity of the 200 EBMF gene
+programs (our flashier fit) with 200 matched RQVI programs from our
+collaborator (Tianze, <a
 href="https://github.com/TianzeCompbio/RQVI_GP_figures">TianzeCompbio/RQVI_GP_figures</a>).
-The two heatmaps share the same row order and the same level2-cluster
-columns, so matching biological patterns can be read directly from left
-to right. The visual style follows the collaborator’s figure: two
-white-to-blue <code>Blues</code> heatmaps, per-factor relative loading
-on <code>[0, 1]</code>, broad lineage annotations above the columns, no
-factor identifiers, and a single shared colorbar.</p>
-<p><strong>Design.</strong> Cells are our <code>L_pm_filtered</code>
-cells (those that passed the iterative total-loading filter), restricted
-to non-thymocytes (<code>annotation_level1 != "thymocyte"</code>, all
-conditions), intersected with the cells that carry RQVI loadings. EBMF
-cluster means use our flashier loadings; RQVI cluster means use the
-collaborator’s raw cell-level RQVI loadings. Both are averaged within
-<code>annotation_level2</code> on the same common cells. Each RQVI
-program is placed on the row of its paired EBMF factor; the pairing is a
-one-to-one assignment re-derived on our clustering (see below). The
-collaborator’s EBMF factor <code>F_k</code> was verified to equal our
-flashier <code>GP_k</code> at the cell level (Pearson r = 1.0 for all
-200).</p>
-<div id="pipeline" class="section level2">
-<h2>Pipeline</h2>
-<p>Three steps, run from the repository root (<a
-href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/main/script"><code>script/</code></a>):</p>
-<pre class="bash"><code># 1. cluster-mean matrices + column/palette metadata (uses our L_pm_filtered)
-Rscript script/FigureS5.R
-# 2. re-derive the one-to-one EBMF&lt;-&gt;RQVI matching on our basis
-python script/FigureS5_rematch.py
-# 3. draw the Tianze-style heatmaps
-python script/FigureS5_plot.py</code></pre>
+It is produced by <a
+href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS5.R"><code>script/FigureS5.R</code></a>,
+<a
+href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS5_rematch.py"><code>script/FigureS5_rematch.py</code></a>,
+and <a
+href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS5_plot.py"><code>script/FigureS5_plot.py</code></a>,
+in the collaborator’s plotting style: two white-to-blue heatmaps sharing
+row and column order, per-factor relative loading on
+<code>[0, 1]</code>, broad lineage annotations above the columns, and a
+single shared colorbar.</p>
+<p>Cells are our <code>L_pm_filtered</code> cells (those that passed the
+iterative total-loading filter), restricted to non-thymocytes
+(<code>annotation_level1 != "thymocyte"</code>, all conditions),
+intersected with the cells carrying RQVI loadings. EBMF and RQVI
+loadings are averaged within <code>annotation_level2</code> on those
+common cells, and each RQVI program is placed on the row of its paired
+EBMF factor. The collaborator’s EBMF factor <code>F_k</code> was
+verified equal to our flashier <code>GP_k</code> at the cell level
+(Pearson r = 1.0 for all 200).</p>
+<div id="figs5" class="section level2">
+<h2>Figure S5</h2>
+<p><img src="assets/FigureS5/S5_ebmf_rqvi_level2_comparison.png" width="100%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-S5_ebmf_rqvi_level2_comparison">
+Past versions of S5_ebmf_rqvi_level2_comparison.png
+</button>
+</p>
+<div id="fig-S5_ebmf_rqvi_level2_comparison" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/9398c728b594020e2c80f2328cd3d096381f4997/docs/assets/FigureS5/S5_ebmf_rqvi_level2_comparison.png" target="_blank">9398c72</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-23
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="figcaption">
+<p><strong>Fig. S5. Cluster-level activity profiles of corresponding
+EBMF and RQVI factors.</strong> EBMF cell loadings (our flashier fit)
+and matched RQVI program loadings were averaged within 107 fine-grained
+<code>annotation_level2</code> clusters, using all non-thymocyte cells
+present in both the filtered EBMF loading matrix and the RQVI analysis
+(n = 629,551 cells). The left heatmap shows 200 EBMF factors ordered by
+hierarchical clustering of their cluster-level profiles. The right
+heatmap shows, on the same row and column order, the RQVI program
+assigned to each EBMF factor by a global one-to-one maximum-correlation
+assignment over all 2,560 candidates (10 seeds x 256 programs),
+re-derived on this clustering using all common cells. Loadings were
+independently rescaled to <code>[0, 1]</code> within each factor for
+display; broad lineage annotations are shown above the columns. The
+median per-factor Pearson correlation across the displayed clusters was
+0.766, and 92.5% of factors had r &gt;= 0.5. Standalone left/right
+panels and the shared colorbar are saved under
+<code>figures/generated/Figure S5/S5_subfigures/</code>.</p>
+</div>
+</div>
+<div id="how-the-figure-is-made" class="section level2">
+<h2>How the figure is made</h2>
+<p>Three steps, run from the repository root:</p>
+<pre class="bash"><code>Rscript script/FigureS5.R          # cluster-mean matrices + column/palette metadata
+python  script/FigureS5_rematch.py # one-to-one EBMF&lt;-&gt;RQVI matching on our basis
+python  script/FigureS5_plot.py    # Tianze-style heatmaps</code></pre>
 <p>The Python steps use an environment with <code>matplotlib</code>,
 <code>pandas</code>, <code>scipy</code>, <code>h5py</code>, and
 <code>numpy</code>. The collaborator’s cell-level loading package
 (<code>data/rqvi_loading/RQVI_EBMF_heatmap_data_v1/</code>) provides the
 RQVI and EBMF cell-level loadings; <code>data/</code> is a git-ignored
 symlink and is not tracked here.</p>
-</div>
-<div id="data-cluster-means-on-common-cells" class="section level2">
-<h2>Data: cluster means on common cells</h2>
+<div id="cluster-means" class="section level3">
+<h3>Cluster means</h3>
 <p><code>script/FigureS5.R</code> builds the raw
 <code>annotation_level2</code> cluster-mean matrices for the EBMF
 factors and the matched RQVI programs on the common non-thymocyte cells,
@@ -887,6 +977,15 @@ hex &lt;- vapply(l1pal, function(cc) {
 pal_df &lt;- data.frame(level1 = names(hex), color = unname(hex), stringsAsFactors = FALSE)
 
 ## ---- write outputs ----
+# cell -&gt; level1/level2 for all L_pm_filtered cells; consumed by FigureS5_rematch.py
+# to define common cells and clusters (avoids any machine-specific path).
+fwrite(data.frame(
+  cellID            = rownames(L),
+  annotation_level1 = as.character(meta$annotation_level1),
+  annotation_level2 = as.character(meta$annotation_level2),
+  stringsAsFactors  = FALSE
+), file.path(outdir, &quot;S5_cell_metadata.csv.gz&quot;))
+
 fwrite(data.frame(level2_cluster = rownames(ebmf_means), ebmf_means, check.names = FALSE),
        file.path(outdir, &quot;S5_ebmf_raw_means_level2.csv&quot;))
 fwrite(data.frame(level2_cluster = rownames(rqvi_means), rqvi_means, check.names = FALSE),
@@ -904,470 +1003,33 @@ fwrite(data.frame(
 
 message(&quot;Wrote Fig S5 data inputs to &quot;, normalizePath(outdir))</code></pre>
 </div>
-<div id="matching-one-to-one-assignment-collaborators-method-re-applied"
-class="section level2">
-<h2>Matching: one-to-one assignment (collaborator’s method,
-re-applied)</h2>
-<p>The matching is the collaborator’s method applied unchanged to our
-re-aligned data. Each factor’s mean-loading profile is z-scored across
-clusters; the signed Pearson correlation between every EBMF factor and
-every one of the 2,560 seed-specific RQVI candidates (10 seeds x 256
-programs) is <code>EBMF_z^T @ RQVI_z / K</code>; candidates with a
-constant profile are excluded; and a maximum-weight one-to-one
-assignment (<code>scipy.optimize.linear_sum_assignment</code>) pairs
-each EBMF factor with a distinct RQVI candidate so that the total signed
-correlation is maximized. Only the inputs differ from the collaborator’s
-run: our updated <code>annotation_level2</code> clustering and our
-common cell set. The matching uses <strong>all</strong> common cells
+<div id="matching" class="section level3">
+<h3>Matching</h3>
+<p>The matching is our collaborator’s method applied unchanged to the
+re-aligned data (only the inputs differ: our updated
+<code>annotation_level2</code> clustering and our common cell set). Each
+factor’s mean-loading profile is z-scored across clusters; the signed
+Pearson correlation between every EBMF factor and all 2,560
+seed-specific RQVI candidates (10 seeds x 256 programs) is
+<code>EBMF_z^T @ RQVI_z / K</code>; candidates with a constant profile
+are excluded; and a maximum-weight one-to-one assignment
+(<code>scipy.optimize.linear_sum_assignment</code>) pairs each EBMF
+factor with a distinct RQVI candidate so that the total signed
+correlation is maximized. The matching uses all common cells
 (<code>L_pm_filtered</code> intersect RQVI, 108 level2 clusters
 including the thymocyte cluster); the figure displays the 107
-non-thymocyte clusters.</p>
-<pre class="python"><code>&quot;&quot;&quot;Figure S5 rematch step. Re-derive the one-to-one EBMF&lt;-&gt;RQVI matching on OUR
-basis using Tianze&#39;s exact method, then aggregate the matched RQVI programs onto
-the display clusters.
-
-Matching basis: ALL common cells = our L_pm_filtered cells that also have RQVI
-loadings, WITHOUT a non-thymocyte filter (aligns the two loading matrices
-directly). Clusters = our annotation_level2 (108, including the thymocyte
-cluster). This is the user-preferred alignment; vs a non-thymocyte-only matching
-it changes only ~5/200 pairs and leaves the display-cluster correlation identical.
-
-Display basis: non-thymocyte cells only, our annotation_level2 (107 clusters) --
-this is what Figure S5 shows.
-
-Method (identical to Tianze&#39;s fig_ebmf_rqvi_level2_comparison.py --recompute-matches):
-  1. z-score every factor&#39;s mean-loading profile across clusters,
-  2. signed Pearson r = EBMF_z^T @ RQVI_z / n_clusters,
-  3. drop constant-profile RQVI candidates,
-  4. maximum-weight one-to-one assignment via scipy linear_sum_assignment.
-We only re-apply this method to the re-aligned data; the algorithm is unchanged.
-
-EBMF loadings are read from Tianze&#39;s ebmf_cell_loadings.h5ad, which was verified
-cell-for-cell identical to our L_pm_filtered (F_k == GP_k, cell-level r = 1.0).
-
-Run: &lt;miniforge&gt;/envs/pyenv/bin/python script/FigureS5_rematch.py
-&quot;&quot;&quot;
-from __future__ import annotations
-
-import csv
-from pathlib import Path
-
-import h5py
-import numpy as np
-import pandas as pd
-import scipy.sparse as sp
-from scipy.optimize import linear_sum_assignment
-
-FIG_DIR = Path(&quot;figures/generated/Figure S5&quot;)
-PKG = Path(&quot;data/rqvi_loading/RQVI_EBMF_heatmap_data_v1/data&quot;)
-EBMF_H5AD = PKG / &quot;ebmf_cell_loadings.h5ad&quot;
-ALL_H5AD = PKG / &quot;rqvi_all_10seeds_cell_loadings.h5ad&quot;
-OUR_CELLS = Path(&quot;/private/tmp/claude-501/-Users-ziangzhang-Desktop-Immgen-immgenT-GP-analysis/&quot;
-                 &quot;c8df43b6-c668-4f73-8b74-79373075c6fe/scratchpad/our_cells.csv&quot;)
-FACTORS = [f&quot;F{k}&quot; for k in range(1, 201)]
-
-
-def _h5_index(f, group):
-    g = f[group]
-    key = g.attrs.get(&quot;_index&quot;, &quot;_index&quot;)
-    if isinstance(key, bytes):
-        key = key.decode()
-    return np.array([v.decode() if isinstance(v, (bytes, bytearray)) else str(v) for v in g[key][:]])
-
-
-def _zscore(M):
-    m = M - M.mean(0, keepdims=True)
-    s = M.std(0, ddof=0, keepdims=True)
-    info = s.ravel() &gt; np.finfo(float).eps
-    z = np.zeros_like(M)
-    z[:, info] = m[:, info] / s[:, info]
-    return z, info
-
-
-def _cluster_means(mat, codes, n_clusters):
-    &quot;&quot;&quot;mat: (n_cells x n_features) dense ndarray or scipy sparse; returns (K x n_features).&quot;&quot;&quot;
-    counts = np.bincount(codes, minlength=n_clusters).astype(np.float64)
-    ind = sp.csr_matrix((np.ones(codes.size), (codes, np.arange(codes.size))),
-                        shape=(n_clusters, codes.size))
-    prod = ind @ mat
-    if sp.issparse(prod):
-        prod = np.asarray(prod.todense())
-    return np.asarray(prod, dtype=np.float64) / counts[:, None], counts
-
-
-def main() -&gt; None:
-    # our L_pm_filtered cells -&gt; annotation (no filtering yet)
-    cell_l1, cell_l2 = {}, {}
-    with open(OUR_CELLS) as fh:
-        for row in csv.DictReader(fh):
-            cell_l1[row[&quot;cellID&quot;]] = row[&quot;annotation_level1&quot;]
-            cell_l2[row[&quot;cellID&quot;]] = row[&quot;annotation_level2&quot;]
-
-    # EBMF (F1..F200, dense) and RQVI all-2560 (sparse), same cell order
-    fe = h5py.File(EBMF_H5AD, &quot;r&quot;)
-    obs = _h5_index(fe, &quot;obs&quot;)
-    e_var = _h5_index(fe, &quot;var&quot;)
-    e_pos = {n: i for i, n in enumerate(e_var)}
-    E = fe[&quot;X&quot;][:][:, [e_pos[c] for c in FACTORS]]              # n_obs x 200
-    fe.close()
-
-    fr = h5py.File(ALL_H5AD, &quot;r&quot;)
-    r_obs = _h5_index(fr, &quot;obs&quot;)
-    r_var = _h5_index(fr, &quot;var&quot;)
-    g = fr[&quot;X&quot;]
-    R = sp.csr_matrix((g[&quot;data&quot;][:], g[&quot;indices&quot;][:], g[&quot;indptr&quot;][:]), shape=tuple(g.attrs[&quot;shape&quot;]))
-    fr.close()
-    if not np.array_equal(obs, r_obs):
-        raise ValueError(&quot;EBMF and RQVI cell orders differ&quot;)
-
-    # ---- MATCHING basis: all common cells (no non-thymocyte filter) ----
-    m_mask = np.array([c in cell_l2 for c in obs])
-    m_idx = np.where(m_mask)[0]
-    m_labs = np.array([cell_l2[obs[i]] for i in m_idx])
-    m_clusters = sorted(set(m_labs))
-    m_code = {l: i for i, l in enumerate(m_clusters)}
-    m_codes = np.array([m_code[l] for l in m_labs])
-    K_match = len(m_clusters)
-
-    ebmf_m, _ = _cluster_means(E[m_idx], m_codes, K_match)      # K_match x 200
-    rqvi_m, _ = _cluster_means(R[m_idx], m_codes, K_match)      # K_match x 2560
-    ez, e_info = _zscore(ebmf_m)
-    rz, r_info = _zscore(rqvi_m)
-    if not e_info.all():
-        raise ValueError(&quot;constant EBMF factor on matching basis&quot;)
-    corr = ez.T @ rz / K_match
-    corr[:, ~r_info] = -np.inf
-    cost = np.where(np.isfinite(corr), corr, -1e9)
-    rows, cols = linear_sum_assignment(-cost)
-    if rows.size != 200 or np.unique(cols).size != 200:
-        raise RuntimeError(&quot;assignment did not cover all 200 EBMF factors uniquely&quot;)
-    sel = np.empty(200, dtype=int)
-    sel[rows] = cols
-    match_r = corr[np.arange(200), sel]
-    matched_candidates = r_var[sel]
-    print(f&quot;MATCHING basis: {len(m_idx)} common cells, {K_match} level2 clusters &quot;
-          f&quot;(incl. {sorted(set(m_clusters) - set(cell_l2[c] for c in obs if c in cell_l2 and cell_l1[c] != &#39;thymocyte&#39;))})&quot;)
-
-    # ---- DISPLAY basis: non-thymocyte cells, order from S5_cluster_order.csv ----
-    order = pd.read_csv(FIG_DIR / &quot;S5_cluster_order.csv&quot;).sort_values(&quot;display_column&quot;)
-    disp_clusters = order[&quot;level2_cluster&quot;].astype(str).tolist()
-    d_code = {l: i for i, l in enumerate(disp_clusters)}
-    d_mask = np.array([(c in cell_l2) and (cell_l1[c] != &quot;thymocyte&quot;) for c in obs])
-    d_idx = np.where(d_mask)[0]
-    d_codes = np.array([d_code[cell_l2[obs[i]]] for i in d_idx])
-    rqvi_disp_all, d_counts = _cluster_means(R[d_idx], d_codes, len(disp_clusters))   # 107 x 2560
-    if not np.array_equal(d_counts.astype(int), order[&quot;n_cells&quot;].to_numpy()):
-        raise ValueError(&quot;display cell counts differ from S5_cluster_order&quot;)
-    rematched_disp = rqvi_disp_all[:, sel]                        # 107 x 200
-
-    out = pd.DataFrame(rematched_disp, index=disp_clusters, columns=FACTORS)
-    out.index.name = &quot;level2_cluster&quot;
-    out.to_csv(FIG_DIR / &quot;S5_rqvi_rematched_raw_means_level2.csv&quot;)
-
-    # display-basis correlation for the caption
-    ebmf_disp, _ = _cluster_means(E[d_idx], d_codes, len(disp_clusters))
-    ez_d = _zscore(ebmf_disp)[0]
-    rz_d = _zscore(rematched_disp)[0]
-    disp_r = (ez_d * rz_d).sum(0) / len(disp_clusters)
-
-    shipped = pd.read_csv(PKG / &quot;ebmf_rqvi_multiseed_level2_one_to_one_matches.csv&quot;)
-    shipped_map = dict(zip(shipped[&quot;ebmf_factor&quot;].astype(str), shipped[&quot;rqvi_candidate&quot;].astype(str)))
-    same = sum(matched_candidates[k] == shipped_map.get(f&quot;F{k+1}&quot;) for k in range(200))
-
-    pd.DataFrame({
-        &quot;ebmf_factor&quot;: FACTORS,
-        &quot;rematched_rqvi_candidate&quot;: matched_candidates,
-        &quot;pearson_r_match_basis_108&quot;: match_r,
-        &quot;pearson_r_display_basis_107&quot;: disp_r,
-        &quot;same_as_shipped&quot;: [matched_candidates[k] == shipped_map.get(f&quot;F{k+1}&quot;) for k in range(200)],
-    }).to_csv(FIG_DIR / &quot;S5_rematch_mapping.csv&quot;, index=False)
-
-    print(&quot;=== rematch (matching basis = all common cells, 108 clusters) ===&quot;)
-    print(f&quot;match-basis r:   median {np.median(match_r):.3f}, &gt;=0.5 {100*np.mean(match_r&gt;=0.5):.1f}%, &quot;
-          f&quot;r&lt;0.3 {int((match_r&lt;0.3).sum())}&quot;)
-    print(f&quot;display-basis r: median {np.median(disp_r):.3f}, &gt;=0.5 {100*np.mean(disp_r&gt;=0.5):.1f}%, &quot;
-          f&quot;r&lt;0.3 {int((disp_r&lt;0.3).sum())}&quot;)
-    print(f&quot;pairs identical to Tianze&#39;s shipped matching: {same}/200&quot;)
-    print(f&quot;wrote {FIG_DIR/&#39;S5_rqvi_rematched_raw_means_level2.csv&#39;} and S5_rematch_mapping.csv&quot;)
-
-
-if __name__ == &quot;__main__&quot;:
-    main()</code></pre>
+non-thymocyte clusters. Median per-factor r = 0.766, 92.5% &gt;= 0.5.
+Full code: <a
+href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS5_rematch.py"><code>script/FigureS5_rematch.py</code></a>.</p>
 </div>
-<div id="plotting-tianze-style-heatmaps" class="section level2">
-<h2>Plotting: Tianze-style heatmaps</h2>
+<div id="plotting" class="section level3">
+<h3>Plotting</h3>
 <p><code>script/FigureS5_plot.py</code> orders the EBMF rows by
 hierarchical clustering (average linkage, correlation distance, optimal
 leaf ordering), rescales every factor to <code>[0, 1]</code> across
-clusters, and draws the two heatmaps with a shared colorbar. The matched
-RQVI panel reuses the EBMF row order.</p>
-<pre class="python"><code>&quot;&quot;&quot;Figure S5 (plot step). EBMF vs matched-RQVI level2 heatmaps in Tianze&#39;s style.
-
-Reads the raw cluster-mean matrices written by script/FigureS5.R, orders EBMF
-factors by hierarchical clustering (average linkage, correlation distance,
-optimal leaf ordering), scales every factor to [0, 1] across clusters, and draws
-two Blues heatmaps (EBMF | corresponding RQVI) sharing row order, columns, and a
-&quot;Relative loading&quot; colorbar. Plotting helpers are adapted from Tianze&#39;s
-scripts/fig_ebmf_rqvi_level2_comparison.py so the visual style matches.
-
-Run from the repository root:
-    &lt;miniforge&gt;/envs/pyenv/bin/python script/FigureS5_plot.py
-&quot;&quot;&quot;
-from __future__ import annotations
-
-import argparse
-from pathlib import Path
-
-import matplotlib
-
-matplotlib.use(&quot;Agg&quot;)
-import matplotlib.colors as mcolors
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-from scipy.cluster.hierarchy import leaves_list, linkage
-
-FIG_DIR = Path(&quot;figures/generated/Figure S5&quot;)
-EBMF_MEANS = FIG_DIR / &quot;S5_ebmf_raw_means_level2.csv&quot;
-# Canonical Fig S5 uses the matching re-derived on our basis (FigureS5_rematch.py).
-# To plot the shipped-matching variant instead:
-#   FigureS5_plot.py --rqvi-means &quot;.../S5_rqvi_matched_raw_means_level2.csv&quot; --suffix _shipped
-RQVI_MEANS = FIG_DIR / &quot;S5_rqvi_rematched_raw_means_level2.csv&quot;
-CLUSTER_ORDER = FIG_DIR / &quot;S5_cluster_order.csv&quot;
-LEVEL1_PALETTE = FIG_DIR / &quot;S5_level1_palette.csv&quot;
-SUBFIG_DIR = FIG_DIR / &quot;S5_subfigures&quot;
-
-# populated from S5_level1_palette.csv in main()
-LEVEL1_COLORS: dict[str, str] = {}
-
-
-def _zscore_columns(df: pd.DataFrame) -&gt; pd.DataFrame:
-    values = df.to_numpy(dtype=np.float64)
-    means = values.mean(axis=0, keepdims=True)
-    stds = values.std(axis=0, ddof=0, keepdims=True)
-    informative = stds.ravel() &gt; np.finfo(float).eps
-    if not np.all(informative):
-        raise ValueError(f&quot;constant-profile factors: {df.columns[~informative].tolist()}&quot;)
-    z = (values - means) / stds
-    return pd.DataFrame(z, index=df.index, columns=df.columns)
-
-
-def _scale_columns_to_unit_interval(df: pd.DataFrame) -&gt; pd.DataFrame:
-    values = df.to_numpy(dtype=np.float64)
-    minima = values.min(axis=0, keepdims=True)
-    ranges = values.max(axis=0, keepdims=True) - minima
-    informative = ranges.ravel() &gt; np.finfo(float).eps
-    scaled = np.zeros_like(values)
-    scaled[:, informative] = (values[:, informative] - minima[:, informative]) / ranges[:, informative]
-    return pd.DataFrame(scaled, index=df.index, columns=df.columns)
-
-
-def _group_spans(lineages: list[str]) -&gt; list[tuple[str, int, int]]:
-    spans: list[tuple[str, int, int]] = []
-    start = 0
-    for position in range(1, len(lineages) + 1):
-        if position == len(lineages) or lineages[position] != lineages[start]:
-            spans.append((lineages[start], start, position))
-            start = position
-    return spans
-
-
-def _draw_lineage_strip(ax, cluster_lineages, spans) -&gt; None:
-    categories = list(dict.fromkeys(cluster_lineages))
-    category_to_code = {label: index for index, label in enumerate(categories)}
-    codes = np.asarray([[category_to_code[label] for label in cluster_lineages]])
-    cmap = mcolors.ListedColormap([LEVEL1_COLORS.get(label, &quot;#BDBDBD&quot;) for label in categories])
-    ax.imshow(codes, aspect=&quot;auto&quot;, cmap=cmap, interpolation=&quot;none&quot;)
-    ax.set_xlim(-0.5, len(cluster_lineages) - 0.5)
-    ax.set_xticks([])
-    ax.set_yticks([])
-    for lineage, start, stop in spans:
-        if stop - start &gt;= 4:
-            ax.text((start + stop - 1) / 2, -0.6, lineage, ha=&quot;center&quot;, va=&quot;bottom&quot;,
-                    fontsize=7.5, clip_on=False)
-        if start &gt; 0:
-            ax.axvline(start - 0.5, color=&quot;white&quot;, linewidth=1.0)
-    for spine in ax.spines.values():
-        spine.set_visible(False)
-
-
-def _style_heatmap(ax, spans) -&gt; None:
-    for _, start, _ in spans[1:]:
-        ax.axvline(start - 0.5, color=&quot;#777777&quot;, linewidth=0.35)
-    ax.set_xticks([])
-    ax.set_yticks([])
-    for spine in ax.spines.values():
-        spine.set_color(&quot;#333333&quot;)
-        spine.set_linewidth(0.55)
-
-
-def _set_plot_style() -&gt; None:
-    plt.rcParams.update({
-        &quot;font.family&quot;: &quot;DejaVu Sans&quot;,
-        &quot;font.size&quot;: 9,
-        &quot;pdf.fonttype&quot;: 42,
-        &quot;ps.fonttype&quot;: 42,
-        &quot;figure.dpi&quot;: 300,
-        &quot;savefig.dpi&quot;: 300,
-    })
-
-
-def _plot_heatmap_subfigure(matrix, cluster_lineages, ylabel, ylabel_on_right, output_pdf) -&gt; None:
-    _set_plot_style()
-    cmap = plt.get_cmap(&quot;Blues&quot;)
-    norm = mcolors.Normalize(vmin=0.0, vmax=1.0)
-    spans = _group_spans(cluster_lineages)
-    fig = plt.figure(figsize=(5.1, 7.8), facecolor=&quot;white&quot;)
-    grid = fig.add_gridspec(2, 1, height_ratios=[0.18, 7.6], hspace=0.02)
-    ax_strip = fig.add_subplot(grid[0, 0])
-    ax_heatmap = fig.add_subplot(grid[1, 0])
-    _draw_lineage_strip(ax_strip, cluster_lineages, spans)
-    ax_heatmap.imshow(matrix, aspect=&quot;auto&quot;, interpolation=&quot;none&quot;, cmap=cmap, norm=norm, rasterized=True)
-    _style_heatmap(ax_heatmap, spans)
-    ax_heatmap.set_ylabel(ylabel, fontsize=10, labelpad=8)
-    if ylabel_on_right:
-        ax_heatmap.yaxis.set_label_position(&quot;right&quot;)
-        fig.subplots_adjust(left=0.04, right=0.86, top=0.95, bottom=0.04)
-    else:
-        fig.subplots_adjust(left=0.14, right=0.96, top=0.95, bottom=0.04)
-    output_pdf.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(output_pdf, dpi=300, bbox_inches=&quot;tight&quot;)
-    plt.close(fig)
-
-
-def _plot_shared_colorbar(output_pdf) -&gt; None:
-    _set_plot_style()
-    cmap = plt.get_cmap(&quot;Blues&quot;)
-    norm = mcolors.Normalize(vmin=0.0, vmax=1.0)
-    scalar_mappable = plt.cm.ScalarMappable(norm=norm, cmap=cmap)
-    fig = plt.figure(figsize=(2.1, 0.48), facecolor=&quot;white&quot;)
-    colorbar_axis = fig.add_axes([0.08, 0.54, 0.84, 0.27])
-    colorbar = fig.colorbar(scalar_mappable, cax=colorbar_axis, orientation=&quot;horizontal&quot;, ticks=[0.0, 0.5, 1.0])
-    colorbar.set_label(&quot;Relative loading&quot;, fontsize=8, labelpad=2)
-    colorbar.ax.tick_params(labelsize=7, length=2, pad=1)
-    colorbar.outline.set_linewidth(0.45)
-    output_pdf.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(output_pdf, dpi=300, bbox_inches=&quot;tight&quot;, pad_inches=0.02)
-    plt.close(fig)
-
-
-def _plot(ebmf_plot, rqvi_plot, cluster_lineages, output_pdf, output_png) -&gt; None:
-    _set_plot_style()
-    cmap = plt.get_cmap(&quot;Blues&quot;)
-    norm = mcolors.Normalize(vmin=0.0, vmax=1.0)
-    fig = plt.figure(figsize=(10.8, 7.8), facecolor=&quot;white&quot;)
-    grid = fig.add_gridspec(2, 3, height_ratios=[0.18, 7.6], width_ratios=[1.0, 0.14, 1.0],
-                            hspace=0.02, wspace=0.0)
-    ax_strip_ebmf = fig.add_subplot(grid[0, 0])
-    ax_ebmf = fig.add_subplot(grid[1, 0])
-    ax_strip_rqvi = fig.add_subplot(grid[0, 2])
-    ax_rqvi = fig.add_subplot(grid[1, 2])
-    spans = _group_spans(cluster_lineages)
-    _draw_lineage_strip(ax_strip_ebmf, cluster_lineages, spans)
-    _draw_lineage_strip(ax_strip_rqvi, cluster_lineages, spans)
-    ax_ebmf.imshow(ebmf_plot, aspect=&quot;auto&quot;, interpolation=&quot;none&quot;, cmap=cmap, norm=norm, rasterized=True)
-    ax_rqvi.imshow(rqvi_plot, aspect=&quot;auto&quot;, interpolation=&quot;none&quot;, cmap=cmap, norm=norm, rasterized=True)
-    _style_heatmap(ax_ebmf, spans)
-    _style_heatmap(ax_rqvi, spans)
-    ax_ebmf.set_ylabel(&quot;EBMF factors&quot;, fontsize=10, labelpad=8)
-    ax_rqvi.set_ylabel(&quot;Corresponding RQVI factors&quot;, fontsize=10, labelpad=8)
-    ax_rqvi.yaxis.set_label_position(&quot;right&quot;)
-    scalar_mappable = plt.cm.ScalarMappable(norm=norm, cmap=cmap)
-    colorbar_axis = fig.add_axes([0.80, 0.055, 0.12, 0.016])
-    colorbar = fig.colorbar(scalar_mappable, cax=colorbar_axis, orientation=&quot;horizontal&quot;, ticks=[0.0, 0.5, 1.0])
-    colorbar.set_label(&quot;Relative loading&quot;, fontsize=8, labelpad=2)
-    colorbar.ax.tick_params(labelsize=7, length=2, pad=1)
-    colorbar.outline.set_linewidth(0.45)
-    fig.subplots_adjust(left=0.08, right=0.92, top=0.95, bottom=0.09)
-    output_pdf.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(output_pdf, dpi=300, bbox_inches=&quot;tight&quot;)
-    fig.savefig(output_png, dpi=300, bbox_inches=&quot;tight&quot;)
-    plt.close(fig)
-
-
-def main() -&gt; None:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(&quot;--rqvi-means&quot;, type=Path, default=RQVI_MEANS,
-                        help=&quot;RQVI cluster-mean CSV to plot on the right panel.&quot;)
-    parser.add_argument(&quot;--suffix&quot;, type=str, default=&quot;&quot;,
-                        help=&quot;Suffix for output filenames (e.g. &#39;_rematched&#39;).&quot;)
-    args = parser.parse_args()
-
-    global LEVEL1_COLORS
-    palette = pd.read_csv(LEVEL1_PALETTE)
-    LEVEL1_COLORS = dict(zip(palette[&quot;level1&quot;].astype(str), palette[&quot;color&quot;].astype(str)))
-
-    cluster_info = pd.read_csv(CLUSTER_ORDER).sort_values(&quot;display_column&quot;)
-    cluster_labels = cluster_info[&quot;level2_cluster&quot;].astype(str).tolist()
-    cluster_lineages = cluster_info[&quot;level1&quot;].astype(str).tolist()
-
-    ebmf_raw = pd.read_csv(EBMF_MEANS, index_col=&quot;level2_cluster&quot;)
-    rqvi_raw = pd.read_csv(args.rqvi_means, index_col=&quot;level2_cluster&quot;)
-    ebmf_raw.index = ebmf_raw.index.astype(str)
-    rqvi_raw.index = rqvi_raw.index.astype(str)
-    if set(cluster_labels) != set(ebmf_raw.index) or set(cluster_labels) != set(rqvi_raw.index):
-        raise ValueError(&quot;cluster labels differ between order file and mean matrices&quot;)
-    ebmf_raw = ebmf_raw.loc[cluster_labels]
-    rqvi_raw = rqvi_raw.loc[cluster_labels]
-    factors = [f&quot;F{k}&quot; for k in range(1, 201)]
-    if ebmf_raw.columns.tolist() != factors or rqvi_raw.columns.tolist() != factors:
-        raise ValueError(&quot;expected columns F1..F200 in both matrices&quot;)
-
-    # row order: hierarchical clustering of z-scored EBMF profiles
-    ebmf_z = _zscore_columns(ebmf_raw)
-    tree = linkage(ebmf_z.to_numpy().T, method=&quot;average&quot;, metric=&quot;correlation&quot;, optimal_ordering=True)
-    display_order = leaves_list(tree)
-
-    ebmf_scaled = _scale_columns_to_unit_interval(ebmf_raw)
-    rqvi_scaled = _scale_columns_to_unit_interval(rqvi_raw)
-    ebmf_plot = ebmf_scaled.to_numpy().T[display_order]
-    rqvi_plot = rqvi_scaled.to_numpy().T[display_order]
-
-    sfx = args.suffix
-    subfig_dir = SUBFIG_DIR if not sfx else SUBFIG_DIR.with_name(SUBFIG_DIR.name + sfx)
-    _plot(ebmf_plot, rqvi_plot, cluster_lineages,
-          FIG_DIR / f&quot;S5_ebmf_rqvi_level2_comparison{sfx}.pdf&quot;,
-          FIG_DIR / f&quot;S5_ebmf_rqvi_level2_comparison{sfx}.png&quot;)
-    _plot_heatmap_subfigure(ebmf_plot, cluster_lineages, &quot;EBMF factors&quot;, False,
-                            subfig_dir / &quot;panel_A_ebmf_factors.pdf&quot;)
-    _plot_heatmap_subfigure(rqvi_plot, cluster_lineages, &quot;Corresponding RQVI factors&quot;, True,
-                            subfig_dir / &quot;panel_B_corresponding_rqvi_factors.pdf&quot;)
-    _plot_shared_colorbar(subfig_dir / &quot;shared_relative_loading_colorbar.pdf&quot;)
-
-    ordered_factors = [factors[i] for i in display_order]
-    pd.DataFrame(ebmf_plot, index=ordered_factors, columns=cluster_labels).to_csv(
-        FIG_DIR / f&quot;S5_ebmf_scaled_display{sfx}.csv&quot;)
-    pd.DataFrame(rqvi_plot, index=ordered_factors, columns=cluster_labels).to_csv(
-        FIG_DIR / f&quot;S5_rqvi_scaled_display{sfx}.csv&quot;)
-
-    print(f&quot;rows: {len(display_order)} factors; cols: {len(cluster_labels)} level2 clusters&quot;)
-    print(f&quot;wrote {FIG_DIR / (&#39;S5_ebmf_rqvi_level2_comparison&#39;+sfx+&#39;.pdf&#39;)} and .png&quot;)
-    print(f&quot;wrote subfigures to {subfig_dir}&quot;)
-
-
-if __name__ == &quot;__main__&quot;:
-    main()</code></pre>
-</div>
-<div id="figure" class="section level2">
-<h2>Figure</h2>
-<p><img src="assets/FigureS5/S5_ebmf_rqvi_level2_comparison.png" width="100%" style="display: block; margin: auto;" /></p>
-<div class="figcaption">
-<p><strong>Fig. S5. Cluster-level activity profiles of corresponding
-EBMF and RQVI factors.</strong> EBMF cell loadings (our flashier fit)
-and matched RQVI program loadings were averaged within 107 fine-grained
-<code>annotation_level2</code> clusters, using all non-thymocyte cells
-present in both the filtered EBMF loading matrix and the RQVI analysis
-(n = 629,551 cells). The left heatmap shows 200 EBMF factors ordered by
-hierarchical clustering of their cluster-level profiles. The right
-heatmap shows, on the same row and column order, the RQVI program
-assigned to each EBMF factor by a global one-to-one maximum-correlation
-assignment over all 2,560 candidates (10 seeds x 256 programs),
-re-derived on this clustering using all common cells. Loadings were
-independently rescaled to <code>[0, 1]</code> within each factor for
-display; broad lineage annotations are shown above the columns. The
-median per-factor Pearson correlation across the displayed clusters was
-0.766, and 92.5% of factors had r &gt;= 0.5.</p>
-</div>
+clusters, and draws the two heatmaps with a shared colorbar; the matched
+RQVI panel reuses the EBMF row order. Full code: <a
+href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS5_plot.py"><code>script/FigureS5_plot.py</code></a>.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1405,6 +1067,7 @@ loaded via a namespace (and not attached):
 [29] pkgconfig_2.0.3 later_1.4.4     digest_0.6.39   R6_2.6.1       
 [33] pillar_1.11.1   magrittr_2.0.5  bslib_0.9.0     tools_4.5.1    
 [37] cachem_1.1.0   </code></pre>
+</div>
 </div>
 </div>
 </div>
