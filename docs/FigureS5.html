@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree98d292488cb85688be742e5141be7eaf222ab79atargetblank98d2924a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree61de7cb8c334b5c001317a99c77f840544d1f16atargetblank61de7cba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/98d292488cb85688be742e5141be7eaf222ab79a" target="_blank">98d2924</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/61de7cb8c334b5c001317a99c77f840544d1f16a" target="_blank">61de7cb</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree98d292488cb85688be742e5141be7eaf222ab79atargetblank98d2924a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree61de7cb8c334b5c001317a99c77f840544d1f16atargetblank61de7cba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/98d292488cb85688be742e5141be7eaf222ab79a" target="_blank">98d2924</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/61de7cb8c334b5c001317a99c77f840544d1f16a" target="_blank">61de7cb</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -700,6 +700,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/61de7cb8c334b5c001317a99c77f840544d1f16a/analysis/FigureS5.Rmd" target="_blank">61de7cb</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-24
+</td>
+<td>
+Reflect single-matching pipeline on the Figure S5 page
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/9862b6db41ffa01f95c252bfcaa0a067654d2852/docs/FigureS5.html" target="_blank">9862b6d</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-24
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -881,27 +915,27 @@ here.</p>
 <div id="cluster-means" class="section level3">
 <h3>Cluster means</h3>
 <p><code>script/FigureS5.R</code> builds the raw
-<code>annotation_level2</code> cluster-mean matrices for the EBMF and
-RQVI programs on the common non-thymocyte cells, together with the
-column order (Figure-1 level1 lineage order, alphabetical within each
-lineage) and the lineage color palette.</p>
-<pre class="r"><code># Figure S5 (data step): cluster-mean matrices for the EBMF vs RQVI gene-program
-# comparison across annotation_level2 clusters.
+<code>annotation_level2</code> cluster-mean matrix for the EBMF programs
+on the common non-thymocyte cells, together with the column order
+(Figure-1 level1 lineage order, alphabetical within each lineage) and
+the lineage color palette. The matched RQVI cluster means are produced
+by the matching step below.</p>
+<pre class="r"><code># Figure S5 (data step): EBMF cluster-mean matrix and column/palette metadata for
+# the EBMF vs RQVI gene-program comparison across annotation_level2 clusters.
 #
 #   * Cells: L_pm_filtered gene-program loadings (cells passing the iterative
 #     total-loading filter), restricted to non-thymocytes (annotation_level1 !=
 #     &quot;thymocyte&quot;, all conditions) and to cells that also carry an RQVI loading
-#     (&quot;common cells&quot;).
+#     (&quot;common cells&quot;). The RQVI cell set is taken from the cell_id index of the
+#     RQVI loading table.
 #   * EBMF matrix: flashier loadings L_pm_filtered (GP1..GP200), averaged within
 #     annotation_level2 on the common cells.
-#   * RQVI matrix: RQVI program loadings, averaged within annotation_level2 on the
-#     same common cells, with each program placed under the column of its matched
-#     EBMF program. EBMF factor F_k corresponds to gene program GP_k.
 #   * Columns (level2 clusters) are ordered by the Figure-1 level1 lineage order,
 #     alphabetically within each lineage.
 #
-# This script writes the raw cluster-mean matrices and column/palette metadata.
-# The one-to-one matching is computed by script/FigureS5_rematch.py; row ordering,
+# This script writes the EBMF cluster-mean matrix, a cell-&gt;annotation table, and
+# the column order + lineage palette. The RQVI cluster means and the one-to-one
+# EBMF-RQVI matching are computed by script/FigureS5_rematch.py; row ordering,
 # per-program [0,1] scaling, and the heatmaps by script/FigureS5_plot.py.
 
 suppressPackageStartupMessages({
@@ -919,8 +953,7 @@ outdir &lt;- &quot;figures/generated/Figure S5&quot;
 dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
 
 PKG &lt;- &quot;data/rqvi_loading/RQVI_EBMF_heatmap_data_v1/data&quot;
-parquet_path &lt;- file.path(PKG, &quot;rqvi_matched_200_cell_loadings.parquet&quot;)
-matches_path &lt;- file.path(PKG, &quot;ebmf_rqvi_multiseed_level2_one_to_one_matches.csv&quot;)
+rqvi_loading_path &lt;- file.path(PKG, &quot;rqvi_matched_200_cell_loadings.parquet&quot;)
 level1_order &lt;- c(&quot;CD8&quot;, &quot;CD4&quot;, &quot;Treg&quot;, &quot;gdT&quot;, &quot;CD8aa&quot;, &quot;Tz&quot;, &quot;DN&quot;, &quot;DP&quot;)
 
 ## ---- EBMF loadings + metadata ----
@@ -933,21 +966,11 @@ stopifnot(identical(rownames(L), rownames(meta)), ncol(L) == 200L)
 nonthy &lt;- meta$annotation_level1 != &quot;thymocyte&quot;
 if (anyNA(nonthy)) stop(&quot;annotation_level1 has missing values.&quot;)
 
-## ---- matched RQVI cell loadings (200 programs) ----
-pq   &lt;- as.data.frame(arrow::read_parquet(parquet_path))
-prog &lt;- setdiff(colnames(pq), &quot;cell_id&quot;)
-stopifnot(length(prog) == 200L)
-matches &lt;- fread(matches_path)
-f_for &lt;- matches$ebmf_factor[match(prog, matches$rqvi_candidate)]   # &quot;F&lt;k&gt;&quot; per program
-if (anyNA(f_for) || length(unique(f_for)) != 200L) {
-  stop(&quot;Could not map every RQVI program column to a unique EBMF factor.&quot;)
-}
-
-## ---- common cells (non-thymocyte, in L_pm, and with RQVI loading) ----
+## ---- common cells (non-thymocyte, in L_pm, and with an RQVI loading) ----
+rqvi_cell_ids &lt;- as.data.frame(arrow::read_parquet(rqvi_loading_path, col_select = &quot;cell_id&quot;))$cell_id
 our_nonthy_ids &lt;- rownames(L)[nonthy]
-common_ids &lt;- our_nonthy_ids[our_nonthy_ids %in% pq$cell_id]
-grp &lt;- factor(as.character(meta$annotation_level2[match(common_ids, rownames(meta))]))
-grp &lt;- droplevels(grp)
+common_ids &lt;- our_nonthy_ids[our_nonthy_ids %in% rqvi_cell_ids]
+grp &lt;- droplevels(factor(as.character(meta$annotation_level2[match(common_ids, rownames(meta))])))
 if (anyNA(grp) || any(as.character(grp) == &quot;&quot;)) stop(&quot;Missing level2 labels on common cells.&quot;)
 
 message(sprintf(&quot;common non-thymocyte cells: %d (healthy %d / non-healthy %d); level2 clusters: %d&quot;,
@@ -962,18 +985,7 @@ colnames(Lc) &lt;- paste0(&quot;F&quot;, seq_len(ncol(Lc)))
 esum &lt;- rowsum(Lc, grp)
 ecnt &lt;- as.integer(table(grp)[rownames(esum)])
 ebmf_means &lt;- sweep(esum, 1L, ecnt, &quot;/&quot;)                 # K x 200
-
-## ---- matched-RQVI cluster means (columns F1..F200, same pairing) ----
-pqc &lt;- as.matrix(pq[match(common_ids, pq$cell_id), prog, drop = FALSE])
-colnames(pqc) &lt;- f_for
-pqc &lt;- pqc[, paste0(&quot;F&quot;, seq_len(200)), drop = FALSE]     # reorder to F1..F200
-rsum &lt;- rowsum(pqc, grp)
-rcnt &lt;- as.integer(table(grp)[rownames(rsum)])
-rqvi_means &lt;- sweep(rsum, 1L, rcnt, &quot;/&quot;)
-
-stopifnot(identical(rownames(ebmf_means), rownames(rqvi_means)),
-          identical(ecnt, rcnt),                           # same cells -&gt; same counts
-          nrow(ebmf_means) == 107L, ncol(ebmf_means) == 200L)
+stopifnot(nrow(ebmf_means) == 107L, ncol(ebmf_means) == 200L)
 
 ## ---- level2 column order (Figure-1 level1 order, alphabetical within) ----
 l2  &lt;- rownames(ebmf_means)
@@ -992,7 +1004,7 @@ cluster_order &lt;- data.frame(
   stringsAsFactors = FALSE
 )
 
-## ---- level1 palette (our canonical colors) as hex ----
+## ---- level1 palette (canonical lineage colors) as hex ----
 l1pal &lt;- ZemmourLib::immgent_colors$level1
 hex &lt;- vapply(l1pal, function(cc) {
   v &lt;- grDevices::col2rgb(cc)
@@ -1012,17 +1024,14 @@ fwrite(data.frame(
 
 fwrite(data.frame(level2_cluster = rownames(ebmf_means), ebmf_means, check.names = FALSE),
        file.path(outdir, &quot;S5_ebmf_raw_means_level2.csv&quot;))
-fwrite(data.frame(level2_cluster = rownames(rqvi_means), rqvi_means, check.names = FALSE),
-       file.path(outdir, &quot;S5_rqvi_matched_raw_means_level2.csv&quot;))
 fwrite(cluster_order, file.path(outdir, &quot;S5_cluster_order.csv&quot;))
 fwrite(pal_df,        file.path(outdir, &quot;S5_level1_palette.csv&quot;))
 fwrite(data.frame(
-  metric = c(&quot;common_cells&quot;, &quot;healthy_cells&quot;, &quot;nonhealthy_cells&quot;, &quot;level2_clusters&quot;,
-             &quot;ebmf_factors&quot;, &quot;rqvi_matched_programs&quot;),
+  metric = c(&quot;common_cells&quot;, &quot;healthy_cells&quot;, &quot;nonhealthy_cells&quot;, &quot;level2_clusters&quot;, &quot;ebmf_factors&quot;),
   value  = c(length(common_ids),
              sum(meta$condition_broad[match(common_ids, rownames(meta))] == &quot;healthy&quot;),
              sum(meta$condition_broad[match(common_ids, rownames(meta))] != &quot;healthy&quot;),
-             nlevels(grp), 200L, 200L)
+             nlevels(grp), 200L)
 ), file.path(outdir, &quot;S5_build_summary.csv&quot;))
 
 message(&quot;Wrote Fig S5 data inputs to &quot;, normalizePath(outdir))</code></pre>
