@@ -1,17 +1,16 @@
 # Figure 4. GPs associated with T-cell activation.
 #
 # Panels produced (see figures/Figure3_Activation/Figure3_caption.md for the
-# full caption text -- lettered a-e there, but relettered c-g in the final
-# figures/final-selected/bits/Figure 4/ bundle; this script uses the final
-# c-g lettering to match):
-#   3c  Standardized mean difference (d) in GP loading, activated vs resting,
+# full caption text -- lettered a-e there; this script uses that same a-e
+# lettering to match the final figures/final-selected/bits/Figure 4/ bundle):
+#   4a  Standardized mean difference (d) in GP loading, activated vs resting,
 #       CD4 (x) vs CD8 (y); curated GPs colored by semantic group and labeled.
-#   3d  GP-gene signature network: each curated GP linked to its top 5
+#   4b  GP-gene signature network: each curated GP linked to its top 5
 #       positively/negatively regulated genes.
-#   3e  Bipartite TF-GP network for the curated activation GPs.
-#   3f  Heatmap of log2FC in mean GP loading across experimental conditions,
+#   4c  Bipartite TF-GP network for the curated activation GPs.
+#   4d  Heatmap of log2FC in mean GP loading across experimental conditions,
 #       for activated CD4/CD8 cells.
-#   3g  Heatmap of mean GP loading per Level-2 sub-lineage, across the 7
+#   4e  Heatmap of mean GP loading per Level-2 sub-lineage, across the 7
 #       T-cell lineages.
 #
 # Source: ported from Figure_Activation.R, which also produced the
@@ -53,7 +52,7 @@ seurat_meta_filtered <- seurat_meta[rownames(L_pm_filtered), ]
 source("code/R/activation_shared_setup.R")
 
 # ============================================================
-# 3a: Standardized mean difference, activated vs resting, CD4 vs CD8
+# 4a: Standardized mean difference, activated vs resting, CD4 vs CD8
 # ============================================================
 d_thr <- 0.15
 ratio_cutoff <- 3
@@ -103,7 +102,7 @@ manual_curated_df <- GP_activation_summary %>%
     )
   )
 
-p_3a <- ggplot(manual_curated_df, aes(x = d_CD4, y = d_CD8)) +
+p_4a <- ggplot(manual_curated_df, aes(x = d_CD4, y = d_CD8)) +
   geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
   geom_hline(yintercept = 0, linetype = "dashed", color = "blue") +
   geom_vline(xintercept = 0, linetype = "dashed", color = "blue") +
@@ -141,14 +140,14 @@ p_3a <- ggplot(manual_curated_df, aes(x = d_CD4, y = d_CD8)) +
   ) +
   theme_minimal()
 ggsave(
-  filename = paste0(figure_path, "4c.pdf"),
-  plot = p_3a,
+  filename = paste0(figure_path, "4a.pdf"),
+  plot = p_4a,
   width = 8,
   height = 7
 )
 
 # ============================================================
-# 3b: GP-gene signature network
+# 4b: GP-gene signature network
 # ============================================================
 set.seed(42)
 F_pm_filtered_norm_subset <- F_pm_filtered_norm[, GPs_of_interest, drop = FALSE]
@@ -205,7 +204,7 @@ graph <- tidygraph::as_tbl_graph(all_edges_sorted) %>%
   )
 
 set.seed(2)
-p_3b <- ggraph(graph, layout = "stress") +
+p_4b <- ggraph(graph, layout = "stress") +
   geom_edge_link(aes(color = Color), alpha = 0.4, width = 0.6) +
   geom_node_point(
     aes(filter = (NodeGroup == "Gene"), color = ColorGroup),
@@ -251,14 +250,14 @@ p_3b <- ggraph(graph, layout = "stress") +
   ) +
   guides(color = guide_legend(override.aes = list(size = 5, shape = 15)))
 ggsave(
-  filename = paste0(figure_path, "4d.pdf"),
-  plot = p_3b,
+  filename = paste0(figure_path, "4b.pdf"),
+  plot = p_4b,
   width = 10,
   height = 10
 )
 
 # ============================================================
-# 3c: Bipartite TF-GP network
+# 4c: Bipartite TF-GP network
 # ============================================================
 mm <- org.Mm.eg.db::org.Mm.eg.db
 go2eg <- as.list(org.Mm.eg.db::org.Mm.egGO2ALLEGS)
@@ -310,7 +309,7 @@ plot_height_tf <- min(
   max(12, length(selected_tfs) * 0.35, length(GPs_of_interest) * 1.5 * 0.55 + 2)
 )
 ggsave(
-  filename = paste0(figure_path, "4e.pdf"),
+  filename = paste0(figure_path, "4c.pdf"),
   plot = tf_network_plot,
   width = 18,
   height = plot_height_tf,
@@ -318,7 +317,7 @@ ggsave(
 )
 
 # ============================================================
-# 3e: Mean GP loading per Level-2 sub-lineage (built before 3d since 3d
+# 4e: Mean GP loading per Level-2 sub-lineage (built before 4d since 4d
 #     reuses gp_row_order/group_colors computed here)
 # ============================================================
 keep_cells <- seurat_meta_filtered$annotation_level1 %in% lineages
@@ -381,12 +380,12 @@ col_idx <- which(ph$gtable$layout$name == "col_names")
 ph$gtable$grobs[[row_idx]]$gp$col <- row_label_cols
 ph$gtable$grobs[[col_idx]]$gp$col <- col_label_cols
 
-pdf(paste0(figure_path, "4g.pdf"), width = 11, height = 5.5)
+pdf(paste0(figure_path, "4e.pdf"), width = 11, height = 5.5)
 grid::grid.draw(ph$gtable)
 invisible(dev.off())
 
 # ============================================================
-# 3d: log2FC heatmap of activated CD4+CD8 cells across conditions,
+# 4d: log2FC heatmap of activated CD4+CD8 cells across conditions,
 #     relative to the per-GP mean across all CD4/CD8 cells
 # ============================================================
 act_keep <- seurat_meta_filtered$annotation_level1 %in%
@@ -464,7 +463,7 @@ row_idx_lfc_m <- which(ph_cond_lfc_mean$gtable$layout$name == "row_names")
 ph_cond_lfc_mean$gtable$grobs[[row_idx_lfc_m]]$gp$col <- row_label_cols
 
 pdf(
-  paste0(figure_path, "4f.pdf"),
+  paste0(figure_path, "4d.pdf"),
   width = max(8, 0.18 * ncol(lfc_mat_mean) + 4),
   height = 6
 )
