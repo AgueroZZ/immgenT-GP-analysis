@@ -11,7 +11,6 @@ Run from the repository root:
 """
 from __future__ import annotations
 
-import argparse
 from pathlib import Path
 
 import matplotlib
@@ -181,13 +180,6 @@ def _plot(ebmf_plot, rqvi_plot, cluster_lineages, output_pdf, output_png) -> Non
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--rqvi-means", type=Path, default=RQVI_MEANS,
-                        help="RQVI cluster-mean CSV to plot on the right panel.")
-    parser.add_argument("--suffix", type=str, default="",
-                        help="Suffix for output filenames (e.g. '_rematched').")
-    args = parser.parse_args()
-
     global LEVEL1_COLORS
     palette = pd.read_csv(LEVEL1_PALETTE)
     LEVEL1_COLORS = dict(zip(palette["level1"].astype(str), palette["color"].astype(str)))
@@ -197,7 +189,7 @@ def main() -> None:
     cluster_lineages = cluster_info["level1"].astype(str).tolist()
 
     ebmf_raw = pd.read_csv(EBMF_MEANS, index_col="level2_cluster")
-    rqvi_raw = pd.read_csv(args.rqvi_means, index_col="level2_cluster")
+    rqvi_raw = pd.read_csv(RQVI_MEANS, index_col="level2_cluster")
     ebmf_raw.index = ebmf_raw.index.astype(str)
     rqvi_raw.index = rqvi_raw.index.astype(str)
     if set(cluster_labels) != set(ebmf_raw.index) or set(cluster_labels) != set(rqvi_raw.index):
@@ -218,26 +210,24 @@ def main() -> None:
     ebmf_plot = ebmf_scaled.to_numpy().T[display_order]
     rqvi_plot = rqvi_scaled.to_numpy().T[display_order]
 
-    sfx = args.suffix
-    subfig_dir = SUBFIG_DIR if not sfx else SUBFIG_DIR.with_name(SUBFIG_DIR.name + sfx)
     _plot(ebmf_plot, rqvi_plot, cluster_lineages,
-          FIG_DIR / f"S5_ebmf_rqvi_level2_comparison{sfx}.pdf",
-          FIG_DIR / f"S5_ebmf_rqvi_level2_comparison{sfx}.png")
+          FIG_DIR / "S5_ebmf_rqvi_level2_comparison.pdf",
+          FIG_DIR / "S5_ebmf_rqvi_level2_comparison.png")
     _plot_heatmap_subfigure(ebmf_plot, cluster_lineages, "EBMF factors", False,
-                            subfig_dir / "panel_A_ebmf_factors.pdf")
+                            SUBFIG_DIR / "panel_A_ebmf_factors.pdf")
     _plot_heatmap_subfigure(rqvi_plot, cluster_lineages, "Corresponding RQVI factors", True,
-                            subfig_dir / "panel_B_corresponding_rqvi_factors.pdf")
-    _plot_shared_colorbar(subfig_dir / "shared_relative_loading_colorbar.pdf")
+                            SUBFIG_DIR / "panel_B_corresponding_rqvi_factors.pdf")
+    _plot_shared_colorbar(SUBFIG_DIR / "shared_relative_loading_colorbar.pdf")
 
     ordered_factors = [factors[i] for i in display_order]
     pd.DataFrame(ebmf_plot, index=ordered_factors, columns=cluster_labels).to_csv(
-        FIG_DIR / f"S5_ebmf_scaled_display{sfx}.csv")
+        FIG_DIR / "S5_ebmf_scaled_display.csv")
     pd.DataFrame(rqvi_plot, index=ordered_factors, columns=cluster_labels).to_csv(
-        FIG_DIR / f"S5_rqvi_scaled_display{sfx}.csv")
+        FIG_DIR / "S5_rqvi_scaled_display.csv")
 
-    print(f"rows: {len(display_order)} factors; cols: {len(cluster_labels)} level2 clusters")
-    print(f"wrote {FIG_DIR / ('S5_ebmf_rqvi_level2_comparison'+sfx+'.pdf')} and .png")
-    print(f"wrote subfigures to {subfig_dir}")
+    print(f"rows: {len(display_order)} programs; cols: {len(cluster_labels)} level2 clusters")
+    print(f"wrote {FIG_DIR / 'S5_ebmf_rqvi_level2_comparison.pdf'} and .png")
+    print(f"wrote subfigures to {SUBFIG_DIR}")
 
 
 if __name__ == "__main__":

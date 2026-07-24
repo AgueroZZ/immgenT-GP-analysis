@@ -1,20 +1,19 @@
-# Figure S5 (data step): cluster-mean matrices for the EBMF vs RQVI gene-program
-# comparison across annotation_level2 clusters.
+# Figure S5 (data step): EBMF cluster-mean matrix and column/palette metadata for
+# the EBMF vs RQVI gene-program comparison across annotation_level2 clusters.
 #
 #   * Cells: L_pm_filtered gene-program loadings (cells passing the iterative
 #     total-loading filter), restricted to non-thymocytes (annotation_level1 !=
 #     "thymocyte", all conditions) and to cells that also carry an RQVI loading
-#     ("common cells").
+#     ("common cells"). The RQVI cell set is taken from the cell_id index of the
+#     RQVI loading table.
 #   * EBMF matrix: flashier loadings L_pm_filtered (GP1..GP200), averaged within
 #     annotation_level2 on the common cells.
-#   * RQVI matrix: RQVI program loadings, averaged within annotation_level2 on the
-#     same common cells, with each program placed under the column of its matched
-#     EBMF program. EBMF factor F_k corresponds to gene program GP_k.
 #   * Columns (level2 clusters) are ordered by the Figure-1 level1 lineage order,
 #     alphabetically within each lineage.
 #
-# This script writes the raw cluster-mean matrices and column/palette metadata.
-# The one-to-one matching is computed by script/FigureS5_rematch.py; row ordering,
+# This script writes the EBMF cluster-mean matrix, a cell->annotation table, and
+# the column order + lineage palette. The RQVI cluster means and the one-to-one
+# EBMF-RQVI matching are computed by script/FigureS5_rematch.py; row ordering,
 # per-program [0,1] scaling, and the heatmaps by script/FigureS5_plot.py.
 
 suppressPackageStartupMessages({
@@ -32,8 +31,7 @@ outdir <- "figures/generated/Figure S5"
 dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
 
 PKG <- "data/rqvi_loading/RQVI_EBMF_heatmap_data_v1/data"
-parquet_path <- file.path(PKG, "rqvi_matched_200_cell_loadings.parquet")
-matches_path <- file.path(PKG, "ebmf_rqvi_multiseed_level2_one_to_one_matches.csv")
+rqvi_loading_path <- file.path(PKG, "rqvi_matched_200_cell_loadings.parquet")
 level1_order <- c("CD8", "CD4", "Treg", "gdT", "CD8aa", "Tz", "DN", "DP")
 
 ## ---- EBMF loadings + metadata ----
@@ -46,21 +44,11 @@ stopifnot(identical(rownames(L), rownames(meta)), ncol(L) == 200L)
 nonthy <- meta$annotation_level1 != "thymocyte"
 if (anyNA(nonthy)) stop("annotation_level1 has missing values.")
 
-## ---- matched RQVI cell loadings (200 programs) ----
-pq   <- as.data.frame(arrow::read_parquet(parquet_path))
-prog <- setdiff(colnames(pq), "cell_id")
-stopifnot(length(prog) == 200L)
-matches <- fread(matches_path)
-f_for <- matches$ebmf_factor[match(prog, matches$rqvi_candidate)]   # "F<k>" per program
-if (anyNA(f_for) || length(unique(f_for)) != 200L) {
-  stop("Could not map every RQVI program column to a unique EBMF factor.")
-}
-
-## ---- common cells (non-thymocyte, in L_pm, and with RQVI loading) ----
+## ---- common cells (non-thymocyte, in L_pm, and with an RQVI loading) ----
+rqvi_cell_ids <- as.data.frame(arrow::read_parquet(rqvi_loading_path, col_select = "cell_id"))$cell_id
 our_nonthy_ids <- rownames(L)[nonthy]
-common_ids <- our_nonthy_ids[our_nonthy_ids %in% pq$cell_id]
-grp <- factor(as.character(meta$annotation_level2[match(common_ids, rownames(meta))]))
-grp <- droplevels(grp)
+common_ids <- our_nonthy_ids[our_nonthy_ids %in% rqvi_cell_ids]
+grp <- droplevels(factor(as.character(meta$annotation_level2[match(common_ids, rownames(meta))])))
 if (anyNA(grp) || any(as.character(grp) == "")) stop("Missing level2 labels on common cells.")
 
 message(sprintf("common non-thymocyte cells: %d (healthy %d / non-healthy %d); level2 clusters: %d",
@@ -75,18 +63,7 @@ colnames(Lc) <- paste0("F", seq_len(ncol(Lc)))
 esum <- rowsum(Lc, grp)
 ecnt <- as.integer(table(grp)[rownames(esum)])
 ebmf_means <- sweep(esum, 1L, ecnt, "/")                 # K x 200
-
-## ---- matched-RQVI cluster means (columns F1..F200, same pairing) ----
-pqc <- as.matrix(pq[match(common_ids, pq$cell_id), prog, drop = FALSE])
-colnames(pqc) <- f_for
-pqc <- pqc[, paste0("F", seq_len(200)), drop = FALSE]     # reorder to F1..F200
-rsum <- rowsum(pqc, grp)
-rcnt <- as.integer(table(grp)[rownames(rsum)])
-rqvi_means <- sweep(rsum, 1L, rcnt, "/")
-
-stopifnot(identical(rownames(ebmf_means), rownames(rqvi_means)),
-          identical(ecnt, rcnt),                           # same cells -> same counts
-          nrow(ebmf_means) == 107L, ncol(ebmf_means) == 200L)
+stopifnot(nrow(ebmf_means) == 107L, ncol(ebmf_means) == 200L)
 
 ## ---- level2 column order (Figure-1 level1 order, alphabetical within) ----
 l2  <- rownames(ebmf_means)
@@ -105,7 +82,7 @@ cluster_order <- data.frame(
   stringsAsFactors = FALSE
 )
 
-## ---- level1 palette (our canonical colors) as hex ----
+## ---- level1 palette (canonical lineage colors) as hex ----
 l1pal <- ZemmourLib::immgent_colors$level1
 hex <- vapply(l1pal, function(cc) {
   v <- grDevices::col2rgb(cc)
@@ -125,17 +102,14 @@ fwrite(data.frame(
 
 fwrite(data.frame(level2_cluster = rownames(ebmf_means), ebmf_means, check.names = FALSE),
        file.path(outdir, "S5_ebmf_raw_means_level2.csv"))
-fwrite(data.frame(level2_cluster = rownames(rqvi_means), rqvi_means, check.names = FALSE),
-       file.path(outdir, "S5_rqvi_matched_raw_means_level2.csv"))
 fwrite(cluster_order, file.path(outdir, "S5_cluster_order.csv"))
 fwrite(pal_df,        file.path(outdir, "S5_level1_palette.csv"))
 fwrite(data.frame(
-  metric = c("common_cells", "healthy_cells", "nonhealthy_cells", "level2_clusters",
-             "ebmf_factors", "rqvi_matched_programs"),
+  metric = c("common_cells", "healthy_cells", "nonhealthy_cells", "level2_clusters", "ebmf_factors"),
   value  = c(length(common_ids),
              sum(meta$condition_broad[match(common_ids, rownames(meta))] == "healthy"),
              sum(meta$condition_broad[match(common_ids, rownames(meta))] != "healthy"),
-             nlevels(grp), 200L, 200L)
+             nlevels(grp), 200L)
 ), file.path(outdir, "S5_build_summary.csv"))
 
 message("Wrote Fig S5 data inputs to ", normalizePath(outdir))
