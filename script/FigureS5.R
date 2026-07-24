@@ -1,23 +1,21 @@
-# Figure S5 (data step). EBMF vs matched-RQVI level2-cluster comparison.
+# Figure S5 (data step): cluster-mean matrices for the EBMF vs RQVI gene-program
+# comparison across annotation_level2 clusters.
 #
-# Design (version B, Tianze-style plotting done in script/FigureS5_plot.py):
-#   * Cells: OUR L_pm_filtered cells (passed the iterative total-loading filter),
-#     restricted to non-thymocytes (annotation_level1 != "thymocyte"), ALL
-#     conditions (no healthy-only restriction), intersected with the cells that
-#     have RQVI loadings -> "common cells".
-#   * EBMF matrix: our flashier loadings L_pm_filtered (GP1..GP200), averaged
-#     within annotation_level2 on the common cells.
-#   * RQVI matrix: Tianze's 200 matched RQVI programs (raw cell loadings),
-#     averaged within annotation_level2 on the SAME common cells. Each matched
-#     program is placed under the column of its paired EBMF factor. The pairing
-#     is Tianze's one-to-one match table; F_k == our GP_k (verified at cell level,
-#     cell-level Pearson r = 1.0 for all 200).
-#   * Columns (level2 clusters) are ordered by the Figure-1 level1 lineage order
-#     and alphabetically within each lineage.
+#   * Cells: L_pm_filtered gene-program loadings (cells passing the iterative
+#     total-loading filter), restricted to non-thymocytes (annotation_level1 !=
+#     "thymocyte", all conditions) and to cells that also carry an RQVI loading
+#     ("common cells").
+#   * EBMF matrix: flashier loadings L_pm_filtered (GP1..GP200), averaged within
+#     annotation_level2 on the common cells.
+#   * RQVI matrix: RQVI program loadings, averaged within annotation_level2 on the
+#     same common cells, with each program placed under the column of its matched
+#     EBMF program. EBMF factor F_k corresponds to gene program GP_k.
+#   * Columns (level2 clusters) are ordered by the Figure-1 level1 lineage order,
+#     alphabetically within each lineage.
 #
-# This script writes raw cluster-mean matrices + column/palette metadata.
-# Row ordering (hierarchical clustering of EBMF), per-factor 0-1 scaling, and
-# the heatmaps are produced by script/FigureS5_plot.py in Tianze's visual style.
+# This script writes the raw cluster-mean matrices and column/palette metadata.
+# The one-to-one matching is computed by script/FigureS5_rematch.py; row ordering,
+# per-program [0,1] scaling, and the heatmaps by script/FigureS5_plot.py.
 
 suppressPackageStartupMessages({
   library(arrow)
@@ -38,7 +36,7 @@ parquet_path <- file.path(PKG, "rqvi_matched_200_cell_loadings.parquet")
 matches_path <- file.path(PKG, "ebmf_rqvi_multiseed_level2_one_to_one_matches.csv")
 level1_order <- c("CD8", "CD4", "Treg", "gdT", "CD8aa", "Tz", "DN", "DP")
 
-## ---- our EBMF loadings + metadata ----
+## ---- EBMF loadings + metadata ----
 gp <- load_gp_data()
 L  <- gp$L_pm_filtered
 colnames(L) <- paste0("GP", seq_len(ncol(L)))

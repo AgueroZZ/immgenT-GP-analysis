@@ -1,14 +1,13 @@
-"""Figure S5 (plot step). EBMF vs matched-RQVI level2 heatmaps in Tianze's style.
+"""Figure S5 (plot step): draw the EBMF vs RQVI level2-cluster heatmaps.
 
 Reads the raw cluster-mean matrices written by script/FigureS5.R, orders EBMF
-factors by hierarchical clustering (average linkage, correlation distance,
-optimal leaf ordering), scales every factor to [0, 1] across clusters, and draws
+programs by hierarchical clustering (average linkage, correlation distance,
+optimal leaf ordering), scales every program to [0, 1] across clusters, and draws
 two Blues heatmaps (EBMF | corresponding RQVI) sharing row order, columns, and a
-"Relative loading" colorbar. Plotting helpers are adapted from Tianze's
-scripts/fig_ebmf_rqvi_level2_comparison.py so the visual style matches.
+"Relative loading" colorbar.
 
 Run from the repository root:
-    <miniforge>/envs/pyenv/bin/python script/FigureS5_plot.py
+    python script/FigureS5_plot.py
 """
 from __future__ import annotations
 
@@ -26,9 +25,8 @@ from scipy.cluster.hierarchy import leaves_list, linkage
 
 FIG_DIR = Path("figures/generated/Figure S5")
 EBMF_MEANS = FIG_DIR / "S5_ebmf_raw_means_level2.csv"
-# Canonical Fig S5 uses the matching re-derived on our basis (FigureS5_rematch.py).
-# To plot the shipped-matching variant instead:
-#   FigureS5_plot.py --rqvi-means ".../S5_rqvi_matched_raw_means_level2.csv" --suffix _shipped
+# RQVI cluster means for the right panel: the matched programs from
+# FigureS5_rematch.py. Pass --rqvi-means to plot a different matrix.
 RQVI_MEANS = FIG_DIR / "S5_rqvi_rematched_raw_means_level2.csv"
 CLUSTER_ORDER = FIG_DIR / "S5_cluster_order.csv"
 LEVEL1_PALETTE = FIG_DIR / "S5_level1_palette.csv"

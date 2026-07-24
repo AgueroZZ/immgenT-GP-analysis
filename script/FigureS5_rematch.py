@@ -1,27 +1,20 @@
-"""Figure S5 rematch step. Re-derive the one-to-one EBMF<->RQVI matching on OUR
-basis using Tianze's exact method, then aggregate the matched RQVI programs onto
-the display clusters.
+"""Figure S5 matching step: pair each EBMF gene program with an RQVI program.
 
-Matching basis: ALL common cells = our L_pm_filtered cells that also have RQVI
-loadings, WITHOUT a non-thymocyte filter (aligns the two loading matrices
-directly). Clusters = our annotation_level2 (108, including the thymocyte
-cluster). This is the user-preferred alignment; vs a non-thymocyte-only matching
-it changes only ~5/200 pairs and leaves the display-cluster correlation identical.
+The one-to-one assignment is computed over all common cells (the L_pm_filtered
+cells that also carry an RQVI loading), grouped by annotation_level2 (108
+clusters, including the thymocyte cluster). The matched RQVI programs are then
+aggregated onto the 107 non-thymocyte clusters displayed in Figure S5.
 
-Display basis: non-thymocyte cells only, our annotation_level2 (107 clusters) --
-this is what Figure S5 shows.
-
-Method (identical to Tianze's fig_ebmf_rqvi_level2_comparison.py --recompute-matches):
-  1. z-score every factor's mean-loading profile across clusters,
+Assignment:
+  1. z-score every program's mean-loading profile across clusters,
   2. signed Pearson r = EBMF_z^T @ RQVI_z / n_clusters,
-  3. drop constant-profile RQVI candidates,
-  4. maximum-weight one-to-one assignment via scipy linear_sum_assignment.
-We only re-apply this method to the re-aligned data; the algorithm is unchanged.
+  3. drop RQVI candidates with a constant profile,
+  4. maximum-weight one-to-one assignment via scipy.optimize.linear_sum_assignment.
 
-EBMF loadings are read from Tianze's ebmf_cell_loadings.h5ad, which was verified
-cell-for-cell identical to our L_pm_filtered (F_k == GP_k, cell-level r = 1.0).
+EBMF loadings are read from ebmf_cell_loadings.h5ad, whose factors F1..F200
+correspond to gene programs GP1..GP200.
 
-Run: <miniforge>/envs/pyenv/bin/python script/FigureS5_rematch.py
+Run: python script/FigureS5_rematch.py
 """
 from __future__ import annotations
 
@@ -71,12 +64,12 @@ def _cluster_means(mat, codes, n_clusters):
 
 
 def main() -> None:
-    # our L_pm_filtered cells -> annotation (no filtering yet)
+    # L_pm_filtered cells -> annotation (no filtering yet)
     meta = pd.read_csv(CELL_META, dtype=str)
     cell_l1 = dict(zip(meta["cellID"], meta["annotation_level1"]))
     cell_l2 = dict(zip(meta["cellID"], meta["annotation_level2"]))
 
-    # EBMF (F1..F200, dense) and RQVI all-2560 (sparse), same cell order
+    # EBMF (F1..F200, dense) and all RQVI programs (2560, sparse), same cell order
     fe = h5py.File(EBMF_H5AD, "r")
     obs = _h5_index(fe, "obs")
     e_var = _h5_index(fe, "var")
@@ -93,7 +86,7 @@ def main() -> None:
     if not np.array_equal(obs, r_obs):
         raise ValueError("EBMF and RQVI cell orders differ")
 
-    # ---- MATCHING basis: all common cells (no non-thymocyte filter) ----
+    # ---- matching basis: all common cells (no non-thymocyte filter) ----
     m_mask = np.array([c in cell_l2 for c in obs])
     m_idx = np.where(m_mask)[0]
     m_labs = np.array([cell_l2[obs[i]] for i in m_idx])
@@ -107,21 +100,20 @@ def main() -> None:
     ez, e_info = _zscore(ebmf_m)
     rz, r_info = _zscore(rqvi_m)
     if not e_info.all():
-        raise ValueError("constant EBMF factor on matching basis")
+        raise ValueError("constant EBMF program on matching basis")
     corr = ez.T @ rz / K_match
     corr[:, ~r_info] = -np.inf
     cost = np.where(np.isfinite(corr), corr, -1e9)
     rows, cols = linear_sum_assignment(-cost)
     if rows.size != 200 or np.unique(cols).size != 200:
-        raise RuntimeError("assignment did not cover all 200 EBMF factors uniquely")
+        raise RuntimeError("assignment did not cover all 200 EBMF programs uniquely")
     sel = np.empty(200, dtype=int)
     sel[rows] = cols
     match_r = corr[np.arange(200), sel]
     matched_candidates = r_var[sel]
-    print(f"MATCHING basis: {len(m_idx)} common cells, {K_match} level2 clusters "
-          f"(incl. {sorted(set(m_clusters) - set(cell_l2[c] for c in obs if c in cell_l2 and cell_l1[c] != 'thymocyte'))})")
+    print(f"matching basis: {len(m_idx)} common cells, {K_match} level2 clusters")
 
-    # ---- DISPLAY basis: non-thymocyte cells, order from S5_cluster_order.csv ----
+    # ---- display basis: non-thymocyte cells, order from S5_cluster_order.csv ----
     order = pd.read_csv(FIG_DIR / "S5_cluster_order.csv").sort_values("display_column")
     disp_clusters = order["level2_cluster"].astype(str).tolist()
     d_code = {l: i for i, l in enumerate(disp_clusters)}
@@ -131,36 +123,29 @@ def main() -> None:
     rqvi_disp_all, d_counts = _cluster_means(R[d_idx], d_codes, len(disp_clusters))   # 107 x 2560
     if not np.array_equal(d_counts.astype(int), order["n_cells"].to_numpy()):
         raise ValueError("display cell counts differ from S5_cluster_order")
-    rematched_disp = rqvi_disp_all[:, sel]                        # 107 x 200
+    matched_disp = rqvi_disp_all[:, sel]                         # 107 x 200
 
-    out = pd.DataFrame(rematched_disp, index=disp_clusters, columns=FACTORS)
+    out = pd.DataFrame(matched_disp, index=disp_clusters, columns=FACTORS)
     out.index.name = "level2_cluster"
     out.to_csv(FIG_DIR / "S5_rqvi_rematched_raw_means_level2.csv")
 
-    # display-basis correlation for the caption
+    # per-program correlation on the displayed clusters (for the caption)
     ebmf_disp, _ = _cluster_means(E[d_idx], d_codes, len(disp_clusters))
     ez_d = _zscore(ebmf_disp)[0]
-    rz_d = _zscore(rematched_disp)[0]
+    rz_d = _zscore(matched_disp)[0]
     disp_r = (ez_d * rz_d).sum(0) / len(disp_clusters)
-
-    shipped = pd.read_csv(PKG / "ebmf_rqvi_multiseed_level2_one_to_one_matches.csv")
-    shipped_map = dict(zip(shipped["ebmf_factor"].astype(str), shipped["rqvi_candidate"].astype(str)))
-    same = sum(matched_candidates[k] == shipped_map.get(f"F{k+1}") for k in range(200))
 
     pd.DataFrame({
         "ebmf_factor": FACTORS,
-        "rematched_rqvi_candidate": matched_candidates,
+        "rqvi_program": matched_candidates,
         "pearson_r_match_basis_108": match_r,
         "pearson_r_display_basis_107": disp_r,
-        "same_as_shipped": [matched_candidates[k] == shipped_map.get(f"F{k+1}") for k in range(200)],
     }).to_csv(FIG_DIR / "S5_rematch_mapping.csv", index=False)
 
-    print("=== rematch (matching basis = all common cells, 108 clusters) ===")
     print(f"match-basis r:   median {np.median(match_r):.3f}, >=0.5 {100*np.mean(match_r>=0.5):.1f}%, "
           f"r<0.3 {int((match_r<0.3).sum())}")
     print(f"display-basis r: median {np.median(disp_r):.3f}, >=0.5 {100*np.mean(disp_r>=0.5):.1f}%, "
           f"r<0.3 {int((disp_r<0.3).sum())}")
-    print(f"pairs identical to Tianze's shipped matching: {same}/200")
     print(f"wrote {FIG_DIR/'S5_rqvi_rematched_raw_means_level2.csv'} and S5_rematch_mapping.csv")
 
 
