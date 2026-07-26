@@ -128,9 +128,10 @@ ggsave(filename = paste0(figure_path, "2E.pdf"), plot = p_2E, width = 6, height 
 # ============================================================
 gp_active_cell_counts_all <- rowSums(L_pm_filtered > 1e-1)
 gp_cd44_df <- data.frame(CD44_Protein_Level = protein_mat_normalized_lognorm, Active_GP_Counts = gp_active_cell_counts_all)
+gp_cd44_df_nz <- gp_cd44_df %>% dplyr::filter(CD44_Protein_Level > 0)
+R <- cor(gp_cd44_df_nz$CD44_Protein_Level, gp_cd44_df_nz$Active_GP_Counts, use = "complete.obs") # on all non-zero-CD44 cells, not just the plotted subsample
 set.seed(123)
-df_nz <- gp_cd44_df %>% dplyr::filter(CD44_Protein_Level > 0) %>% sample_n(min(10000, nrow(.)))
-R <- cor(df_nz$CD44_Protein_Level, df_nz$Active_GP_Counts, use = "complete.obs")
+df_nz <- gp_cd44_df_nz %>% sample_n(min(10000, nrow(.))) # subsample only for scatter rendering
 p_2F <- ggplot(df_nz, aes(CD44_Protein_Level, Active_GP_Counts)) +
   geom_point(alpha = 0.1, size = 0.7) +
   geom_smooth(method = "lm", se = TRUE) +
