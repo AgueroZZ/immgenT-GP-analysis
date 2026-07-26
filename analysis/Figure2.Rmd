@@ -86,7 +86,7 @@ knitr::include_graphics("assets/Figure2/2E.png")
 
 ## (F) CD44 vs. active-GP count {#fig2f}
 
-```{r fig2f-code, code=readLines("../script/Figure2.R")[126:140], eval=FALSE}
+```{r fig2f-code, code=readLines("../script/Figure2.R")[126:141], eval=FALSE}
 ```
 
 ```{r fig2f-img, echo=FALSE, out.width="50%"}
