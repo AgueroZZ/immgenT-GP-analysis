@@ -8,3 +8,6 @@
 # machine); not tracked here, and the symlink itself is excluded too since
 # gitignore's directory-only "data/" pattern doesn't match a symlink.
 data
+
+# Large regenerable script-to-script handoff (rebuilt by script/FigureS5.R)
+output/FigureS5/S5_cell_metadata.csv.gz

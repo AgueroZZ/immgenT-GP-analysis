@@ -10,9 +10,9 @@
 #   2D  Boxplot of active-GP-count per cell, by major lineage.
 #   2E  Boxplot of active-GP-count per cell, activated vs resting.
 #   2F  Scatter of CD44 protein level vs. number of active GPs per cell.
-# Two extra non-lettered diagnostics (raw active-cell-count histogram, active-gene
+# Three non-lettered diagnostics (active-cell-count histogram, active-gene
 # proportion histogram, and a PVE-colored active-cell-vs-active-gene scatter) are
-# saved under descriptive names. Split out of the former Figure 1 (panels 1D-1I).
+# saved under descriptive names in output/Figure2/, not as manuscript panels.
 #
 # Required inputs (data/): L_pm_filtered.rds, F_pm_filtered.rds,
 #   igt1_96_..._ADTonly.Rds, protein_mat_normalized_lognorm.rds,
@@ -141,14 +141,16 @@ p_2F <- ggplot(df_nz, aes(CD44_Protein_Level, Active_GP_Counts)) +
 ggsave(filename = paste0(figure_path, "2F.pdf"), plot = p_2F, width = 6, height = 4, dpi = 300)
 
 # ============================================================
-# Extra (non-lettered) diagnostics kept under descriptive names
+# Extra (non-lettered) diagnostics -> output/Figure2/ (not manuscript panels)
 # ============================================================
-pdf(paste0(figure_path, "hist_active_cells_per_GP.pdf"), width = 6, height = 4, useDingbats = FALSE)
+diag_path <- "output/Figure2/"
+dir.create(diag_path, recursive = TRUE, showWarnings = FALSE)
+pdf(paste0(diag_path, "hist_active_cells_per_GP.pdf"), width = 6, height = 4, useDingbats = FALSE)
 hist(gp_active_cell_counts, breaks = 100, xlab = "Number of highly active cells per GP", main = "Histogram of highly active cells per GP", freq = TRUE)
 dev.off()
 
 gp_active_gene_prop <- gp_active_gene_counts / nrow(F_pm_norm_col)
-pdf(paste0(figure_path, "hist_active_genes_prop_per_GP.pdf"), width = 6, height = 4, useDingbats = FALSE)
+pdf(paste0(diag_path, "hist_active_genes_prop_per_GP.pdf"), width = 6, height = 4, useDingbats = FALSE)
 hist(gp_active_gene_prop, breaks = 100, xlab = "Proportion of highly active genes per GP", main = "Histogram of highly active genes per GP (proportion)", freq = TRUE)
 dev.off()
 
@@ -162,7 +164,7 @@ col_points <- pal[pmin(pmax(1, floor(pve_scaled * (n_col - 1)) + 1), n_col)]
 load(paste0(data_path, "flashier_snmf_fitted_prior.rda"))
 p_cells <- 1 - sapply(1:200, function(i) flashier_snmf_fitted_prior$L_ghat[[i]]$pi[1])
 p_genes <- 1 - sapply(1:200, function(i) flashier_snmf_fitted_prior$F_ghat[[i]]$pi[1])
-pdf(paste0(figure_path, "scatter_e_active_cells_vs_genes.pdf"), width = 6, height = 6)
+pdf(paste0(diag_path, "scatter_e_active_cells_vs_genes.pdf"), width = 6, height = 6)
 plot(p_cells, p_genes, xlab = "Expected proportion of active cells", ylab = "Expected proportion of active genes",
      log = "xy", col = col_points, pch = 19, xaxt = "n", yaxt = "n",
      main = "Expected proportion of active cells vs genes per GP\n(colored by PVE)")

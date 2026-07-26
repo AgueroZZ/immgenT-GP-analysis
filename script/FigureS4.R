@@ -287,6 +287,8 @@ render_centered_heatmap(
   level1_palette = level1_palette
 )
 
+summary_dir <- "output/FigureS4"   # build intermediate (not a manuscript panel)
+dir.create(summary_dir, recursive = TRUE, showWarnings = FALSE)
 write.csv(
   data.frame(
     panel = c("S4a", "S4b"),
@@ -301,7 +303,7 @@ write.csv(
     observed_min = c(min(organ_centered), min(level2_centered)),
     observed_max = c(max(organ_centered), max(level2_centered))
   ),
-  file.path(figure_path, "S4_summary.csv"),
+  file.path(summary_dir, "S4_summary.csv"),
   row.names = FALSE,
   quote = FALSE
 )

@@ -26,12 +26,12 @@ import pandas as pd
 import scipy.sparse as sp
 from scipy.optimize import linear_sum_assignment
 
-FIG_DIR = Path("figures/generated/Figure S5")
+OUT_DIR = Path("output/FigureS5")   # build intermediates
 PKG = Path("data/rqvi_loading/RQVI_EBMF_heatmap_data_v1/data")
 EBMF_H5AD = PKG / "ebmf_cell_loadings.h5ad"
 ALL_H5AD = PKG / "rqvi_all_10seeds_cell_loadings.h5ad"
 # cell -> annotation table written by FigureS5.R (run step 1 first)
-CELL_META = FIG_DIR / "S5_cell_metadata.csv.gz"
+CELL_META = OUT_DIR / "S5_cell_metadata.csv.gz"
 FACTORS = [f"F{k}" for k in range(1, 201)]
 
 
@@ -114,7 +114,7 @@ def main() -> None:
     print(f"matching basis: {len(m_idx)} common cells, {K_match} level2 clusters")
 
     # ---- display basis: non-thymocyte cells, order from S5_cluster_order.csv ----
-    order = pd.read_csv(FIG_DIR / "S5_cluster_order.csv").sort_values("display_column")
+    order = pd.read_csv(OUT_DIR / "S5_cluster_order.csv").sort_values("display_column")
     disp_clusters = order["level2_cluster"].astype(str).tolist()
     d_code = {l: i for i, l in enumerate(disp_clusters)}
     d_mask = np.array([(c in cell_l2) and (cell_l1[c] != "thymocyte") for c in obs])
@@ -127,7 +127,7 @@ def main() -> None:
 
     out = pd.DataFrame(matched_disp, index=disp_clusters, columns=FACTORS)
     out.index.name = "level2_cluster"
-    out.to_csv(FIG_DIR / "S5_rqvi_rematched_raw_means_level2.csv")
+    out.to_csv(OUT_DIR / "S5_rqvi_rematched_raw_means_level2.csv")
 
     # per-program correlation on the displayed clusters (for the caption)
     ebmf_disp, _ = _cluster_means(E[d_idx], d_codes, len(disp_clusters))
@@ -140,13 +140,13 @@ def main() -> None:
         "rqvi_program": matched_candidates,
         "pearson_r_match_basis_108": match_r,
         "pearson_r_display_basis_107": disp_r,
-    }).to_csv(FIG_DIR / "S5_rematch_mapping.csv", index=False)
+    }).to_csv(OUT_DIR / "S5_rematch_mapping.csv", index=False)
 
     print(f"match-basis r:   median {np.median(match_r):.3f}, >=0.5 {100*np.mean(match_r>=0.5):.1f}%, "
           f"r<0.3 {int((match_r<0.3).sum())}")
     print(f"display-basis r: median {np.median(disp_r):.3f}, >=0.5 {100*np.mean(disp_r>=0.5):.1f}%, "
           f"r<0.3 {int((disp_r<0.3).sum())}")
-    print(f"wrote {FIG_DIR/'S5_rqvi_rematched_raw_means_level2.csv'} and S5_rematch_mapping.csv")
+    print(f"wrote {OUT_DIR/'S5_rqvi_rematched_raw_means_level2.csv'} and S5_rematch_mapping.csv")
 
 
 if __name__ == "__main__":

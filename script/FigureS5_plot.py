@@ -22,14 +22,13 @@ import numpy as np
 import pandas as pd
 from scipy.cluster.hierarchy import leaves_list, linkage
 
-FIG_DIR = Path("figures/generated/Figure S5")
-EBMF_MEANS = FIG_DIR / "S5_ebmf_raw_means_level2.csv"
-# RQVI cluster means for the right panel: the matched programs from
-# FigureS5_rematch.py. Pass --rqvi-means to plot a different matrix.
-RQVI_MEANS = FIG_DIR / "S5_rqvi_rematched_raw_means_level2.csv"
-CLUSTER_ORDER = FIG_DIR / "S5_cluster_order.csv"
-LEVEL1_PALETTE = FIG_DIR / "S5_level1_palette.csv"
-SUBFIG_DIR = FIG_DIR / "S5_subfigures"
+FIG_DIR = Path("figures/generated/Figure S5")   # final manuscript panels
+OUT_DIR = Path("output/FigureS5")               # build intermediates
+ASSET_DIR = Path("analysis/assets/FigureS5")    # web preview for the workflowr page
+EBMF_MEANS = OUT_DIR / "S5_ebmf_raw_means_level2.csv"
+RQVI_MEANS = OUT_DIR / "S5_rqvi_rematched_raw_means_level2.csv"
+CLUSTER_ORDER = OUT_DIR / "S5_cluster_order.csv"
+LEVEL1_PALETTE = OUT_DIR / "S5_level1_palette.csv"
 
 # populated from S5_level1_palette.csv in main()
 LEVEL1_COLORS: dict[str, str] = {}
@@ -210,24 +209,27 @@ def main() -> None:
     ebmf_plot = ebmf_scaled.to_numpy().T[display_order]
     rqvi_plot = rqvi_scaled.to_numpy().T[display_order]
 
-    _plot(ebmf_plot, rqvi_plot, cluster_lineages,
-          FIG_DIR / "S5_ebmf_rqvi_level2_comparison.pdf",
-          FIG_DIR / "S5_ebmf_rqvi_level2_comparison.png")
+    # final manuscript panels -> figures/generated/Figure S5/
     _plot_heatmap_subfigure(ebmf_plot, cluster_lineages, "EBMF factors", False,
-                            SUBFIG_DIR / "panel_A_ebmf_factors.pdf")
+                            FIG_DIR / "S5a.pdf")
     _plot_heatmap_subfigure(rqvi_plot, cluster_lineages, "Corresponding RQVI factors", True,
-                            SUBFIG_DIR / "panel_B_corresponding_rqvi_factors.pdf")
-    _plot_shared_colorbar(SUBFIG_DIR / "shared_relative_loading_colorbar.pdf")
+                            FIG_DIR / "S5b.pdf")
+    _plot_shared_colorbar(FIG_DIR / "S5_shared_relative_loading_colorbar.pdf")
+
+    # assembled figure -> intermediates; web preview PNG -> analysis/assets
+    _plot(ebmf_plot, rqvi_plot, cluster_lineages,
+          OUT_DIR / "S5_ebmf_rqvi_level2_comparison.pdf",
+          ASSET_DIR / "S5_ebmf_rqvi_level2_comparison.png")
 
     ordered_factors = [factors[i] for i in display_order]
     pd.DataFrame(ebmf_plot, index=ordered_factors, columns=cluster_labels).to_csv(
-        FIG_DIR / "S5_ebmf_scaled_display.csv")
+        OUT_DIR / "S5_ebmf_scaled_display.csv")
     pd.DataFrame(rqvi_plot, index=ordered_factors, columns=cluster_labels).to_csv(
-        FIG_DIR / "S5_rqvi_scaled_display.csv")
+        OUT_DIR / "S5_rqvi_scaled_display.csv")
 
     print(f"rows: {len(display_order)} programs; cols: {len(cluster_labels)} level2 clusters")
-    print(f"wrote {FIG_DIR / 'S5_ebmf_rqvi_level2_comparison.pdf'} and .png")
-    print(f"wrote subfigures to {SUBFIG_DIR}")
+    print(f"wrote panels (S5a.pdf, S5b.pdf, colorbar) to {FIG_DIR}")
+    print(f"wrote assembled figure to {OUT_DIR}; web preview to {ASSET_DIR}")
 
 
 if __name__ == "__main__":

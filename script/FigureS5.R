@@ -27,7 +27,7 @@ if (!file.exists("code/R/setup_data.R")) {
 }
 source("code/R/setup_data.R")
 
-outdir <- "figures/generated/Figure S5"
+outdir <- "output/FigureS5"   # build intermediates; final panels come from FigureS5_plot.py
 dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
 
 PKG <- "data/rqvi_loading/RQVI_EBMF_heatmap_data_v1/data"
