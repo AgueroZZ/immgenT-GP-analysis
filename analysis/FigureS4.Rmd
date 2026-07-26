@@ -6,6 +6,10 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r doc-code, include=FALSE}
+source("../code/R/doc_code.R")
+```
+
 Figure S4 is produced by
 [`script/FigureS4.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS4.R).
 Both panels show the final full row-centered matrices, with all 200 GPs and all
@@ -17,7 +21,7 @@ range are saturated at the endpoint colors.
 
 ## Setup, centering, and ordering
 
-```{r figs4-setup, code=readLines("../script/FigureS4.R")[1:261], eval=FALSE}
+```{r figs4-setup, code=code_for("../script/FigureS4.R", "^"), eval=FALSE}
 ```
 
 ## (a) Tissue mean loading {#figs4a}
@@ -51,5 +55,5 @@ annotations, and the centered color scale is fixed at -0.2 to 0.2.
 
 ## Panel rendering
 
-```{r figs4-rendering, code=readLines("../script/FigureS4.R")[262:309], eval=FALSE}
+```{r figs4-rendering, code=code_for("../script/FigureS4.R", "doc:rendering"), eval=FALSE}
 ```

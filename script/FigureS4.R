@@ -259,6 +259,7 @@ level2_palette <- palette_for_groups(
 )
 level1_palette <- ZemmourLib::immgent_colors$level1[level1_order]
 
+# --- doc:rendering ---
 render_centered_heatmap(
   organ_centered,
   organ_palette,

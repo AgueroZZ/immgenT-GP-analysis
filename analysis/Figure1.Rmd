@@ -6,6 +6,10 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r doc-code, include=FALSE}
+source("../code/R/doc_code.R")
+```
+
 All panels except (B) are produced by
 [`script/Figure1.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure1.R).
 The code below is shown for reference (not re-executed on this page, since some
@@ -16,17 +20,17 @@ output.
 
 Data loading, shared across all panels below.
 
-```{r fig1-setup1, code=readLines("../script/Figure1.R")[31:57], eval=FALSE}
+```{r fig1-setup1, code=code_for("../script/Figure1.R", c("doc:setup", "Load data")), eval=FALSE}
 ```
 
 Panels C and D restrict to non-thymocyte cells:
 
-```{r fig1-setup2, code=readLines("../script/Figure1.R")[91:96], eval=FALSE}
+```{r fig1-setup2, code=code_for("../script/Figure1.R", "doc:setup2"), eval=FALSE}
 ```
 
 ## (A) Global MDE by lineage {#fig1a}
 
-```{r fig1a-code, code=readLines("../script/Figure1.R")[59:87], eval=FALSE}
+```{r fig1a-code, code=code_for("../script/Figure1.R", "1A"), eval=FALSE}
 ```
 
 ```{r fig1a-img, echo=FALSE, out.width="50%"}
@@ -43,7 +47,7 @@ This panel is a hand-drawn schematic, not generated from R -- there is no code o
 
 ## (C) Gene-program network {#fig1c}
 
-```{r fig1c-code, code=readLines("../script/Figure1.R")[98:167], eval=FALSE}
+```{r fig1c-code, code=code_for("../script/Figure1.R", "1C"), eval=FALSE}
 ```
 
 ```{r fig1c-img, echo=FALSE, out.width="70%"}
@@ -71,7 +75,7 @@ An internal version with a color→GP legend and GP-index labels is kept in
 
 ## (D) GP loading heatmap {#fig1d}
 
-```{r fig1d-code, code=readLines("../script/Figure1.R")[169:257], eval=FALSE}
+```{r fig1d-code, code=code_for("../script/Figure1.R", "1D"), eval=FALSE}
 ```
 
 ```{r fig1d-img, echo=FALSE, out.width="70%"}

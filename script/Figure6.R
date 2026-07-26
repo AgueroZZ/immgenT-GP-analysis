@@ -35,6 +35,7 @@
 #   CITEseq_markers_full.rds                    [code/pipeline/04_protein_projection.R, using the
 #     non-backfit200 protein summary -- see caveat above]
 
+# --- doc:setup ---
 library(ggplot2)
 library(ggrepel)
 library(dplyr)

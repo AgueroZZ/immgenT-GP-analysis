@@ -2,14 +2,14 @@
 #
 # Panels produced (see figures/final-selected/bits/Figure 5/Figure_Organ_caption.md
 # for the full caption text):
-#   4a  Max AUC (organ) vs max AUC (level-1 lineage) scatter, per GP.
-#   4b  GP37+ rate by lineage, mammary gland vs. the same lineage elsewhere.
-#   4c  Marker genes of the 7 organ-specific GPs: expression dotplot across
+#   5a  Max AUC (organ) vs max AUC (level-1 lineage) scatter, per GP.
+#   5b  GP37+ rate by lineage, mammary gland vs. the same lineage elsewhere.
+#   5c  Marker genes of the 7 organ-specific GPs: expression dotplot across
 #       organs (left) + per-GP gene-score heatmap (right), combined.
-#   4d  As 4a, but organ AUC vs Level-2 (fine-grained sub-lineage/cluster)
+#   5d  As 5a, but organ AUC vs Level-2 (fine-grained sub-lineage/cluster)
 #       AUC, with the 7 organ-specific GPs (red) and a contrasting
 #       cluster-specific set (blue) highlighted.
-#   4e  Alluvial diagram: organ of origin -> GP -> Level-2 cell type, for
+#   5e  Alluvial diagram: organ of origin -> GP -> Level-2 cell type, for
 #       GP+ cells of the 7 organ-specific GPs.
 #
 # Source: ported from Figure_Organ.R, which mixed these 5 panels with
@@ -74,7 +74,7 @@ colnames(organ_AUC_list$threshold) <- gsub("^K", "GP", colnames(organ_AUC_list$t
 seurat_meta_filtered_no_thymocytes_healthy <- seurat_meta_filtered %>%
   filter(annotation_level1 != "thymocyte", condition_broad == "healthy")
 
-# The 7 organ-specific GPs highlighted throughout this figure (caption 4d/4e)
+# The 7 organ-specific GPs highlighted throughout this figure (caption 5d/5e)
 gps_of_interest <- c("GP3", "GP6", "GP11", "GP26", "GP29", "GP37", "GP177")
 
 # Labels a highlighted point with its top categories above `threshold` AUC.
@@ -88,7 +88,7 @@ top_cats_label <- function(factor_name, auc_matrix, positive_mask, threshold = 0
 }
 
 # ============================================================
-# 4a: Max AUC Organ vs Level-1
+# 5a: Max AUC Organ vs Level-1
 # ============================================================
 level_1_small_count <- table(seurat_meta_filtered_no_thymocytes_healthy$annotation_level1)
 level_1_small_count <- names(level_1_small_count[level_1_small_count < 1000])
@@ -152,7 +152,7 @@ label_below <- df %>%
   filter(Factor %in% highlighted_factors, residual <= 0) %>%
   mutate(nudge_x = 0.035, label_text = sapply(Factor, top_cats_label, auc_matrix = organ_AUC, positive_mask = organ_AUC_positive))
 
-p_4a <- ggplot(df, aes(Max_AUC_Organ, Max_AUC_Level1)) +
+p_5a <- ggplot(df, aes(Max_AUC_Organ, Max_AUC_Level1)) +
   geom_point(alpha = 0.3, size = 1.8) +
   geom_point(data = label_above, color = "#1f78b4", alpha = 0.8, size = 1.8) +
   geom_point(data = label_below, color = "#e31a1c", alpha = 0.8, size = 1.8) +
@@ -174,10 +174,10 @@ p_4a <- ggplot(df, aes(Max_AUC_Organ, Max_AUC_Level1)) +
     force = 3, force_pull = 0.1, box.padding = 0.4, point.padding = 0.15,
     max.time = 10, max.iter = 2e4, max.overlaps = 20, min.segment.length = 0.01, segment.alpha = 0.7
   )
-ggsave(filename = paste0(figure_path, "5a.pdf"), plot = p_4a, width = 8, height = 8, dpi = 300)
+ggsave(filename = paste0(figure_path, "5a.pdf"), plot = p_5a, width = 8, height = 8, dpi = 300)
 
 # ============================================================
-# 4d prep: Max AUC Organ vs Level-2
+# 5d prep: Max AUC Organ vs Level-2
 # ============================================================
 level_2_AUC <- level_2_AUC_list$auc
 level_2_small_count <- table(seurat_meta_filtered_no_thymocytes_healthy$annotation_level2)
@@ -190,7 +190,7 @@ level_2_cat_mean <- t(sapply(rownames(level_2_AUC), function(cat) {
 }))
 level_2_AUC_positive <- sweep(level_2_cat_mean, 2, overall_mean, "-") > 0
 
-# 4d/4e reuse `organ_AUC_max_name`, but recomputed against the Level-2
+# 5d/5e reuse `organ_AUC_max_name`, but recomputed against the Level-2
 # category-count filter to match the original script's exact numbers.
 organ_AUC_masked_l2 <- organ_AUC
 organ_AUC_positive_l2 <- sweep(
@@ -205,7 +205,7 @@ organ_AUC_max <- apply(organ_AUC_masked_l2, 2, max, na.rm = TRUE)
 organ_AUC_max_name <- apply(organ_AUC_masked_l2, 2, function(x) rownames(organ_AUC_masked_l2)[which.max(x)])
 
 # ============================================================
-# 4d: Max AUC Organ vs Level-2, 7 organ-specific GPs (red) vs.
+# 5d: Max AUC Organ vs Level-2, 7 organ-specific GPs (red) vs.
 #     contrasting cluster-specific GPs (blue) highlighted
 # ============================================================
 seven_gp_df <- df |>
@@ -217,7 +217,7 @@ top_left_df <- df |>
   dplyr::filter(Factor %in% top_left_gps) |>
   dplyr::mutate(label_text = sapply(Factor, top_cats_label, auc_matrix = level_2_AUC, positive_mask = level_2_AUC_positive, threshold = 0.9, n = 3))
 
-p_4d <- ggplot(df, aes(Max_AUC_Organ, Max_AUC_Level1)) +
+p_5d <- ggplot(df, aes(Max_AUC_Organ, Max_AUC_Level1)) +
   geom_point(alpha = 0.2, size = 1.5, color = "grey60") +
   geom_point(data = top_left_df, color = "#1f78b4", size = 2.2, alpha = 0.9) +
   geom_text_repel(
@@ -240,10 +240,10 @@ p_4d <- ggplot(df, aes(Max_AUC_Organ, Max_AUC_Level1)) +
   labs(x = "Max AUC (Organ Simplified)", y = "Max AUC (Level-2)", title = "Max AUC: Organ vs Level-2 - organ-specific GPs") +
   theme_minimal(base_size = 13) +
   theme(plot.margin = margin(10, 80, 10, 80))
-ggsave(filename = paste0(figure_path, "5d.pdf"), plot = p_4d, width = 8, height = 8, dpi = 300)
+ggsave(filename = paste0(figure_path, "5d.pdf"), plot = p_5d, width = 8, height = 8, dpi = 300)
 
 # ============================================================
-# 4b: GP37+ rate by lineage, mammary gland vs. elsewhere
+# 5b: GP37+ rate by lineage, mammary gland vs. elsewhere
 # ============================================================
 plot_gp_threshold_group_activation_rate <- function(
   gp, organ, threshold, loading_mat, organ_info, group_info,
@@ -323,7 +323,7 @@ plot_gp_threshold_group_activation_rate <- function(
     theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "top")
 }
 
-p_4b <- plot_gp_threshold_group_activation_rate(
+p_5b <- plot_gp_threshold_group_activation_rate(
   gp = "GP37",
   organ = "mammary gland",
   threshold = organ_AUC_list$threshold["mammary gland", "GP37"],
@@ -335,10 +335,10 @@ p_4b <- plot_gp_threshold_group_activation_rate(
   group_colors = ZemmourLib::immgent_colors$level1,
   reference = "not_in_organ"
 )
-ggsave(filename = paste0(figure_path, "5b.pdf"), plot = p_4b, width = 8, height = 5, dpi = 300)
+ggsave(filename = paste0(figure_path, "5b.pdf"), plot = p_5b, width = 8, height = 5, dpi = 300)
 
 # ============================================================
-# 4e: alluvial, organ -> GP -> Level-2, for GP+ cells of the
+# 5e: alluvial, organ -> GP -> Level-2, for GP+ cells of the
 #     7 organ-specific GPs
 # ============================================================
 best_organ_per_gp <- organ_AUC_max_name[gps_of_interest]
@@ -373,7 +373,7 @@ gp_colors <- ZemmourLib::immgent_colors$organ_simplified[unname(best_organ_per_g
 gp_colors[is.na(gp_colors)] <- "grey60"
 names(gp_colors) <- gps_of_interest
 
-p_4e <- ggplot(count_df, aes(axis1 = organ, axis2 = gp_program, axis3 = level2, y = n)) +
+p_5e <- ggplot(count_df, aes(axis1 = organ, axis2 = gp_program, axis3 = level2, y = n)) +
   ggalluvial::geom_alluvium(aes(fill = gp_program), width = 1 / 4, alpha = 0.6, knot.pos = 0.4) +
   ggalluvial::geom_stratum(width = 1 / 4, fill = "grey92", color = "grey50", linewidth = 0.3) +
   ggplot2::geom_text(stat = ggalluvial::StatStratum, aes(label = after_stat(stratum)), size = 3, angle = 90) +
@@ -383,7 +383,7 @@ p_4e <- ggplot(count_df, aes(axis1 = organ, axis2 = gp_program, axis3 = level2, 
   theme_minimal(base_size = 12) +
   theme(panel.grid = element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank()) +
   coord_flip()
-ggsave(filename = paste0(figure_path, "5e.pdf"), plot = p_4e, width = 20, height = 10, dpi = 300)
+ggsave(filename = paste0(figure_path, "5e.pdf"), plot = p_5e, width = 20, height = 10, dpi = 300)
 
 # ============================================================
 # 5c: organ marker genes - per-GP gene-score heatmap

@@ -6,6 +6,10 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r doc-code, include=FALSE}
+source("../code/R/doc_code.R")
+```
+
 All panels are produced by
 [`script/Figure2.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure2.R).
 The code below is shown for reference (not re-executed on this page); the images
@@ -16,12 +20,12 @@ are its pre-rendered output. These panels quantify how many cells and genes are
 
 Data loading (non-thymocyte cells), shared across all panels below.
 
-```{r fig2-setup, code=readLines("../script/Figure2.R")[22:45], eval=FALSE}
+```{r fig2-setup, code=code_for("../script/Figure2.R", c("doc:setup", "Load data")), eval=FALSE}
 ```
 
 ## (A) GP1 signature volcano {#fig2a}
 
-```{r fig2a-code, code=readLines("../script/Figure2.R")[47:55], eval=FALSE}
+```{r fig2a-code, code=code_for("../script/Figure2.R", "2A"), eval=FALSE}
 ```
 
 ```{r fig2a-img, echo=FALSE, out.width="50%"}
@@ -34,7 +38,7 @@ knitr::include_graphics("assets/Figure2/2A.png")
 
 ## (B) Active-cell proportion per GP {#fig2b}
 
-```{r fig2b-code, code=readLines("../script/Figure2.R")[57:70], eval=FALSE}
+```{r fig2b-code, code=code_for("../script/Figure2.R", "2B"), eval=FALSE}
 ```
 
 ```{r fig2b-img, echo=FALSE, out.width="50%"}
@@ -47,7 +51,7 @@ knitr::include_graphics("assets/Figure2/2B.png")
 
 ## (C) Active-gene count per GP {#fig2c}
 
-```{r fig2c-code, code=readLines("../script/Figure2.R")[72:84], eval=FALSE}
+```{r fig2c-code, code=code_for("../script/Figure2.R", "2C"), eval=FALSE}
 ```
 
 ```{r fig2c-img, echo=FALSE, out.width="50%"}
@@ -60,7 +64,7 @@ knitr::include_graphics("assets/Figure2/2C.png")
 
 ## (D) Active-GP count by lineage {#fig2d}
 
-```{r fig2d-code, code=readLines("../script/Figure2.R")[86:106], eval=FALSE}
+```{r fig2d-code, code=code_for("../script/Figure2.R", "2D"), eval=FALSE}
 ```
 
 ```{r fig2d-img, echo=FALSE, out.width="50%"}
@@ -73,7 +77,7 @@ knitr::include_graphics("assets/Figure2/2D.png")
 
 ## (E) Active-GP count, activated vs. resting {#fig2e}
 
-```{r fig2e-code, code=readLines("../script/Figure2.R")[108:124], eval=FALSE}
+```{r fig2e-code, code=code_for("../script/Figure2.R", "2E"), eval=FALSE}
 ```
 
 ```{r fig2e-img, echo=FALSE, out.width="50%"}
@@ -86,7 +90,7 @@ knitr::include_graphics("assets/Figure2/2E.png")
 
 ## (F) CD44 vs. active-GP count {#fig2f}
 
-```{r fig2f-code, code=readLines("../script/Figure2.R")[126:141], eval=FALSE}
+```{r fig2f-code, code=code_for("../script/Figure2.R", "2F"), eval=FALSE}
 ```
 
 ```{r fig2f-img, echo=FALSE, out.width="50%"}

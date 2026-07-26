@@ -6,6 +6,10 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r doc-code, include=FALSE}
+source("../code/R/doc_code.R")
+```
+
 All panels are produced by
 [`script/Figure3.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure3.R).
 The code below is shown for reference (not re-executed on this page); the
@@ -15,12 +19,12 @@ images are its pre-rendered output.
 
 Data loading, shared across all panels below.
 
-```{r fig3-setup, code=readLines("../script/Figure3.R")[1:73], eval=FALSE}
+```{r fig3-setup, code=code_for("../script/Figure3.R", c("^", "Load data")), eval=FALSE}
 ```
 
 ## (A) AUC swarm plot by lineage {#fig3a}
 
-```{r fig3a-code, code=readLines("../script/Figure3.R")[75:121], eval=FALSE}
+```{r fig3a-code, code=code_for("../script/Figure3.R", "3A"), eval=FALSE}
 ```
 
 ```{r fig3a-img, echo=FALSE, out.width="60%"}
@@ -33,7 +37,7 @@ knitr::include_graphics("assets/Figure3/3A.png")
 
 ## (B) Structure plot of lineage-defining GPs {#fig3b}
 
-```{r fig3b-code, code=readLines("../script/Figure3.R")[123:175], eval=FALSE}
+```{r fig3b-code, code=code_for("../script/Figure3.R", "3B"), eval=FALSE}
 ```
 
 ```{r fig3b-img, echo=FALSE, out.width="60%"}
@@ -46,7 +50,7 @@ knitr::include_graphics("assets/Figure3/3B.png")
 
 ## (C) GP68 loading on the global MDE {#fig3c}
 
-```{r fig3c-code, code=readLines("../script/Figure3.R")[180:193], eval=FALSE}
+```{r fig3c-code, code=code_for("../script/Figure3.R", "3C/3E/3G"), eval=FALSE}
 ```
 
 ```{r fig3c-img, echo=FALSE, out.width="40%"}
@@ -59,7 +63,7 @@ knitr::include_graphics("assets/Figure3/3C.png")
 
 ## (D) GP68 signature volcano {#fig3d}
 
-```{r fig3d-code, code=readLines("../script/Figure3.R")[233:251], eval=FALSE}
+```{r fig3d-code, code=code_for("../script/Figure3.R", "3D/3F/3H"), eval=FALSE}
 ```
 
 ```{r fig3d-img, echo=FALSE, out.width="40%"}
@@ -72,7 +76,7 @@ knitr::include_graphics("assets/Figure3/3D.png")
 
 ## (E) GP30 loading on the global MDE {#fig3e}
 
-```{r fig3e-code, code=readLines("../script/Figure3.R")[195:208], eval=FALSE}
+```{r fig3e-code, code=code_for("../script/Figure3.R", "doc:3e"), eval=FALSE}
 ```
 
 ```{r fig3e-img, echo=FALSE, out.width="40%"}
@@ -85,7 +89,7 @@ knitr::include_graphics("assets/Figure3/3E.png")
 
 ## (F) GP30 signature volcano {#fig3f}
 
-```{r fig3f-code, code=readLines("../script/Figure3.R")[253:266], eval=FALSE}
+```{r fig3f-code, code=code_for("../script/Figure3.R", "doc:3f"), eval=FALSE}
 ```
 
 ```{r fig3f-img, echo=FALSE, out.width="40%"}
@@ -98,7 +102,7 @@ knitr::include_graphics("assets/Figure3/3F.png")
 
 ## (G) GP58 loading on the global MDE {#fig3g}
 
-```{r fig3g-code, code=readLines("../script/Figure3.R")[210:223], eval=FALSE}
+```{r fig3g-code, code=code_for("../script/Figure3.R", "doc:3g"), eval=FALSE}
 ```
 
 ```{r fig3g-img, echo=FALSE, out.width="40%"}
@@ -111,7 +115,7 @@ knitr::include_graphics("assets/Figure3/3G.png")
 
 ## (H) GP58 signature volcano {#fig3h}
 
-```{r fig3h-code, code=readLines("../script/Figure3.R")[268:281], eval=FALSE}
+```{r fig3h-code, code=code_for("../script/Figure3.R", "doc:3h"), eval=FALSE}
 ```
 
 ```{r fig3h-img, echo=FALSE, out.width="40%"}
@@ -124,7 +128,7 @@ knitr::include_graphics("assets/Figure3/3H.png")
 
 ## (I) gdT/CD8aa/DN MDE by lineage {#fig3i}
 
-```{r fig3i-code, code=readLines("../script/Figure3.R")[287:324], eval=FALSE}
+```{r fig3i-code, code=code_for("../script/Figure3.R", "3I"), eval=FALSE}
 ```
 
 ```{r fig3i-img, echo=FALSE, out.width="40%"}
@@ -137,7 +141,7 @@ knitr::include_graphics("assets/Figure3/3I.png")
 
 ## (J-L) GP22, GP29, GP3 loading on the gdT/CD8aa/DN MDE {#fig3jl}
 
-```{r fig3jl-code, code=readLines("../script/Figure3.R")[329:346], eval=FALSE}
+```{r fig3jl-code, code=code_for("../script/Figure3.R", "3J/3K/3L"), eval=FALSE}
 ```
 
 ```{r fig3jl-img, echo=FALSE, out.width="30%"}
@@ -150,7 +154,7 @@ knitr::include_graphics(c("assets/Figure3/3J.png", "assets/Figure3/3K.png", "ass
 
 ## (M) Top-30 gene score heatmap for GP3/GP29/GP22 {#fig3m}
 
-```{r fig3m-code, code=readLines("../script/Figure3.R")[359:375], eval=FALSE}
+```{r fig3m-code, code=code_for("../script/Figure3.R", "3M"), eval=FALSE}
 ```
 
 ```{r fig3m-img, echo=FALSE, out.width="40%"}

@@ -19,6 +19,7 @@
 #   mean_shifted_log_expr.rds, flashier_snmf_summary.rds,
 #   flashier_snmf_fitted_prior.rda.
 
+# --- doc:setup ---
 library(ggplot2)
 library(dplyr)
 library(Matrix)  # protein matrix is a dgCMatrix; attach for `[` dispatch

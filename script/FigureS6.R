@@ -33,6 +33,7 @@ figure_path <- "figures/generated/Figure S6/"
 source("code/R/gated_protein_helpers.R")
 source("code/R/citeseq_shared_setup.R")
 
+# --- doc:gallery ---
 # GPs shown in main Figure 6 (panels 6c-6f) are excluded from this gallery.
 GPs_fig6 <- c("GP171", "GP23", "GP12", "GP80")
 other_GPs <- setdiff(well_aligned_gps, GPs_fig6)

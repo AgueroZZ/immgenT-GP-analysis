@@ -37,6 +37,7 @@ library(tidyr)
 library(ggplot2)
 library(pheatmap)
 
+# --- doc:setup-ab ---
 data_path <- "data/"
 figure_path <- "figures/generated/Figure S1/"
 gp_label <- function(x) sub("^K(\\d+)$", "GP\\1", x)

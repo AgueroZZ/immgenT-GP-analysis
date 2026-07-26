@@ -519,15 +519,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree202b28393455fa6e08595960ad3a4d478eb7e01btargetblank202b283a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreef7d90e74c57e8db95bd23be5d3d6c4243c70ff6etargetblankf7d90e7a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/202b28393455fa6e08595960ad3a4d478eb7e01b" target="_blank">202b283</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/f7d90e74c57e8db95bd23be5d3d6c4243c70ff6e" target="_blank">f7d90e7</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree202b28393455fa6e08595960ad3a4d478eb7e01btargetblank202b283a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreef7d90e74c57e8db95bd23be5d3d6c4243c70ff6etargetblankf7d90e7a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -537,7 +537,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/202b28393455fa6e08595960ad3a4d478eb7e01b" target="_blank">202b283</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/f7d90e74c57e8db95bd23be5d3d6c4243c70ff6e" target="_blank">f7d90e7</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -576,10 +576,12 @@ Ignored files:
     Ignored:    figures/generated/.DS_Store
     Ignored:    figures/generated/Figure 1/.DS_Store
     Ignored:    figures/generated/Figure 2/.DS_Store
+    Ignored:    output/FigureS5/S5_cell_metadata.csv.gz
     Ignored:    tmp/
 
 Untracked files:
     Untracked:  .claude/
+    Untracked:  code/R/doc_code.R
     Untracked:  code/other/topic_flashier_20250212.R
     Untracked:  code/other/topic_wrapper_20250215_alldata_backfit.sh
     Untracked:  experiments/active_metric_comparison/
@@ -588,9 +590,6 @@ Untracked files:
     Untracked:  experiments/protein_threshold_gp_loading_diff/
     Untracked:  experiments/surface_protein_activation_scatter/
     Untracked:  figures/generated/Figure 1/1B.pdf
-    Untracked:  figures/generated/Figure 2/hist_active_cells_per_GP.pdf
-    Untracked:  figures/generated/Figure 2/hist_active_genes_prop_per_GP.pdf
-    Untracked:  figures/generated/Figure 2/scatter_e_active_cells_vs_genes.pdf
     Untracked:  figures/generated/Figure 3/3A.pdf
     Untracked:  figures/generated/Figure 3/3B.pdf
     Untracked:  figures/generated/Figure 3/3H.pdf
@@ -613,7 +612,17 @@ Untracked files:
     Untracked:  tables/
 
 Unstaged changes:
+    Modified:   analysis/Figure1.Rmd
     Modified:   analysis/Figure2.Rmd
+    Modified:   analysis/Figure3.Rmd
+    Modified:   analysis/Figure4.Rmd
+    Modified:   analysis/Figure5.Rmd
+    Modified:   analysis/Figure6.Rmd
+    Modified:   analysis/FigureS1.Rmd
+    Modified:   analysis/FigureS2.Rmd
+    Modified:   analysis/FigureS3.Rmd
+    Modified:   analysis/FigureS4.Rmd
+    Modified:   analysis/FigureS6.Rmd
     Modified:   analysis/Methods_FlashierFit.Rmd
     Modified:   figures/generated/Figure 1/1A.pdf
     Modified:   figures/generated/Figure 1/1C.pdf
@@ -623,9 +632,6 @@ Unstaged changes:
     Deleted:    figures/generated/Figure 1/1G.pdf
     Deleted:    figures/generated/Figure 1/1H.pdf
     Deleted:    figures/generated/Figure 1/1I.pdf
-    Deleted:    figures/generated/Figure 1/hist_active_cells_per_GP.pdf
-    Deleted:    figures/generated/Figure 1/hist_active_genes_prop_per_GP.pdf
-    Deleted:    figures/generated/Figure 1/scatter_e_active_cells_vs_genes.pdf
     Modified:   figures/generated/Figure 2/2A.pdf
     Modified:   figures/generated/Figure 2/2B.pdf
     Modified:   figures/generated/Figure 2/2C.pdf
@@ -654,6 +660,13 @@ Unstaged changes:
     Modified:   figures/generated/Figure S3/s3f.pdf
     Modified:   figures/generated/Figure S3/s3g.pdf
     Modified:   figures/generated/Figure S3/s3h.pdf
+    Modified:   script/Figure1.R
+    Modified:   script/Figure2.R
+    Modified:   script/Figure3.R
+    Modified:   script/Figure6.R
+    Modified:   script/FigureS1.R
+    Modified:   script/FigureS4.R
+    Modified:   script/FigureS6.R
 
 </code></pre>
 <p>
@@ -698,6 +711,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/826226c25f49dbbbc3ad5ed65293b1f4987c95c2/analysis/Figure2.Rmd" target="_blank">826226c</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-26
+</td>
+<td>
+Fix line range for Fig2F code snippet after decoupling R from subsample
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/826226c25f49dbbbc3ad5ed65293b1f4987c95c2/docs/Figure2.html" target="_blank">826226c</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-26
+</td>
+<td>
+Fix line range for Fig2F code snippet after decoupling R from subsample
+</td>
+</tr>
 <tr>
 <td>
 Rmd

@@ -28,6 +28,7 @@
 #   mean_shifted_log_expr.rds                 [gap, no producer script here]
 #   flashier_snmf_fitted_prior.rda            [gap, no producer script here]
 
+# --- doc:setup ---
 library(ggplot2)
 library(dplyr)
 library(scattermore)
@@ -88,6 +89,7 @@ ggsave(filename = paste0(figure_path, "1A.pdf"), plot = p_1A, width = 5, height 
 
 # 1B: hand-finished Illustrator schematic -- not code-generated, no output here.
 
+# --- doc:setup2 ---
 # Drop thymocytes from all downstream cell-level visualizations (matches
 # Figure_Overview.R).
 non_thymo_cells <- seurat_meta_filtered$cellID[seurat_meta_filtered$annotation_level1 != "thymocyte"]

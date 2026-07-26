@@ -6,6 +6,10 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r doc-code, include=FALSE}
+source("../code/R/doc_code.R")
+```
+
 All panels are produced by
 [`script/Figure5.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure5.R).
 The code below is shown for reference (not re-executed on this page); the
@@ -15,12 +19,12 @@ images are its pre-rendered output.
 
 Data loading, shared across all panels below.
 
-```{r fig5-setup, code=readLines("../script/Figure5.R")[1:91], eval=FALSE}
+```{r fig5-setup, code=code_for("../script/Figure5.R", c("^", "Load data")), eval=FALSE}
 ```
 
 ## (a) Max AUC: organ vs. lineage {#fig5a}
 
-```{r fig5a-code, code=readLines("../script/Figure5.R")[92:180], eval=FALSE}
+```{r fig5a-code, code=code_for("../script/Figure5.R", "5a"), eval=FALSE}
 ```
 
 ```{r fig5a-img, echo=FALSE, out.width="60%"}
@@ -33,7 +37,7 @@ knitr::include_graphics("assets/Figure5/5a.png")
 
 ## (b) GP37+ rate in mammary gland vs. elsewhere {#fig5b}
 
-```{r fig5b-code, code=readLines("../script/Figure5.R")[247:341], eval=FALSE}
+```{r fig5b-code, code=code_for("../script/Figure5.R", "5b"), eval=FALSE}
 ```
 
 ```{r fig5b-img, echo=FALSE, out.width="60%"}
@@ -46,7 +50,7 @@ knitr::include_graphics("assets/Figure5/5b.png")
 
 ## (c) Marker genes of the 7 organ-specific GPs {#fig5c}
 
-```{r fig5c-code, code=readLines("../script/Figure5.R")[388:430], eval=FALSE}
+```{r fig5c-code, code=code_for("../script/Figure5.R", "5c"), eval=FALSE}
 ```
 
 ```{r fig5c-img, echo=FALSE, out.width="60%"}
@@ -59,7 +63,7 @@ knitr::include_graphics("assets/Figure5/5c.png")
 
 ## (d) Max AUC: organ vs. cluster {#fig5d}
 
-```{r fig5d-code, code=readLines("../script/Figure5.R")[181:246], eval=FALSE}
+```{r fig5d-code, code=code_for("../script/Figure5.R", c("5d prep", "5d:")), eval=FALSE}
 ```
 
 ```{r fig5d-img, echo=FALSE, out.width="60%"}
@@ -72,7 +76,7 @@ knitr::include_graphics("assets/Figure5/5d.png")
 
 ## (e) Organ, GP, and cluster alluvial diagram {#fig5e}
 
-```{r fig5e-code, code=readLines("../script/Figure5.R")[342:389], eval=FALSE}
+```{r fig5e-code, code=code_for("../script/Figure5.R", "5e"), eval=FALSE}
 ```
 
 ```{r fig5e-img, echo=FALSE, out.width="80%"}

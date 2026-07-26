@@ -6,6 +6,10 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r doc-code, include=FALSE}
+source("../code/R/doc_code.R")
+```
+
 All panels except (a) are produced by
 [`script/Figure6.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure6.R),
 which shares its CITE-seq setup with [Figure S6](FigureS6.html) via
@@ -15,12 +19,12 @@ minute to run); the images are its pre-rendered output.
 
 ## Setup
 
-```{r fig6-setup, code=readLines("../script/Figure6.R")[39:49], eval=FALSE}
+```{r fig6-setup, code=code_for("../script/Figure6.R", "doc:setup"), eval=FALSE}
 ```
 
 Panels (b) onward additionally load the shared CITE-seq cell/protein setup:
 
-```{r fig6-setup2, code=readLines("../script/Figure6.R")[53:67], eval=FALSE}
+```{r fig6-setup2, code=code_for("../script/Figure6.R", "Load data"), eval=FALSE}
 ```
 
 ## (a) Projection schematic {#fig6a}
@@ -29,7 +33,7 @@ This panel is a hand-drawn schematic, not generated from R -- there is no code o
 
 ## (b) Protein-program heatmap {#fig6b}
 
-```{r fig6b-code, code=readLines("../script/Figure6.R")[69:145], eval=FALSE}
+```{r fig6b-code, code=code_for("../script/Figure6.R", "6b"), eval=FALSE}
 ```
 
 ```{r fig6b-img, echo=FALSE, out.width="100%"}
@@ -42,7 +46,7 @@ knitr::include_graphics("assets/Figure6/6b.png")
 
 ## (c-f) Protein-gated vs. GP-loading populations {#fig6cf}
 
-```{r fig6cf-code, code=readLines("../script/Figure6.R")[147:172], eval=FALSE}
+```{r fig6cf-code, code=code_for("../script/Figure6.R", "6c-6f"), eval=FALSE}
 ```
 
 ```{r fig6cf-img, echo=FALSE, out.width="49%"}
@@ -58,7 +62,7 @@ knitr::include_graphics(c(
 
 ## (g, h) KLRG1 modulation across lineages {#fig6gh}
 
-```{r fig6gh-code, code=readLines("../script/Figure6.R")[174:239], eval=FALSE}
+```{r fig6gh-code, code=code_for("../script/Figure6.R", "6g/6h"), eval=FALSE}
 ```
 
 ```{r fig6gh-img, echo=FALSE, out.width="49%"}
@@ -71,7 +75,7 @@ knitr::include_graphics(c("assets/Figure6/6g.png", "assets/Figure6/6h.png"))
 
 ## (i-k) GPs associated with CD69 {#fig6ik}
 
-```{r fig6ik-code, code=readLines("../script/Figure6.R")[241:329], eval=FALSE}
+```{r fig6ik-code, code=code_for("../script/Figure6.R", "6i/6j/6k"), eval=FALSE}
 ```
 
 ```{r fig6ik-img, echo=FALSE, out.width="32%"}

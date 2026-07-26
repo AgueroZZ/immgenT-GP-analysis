@@ -6,6 +6,10 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r doc-code, include=FALSE}
+source("../code/R/doc_code.R")
+```
+
 All panels are produced by
 [`script/Figure4.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure4.R),
 which shares its curated GP set with [Figure S3](FigureS3.html) via
@@ -17,12 +21,12 @@ output.
 
 Data loading, shared across all panels below.
 
-```{r fig4-setup, code=readLines("../script/Figure4.R")[1:50], eval=FALSE}
+```{r fig4-setup, code=code_for("../script/Figure4.R", c("^", "Load data")), eval=FALSE}
 ```
 
 ## (4a) Activation effect, CD4 vs. CD8 {#fig4a}
 
-```{r fig4a-code, code=readLines("../script/Figure4.R")[52:100], eval=FALSE}
+```{r fig4a-code, code=code_for("../script/Figure4.R", "4a"), eval=FALSE}
 ```
 
 ```{r fig4a-img, echo=FALSE, out.width="50%"}
@@ -35,7 +39,7 @@ knitr::include_graphics("assets/Figure4/4a.png")
 
 ## (4b) GP-gene signature network {#fig4b}
 
-```{r fig4b-code, code=readLines("../script/Figure4.R")[102:161], eval=FALSE}
+```{r fig4b-code, code=code_for("../script/Figure4.R", "4b"), eval=FALSE}
 ```
 
 ```{r fig4b-img, echo=FALSE, out.width="50%"}
@@ -48,7 +52,7 @@ knitr::include_graphics("assets/Figure4/4b.png")
 
 ## (4c) TF-GP network {#fig4c}
 
-```{r fig4c-code, code=readLines("../script/Figure4.R")[163:200], eval=FALSE}
+```{r fig4c-code, code=code_for("../script/Figure4.R", "4c"), eval=FALSE}
 ```
 
 ```{r fig4c-img, echo=FALSE, out.width="50%"}
@@ -61,7 +65,7 @@ knitr::include_graphics("assets/Figure4/4c.png")
 
 ## (4d) Log2FC heatmap across conditions {#fig4d}
 
-```{r fig4d-code, code=readLines("../script/Figure4.R")[248:299], eval=FALSE}
+```{r fig4d-code, code=code_for("../script/Figure4.R", "4d"), eval=FALSE}
 ```
 
 ```{r fig4d-img, echo=FALSE, out.width="50%"}
@@ -74,7 +78,7 @@ knitr::include_graphics("assets/Figure4/4d.png")
 
 ## (4e) Mean loading by sub-lineage {#fig4e}
 
-```{r fig4e-code, code=readLines("../script/Figure4.R")[202:246], eval=FALSE}
+```{r fig4e-code, code=code_for("../script/Figure4.R", "4e"), eval=FALSE}
 ```
 
 ```{r fig4e-img, echo=FALSE, out.width="50%"}

@@ -6,6 +6,10 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r doc-code, include=FALSE}
+source("../code/R/doc_code.R")
+```
+
 Both pages are produced by
 [`script/FigureS6.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS6.R),
 which shares its CITE-seq setup and gating logic with
@@ -17,12 +21,12 @@ pre-rendered output.
 
 ## Setup
 
-```{r figs6-setup, code=readLines("../script/FigureS6.R")[1:35], eval=FALSE}
+```{r figs6-setup, code=code_for("../script/FigureS6.R", "^"), eval=FALSE}
 ```
 
 ## Gallery pages {#figs6-gallery}
 
-```{r figs6-code, code=readLines("../script/FigureS6.R")[37:102], eval=FALSE}
+```{r figs6-code, code=code_for("../script/FigureS6.R", "doc:gallery"), eval=FALSE}
 ```
 
 ```{r figs6-img, echo=FALSE, out.width="100%"}
