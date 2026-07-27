@@ -123,7 +123,7 @@ except where listed below. Nothing is left unexplained.
   Itm2b, Klra1, Cd3e, Nr4a2, Klre1, Chn2, Klrk1, which brings GP22's
   NK-receptor set (Klra1/Klre1/Klrk1, next to the Klra7/Klrd1 already there)
   into the figure. 21 of the 30 are unchanged. Rows are additionally pinned
-  (Fcer1g/Ccl5/Cd7 on top) and the columns ordered GP3/GP29/GP22.
+  (Fcer1g/Ccl5/Cd7/Ctsw on top) and the columns ordered GP3/GP29/GP22.
 - **Figure 5, panel 5c** drops the across-organ expression dotplot that formed
   the left half of the published 4c and ships the gene-score heatmap alone, at
   half the width. The caption describes the heatmap only.

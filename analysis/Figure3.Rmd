@@ -162,5 +162,5 @@ knitr::include_graphics("assets/Figure3/3M.png")
 ```
 
 ::: {.figcaption}
-**Fig. 3M.** Heatmap of the 30 most up-regulated genes across GP3, GP29 and GP22: of the genes with a positive score in at least one of the three, the 30 with the highest score across them. Gene scores are scaled so that each GP's largest absolute score is 1 (blue, negative; red, positive), and a gene selected for one GP can still be negative in another. Rows are hierarchically clustered, with Fcer1g, Ccl5 and Cd7 pinned to the top.
+**Fig. 3M.** Heatmap of the 30 most up-regulated genes across GP3, GP29 and GP22: of the genes with a positive score in at least one of the three, the 30 with the highest score across them. Gene scores are scaled so that each GP's largest absolute score is 1 (blue, negative; red, positive), and a gene selected for one GP can still be negative in another. Rows are hierarchically clustered, with Fcer1g, Ccl5, Cd7 and Ctsw pinned to the top.
 :::

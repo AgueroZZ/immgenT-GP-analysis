@@ -10,7 +10,7 @@
 #   3D,3F,3H  Per-gene view (score vs. mean expression) for GP68, GP30, GP58.
 #   3I  MDE restricted to gdT/CD8aa/DN, colored by lineage.
 #   3J,3K,3L  GP loading on the gdT/CD8aa/DN MDE, for GP22, GP29, GP3.
-#   3M  Heatmap of top-30 gene scores for GP3, GP22, GP29.
+#   3M  Heatmap of the top-30 up-regulated gene scores for GP3, GP29, GP22.
 #
 # Source: ported from Figure_Lineage.R, which also produced the
 # Figure S2 panels (see FigureS2.R) from the same L_pm_filtered/MDE setup.
@@ -360,7 +360,7 @@ for (gp_name in names(gp_letter)) {
 #   - rank_by = "pos": top 30 by max(score), i.e. genuinely up-regulated,
 #     instead of the app's max|score| (see the note at the call below)
 #   - column order GP3, GP29, GP22 (the app-faithful order is GP3, GP22, GP29)
-#   - Fcer1g/Ccl5/Cd7 pinned to the top 3 rows via `pin_top`
+#   - Fcer1g/Ccl5/Cd7/Ctsw pinned to the top 4 rows via `pin_top`
 # The last two were settled first, against the app-faithful version; the
 # ranking change came out of experiments/fig3m_updown_ranking/.
 # ============================================================
@@ -390,7 +390,7 @@ p_3M <- plot_cross_gp_heatmap(
   # See experiments/fig3m_updown_ranking/ for the side-by-side that decided it.
   feat_label = "Gene", n_genes = 30, direction = "pos", rank_by = "pos",
   threshold = 0.05, colorscheme = "bwr", cluster_r = TRUE, cluster_c = FALSE,
-  pin_top = c("Fcer1g", "Ccl5", "Cd7")
+  pin_top = c("Fcer1g", "Ccl5", "Cd7", "Ctsw")
 )
 ph_3m <- max(4, 2 + 30 * 0.14)
 pw_3m <- max(5, 3 + length(gps_3m) * 0.8)
