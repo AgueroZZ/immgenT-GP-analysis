@@ -17,23 +17,25 @@ library(fastTopics)
 data_path <- "data/" # original script used a cluster path; adjust as needed
 
 seurat_meta <- readRDS(paste0(data_path, "igt1_96_withtotalvi20260206_clean_ADTonly.Rds"))@meta.data
-protein_mat_normalized <- readRDS(paste0(data_path, "protein_mat_normalized_lognorm.rds"))
-protein_mat_normalized <- as.matrix(protein_mat_normalized)
+protein_mat_normalized_lognorm <- readRDS(paste0(data_path, "protein_mat_normalized_lognorm.rds"))
+protein_mat_normalized_lognorm <- as.matrix(protein_mat_normalized_lognorm)
 scRNA_result <- readRDS(paste0(data_path, "flashier_snmf_summary.rds")) # see 01_extract_data.R gap note
 
+# Y_mat is the response in Y ~= L U^T: the LogNormalize protein matrix
+# restricted to the measured CITE-seq cells.
 cells_measured <- seurat_meta$cellID[seurat_meta$cite_seq]
-L_mat <- scRNA_result$L_pm[rownames(protein_mat_normalized), , drop = FALSE]
+L_mat <- scRNA_result$L_pm[rownames(protein_mat_normalized_lognorm), , drop = FALSE]
 L_mat <- L_mat[cells_measured, , drop = FALSE]
-protein_mat_normalized <- protein_mat_normalized[cells_measured, , drop = FALSE]
+Y_mat <- protein_mat_normalized_lognorm[cells_measured, , drop = FALSE]
 
 # OLS projection, used as the flashier initialization
 qrL <- qr(L_mat)
-U_t <- qr.coef(qrL, protein_mat_normalized)
+U_t <- qr.coef(qrL, Y_mat)
 U <- t(U_t)
 saveRDS(U, file = paste0(data_path, "protein_projection_OLS_lognorm.rds"))
 
 F_mat_int <- U
-flash_fixed_loading <- flash_init(protein_mat_normalized, var_type = 2) |>
+flash_fixed_loading <- flash_init(Y_mat, var_type = 2) |>
   flash_set_verbose(1) |>
   flash_factors_init(list(L_mat, F_mat_int), ebnm_fn = ebnm_point_laplace) |>
   flash_factors_fix(kset = 1:ncol(L_mat), which_dim = "loadings")

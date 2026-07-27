@@ -1,7 +1,12 @@
 #!/usr/bin/env Rscript
 
 # Prepare reproducible CITE-seq protein matrices from the 20260206 ADT-only
-# Seurat object. This is a cluster-scale provenance script.
+# Seurat object. This is the single source of every ADT matrix in this project,
+# and it is a cluster-scale provenance script.
+#
+# ADT normalization: Seurat LogNormalize only, with scale factor
+# round(mean(nCount_ADT)) = 3472. No CLR-normalized ADT matrix is produced or
+# used anywhere in this repository.
 #
 # Usage:
 #   Rscript code/other/prepare_citeseq_protein_matrices_20260206.R \
@@ -9,9 +14,11 @@
 #
 # Outputs in data_path:
 #   seurat_meta_20260206.rds              current cell metadata
-#   protein_mat.rds                       raw ADT counts (cells x proteins)
-#   protein_mat_normalized.rds            CLR-normalized ADT (legacy name)
-#   protein_mat_normalized_lognorm.rds    LogNormalize ADT used by protein EBMF
+#   protein_mat.rds                       raw ADT counts (cells x proteins);
+#                                         kept as the input to normalization,
+#                                         but read by no downstream script
+#   protein_mat_normalized_lognorm.rds    LogNormalize ADT -- the only ADT
+#                                         matrix any analysis reads
 
 suppressPackageStartupMessages({
   library(Matrix)
@@ -71,26 +78,6 @@ protein_mat <- t(seurat_obj[["ADT"]]$counts)
 validate_protein_matrix(protein_mat, "Raw ADT matrix")
 saveRDS(protein_mat, file.path(data_path, "protein_mat.rds"))
 rm(protein_mat)
-invisible(gc())
-
-# CLR normalization is retained because it was part of the original extraction
-# workflow. The legacy filename protein_mat_normalized.rds refers specifically
-# to this CLR matrix; it is not the matrix used for the fixed-loading EBMF fit.
-message("Computing CLR-normalized ADT matrix (margin = 2)...")
-seurat_obj <- NormalizeData(
-  seurat_obj,
-  assay = "ADT",
-  normalization.method = "CLR",
-  margin = 2,
-  verbose = TRUE
-)
-protein_mat_normalized_clr <- t(seurat_obj[["ADT"]]$data)
-validate_protein_matrix(protein_mat_normalized_clr, "CLR-normalized ADT matrix")
-saveRDS(
-  protein_mat_normalized_clr,
-  file.path(data_path, "protein_mat_normalized.rds")
-)
-rm(protein_mat_normalized_clr)
 invisible(gc())
 
 # The cached protein_mat_normalized_lognorm.rds was audited against the raw

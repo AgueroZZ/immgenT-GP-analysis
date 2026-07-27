@@ -27,9 +27,9 @@ meant to be run against the trimmed `data/` directory shipped in this repo,
 which already contains their cached outputs.
 
 1. `01_extract_data.R` — historical full-object extraction -> gene-filtered
-   RNA counts, raw/CLR CITE-seq matrices, and a condensed factorization summary.
-   For the authoritative 20260206 protein workflow and LogNormalize matrix, use
-   `other/prepare_citeseq_protein_matrices_20260206.R`.
+   RNA counts and a condensed factorization summary. RNA only; it reads the
+   older 20250710 Seurat object and produces no CITE-seq matrices (see the
+   CITE-seq note below).
 2. `01b_filter_cells.R` — filters cells by total GP membership, producing
    `L_pm_filtered.rds`/`F_pm_filtered.rds` (unlike `01_extract_data.R`,
    this one *is* runnable against the `data/` in this repo).
@@ -47,11 +47,35 @@ which already contains their cached outputs.
 6. `05_igt_validation.R` — per-batch (IGT) reproducibility validation
    (feeds FigureS1).
 
+### CITE-seq ADT: one matrix, one normalization
+
+Every CITE-seq analysis in this project reads exactly one protein matrix,
+`protein_mat_normalized_lognorm.rds`, produced by
+`other/prepare_citeseq_protein_matrices_20260206.R`. It is **Seurat
+`LogNormalize`** with `scale.factor = round(mean(nCount_ADT)) = 3472`, computed
+from the 20260206 ADT-only Seurat object. There is no CLR-normalized ADT
+anywhere in the analysis.
+
+Its readers are `pipeline/03_protein_thresholds.R`,
+`pipeline/04_protein_projection.R`,
+`other/fit_citeseq_fixed_loading_ebmf_20260206.R`, `R/citeseq_shared_setup.R`
+(which in turn feeds Figure 6, Figure S6, and Extended Data Table 7), and
+`script/Figure1.R`, `script/Figure2.R`, `script/FigureS2.R`.
+
+Note for anyone reading older revisions: `01_extract_data.R` and
+`prepare_citeseq_protein_matrices_20260206.R` used to also write a CLR matrix
+named `protein_mat_normalized.rds`. Nothing ever read it, its name invited
+confusion with the LogNormalize matrix above, and `01_extract_data.R` wrote it
+from a different (20250710) Seurat object than the 20260206 preparation, so
+running the two in either order silently mixed object versions. Both CLR blocks
+have been removed. A stale `data/protein_mat_normalized.rds` may still sit in
+the shared, non-published `data/` directory; nothing reads it.
+
 ## other/ — cluster-scale source workflows
 
 | File | Contents |
 |---|---|
-| `prepare_citeseq_protein_matrices_20260206.R` | Authoritative 20260206 CITE-seq extraction: saves versioned metadata, raw ADT counts, the legacy CLR-normalized matrix, and the LogNormalize matrix used by protein EBMF. |
+| `prepare_citeseq_protein_matrices_20260206.R` | The only source of CITE-seq matrices in this project: saves versioned 20260206 metadata, raw ADT counts, and the LogNormalize ADT matrix everything downstream reads. |
 | `fit_citeseq_fixed_loading_ebmf_20260206.R` | Aligns measured CITE-seq cells to the scRNA loading matrix, initializes protein scores by OLS, fixes the cell loadings, and saves cumulative flashier checkpoints at 20, 40, 80, 120, 160, and 200 iterations. |
 
 ## Data provenance
@@ -80,8 +104,8 @@ across two directories.
 | `shifted_log_counts_subset.rds` | **gap** | A subset of `shifted_log_counts.qs` (used by Figure4's panel c); the subsetting script isn't preserved. |
 | `mean_shifted_log_expr.rds` | **gap** | Per-gene mean shifted-log expression, most likely `colMeans()` of `shifted_log_counts.qs`; not scripted here. |
 | `seurat_meta_20260206.rds` | `other/prepare_citeseq_protein_matrices_20260206.R` | Versioned metadata snapshot from the 20260206 ADT-only Seurat object; used for all CITE-seq cell selection. |
-| `protein_mat.rds`, `protein_mat_normalized.rds` | `other/prepare_citeseq_protein_matrices_20260206.R` (the historical raw/CLR extraction is also present in `01_extract_data.R`) | CITE-seq ADT matrix: raw counts and CLR normalization (`margin = 2`), respectively. |
-| `protein_mat_normalized_lognorm.rds` | `other/prepare_citeseq_protein_matrices_20260206.R` | Seurat LogNormalize ADT matrix used for protein EBMF. The scale factor is `round(mean(nCount_ADT)) = 3472` for the 20260206 object; the reconstructed matrix matches the cached file to floating-point precision. |
+| `protein_mat.rds` | `other/prepare_citeseq_protein_matrices_20260206.R` | Raw ADT counts (cells x proteins). Written as the documented input to normalization; no script reads it. |
+| `protein_mat_normalized_lognorm.rds` | `other/prepare_citeseq_protein_matrices_20260206.R` | **The ADT matrix every CITE-seq analysis uses.** Seurat LogNormalize with scale factor `round(mean(nCount_ADT)) = 3472` for the 20260206 object; the reconstructed matrix matches the cached file to floating-point precision. |
 | `Thresholds_Selected_Proteins.csv`, `GMM_Thresholds_Summary.csv` | `03_protein_thresholds.R` | Per-protein positivity thresholds. |
 | `TableS4_citeseq_qc_20250513.csv` | *(external)* | The manuscript's own Supplementary Table S4 (manually reviewed protein QC classifications) — not computationally derived. |
 | `CITEseq_markers_full.rds` | `04_protein_projection.R` | Per-GP positive/negative protein markers (\|score\| >= 0.5 on the same filtered/scaled protein factor matrix as Figure 6 panel b). Recovered from live (not commented-out) code in the original `Figure_CITEseq.R`; the marker-selection logic itself is verified byte-identical to the cached file when fed the same upstream input -- the only divergence is that this step uses the non-`backfit200` protein summary (see that row's caveat above). |

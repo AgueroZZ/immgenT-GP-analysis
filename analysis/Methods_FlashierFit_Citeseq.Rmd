@@ -50,7 +50,10 @@ seurat_meta <- seurat_obj@meta.data
 The ADT assay is stored with proteins in rows and cells in columns. We use
 Seurat `LogNormalize` with the rounded mean ADT library size as the scale
 factor, then transpose the result so that cells are rows and proteins are
-columns.
+columns. This is the only ADT normalization used anywhere in this project:
+`protein_mat_normalized_lognorm.rds` is the single protein matrix read by the
+fit below, by the protein positivity thresholds, and by every figure and table
+that shows surface-protein levels. No CLR-normalized ADT matrix is used.
 
 ```{r, eval=FALSE}
 adt_scale_factor <- round(mean(seurat_meta$nCount_ADT, na.rm = TRUE))
@@ -92,7 +95,7 @@ cells_used <- cells_measured[
 ]
 
 L_mat <- scRNA_result$L_pm[cells_used, , drop = FALSE]
-protein_mat_normalized <- as.matrix(
+Y_mat <- as.matrix(
   protein_mat_normalized_lognorm[cells_used, , drop = FALSE]
 )
 ```
@@ -110,7 +113,7 @@ explicitly.
 
 ```{r, eval=FALSE}
 qrL <- qr(L_mat)
-U_t <- qr.coef(qrL, protein_mat_normalized)
+U_t <- qr.coef(qrL, Y_mat)
 U <- t(U_t)
 saveRDS(U, file.path(data_path, "protein_projection_OLS_lognorm.rds"))
 ```
@@ -127,7 +130,7 @@ does not alter the scRNA-derived cellular programs.
 - `flash_factors_fix(..., which_dim = "loadings")` fixes all columns of $L$.
 
 ```{r, eval=FALSE}
-flash_fixed_loading <- flash_init(protein_mat_normalized, var_type = 2) |>
+flash_fixed_loading <- flash_init(Y_mat, var_type = 2) |>
   flash_set_verbose(1) |>
   flash_factors_init(
     list(L_mat, U),

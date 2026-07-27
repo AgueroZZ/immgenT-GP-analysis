@@ -1,10 +1,13 @@
-# Pipeline step 1: raw data extraction.
+# Pipeline step 1: raw RNA extraction.
 #
 # From the raw Seurat object, produces:
 #   - shifted_log_counts.qs / counts.qs   (RNA counts, gene-filtered)
-#   - protein_mat.rds / protein_mat_normalized.rds  (CITE-seq ADT)
 #   - flashier_snmf_summary.rds  (L_pm/F_pm/elbo/pve; condensed from the
 #     upstream flashier fit)
+#
+# RNA only. The CITE-seq ADT matrices come from a different, newer Seurat
+# object and are produced solely by
+# code/other/prepare_citeseq_protein_matrices_20260206.R.
 #
 # GAP: this script reads an existing `flashier_snmf.rds` (line "flashier_snmf
 # <- readRDS(...)") -- the flashier semi-NMF fit itself. No script anywhere
@@ -18,13 +21,12 @@
 # not intended to be run against the data/ directory in this repo (which
 # only contains the already-extracted, filtered outputs).
 #
-# Source: ported from extract_data.R, unchanged apart from path
-# variables and this header.
-#
-# NOTE: the RNA portion remains the historical full-object extraction, and the
-# ADT portion below preserves the historical raw/CLR outputs. The authoritative
-# 20260206 CITE-seq preparation, including the LogNormalize matrix used by the
-# protein EBMF fit, is code/other/prepare_citeseq_protein_matrices_20260206.R.
+# Source: ported from extract_data.R, unchanged apart from path variables,
+# this header, and the removal of its ADT block. That block normalized the ADT
+# assay with CLR and wrote protein_mat.rds / protein_mat_normalized.rds from
+# the older 20250710 Seurat object read below -- the same filenames the
+# 20260206 preparation writes, so running it would have silently overwritten
+# the current matrices with stale ones. Nothing ever read its CLR output.
 
 libs <- c("fastTopics", "flashier", "Matrix", "Seurat", "qs")
 invisible(sapply(libs, function(x) suppressMessages(suppressWarnings(library(x, character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)))))
@@ -56,15 +58,6 @@ shifted_log_counts <- shifted_log_counts[, genes_to_keep]
 counts <- counts[, genes_to_keep]
 qsave(shifted_log_counts, file = file.path(data_path, "shifted_log_counts.qs"), preset = "balanced")
 qsave(counts, file = file.path(data_path, "counts.qs"), preset = "balanced")
-
-# CITE-seq (ADT) protein matrix
-seurat_obj <- NormalizeData(seurat_obj, normalization.method = "CLR", margin = 2, assay = "ADT")
-protein_mat <- seurat_obj[["ADT"]]$counts
-protein_mat_normalized <- seurat_obj[["ADT"]]$data
-protein_mat <- t(protein_mat)
-protein_mat_normalized <- t(protein_mat_normalized)
-saveRDS(protein_mat, file = paste0(data_path, "protein_mat.rds"))
-saveRDS(protein_mat_normalized, file = paste0(data_path, "protein_mat_normalized.rds"))
 
 # Condense the full flashier fit (see GAP note above) into the summary
 # object every figure script reads.

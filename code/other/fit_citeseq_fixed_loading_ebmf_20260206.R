@@ -23,7 +23,7 @@ scrna_file <- file.path(data_path, "flashier_snmf_summary.rds")
 message("Reading 20260206 metadata: ", metadata_file)
 seurat_meta <- readRDS(metadata_file)
 message("Reading LogNormalize protein matrix: ", protein_file)
-protein_mat_normalized <- readRDS(protein_file)
+protein_mat_normalized_lognorm <- readRDS(protein_file)
 message("Reading scRNA GP fit summary: ", scrna_file)
 scRNA_result <- readRDS(scrna_file)
 
@@ -38,7 +38,7 @@ if (length(missing_metadata) > 0L) {
 if (is.null(scRNA_result$L_pm) || is.null(rownames(scRNA_result$L_pm))) {
   stop("flashier_snmf_summary.rds does not contain a row-named L_pm matrix.")
 }
-if (is.null(rownames(protein_mat_normalized))) {
+if (is.null(rownames(protein_mat_normalized_lognorm))) {
   stop("The protein matrix does not have cell IDs as row names.")
 }
 
@@ -49,7 +49,7 @@ cells_measured <- as.character(
   seurat_meta$cellID[!is.na(seurat_meta$cite_seq) & seurat_meta$cite_seq]
 )
 cells_used <- cells_measured[
-  cells_measured %in% rownames(protein_mat_normalized) &
+  cells_measured %in% rownames(protein_mat_normalized_lognorm) &
     cells_measured %in% rownames(scRNA_result$L_pm)
 ]
 
@@ -63,11 +63,13 @@ if (length(cells_used) < length(cells_measured)) {
   )
 }
 
+# Y_mat is the response in Y ~= L U^T: the LogNormalize protein matrix
+# restricted to the aligned cells.
 L_mat <- scRNA_result$L_pm[cells_used, , drop = FALSE]
-protein_mat_normalized <- as.matrix(
-  protein_mat_normalized[cells_used, , drop = FALSE]
+Y_mat <- as.matrix(
+  protein_mat_normalized_lognorm[cells_used, , drop = FALSE]
 )
-if (!identical(rownames(L_mat), rownames(protein_mat_normalized))) {
+if (!identical(rownames(L_mat), rownames(Y_mat))) {
   stop("The aligned scRNA loading and protein matrices have different row order.")
 }
 
@@ -77,19 +79,19 @@ message(
   " cells x ",
   ncol(L_mat),
   " fixed GP loadings; ",
-  ncol(protein_mat_normalized),
+  ncol(Y_mat),
   " proteins."
 )
 
 # OLS projection gives a protein x GP score matrix used to initialize flashier.
 message("Computing the OLS protein-score initialization...")
 qrL <- qr(L_mat)
-U_t <- qr.coef(qrL, protein_mat_normalized)
+U_t <- qr.coef(qrL, Y_mat)
 U <- t(U_t)
 saveRDS(U, file.path(data_path, "protein_projection_OLS_lognorm.rds"))
 
 message("Initializing flashier and fixing the scRNA-derived loading matrix...")
-flash_fixed_loading <- flash_init(protein_mat_normalized, var_type = 2) |>
+flash_fixed_loading <- flash_init(Y_mat, var_type = 2) |>
   flash_set_verbose(1) |>
   flash_factors_init(
     list(L_mat, U),
