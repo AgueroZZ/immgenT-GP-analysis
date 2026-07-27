@@ -11,3 +11,6 @@ data
 
 # Large regenerable script-to-script handoff (rebuilt by script/FigureS5.R)
 output/FigureS5/S5_cell_metadata.csv.gz
+
+# Local Claude Code config (machine-specific absolute paths)
+.claude/
