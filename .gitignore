@@ -14,3 +14,7 @@ output/FigureS5/S5_cell_metadata.csv.gz
 
 # Local Claude Code config (machine-specific absolute paths)
 .claude/
+
+# Published supplementary tables (journal artifacts, used only as
+# verification ground truth -- see code/README.md; not produced here)
+tables/

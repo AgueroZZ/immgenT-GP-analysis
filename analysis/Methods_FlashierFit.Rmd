@@ -1,5 +1,5 @@
 ---
-title: "Methods: Flashier matrix factorization"
+title: "Fitting EBMF using flashier"
 output: workflowr::wflow_html
 ---
 
@@ -19,12 +19,34 @@ gene programs from the data.
 
 ## Key steps
 
+### 0. Setup
+
+The script takes three command-line arguments: the path to a Seurat object
+(`.Rds`), an output directory, and a flag for whether to run backfitting.
+After loading the required libraries, the Seurat object is read into memory
+as `so`. This object contains the raw count matrix and cell-level metadata
+for the full ImmGen-T dataset.
+
+```r
+libs = c("fastTopics", "flashier", "Matrix", "Seurat", "BPCells")
+sapply(libs, function(x) suppressMessages(library(x, character.only = TRUE, quietly = TRUE)))
+
+so = readRDS(file = path_to_seurat_object)
+```
+
 ### 1. Normalization
 
 Each cell's counts are log-normalized using a cell-specific scale factor equal
 to the dataset-wide mean library size (`mean(nCount_RNA)`). This "shifted
 log" normalization keeps the data on a comparable scale across cells while
 preserving count structure.
+
+```r
+norm_fac = mean(so$nCount_RNA)
+so = NormalizeData(so, assay = "RNA", normalization.method = "LogNormalize", scale.factor = norm_fac)
+counts = t(so[['RNA']]$counts)
+shifted_log_counts = t(so[['RNA']]$data)
+```
 
 ### 2. Gene filtering
 
@@ -40,30 +62,35 @@ biological signal:
   artifacts with unreliable quantification.
 - **Unexpressed genes**: genes with zero total counts across all cells.
 
+```r
+tcr_genes           = grepl(rownames(so), pattern = "Trbv|Trbd|Trbj|Trbc|Trav|Traj|Trac|Trgv|Trgd|Trgj|Trgc|Trdv|Trdj|Trdc")
+gm_rik_genes        = grepl(rownames(so), pattern = "Gm|Rik$|\\-ps$")
+ribo_genes          = grepl(rownames(so), pattern = "Rpl|Rps|Mrpl|Mrps|Rsl")
+mt_genes            = grepl(rownames(so), pattern = "^mt-")
+genes_not_expressed = rowSums(so[["RNA"]]$counts) == 0
+genes_to_keep       = !(tcr_genes | gm_rik_genes | ribo_genes | mt_genes | genes_not_expressed)
+
+shifted_log_counts = shifted_log_counts[, genes_to_keep]
+counts             = counts[, genes_to_keep]
+```
+
 ### 3. Variance regularization
 
 To set the noise level parameter `S` for `flashier`, we estimate the standard
-deviation of log-normalized Poisson noise:
+deviation of log-normalized Poisson noise. This gives a data-driven estimate
+of the baseline technical noise floor, passed to `flash()` as the `S`
+argument.
 
 ```r
-n <- nrow(counts)              # number of cells
-x <- rpois(1e7, 1/n)          # Poisson draws at rate 1/cell
-s1 <- sd(log(x + 1))          # SD on the shifted-log scale
+n  = nrow(counts)       # number of cells
+x  = rpois(1e7, 1/n)   # Poisson draws at rate 1/cell
+s1 = sd(log(x + 1))    # SD on the shifted-log scale
 ```
-
-This gives a data-driven estimate of the baseline technical noise floor,
-passed to `flash()` as the `S` argument.
 
 ### 4. Flashier fit
 
-```r
-fit <- flash(shifted_log_counts,
-             ebnm_fn = c(ebnm_point_exponential, ebnm_point_laplace),
-             var_type = 2,
-             S = s1,
-             backfit = TRUE,
-             greedy_Kmax = 200L)
-```
+We call `flash()` with prior families chosen to reflect the expected structure
+of the loadings and factors:
 
 - **`ebnm_point_exponential`** for loadings (cells): enforces non-negativity,
   so each cell's contribution to a GP is a non-negative weight.
@@ -77,61 +104,16 @@ fit <- flash(shifted_log_counts,
   factors, a backfitting pass refines all factors jointly to improve the
   overall fit.
 
-The fitted object is saved as `fit.Rds` and used for all downstream GP
-analyses on this site.
-
-## Full script
-
 ```r
-# David Zemmour
-# Usage: Rscript topic_flashier_20250212.R [path_to_seurat_object] [output_dir] [backfit (True/False)]
-
-options(max.print=1000)
-options(expressions = 50000)
-
-args = commandArgs(TRUE)
-path_to_seurat_object = args[1]
-output_dir = args[2]
-backfit_option = tolower(args[3])
-
-if (backfit_option %in% c("true", "t")) {
-    backfit_option = TRUE
-} else if (backfit_option %in% c("false", "f")) {
-    backfit_option = FALSE
-}
-
-if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
-
-libs = c("fastTopics", "flashier", "Matrix", "Seurat", "BPCells")
-sapply(libs, function(x) suppressMessages(library(x, character.only = TRUE, quietly = TRUE)))
-
-so = readRDS(file = path_to_seurat_object)
-
-norm_fac = mean(so$nCount_RNA)
-so = NormalizeData(so, assay = "RNA", normalization.method = "LogNormalize", scale.factor = norm_fac)
-counts = t(so[['RNA']]$counts)
-shifted_log_counts = t(so[['RNA']]$data)
-
-tcr_genes       = grepl(rownames(so), pattern = "Trbv|Trbd|Trbj|Trbc|Trav|Traj|Trac|Trgv|Trgd|Trgj|Trgc|Trdv|Trdj|Trdc")
-gm_rik_genes    = grepl(rownames(so), pattern = "Gm|Rik$|\\-ps$")
-ribo_genes      = grepl(rownames(so), pattern = "Rpl|Rps|Mrpl|Mrps|Rsl")
-mt_genes        = grepl(rownames(so), pattern = "^mt-")
-genes_not_expressed = rowSums(so[["RNA"]]$counts) == 0
-genes_to_keep   = !(tcr_genes | gm_rik_genes | ribo_genes | mt_genes | genes_not_expressed)
-
-shifted_log_counts = shifted_log_counts[, genes_to_keep]
-counts             = counts[, genes_to_keep]
-
-n  = nrow(counts)
-x  = rpois(1e7, 1/n)
-s1 = sd(log(x + 1))
-
 fit = flash(shifted_log_counts,
             ebnm_fn = c(ebnm_point_exponential, ebnm_point_laplace),
             var_type = 2,
             S = s1,
-            backfit = backfit_option,
+            backfit = TRUE,
             greedy_Kmax = 200L)
 
 saveRDS(fit, file = sprintf("%s/fit.Rds", output_dir))
 ```
+
+The fitted object is saved as `fit.Rds` and used for all downstream GP
+analyses on this site.
