@@ -124,13 +124,18 @@ except where listed below. Nothing is left unexplained.
   heatmap with a different aspect ratio.
 - **Figure S3, panel s3c** now reports activated CD4/CD8 cells at threshold
   0.1, not all cells at 0.2 as the published panel did. The caption states it.
-- **Figure S1, panel S1D** ranks its ten GPs on S1C's variance (all 35
-  standard-spleen IGTs) so that S1D's rows are the ten GPs S1C labels.
-  `Figure_batch.R` ranked S1D on the >= 500-cell subset while labelling S1C on
-  all 35, and the two rankings disagree (GP2: 7th on the subset, 11th overall;
-  GP25: 6th overall, 23rd on the subset), so the published S1D shows GP2 where
-  S1C labels GP25. We fix that rather than reproduce it. The >= 500-cell rule
-  still selects the IGT *columns* drawn.
+- **Figure S1, panel S1C** is computed over the 18 standard-spleen IGTs that
+  contribute >= 500 cells, not all 35, so that it shares one per-IGT
+  mean-loading matrix with S1D and its ten labelled GPs are exactly S1D's ten
+  rows. `Figure_batch.R` built that matrix twice on different IGT sets, and the
+  two rankings disagree (GP2: 7th on the subset, 11th over all 35; GP25: 6th
+  over all 35, 23rd on the subset), so the published S1C labels GP25 where the
+  published S1D shows GP2 -- "the top ten from (C)" could not be followed
+  across the panels. Restricting both to the 18 also drops GP25 out of the top
+  ten, which is the point: its rank over all 35 came from IGTs with very few
+  cells. Note the consequence -- **S1D is pixel-identical to the published
+  panel**, and S1C is the panel that moves (its variance axis roughly doubles,
+  since it is no longer diluted by small IGTs).
 - **Figures 3C/3E/3G** and **s3c** had no exact source in the original scripts
   and were reconstructed (3C/3E/3G with `plot_loadings_on_mde()`, the styling
   used for 3J/3K/3L). Content matches; canvas size and the UMAP->MDE / K->GP

@@ -7,13 +7,14 @@
 #   S1B  Number of GPs validated by at least X IGTs, vs X (log-log), for the
 #        same thresholds.
 #   S1C  Between-IGT variability: each GP's mean-of-per-IGT-mean-loading (x)
-#        vs. variance-of-per-IGT-mean-loading (y), spleen-standard subset.
-#   S1D  Heatmap of per-IGT mean loading (IGTs with >= 500 spleen-standard
-#        cells only) for the 10 highest-variance GPs from S1C -- i.e. ranked on
-#        S1C's own variance, so the two panels agree. Figure_batch.R ranked
-#        S1D on the >= 500-cell subset while labelling S1C on all 35 IGTs,
-#        which made the published S1D show GP2 where S1C labels GP25; we fix
-#        that inconsistency rather than reproduce it.
+#        vs. variance-of-per-IGT-mean-loading (y).
+#   S1D  Heatmap of per-IGT mean loading for S1C's 10 highest-variance GPs.
+#
+#        S1C and S1D share one per-IGT mean-loading matrix, over the
+#        standard-spleen subset restricted to the 18 IGTs with >= 500 such
+#        cells. Figure_batch.R built it twice on different IGT sets (S1C over
+#        all 35, S1D over the 18), which made the published panels disagree --
+#        see the note in the "Load data for S1C/S1D" section.
 #   S1E  Scatter of the NUMBER of active genes (x) vs. proportion of active
 #        cells (y) per GP, using the same hard-threshold definitions as Figure 2
 #        (|normalized score| > 0.25 for genes; normalized loading > 0.1 for
@@ -107,21 +108,35 @@ L_pm_filtered <- readRDS(paste0(data_path, "L_pm_filtered.rds"))
 seurat_meta <- readRDS(paste0(data_path, "igt1_96_withtotalvi20260206_clean_ADTonly.Rds"))@meta.data
 seurat_meta_filtered <- seurat_meta[rownames(L_pm_filtered), ]
 seurat_meta_filtered_spleen <- seurat_meta_filtered %>% filter(spleen_standard == TRUE)
-all_gps <- paste0("K", 1:200)
-selected_igts <- names(table(seurat_meta_filtered_spleen$IGT))[table(seurat_meta_filtered_spleen$IGT) >= 500]
+
+# S1C and S1D are both computed from ONE per-IGT mean-loading matrix
+# (IGTs x GPs) over the standard-spleen subset, restricted to the IGTs with
+# >= 500 such cells -- an IGT mean over a handful of cells is too noisy to
+# either rank on or draw. Both panels therefore describe the same 18 IGTs, and
+# S1C's ten labelled GPs are exactly S1D's ten rows.
+#
+# Figure_batch.R built this matrix twice instead: S1C over all 35 spleen IGTs,
+# S1D over the >= 500-cell subset. The two rankings disagree -- GP2 is 7th on
+# the subset but 11th over all 35, GP25 is 6th over all 35 but 23rd on the
+# subset -- so the published S1C labels GP25 while the published S1D shows GP2,
+# and "the top ten from (C)" could not be followed across the two panels.
+# Computing it once removes the inconsistency and the chance of the two
+# drifting apart again.
+spleen_cells <- intersect(rownames(L_pm_filtered), rownames(seurat_meta_filtered_spleen))
+igt_vec <- seurat_meta_filtered_spleen[spleen_cells, "IGT"]
+selected_igts <- names(table(igt_vec))[table(igt_vec) >= 500]
+igt_mean_mat <- do.call(rbind, lapply(selected_igts, function(igt) {
+  colMeans(L_pm_filtered[spleen_cells[igt_vec == igt], , drop = FALSE])
+}))
+rownames(igt_mean_mat) <- selected_igts
+
+gp_igt_var <- apply(igt_mean_mat, 2, var)
+gp_overall <- colMeans(igt_mean_mat)
 
 # ============================================================
 # S1C: GP mean-of-IGT-mean-loading vs. variance-of-IGT-mean-loading (spleen)
 # ============================================================
-common_cells_c <- intersect(rownames(L_pm_filtered), rownames(seurat_meta_filtered_spleen))
-L_sub_c <- L_pm_filtered[common_cells_c, ]
-igt_vec_c <- seurat_meta_filtered_spleen[common_cells_c, "IGT"]
-igt_levels_c <- unique(igt_vec_c)
-igt_mat_c <- do.call(rbind, lapply(igt_levels_c, function(igt) colMeans(L_sub_c[igt_vec_c == igt, , drop = FALSE])))
-
-gp_igt_var <- apply(igt_mat_c, 2, var)
-gp_overall <- colMeans(igt_mat_c)
-gp_stats <- data.frame(GP = colnames(L_sub_c), x = gp_overall, y = gp_igt_var) %>%
+gp_stats <- data.frame(GP = colnames(igt_mean_mat), x = gp_overall, y = gp_igt_var) %>%
   arrange(desc(y)) %>%
   mutate(label = ifelse(row_number() <= 10, gp_label(as.character(GP)), ""))
 
@@ -137,32 +152,13 @@ p_S1C <- ggplot(gp_stats, aes(x = x, y = y, label = label)) +
 ggsave(paste0(figure_path, "S1C.pdf"), plot = p_S1C, width = 6, height = 5, dpi = 300)
 
 # ============================================================
-# S1D: heatmap of per-IGT mean loading (IGTs with >= 500 spleen-standard cells
-#      only) for the top-10 between-IGT-variance GPs over those same IGTs
+# S1D: heatmap of per-IGT mean loading for S1C's ten highest-variance GPs
 # ============================================================
-spleen_cells_act <- intersect(rownames(L_pm_filtered), rownames(seurat_meta_filtered_spleen))
-igt_vec_act <- seurat_meta_filtered_spleen[spleen_cells_act, "IGT"]
-igt_mean_mat_act <- do.call(rbind, lapply(selected_igts, function(igt) {
-  cells_i <- spleen_cells_act[igt_vec_act == igt]
-  colMeans(L_pm_filtered[cells_i, all_gps, drop = FALSE])
-}))
-rownames(igt_mean_mat_act) <- selected_igts
-
-# Ranked on S1C's `gp_igt_var` (variance of per-IGT mean loading over all 35
-# spleen-standard IGTs) so that S1D's 10 rows ARE S1C's 10 labelled GPs.
-#
-# This is a deliberate departure from the published panel. Figure_batch.R
-# recomputed the variance here on the >= 500-cell subset only, so its S1D
-# ranked on 18 IGTs while its S1C labelled on 35 -- and the two disagreed:
-# GP2 is 7th on the subset but 11th overall, GP25 is 6th overall but 23rd on
-# the subset, so the published S1D shows GP2 while the published S1C labels
-# GP25. Readers cannot follow "the top ten from (C)" across that gap, so we
-# rank both panels the same way. The >= 500-cell restriction still applies to
-# the IGT *columns* drawn below, where it keeps noisy small-IGT means out of
-# the heatmap.
+# Same `igt_mean_mat` and same `gp_igt_var` as S1C, so these ten rows are the
+# ten GPs S1C labels -- see the note where that matrix is built.
 top10_var_gps <- names(sort(gp_igt_var, decreasing = TRUE))[1:10]
 
-plot_mat <- t(igt_mean_mat_act[, top10_var_gps, drop = FALSE])
+plot_mat <- t(igt_mean_mat[, top10_var_gps, drop = FALSE])
 plot_mat[plot_mat < 0] <- 0
 rownames(plot_mat) <- gp_label(rownames(plot_mat))
 
