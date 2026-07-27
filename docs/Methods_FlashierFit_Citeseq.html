@@ -514,15 +514,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeffe285cdbf2f4fde2f863a632acf8cae3955ea6ctargetblankffe285ca">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree6447bf7588ebb156104eae9448a10293bd0f6a6ftargetblank6447bf7a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/ffe285cdbf2f4fde2f863a632acf8cae3955ea6c" target="_blank">ffe285c</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/6447bf7588ebb156104eae9448a10293bd0f6a6f" target="_blank">6447bf7</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeffe285cdbf2f4fde2f863a632acf8cae3955ea6ctargetblankffe285ca"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree6447bf7588ebb156104eae9448a10293bd0f6a6ftargetblank6447bf7a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -532,7 +532,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/ffe285cdbf2f4fde2f863a632acf8cae3955ea6c" target="_blank">ffe285c</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/6447bf7588ebb156104eae9448a10293bd0f6a6f" target="_blank">6447bf7</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -630,6 +630,41 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/6447bf7588ebb156104eae9448a10293bd0f6a6f/analysis/Methods_FlashierFit_Citeseq.Rmd" target="_blank">6447bf7</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+<td>
+Remove the unused CLR ADT path; name the LogNormalize matrix
+unambiguously
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/5b1985899918814c0324ed9f67928f6ce556e7ef/docs/Methods_FlashierFit_Citeseq.html" target="_blank">5b19858</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/f0c481d0da23f3a99f2ebe45ee025a5d2037a53e/analysis/Methods_FlashierFit_Citeseq.Rmd" target="_blank">f0c481d</a>
 </td>
 <td>
@@ -715,7 +750,12 @@ seurat_meta &lt;- seurat_obj@meta.data</code></pre>
 <p>The ADT assay is stored with proteins in rows and cells in columns.
 We use Seurat <code>LogNormalize</code> with the rounded mean ADT
 library size as the scale factor, then transpose the result so that
-cells are rows and proteins are columns.</p>
+cells are rows and proteins are columns. This is the only ADT
+normalization used anywhere in this project:
+<code>protein_mat_normalized_lognorm.rds</code> is the single protein
+matrix read by the fit below, by the protein positivity thresholds, and
+by every figure and table that shows surface-protein levels. No
+CLR-normalized ADT matrix is used.</p>
 <pre class="r"><code>adt_scale_factor &lt;- round(mean(seurat_meta$nCount_ADT, na.rm = TRUE))
 
 seurat_obj &lt;- NormalizeData(
@@ -754,7 +794,7 @@ cells_used &lt;- cells_measured[
 ]
 
 L_mat &lt;- scRNA_result$L_pm[cells_used, , drop = FALSE]
-protein_mat_normalized &lt;- as.matrix(
+Y_mat &lt;- as.matrix(
   protein_mat_normalized_lognorm[cells_used, , drop = FALSE]
 )</code></pre>
 </div>
@@ -768,7 +808,7 @@ initialization is</p>
 <p>The implementation uses a QR decomposition instead of forming the
 inverse explicitly.</p>
 <pre class="r"><code>qrL &lt;- qr(L_mat)
-U_t &lt;- qr.coef(qrL, protein_mat_normalized)
+U_t &lt;- qr.coef(qrL, Y_mat)
 U &lt;- t(U_t)
 saveRDS(U, file.path(data_path, &quot;protein_projection_OLS_lognorm.rds&quot;))</code></pre>
 </div>
@@ -786,7 +826,7 @@ every protein.</li>
 <li><code>flash_factors_fix(..., which_dim = "loadings")</code> fixes
 all columns of <span class="math inline">\(L\)</span>.</li>
 </ul>
-<pre class="r"><code>flash_fixed_loading &lt;- flash_init(protein_mat_normalized, var_type = 2) |&gt;
+<pre class="r"><code>flash_fixed_loading &lt;- flash_init(Y_mat, var_type = 2) |&gt;
   flash_set_verbose(1) |&gt;
   flash_factors_init(
     list(L_mat, U),
