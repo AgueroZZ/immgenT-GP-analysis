@@ -363,7 +363,7 @@ T-cell subsets</h1>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -374,8 +374,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -384,13 +384,13 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-26
+<strong>Last updated:</strong> 2026-07-27
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong>
@@ -414,21 +414,18 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
-changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges"
+<div id="strongRMarkdownfilestronguptodate"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of
-the R Markdown file created these results, you’ll want to first commit
-it to the Git repo. If you’re still working on the analysis, you can
-ignore this warning. When you’re finished, you can run
-<code>wflow_publish</code> to commit the R Markdown file and build the
-HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
 </div>
 </div>
 </div>
@@ -519,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreef7d90e74c57e8db95bd23be5d3d6c4243c70ff6etargetblankf7d90e7a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeffe285cdbf2f4fde2f863a632acf8cae3955ea6ctargetblankffe285ca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/f7d90e74c57e8db95bd23be5d3d6c4243c70ff6e" target="_blank">f7d90e7</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/ffe285cdbf2f4fde2f863a632acf8cae3955ea6c" target="_blank">ffe285c</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreef7d90e74c57e8db95bd23be5d3d6c4243c70ff6etargetblankf7d90e7a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeffe285cdbf2f4fde2f863a632acf8cae3955ea6ctargetblankffe285ca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -537,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/f7d90e74c57e8db95bd23be5d3d6c4243c70ff6e" target="_blank">f7d90e7</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/ffe285cdbf2f4fde2f863a632acf8cae3955ea6c" target="_blank">ffe285c</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -553,120 +550,38 @@ were generated:
 <pre><code>
 Ignored files:
     Ignored:    .DS_Store
+    Ignored:    .claude/
     Ignored:    analysis/.DS_Store
     Ignored:    analysis/.Rhistory
     Ignored:    analysis/assets/.DS_Store
     Ignored:    code/.DS_Store
+    Ignored:    code/other/topic_flashier_20250212.R
+    Ignored:    code/other/topic_wrapper_20250215_alldata_backfit.sh
     Ignored:    data
-    Ignored:    experiments/.DS_Store
+    Ignored:    experiments/
     Ignored:    figures/.DS_Store
+    Ignored:    figures/Previous/.DS_Store
+    Ignored:    figures/Previous/bits/.DS_Store
+    Ignored:    figures/Previous/bits/Figure 1/.DS_Store
+    Ignored:    figures/Previous/bits/Figure 2/.DS_Store
+    Ignored:    figures/Previous/bits/Figure 3/.DS_Store
+    Ignored:    figures/Previous/bits/Figure 4/.DS_Store
+    Ignored:    figures/Previous/bits/Figure 6/.DS_Store
+    Ignored:    figures/Previous/bits/Figure 7/.DS_Store
+    Ignored:    figures/Previous/bits/Figure S1/.DS_Store
+    Ignored:    figures/Previous/bits/Figure S2/.DS_Store
+    Ignored:    figures/Previous/bits/Figure S3/.DS_Store
+    Ignored:    figures/Previous/bits/Figure S6/.DS_Store
+    Ignored:    figures/Previous/bits/Figure S7/.DS_Store
     Ignored:    figures/final-selected/.DS_Store
-    Ignored:    figures/final-selected/bits/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure 1/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure 2/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure 3/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure 4/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure 6/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure 7/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure S1/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure S2/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure S3/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure S6/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure S7/.DS_Store
-    Ignored:    figures/generated/.DS_Store
-    Ignored:    figures/generated/Figure 1/.DS_Store
-    Ignored:    figures/generated/Figure 2/.DS_Store
+    Ignored:    figures/final-selected/Figure 1/.DS_Store
+    Ignored:    figures/final-selected/Figure 2/.DS_Store
+    Ignored:    figures/final-selected/Figure S4/.DS_Store
+    Ignored:    log/
     Ignored:    output/FigureS5/S5_cell_metadata.csv.gz
+    Ignored:    plan/
+    Ignored:    tables/
     Ignored:    tmp/
-
-Untracked files:
-    Untracked:  .claude/
-    Untracked:  code/R/doc_code.R
-    Untracked:  code/other/topic_flashier_20250212.R
-    Untracked:  code/other/topic_wrapper_20250215_alldata_backfit.sh
-    Untracked:  experiments/active_metric_comparison/
-    Untracked:  experiments/figure6b_sparsity_ordered/
-    Untracked:  experiments/gene_umap_gp_space/
-    Untracked:  experiments/protein_threshold_gp_loading_diff/
-    Untracked:  experiments/surface_protein_activation_scatter/
-    Untracked:  figures/generated/Figure 1/1B.pdf
-    Untracked:  figures/generated/Figure 3/3A.pdf
-    Untracked:  figures/generated/Figure 3/3B.pdf
-    Untracked:  figures/generated/Figure 3/3H.pdf
-    Untracked:  figures/generated/Figure 3/3I.pdf
-    Untracked:  figures/generated/Figure 3/3J.pdf
-    Untracked:  figures/generated/Figure 3/3K.pdf
-    Untracked:  figures/generated/Figure 3/3L.pdf
-    Untracked:  figures/generated/Figure 3/3M.pdf
-    Untracked:  figures/generated/Figure 5/
-    Untracked:  figures/generated/Figure 6/6a.pdf
-    Untracked:  figures/generated/Figure 7/
-    Untracked:  log/2026-07-13-surface-protein-activation-scatter.md
-    Untracked:  log/2026-07-15-protein-threshold-gp-loading-diff-tables.md
-    Untracked:  plan/2026-07-13-active-cell-gene-metrics-exploration.md
-    Untracked:  plan/2026-07-13-surface-protein-activation-scatter.md
-    Untracked:  plan/2026-07-13_figure6b_triangular_order_plan.md
-    Untracked:  plan/2026-07-13_figure6b_wide_gp_columns_formal_plan.md
-    Untracked:  plan/2026-07-14_figure6b_heatmap_typography_plan.md
-    Untracked:  plan/2026-07-15-protein-threshold-gp-loading-diff-tables.md
-    Untracked:  tables/
-
-Unstaged changes:
-    Modified:   analysis/Figure1.Rmd
-    Modified:   analysis/Figure2.Rmd
-    Modified:   analysis/Figure3.Rmd
-    Modified:   analysis/Figure4.Rmd
-    Modified:   analysis/Figure5.Rmd
-    Modified:   analysis/Figure6.Rmd
-    Modified:   analysis/FigureS1.Rmd
-    Modified:   analysis/FigureS2.Rmd
-    Modified:   analysis/FigureS3.Rmd
-    Modified:   analysis/FigureS4.Rmd
-    Modified:   analysis/FigureS6.Rmd
-    Modified:   analysis/Methods_FlashierFit.Rmd
-    Modified:   figures/generated/Figure 1/1A.pdf
-    Modified:   figures/generated/Figure 1/1C.pdf
-    Modified:   figures/generated/Figure 1/1D.pdf
-    Deleted:    figures/generated/Figure 1/1E.pdf
-    Deleted:    figures/generated/Figure 1/1F.pdf
-    Deleted:    figures/generated/Figure 1/1G.pdf
-    Deleted:    figures/generated/Figure 1/1H.pdf
-    Deleted:    figures/generated/Figure 1/1I.pdf
-    Modified:   figures/generated/Figure 2/2A.pdf
-    Modified:   figures/generated/Figure 2/2B.pdf
-    Modified:   figures/generated/Figure 2/2C.pdf
-    Modified:   figures/generated/Figure 2/2D.pdf
-    Modified:   figures/generated/Figure 2/2E.pdf
-    Deleted:    figures/generated/Figure 2/2G.pdf
-    Deleted:    figures/generated/Figure 2/2H.pdf
-    Deleted:    figures/generated/Figure 2/2I.pdf
-    Deleted:    figures/generated/Figure 2/2J.pdf
-    Deleted:    figures/generated/Figure 2/2K.pdf
-    Deleted:    figures/generated/Figure 2/2L.pdf
-    Deleted:    figures/generated/Figure 2/2M.pdf
-    Modified:   figures/generated/Figure 3/3c.pdf
-    Modified:   figures/generated/Figure 3/3d.pdf
-    Modified:   figures/generated/Figure 3/3e.pdf
-    Modified:   figures/generated/Figure 3/3f.pdf
-    Modified:   figures/generated/Figure 3/3g.pdf
-    Modified:   figures/generated/Figure S1/S1A.pdf
-    Modified:   figures/generated/Figure S1/S1B.pdf
-    Modified:   figures/generated/Figure S1/S1C.pdf
-    Modified:   figures/generated/Figure S1/S1D.pdf
-    Modified:   figures/generated/Figure S1/S1E.pdf
-    Modified:   figures/generated/Figure S3/s3c.pdf
-    Modified:   figures/generated/Figure S3/s3d.pdf
-    Modified:   figures/generated/Figure S3/s3e.pdf
-    Modified:   figures/generated/Figure S3/s3f.pdf
-    Modified:   figures/generated/Figure S3/s3g.pdf
-    Modified:   figures/generated/Figure S3/s3h.pdf
-    Modified:   script/Figure1.R
-    Modified:   script/Figure2.R
-    Modified:   script/Figure3.R
-    Modified:   script/Figure6.R
-    Modified:   script/FigureS1.R
-    Modified:   script/FigureS4.R
-    Modified:   script/FigureS6.R
 
 </code></pre>
 <p>
@@ -711,6 +626,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/91ee0594e2611dd79ad76c76aaddbbce3f92818a/analysis/FigureS2.Rmd" target="_blank">91ee059</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-26
+</td>
+<td>
+Select each panel’s code block by name, not by line number
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/91ee0594e2611dd79ad76c76aaddbbce3f92818a/docs/FigureS2.html" target="_blank">91ee059</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-26
+</td>
+<td>
+Select each panel’s code block by name, not by line number
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -931,7 +880,7 @@ page); the images are its pre-rendered output.</p>
 <h2>Setup</h2>
 <pre class="r"><code># Figure S2. GP30 and GP58 loadings across T-cell subsets.
 #
-# Panels produced (see figures/final-selected/bits/Figure S2/FigureS2_caption.md
+# Panels produced (see figures/Previous/bits/Figure S2/FigureS2_caption.md
 # for the full caption text):
 #   S2A  Boxplots of GP30 loading across Tz subsets (iNKT, MAIT, other Tz)
 #        vs all other, non-Tz T cells.
@@ -959,7 +908,7 @@ library(Matrix) # protein_mat_normalized_lognorm is a dgCMatrix; rownames()
                 # to zero cells during this refactor -- keep this library() call.
 
 data_path &lt;- &quot;data/&quot;
-figure_path &lt;- &quot;figures/generated/Figure S2/&quot;
+figure_path &lt;- &quot;figures/final-selected/Figure S2/&quot;
 source(&quot;code/R/plot_utils.R&quot;) # tukey_outliers()
 
 # ============================================================

@@ -361,7 +361,7 @@ fixed scRNA loadings</h1>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -372,8 +372,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -382,13 +382,13 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-14
+<strong>Last updated:</strong> 2026-07-27
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong>
@@ -412,21 +412,18 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
-changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges"
+<div id="strongRMarkdownfilestronguptodate"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R
-Markdown file created these results, you’ll want to first commit it to
-the Git repo. If you’re still working on the analysis, you can ignore
-this warning. When you’re finished, you can run
-<code>wflow_publish</code> to commit the R Markdown file and build the
-HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
 </div>
 </div>
 </div>
@@ -517,15 +514,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec344aaac0f40cec3809038031fd2a44e7e90baf7targetblankc344aaaa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeffe285cdbf2f4fde2f863a632acf8cae3955ea6ctargetblankffe285ca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c344aaac0f40cec3809038031fd2a44e7e90baf7" target="_blank">c344aaa</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/ffe285cdbf2f4fde2f863a632acf8cae3955ea6c" target="_blank">ffe285c</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec344aaac0f40cec3809038031fd2a44e7e90baf7targetblankc344aaaa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeffe285cdbf2f4fde2f863a632acf8cae3955ea6ctargetblankffe285ca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -535,7 +532,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c344aaac0f40cec3809038031fd2a44e7e90baf7" target="_blank">c344aaa</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/ffe285cdbf2f4fde2f863a632acf8cae3955ea6c" target="_blank">ffe285c</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -556,59 +553,33 @@ Ignored files:
     Ignored:    analysis/.Rhistory
     Ignored:    analysis/assets/.DS_Store
     Ignored:    code/.DS_Store
+    Ignored:    code/other/topic_flashier_20250212.R
+    Ignored:    code/other/topic_wrapper_20250215_alldata_backfit.sh
     Ignored:    data
+    Ignored:    experiments/
     Ignored:    figures/.DS_Store
+    Ignored:    figures/Previous/.DS_Store
+    Ignored:    figures/Previous/bits/.DS_Store
+    Ignored:    figures/Previous/bits/Figure 1/.DS_Store
+    Ignored:    figures/Previous/bits/Figure 2/.DS_Store
+    Ignored:    figures/Previous/bits/Figure 3/.DS_Store
+    Ignored:    figures/Previous/bits/Figure 4/.DS_Store
+    Ignored:    figures/Previous/bits/Figure 6/.DS_Store
+    Ignored:    figures/Previous/bits/Figure 7/.DS_Store
+    Ignored:    figures/Previous/bits/Figure S1/.DS_Store
+    Ignored:    figures/Previous/bits/Figure S2/.DS_Store
+    Ignored:    figures/Previous/bits/Figure S3/.DS_Store
+    Ignored:    figures/Previous/bits/Figure S6/.DS_Store
+    Ignored:    figures/Previous/bits/Figure S7/.DS_Store
     Ignored:    figures/final-selected/.DS_Store
-    Ignored:    figures/final-selected/bits/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure 1/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure 2/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure 3/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure 4/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure 6/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure 7/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure S1/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure S2/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure S3/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure S6/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure S7/.DS_Store
-    Ignored:    figures/generated/.DS_Store
-    Ignored:    figures/generated/Figure 5/
-    Ignored:    figures/generated/Figure 7/
-    Ignored:    figures/generated/Figure 8/
-    Ignored:    figures/generated/Figure 9/
+    Ignored:    figures/final-selected/Figure 1/.DS_Store
+    Ignored:    figures/final-selected/Figure 2/.DS_Store
+    Ignored:    figures/final-selected/Figure S4/.DS_Store
+    Ignored:    log/
+    Ignored:    output/FigureS5/S5_cell_metadata.csv.gz
+    Ignored:    plan/
+    Ignored:    tables/
     Ignored:    tmp/
-
-Untracked files:
-    Untracked:  analysis/Methods_FlashierFit_Citeseq.Rmd
-    Untracked:  code/other/
-    Untracked:  experiments/active_metric_comparison/
-    Untracked:  experiments/figure6b_sparsity_ordered/
-    Untracked:  experiments/gene_correlation_network/
-    Untracked:  experiments/gene_umap_gp_space/
-    Untracked:  experiments/surface_protein_activation_scatter/
-    Untracked:  log/2026-07-13-surface-protein-activation-scatter.md
-    Untracked:  log/2026-07-14-citeseq-normalization-ebmf-methods.md
-    Untracked:  plan/2026-07-13-active-cell-gene-metrics-exploration.md
-    Untracked:  plan/2026-07-13-surface-protein-activation-scatter.md
-    Untracked:  plan/2026-07-13_figure6b_triangular_order_plan.md
-    Untracked:  plan/2026-07-13_figure6b_wide_gp_columns_formal_plan.md
-    Untracked:  plan/2026-07-14-citeseq-normalization-ebmf-methods.md
-    Untracked:  tables/
-
-Unstaged changes:
-    Modified:   analysis/Figure6.Rmd
-    Modified:   analysis/Methods_FlashierFit.Rmd
-    Modified:   analysis/assets/Figure6/6b.png
-    Modified:   analysis/index.Rmd
-    Modified:   code/README.md
-    Modified:   code/pipeline/01_extract_data.R
-    Modified:   code/pipeline/04_protein_projection.R
-    Modified:   figures/generated/Figure 6/6b.pdf
-    Modified:   script/Figure1.R
-    Modified:   script/Figure3.R
-    Modified:   script/Figure6.R
-    Modified:   script/FigureS2.R
-    Modified:   script/FigureS6.R
 
 </code></pre>
 <p>
@@ -624,9 +595,73 @@ have uncommitted changes.
 </div>
 <div id="versions" class="tab-pane fade">
 <p>
-There are no past versions. Publish this analysis with
-<code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the repository in which changes were
+made to the R Markdown
+(<code>analysis/Methods_FlashierFit_Citeseq.Rmd</code>) and HTML
+(<code>docs/Methods_FlashierFit_Citeseq.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/f0c481d0da23f3a99f2ebe45ee025a5d2037a53e/analysis/Methods_FlashierFit_Citeseq.Rmd" target="_blank">f0c481d</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-14
+</td>
+<td>
+Document CITE-seq fixed-loading EBMF workflow
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/f0c481d0da23f3a99f2ebe45ee025a5d2037a53e/docs/Methods_FlashierFit_Citeseq.html" target="_blank">f0c481d</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-14
+</td>
+<td>
+Document CITE-seq fixed-loading EBMF workflow
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -844,28 +879,29 @@ Platform: aarch64-apple-darwin20
 Running under: macOS Sequoia 15.6.1
 
 Matrix products: default
-BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
+BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
 LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
 
 locale:
-[1] C.UTF-8/C.UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8
+[1] en_CA/en_CA/en_CA/C/en_CA/en_CA
 
-time zone: Asia/Shanghai
+time zone: America/Chicago
 tzcode source: internal
 
 attached base packages:
-[1] stats     graphics  grDevices utils     datasets  methods   base
+[1] stats     graphics  grDevices utils     datasets  methods   base     
 
 loaded via a namespace (and not attached):
- [1] vctrs_0.7.3     cli_3.6.6       knitr_1.50      rlang_1.2.0
- [5] xfun_0.55       stringi_1.8.7   otel_0.2.0      promises_1.5.0
+ [1] vctrs_0.7.3     cli_3.6.6       knitr_1.50      rlang_1.2.0    
+ [5] xfun_0.55       stringi_1.8.7   otel_0.2.0      promises_1.5.0 
  [9] jsonlite_2.0.0  workflowr_1.7.2 glue_1.8.1      rprojroot_2.1.1
-[13] git2r_0.36.2    htmltools_0.5.9 httpuv_1.6.16   sass_0.4.10
-[17] rmarkdown_2.30  evaluate_1.0.5  jquerylib_0.1.4 tibble_3.3.0
-[21] fastmap_1.2.0   yaml_2.3.12     lifecycle_1.0.5 stringr_1.6.0
-[25] compiler_4.5.1  fs_1.6.6        Rcpp_1.1.1-1.1  pkgconfig_2.0.3
-[29] later_1.4.4     digest_0.6.39   R6_2.6.1        pillar_1.11.1
-[33] magrittr_2.0.5  bslib_0.9.0     tools_4.5.1     cachem_1.1.0   </code></pre>
+[13] git2r_0.36.2    htmltools_0.5.9 httpuv_1.6.16   sass_0.4.10    
+[17] rmarkdown_2.30  evaluate_1.0.5  jquerylib_0.1.4 tibble_3.3.0   
+[21] fastmap_1.2.0   yaml_2.3.12     lifecycle_1.0.5 whisker_0.4.1  
+[25] stringr_1.6.0   compiler_4.5.1  fs_1.6.6        Rcpp_1.1.1-1.1 
+[29] pkgconfig_2.0.3 later_1.4.4     digest_0.6.39   R6_2.6.1       
+[33] pillar_1.11.1   magrittr_2.0.5  bslib_0.9.0     tools_4.5.1    
+[37] cachem_1.1.0   </code></pre>
 </div>
 </div>
 </div>

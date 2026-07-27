@@ -360,7 +360,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -371,8 +371,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -385,9 +385,9 @@ aria-hidden="true"></span> </a>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong>
@@ -411,21 +411,18 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
-changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges"
+<div id="strongRMarkdownfilestronguptodate"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of
-the R Markdown file created these results, you’ll want to first commit
-it to the Git repo. If you’re still working on the analysis, you can
-ignore this warning. When you’re finished, you can run
-<code>wflow_publish</code> to commit the R Markdown file and build the
-HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
 </div>
 </div>
 </div>
@@ -516,15 +513,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree2b1957791d38f9e4689cef5ece6e4c885224a02etargetblank2b19577a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeffe285cdbf2f4fde2f863a632acf8cae3955ea6ctargetblankffe285ca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/2b1957791d38f9e4689cef5ece6e4c885224a02e" target="_blank">2b19577</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/ffe285cdbf2f4fde2f863a632acf8cae3955ea6c" target="_blank">ffe285c</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree2b1957791d38f9e4689cef5ece6e4c885224a02etargetblank2b19577a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeffe285cdbf2f4fde2f863a632acf8cae3955ea6ctargetblankffe285ca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +531,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/2b1957791d38f9e4689cef5ece6e4c885224a02e" target="_blank">2b19577</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/ffe285cdbf2f4fde2f863a632acf8cae3955ea6c" target="_blank">ffe285c</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -555,52 +552,33 @@ Ignored files:
     Ignored:    analysis/.Rhistory
     Ignored:    analysis/assets/.DS_Store
     Ignored:    code/.DS_Store
+    Ignored:    code/other/topic_flashier_20250212.R
+    Ignored:    code/other/topic_wrapper_20250215_alldata_backfit.sh
     Ignored:    data
-    Ignored:    experiments/.DS_Store
+    Ignored:    experiments/
     Ignored:    figures/.DS_Store
+    Ignored:    figures/Previous/.DS_Store
+    Ignored:    figures/Previous/bits/.DS_Store
+    Ignored:    figures/Previous/bits/Figure 1/.DS_Store
+    Ignored:    figures/Previous/bits/Figure 2/.DS_Store
+    Ignored:    figures/Previous/bits/Figure 3/.DS_Store
+    Ignored:    figures/Previous/bits/Figure 4/.DS_Store
+    Ignored:    figures/Previous/bits/Figure 6/.DS_Store
+    Ignored:    figures/Previous/bits/Figure 7/.DS_Store
+    Ignored:    figures/Previous/bits/Figure S1/.DS_Store
+    Ignored:    figures/Previous/bits/Figure S2/.DS_Store
+    Ignored:    figures/Previous/bits/Figure S3/.DS_Store
+    Ignored:    figures/Previous/bits/Figure S6/.DS_Store
+    Ignored:    figures/Previous/bits/Figure S7/.DS_Store
     Ignored:    figures/final-selected/.DS_Store
-    Ignored:    figures/final-selected/bits/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure 1/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure 2/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure 3/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure 4/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure 6/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure 7/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure S1/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure S2/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure S3/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure S6/.DS_Store
-    Ignored:    figures/final-selected/bits/Figure S7/.DS_Store
-    Ignored:    figures/generated/.DS_Store
-    Ignored:    figures/generated/Figure 1/.DS_Store
-    Ignored:    figures/generated/Figure 2/.DS_Store
-    Ignored:    figures/generated/Figure S4/.DS_Store
+    Ignored:    figures/final-selected/Figure 1/.DS_Store
+    Ignored:    figures/final-selected/Figure 2/.DS_Store
+    Ignored:    figures/final-selected/Figure S4/.DS_Store
+    Ignored:    log/
     Ignored:    output/FigureS5/S5_cell_metadata.csv.gz
+    Ignored:    plan/
+    Ignored:    tables/
     Ignored:    tmp/
-
-Untracked files:
-    Untracked:  code/other/topic_flashier_20250212.R
-    Untracked:  code/other/topic_wrapper_20250215_alldata_backfit.sh
-    Untracked:  experiments/active_metric_comparison/
-    Untracked:  experiments/figure6b_sparsity_ordered/
-    Untracked:  experiments/gene_umap_gp_space/
-    Untracked:  experiments/protein_threshold_gp_loading_diff/
-    Untracked:  experiments/surface_protein_activation_scatter/
-    Untracked:  figures/generated/Figure 1/1B.pdf
-    Untracked:  figures/generated/Figure 6/6a.pdf
-    Untracked:  figures/generated/Figure 7/
-    Untracked:  log/2026-07-13-surface-protein-activation-scatter.md
-    Untracked:  log/2026-07-15-protein-threshold-gp-loading-diff-tables.md
-    Untracked:  plan/2026-07-13-active-cell-gene-metrics-exploration.md
-    Untracked:  plan/2026-07-13-surface-protein-activation-scatter.md
-    Untracked:  plan/2026-07-13_figure6b_triangular_order_plan.md
-    Untracked:  plan/2026-07-13_figure6b_wide_gp_columns_formal_plan.md
-    Untracked:  plan/2026-07-14_figure6b_heatmap_typography_plan.md
-    Untracked:  plan/2026-07-15-protein-threshold-gp-loading-diff-tables.md
-    Untracked:  tables/
-
-Unstaged changes:
-    Modified:   analysis/Methods_FlashierFit.Rmd
 
 </code></pre>
 <p>
@@ -645,6 +623,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/57b12e3423035d0d6852b41feaa10bad6abf071b/analysis/Methods_FlashierFit.Rmd" target="_blank">57b12e3</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+<td>
+Publish the Methods page rewrite; ignore tables/
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/57b12e3423035d0d6852b41feaa10bad6abf071b/docs/Methods_FlashierFit.html" target="_blank">57b12e3</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+<td>
+Publish the Methods page rewrite; ignore tables/
+</td>
+</tr>
 <tr>
 <td>
 Rmd
