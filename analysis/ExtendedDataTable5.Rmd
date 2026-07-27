@@ -17,11 +17,11 @@ Produced by
 All 200 rows are browsable below: sort by clicking a column header, type a GP
 name into the search box under the **GP** column, or use a per-column box to
 filter by value range. Download the raw CSV at
-[`figures/generated/ExtendedDataTable5_GP_during_activation.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generated/ExtendedDataTable5_GP_during_activation.csv).
+[`figures/final-selected/ExtendedDataTable5_GP_during_activation.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/final-selected/ExtendedDataTable5_GP_during_activation.csv).
 
 ```{r edt5-preview, echo=FALSE, message=FALSE}
 suppressPackageStartupMessages(library(DT))
-tab <- read.csv("../figures/generated/ExtendedDataTable5_GP_during_activation.csv", check.names = FALSE)
+tab <- read.csv("../figures/final-selected/ExtendedDataTable5_GP_during_activation.csv", check.names = FALSE)
 DT::datatable(
   tab,
   rownames = FALSE,

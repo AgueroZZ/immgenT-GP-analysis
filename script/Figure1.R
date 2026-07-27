@@ -1,6 +1,6 @@
 # Figure 1. Overview.
 #
-# Panels produced (final files figures/final-selected/bits/Figure 1/1A.pdf .. 1I.pdf;
+# Panels produced (final files figures/Previous/bits/Figure 1/1A.pdf .. 1I.pdf;
 # no separate caption file was found for Figure 1 during this refactor):
 #   1A  Global MDE colored by major lineage (subsampled per lineage).
 #   1B  Hand-finished schematic (Adobe Illustrator) -- NOT code-generated,
@@ -15,7 +15,7 @@
 #
 # Source: ported from Figure_Overview.R (panels C, E-I) and
 # Figure_Lineage.R's "MDE by Lineage" section (panel A, confirmed by
-# an exact byte match between figures/final-selected/bits/Figure 1/1A.pdf
+# an exact byte match between figures/Previous/bits/Figure 1/1A.pdf
 # and figures/Figure2_Lineage/UMAP_level1_group.pdf during this refactor).
 #
 # Required inputs (data/) -- see code/README.md's "Data provenance" table
@@ -39,7 +39,7 @@ library(Matrix) # protein_mat_normalized_lognorm is a dgCMatrix; must be
                 # attached (not just loaded) for `[` subsetting to dispatch
 
 data_path <- "data/"
-figure_path <- "figures/generated/Figure 1/"
+figure_path <- "figures/final-selected/Figure 1/"
 source("code/R/volcano_helpers.R") # plot_gp_signature_volcano() for panel 1D
 
 # ============================================================
@@ -232,9 +232,7 @@ lab_fs   <- ifelse(gpn %in% names(GP_HIGHLIGHTS), 9, 4)
 lab_face <- ifelse(gpn %in% names(GP_HIGHLIGHTS), 2, 1)
 # Publication version: only the highlighted GP columns keep an index label
 # (background GP indices dropped), and the highlighted-GP legend is hidden -- the
-# colour->GP mapping is given in the Fig 1D caption. The full-label, legended
-# version for collaborators lives in experiments/gene_correlation_network/
-# (heatmap_loading.*).
+# colour->GP mapping is given in the Fig 1D caption.
 top_ann <- HeatmapAnnotation(
   `Highlighted GP` = hl_val, col = list(`Highlighted GP` = GP_HIGHLIGHTS),
   na_col = "white", simple_anno_size = unit(4, "mm"), annotation_name_gp = gpar(fontsize = 8),

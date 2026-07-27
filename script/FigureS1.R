@@ -1,6 +1,6 @@
 # Figure S1. GP reproducibility across IGTs.
 #
-# Panels produced (see figures/final-selected/bits/Figure S1/FigureS1_caption.md
+# Panels produced (see figures/Previous/bits/Figure S1/FigureS1_caption.md
 # for the full caption text):
 #   S1A  Cumulative number of GPs validated (cosine >= threshold, thresholds
 #        0.2-0.8) as IGTs are added one at a time, in IGT index order.
@@ -39,7 +39,7 @@ library(pheatmap)
 
 # --- doc:setup-ab ---
 data_path <- "data/"
-figure_path <- "figures/generated/Figure S1/"
+figure_path <- "figures/final-selected/Figure S1/"
 gp_label <- function(x) sub("^K(\\d+)$", "GP\\1", x)
 
 # ============================================================

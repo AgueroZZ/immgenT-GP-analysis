@@ -43,7 +43,7 @@ knitr::include_graphics("assets/Figure1/1A.png")
 
 ## (B) Study design schematic {#fig1b}
 
-This panel is a hand-drawn schematic, not generated from R -- there is no code or pre-rendered image to show here. See `figures/final-selected/bits/Figure 1/1B.pdf` for the published panel.
+This panel is a hand-drawn schematic, not generated from R -- there is no code or pre-rendered image to show here. See `figures/Previous/bits/Figure 1/1B.pdf` for the published panel.
 
 ## (C) Gene-program network {#fig1c}
 
@@ -69,8 +69,6 @@ GP1 (cyan), GP56 (red), GP161 (dark red), GP6 (light green), GP7 (green),
 GP196 (yellow). This shows each highlighted program's signature and how programs
 that share genes sit together — e.g. the Treg program GP68 (*Foxp3, Il2ra,
 Izumo1r*) and the CD8 program GP58 (*Cd8a, Cd8b1*) occupy distinct neighborhoods.
-An internal version with a color→GP legend and GP-index labels is kept in
-`experiments/gene_correlation_network/` (`gp_highlight_internal`).
 :::
 
 ## (D) GP loading heatmap {#fig1d}
@@ -93,7 +91,5 @@ matching color via a top color bar, a colored column label, and a box drawn
 around its **column**, so a program's cross-cell loading pattern can be read
 alongside its position in the network. Colors: GP68 (pink), GP58 (orange),
 GP35 (purple), GP171 (blue), GP1 (cyan), GP56 (red), GP161 (dark red), GP6
-(light green), GP7 (green), GP196 (yellow). A fully-labeled version with a
-color→GP legend (all 200 GP indices) is kept for reference in
-`experiments/gene_correlation_network/` (`heatmap_loading`).
+(light green), GP7 (green), GP196 (yellow).
 :::

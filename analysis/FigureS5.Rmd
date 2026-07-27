@@ -41,7 +41,7 @@ lineage annotations are shown above the columns. The median per-program Pearson
 correlation across the displayed clusters was 0.766, and 92.5% of programs had
 r >= 0.5. The left and right panels and the shared colorbar are saved as
 `S5a.pdf`, `S5b.pdf`, and `S5_shared_relative_loading_colorbar.pdf` in
-`figures/generated/Figure S5/`.
+`figures/final-selected/Figure S5/`.
 :::
 
 ## How the figure is made

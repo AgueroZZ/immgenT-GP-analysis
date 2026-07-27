@@ -20,7 +20,7 @@ if (!file.exists("code/R/setup_data.R")) {
 
 source("code/R/setup_data.R")
 
-figure_path <- "figures/generated/Figure S4"
+figure_path <- "figures/final-selected/Figure S4"
 dir.create(figure_path, recursive = TRUE, showWarnings = FALSE)
 
 mean_loading_by_group <- function(L_mat, labels) {
@@ -264,7 +264,7 @@ render_centered_heatmap(
   organ_centered,
   organ_palette,
   "tissue (organ_simplified)",
-  file.path(figure_path, "S4a_centered_mean_loading.pdf"),
+  file.path(figure_path, "s4a.pdf"),
   organ_order$row_order,
   organ_order$column_order,
   centered_color_limit,
@@ -275,7 +275,7 @@ render_centered_heatmap(
   level2_centered,
   level2_palette,
   "cluster (annotation_level2)",
-  file.path(figure_path, "S4b_centered_mean_loading.pdf"),
+  file.path(figure_path, "s4b.pdf"),
   level2_order$row_order,
   level2_order$column_order,
   centered_color_limit,

@@ -20,7 +20,7 @@
 library(dplyr)
 
 data_path <- "data/"
-output_path <- "figures/generated/"
+output_path <- "figures/final-selected/"
 
 source("code/R/plot_utils.R") # scale_cols(), used by activation_shared_setup.R
 source("code/R/setup_data.R")

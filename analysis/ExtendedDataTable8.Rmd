@@ -18,13 +18,13 @@ One row per signature gene: sort by clicking a column header, or use the
 search boxes under each header to filter (e.g. type `GP1_up` into the
 **signature_name** box, or a gene symbol into **gene_symbol**). Download the
 raw CSV at
-[`figures/generated/ExtendedDataTable8_gene_signature_matrix_long.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generated/ExtendedDataTable8_gene_signature_matrix_long.csv).
+[`figures/final-selected/ExtendedDataTable8_gene_signature_matrix_long.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/final-selected/ExtendedDataTable8_gene_signature_matrix_long.csv).
 The same data is also available in a per-GP-column
 [wide format](ExtendedDataTable8_wide.html).
 
 ```{r edt8-preview, echo=FALSE, message=FALSE}
 suppressPackageStartupMessages(library(DT))
-tab <- read.csv("../figures/generated/ExtendedDataTable8_gene_signature_matrix_long.csv", stringsAsFactors = FALSE)
+tab <- read.csv("../figures/final-selected/ExtendedDataTable8_gene_signature_matrix_long.csv", stringsAsFactors = FALSE)
 DT::datatable(
   tab,
   rownames = FALSE,

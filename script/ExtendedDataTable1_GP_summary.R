@@ -20,7 +20,7 @@
 # signature cutoff from 0.25 to 0.1.
 
 data_path <- "data/"
-output_path <- "figures/generated/"
+output_path <- "figures/final-selected/"
 
 # ---- Protein factor matrix (Figure 6's Protein_F_pm: filtered + max|.|=1 per
 # GP column). Load, extract, and drop the heavy fit before loading L. ----

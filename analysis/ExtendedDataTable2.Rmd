@@ -17,11 +17,11 @@ Produced by
 All 200 rows are browsable below: sort by clicking a column header, type a GP
 name into the search box under the **GP** column, or use a per-lineage box to
 filter by AUC range. Download the raw CSV at
-[`figures/generated/ExtendedDataTable2_GP_AUC_lineage.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generated/ExtendedDataTable2_GP_AUC_lineage.csv).
+[`figures/final-selected/ExtendedDataTable2_GP_AUC_lineage.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/final-selected/ExtendedDataTable2_GP_AUC_lineage.csv).
 
 ```{r edt2-preview, echo=FALSE, message=FALSE}
 suppressPackageStartupMessages(library(DT))
-tab <- read.csv("../figures/generated/ExtendedDataTable2_GP_AUC_lineage.csv", check.names = FALSE)
+tab <- read.csv("../figures/final-selected/ExtendedDataTable2_GP_AUC_lineage.csv", check.names = FALSE)
 DT::datatable(
   tab,
   rownames = FALSE,

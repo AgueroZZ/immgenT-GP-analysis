@@ -18,7 +18,7 @@ library(dplyr)
 library(Matrix) # protein matrices are dgCMatrix; must be attached for `[` to dispatch
 
 data_path <- "data/"
-output_path <- "figures/generated/"
+output_path <- "figures/final-selected/"
 
 source("code/R/gated_protein_helpers.R") # compute_alignment_scores(), format_scores_table()
 source("code/R/citeseq_shared_setup.R")  # df_markers2, L_pm_filtered, protein_mat_normalized_lognorm,

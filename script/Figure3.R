@@ -1,6 +1,6 @@
 # Figure 3. GPs and lineages.
 #
-# Panels produced (see figures/final-selected/bits/Figure 3/Figure2_caption.md
+# Panels produced (see figures/Previous/bits/Figure 3/Figure2_caption.md
 # for the full caption text):
 #   3A  Swarm plot of per-GP AUC (predicting major lineage), up-regulated
 #       GPs only, with GP3/22/29 force-highlighted.
@@ -43,7 +43,7 @@ library(pheatmap)
 library(fastTopics) # structure_plot()
 
 data_path <- "data/"
-figure_path <- "figures/generated/Figure 3/"
+figure_path <- "figures/final-selected/Figure 3/"
 source("code/R/plot_utils.R") # lineage_colors()
 source("code/R/lineage_plots.R") # plot_gp_swarm(), plot_loadings_on_mde()
 source("code/R/volcano_helpers.R") # plot_gp_signature_volcano(), normalize_maxabs()

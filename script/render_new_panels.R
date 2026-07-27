@@ -4,8 +4,8 @@ library(ggplot2)
 library(dplyr)
 
 data_path  <- "data/"
-fig1_path  <- "figures/generated/Figure 1/"
-figs1_path <- "figures/generated/Figure S1/"
+fig1_path  <- "figures/final-selected/Figure 1/"
+figs1_path <- "figures/final-selected/Figure S1/"
 png1_path  <- "analysis/assets/Figure1/"
 pngs1_path <- "analysis/assets/FigureS1/"
 

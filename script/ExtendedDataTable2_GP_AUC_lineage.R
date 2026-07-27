@@ -11,7 +11,7 @@
 # auc_list_to_gp_table() transposes it to a per-GP table and relabels K -> GP.
 
 data_path <- "data/"
-output_path <- "figures/generated/"
+output_path <- "figures/final-selected/"
 
 source("code/R/roc_auc.R")
 

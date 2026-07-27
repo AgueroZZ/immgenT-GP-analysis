@@ -1,6 +1,6 @@
 # Figure S3. Characterizing activation GPs.
 #
-# Panels produced (see figures/final-selected/bits/Figure S3/FigureS3_caption.md
+# Panels produced (see figures/Previous/bits/Figure S3/FigureS3_caption.md
 # for the full caption text; captioned A-F there but the final files are
 # lettered s3c-s3h -- this script uses that final lettering):
 #   s3c  Fraction of activated CD4/CD8 cells per organ with GP26 > 0.1, sorted.
@@ -34,7 +34,7 @@ library(pheatmap)
 library(scales)
 
 data_path <- "data/"
-figure_path <- "figures/generated/Figure S3/"
+figure_path <- "figures/final-selected/Figure S3/"
 source("code/R/plot_utils.R") # scale_cols()
 source("code/R/tf_network.R") # optimize_bipartite_order(), plot_tf_gp_network_v2()
 

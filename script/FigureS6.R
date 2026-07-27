@@ -1,7 +1,7 @@
 # Figure S6. GP loadings recover protein-gated populations across GPs.
 #
 # Extension of Figure 6c-f to all well-aligned GPs (see
-# figures/final-selected/bits/Figure S6/FigureS6_caption.md), shown as two
+# figures/Previous/bits/Figure S6/FigureS6_caption.md), shown as two
 # gallery pages (s6-1 and s6-2). For each GP, cells are shown twice on the
 # same MDE embedding: left, cells passing the GP's curated protein gate;
 # right, an equally sized set of cells with the highest GP loading.
@@ -29,7 +29,7 @@ library(patchwork)
 library(Matrix)
 
 data_path <- "data/"
-figure_path <- "figures/generated/Figure S6/"
+figure_path <- "figures/final-selected/Figure S6/"
 source("code/R/gated_protein_helpers.R")
 source("code/R/citeseq_shared_setup.R")
 

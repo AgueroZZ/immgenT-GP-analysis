@@ -18,11 +18,11 @@ All 200 rows and every cluster column (107 sub-lineage clusters) are browsable
 below: sort by clicking a column header, type a GP name into the search box
 under the **GP** column, or use a per-cluster box to filter by AUC range.
 Scroll horizontally to see all cluster columns. Download the raw CSV at
-[`figures/generated/ExtendedDataTable4_GP_AUC_cluster.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generated/ExtendedDataTable4_GP_AUC_cluster.csv).
+[`figures/final-selected/ExtendedDataTable4_GP_AUC_cluster.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/final-selected/ExtendedDataTable4_GP_AUC_cluster.csv).
 
 ```{r edt4-preview, echo=FALSE, message=FALSE}
 suppressPackageStartupMessages(library(DT))
-tab <- read.csv("../figures/generated/ExtendedDataTable4_GP_AUC_cluster.csv", check.names = FALSE)
+tab <- read.csv("../figures/final-selected/ExtendedDataTable4_GP_AUC_cluster.csv", check.names = FALSE)
 DT::datatable(
   tab,
   rownames = FALSE,

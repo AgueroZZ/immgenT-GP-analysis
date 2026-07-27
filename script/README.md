@@ -3,11 +3,11 @@
 One R script per published figure, plus one per Extended Data table. Each script:
 
 - reads only from `data/` (never writes there),
-- writes its panels into `figures/generated/Figure N/` (or `Figure SN/`) using
-  the exact panel filenames used in `figures/final-selected/bits/`, so each
+- writes its panels into `figures/final-selected/Figure N/` (or `Figure SN/`) using
+  the exact panel filenames used in `figures/Previous/bits/`, so each
   output can be dropped next to and diffed against the ground truth (the
   `ExtendedDataTable*.R` scripts instead write a single CSV into
-  `figures/generated/` -- except Table 8, which writes an .xlsx, since its
+  `figures/final-selected/` -- except Table 8, which writes an .xlsx, since its
   per-GP meta-column grouping needs a merged header row a flat CSV can't
   express),
 - sources shared plotting/data-loading helpers from `code/R/`
@@ -33,7 +33,7 @@ Figures 7 and S7 are **out of scope** (see below).
 
 ## Extended Data table -> script map
 
-Each table is written as one CSV into `figures/generated/` by its script and
+Each table is written as one CSV into `figures/final-selected/` by its script and
 previewed on a matching `analysis/ExtendedDataTable*.Rmd` page. Together these
 replace the retired Table S1/S2/S3, all now regenerated from code. Table 8 is
 the exception: it ships in two layouts from two scripts, a tidy long table
@@ -56,7 +56,7 @@ flat CSV -- see the row below.
 ## Verification status (as of this refactor)
 
 Every script above was run end-to-end and its output PDFs compared
-byte-for-byte against `figures/final-selected/bits/`. Most panels are
+byte-for-byte against `figures/Previous/bits/`. Most panels are
 byte-identical; a handful differ by well under 1% (floating-point/label-repel
 layout nondeterminism in `ggrepel`, not a logic difference). Panels that
 required *reconstruction* (no exact source code existed for them) are called

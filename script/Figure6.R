@@ -45,7 +45,7 @@ library(tidyr)
 library(Matrix) # protein matrices are dgCMatrix; must be attached for `[` to dispatch
 
 data_path <- "data/"
-figure_path <- "figures/generated/Figure 6/"
+figure_path <- "figures/final-selected/Figure 6/"
 source("code/R/gated_protein_helpers.R")
 
 # 6a: hand-drawn schematic -- not code-generated, no output here.

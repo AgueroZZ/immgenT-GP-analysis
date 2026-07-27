@@ -18,11 +18,11 @@ All 200 rows and every tissue column are browsable below: sort by clicking a
 column header, type a GP name into the search box under the **GP** column, or
 use a per-tissue box to filter by AUC range. Scroll horizontally to see all
 tissue columns. Download the raw CSV at
-[`figures/generated/ExtendedDataTable3_GP_AUC_tissue.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generated/ExtendedDataTable3_GP_AUC_tissue.csv).
+[`figures/final-selected/ExtendedDataTable3_GP_AUC_tissue.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/final-selected/ExtendedDataTable3_GP_AUC_tissue.csv).
 
 ```{r edt3-preview, echo=FALSE, message=FALSE}
 suppressPackageStartupMessages(library(DT))
-tab <- read.csv("../figures/generated/ExtendedDataTable3_GP_AUC_tissue.csv", check.names = FALSE)
+tab <- read.csv("../figures/final-selected/ExtendedDataTable3_GP_AUC_tissue.csv", check.names = FALSE)
 DT::datatable(
   tab,
   rownames = FALSE,

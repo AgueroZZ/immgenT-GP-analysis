@@ -2,7 +2,7 @@
 #
 # Panels produced (see figures/Figure3_Activation/Figure3_caption.md for the
 # full caption text -- lettered a-e there; this script uses that same a-e
-# lettering to match the final figures/final-selected/bits/Figure 4/ bundle):
+# lettering to match the final figures/Previous/bits/Figure 4/ bundle):
 #   4a  Standardized mean difference (d) in GP loading, activated vs resting,
 #       CD4 (x) vs CD8 (y); curated GPs colored by semantic group and labeled.
 #   4b  GP-gene signature network: each curated GP linked to its top 5
@@ -32,7 +32,7 @@ library(pheatmap)
 library(scales)
 
 data_path <- "data/"
-figure_path <- "figures/generated/Figure 4/"
+figure_path <- "figures/final-selected/Figure 4/"
 source("code/R/plot_utils.R") # scale_cols()
 source("code/R/tf_network.R") # optimize_bipartite_order(), plot_tf_gp_network_v2()
 

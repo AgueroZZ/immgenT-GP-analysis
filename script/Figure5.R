@@ -1,6 +1,6 @@
 # Figure 5. GPs and tissue.
 #
-# Panels produced (see figures/final-selected/bits/Figure 5/Figure_Organ_caption.md
+# Panels produced (see figures/Previous/bits/Figure 5/Figure_Organ_caption.md
 # for the full caption text):
 #   5a  Max AUC (organ) vs max AUC (level-1 lineage) scatter, per GP.
 #   5b  GP37+ rate by lineage, mammary gland vs. the same lineage elsewhere.
@@ -40,7 +40,7 @@ library(cowplot)
 library(ggalluvial)
 
 data_path <- "data/"
-figure_path <- "figures/generated/Figure 5/"
+figure_path <- "figures/final-selected/Figure 5/"
 
 # ============================================================
 # Load data (healthy, non-thymocyte reference)

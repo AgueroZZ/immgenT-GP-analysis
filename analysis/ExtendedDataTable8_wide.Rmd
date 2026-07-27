@@ -22,7 +22,7 @@ signature gene list (up to 202 rows: up to 100 up- and 100 down-regulated,
 plus a truncation note if either was capped -- see below); sort by clicking a
 column header, or use the search boxes under **Gene** / **Direction** to
 filter further. Download the full spreadsheet at
-[`figures/generated/ExtendedDataTable8_gene_signature_matrix_wide.xlsx`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generated/ExtendedDataTable8_gene_signature_matrix_wide.xlsx).
+[`figures/final-selected/ExtendedDataTable8_gene_signature_matrix_wide.xlsx`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/final-selected/ExtendedDataTable8_gene_signature_matrix_wide.xlsx).
 
 ```{r edt8wide-preview, echo=FALSE, message=FALSE}
 suppressPackageStartupMessages({

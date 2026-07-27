@@ -29,7 +29,7 @@ Panels (b) onward additionally load the shared CITE-seq cell/protein setup:
 
 ## (a) Projection schematic {#fig6a}
 
-This panel is a hand-drawn schematic, not generated from R -- there is no code or pre-rendered image to show here. See `figures/final-selected/bits/Figure 6/6a.pdf` for the published panel.
+This panel is a hand-drawn schematic, not generated from R -- there is no code or pre-rendered image to show here. See `figures/Previous/bits/Figure 6/6a.pdf` for the published panel.
 
 ## (b) Protein-program heatmap {#fig6b}
 

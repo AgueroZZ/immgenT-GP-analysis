@@ -1,6 +1,6 @@
 # Figure 2. Active cells and genes in gene programs.
 #
-# Panels produced (final files figures/generated/Figure 2/2A.pdf .. 2F.pdf):
+# Panels produced (final files figures/final-selected/Figure 2/2A.pdf .. 2F.pdf):
 #   2A  "Signature volcano" for GP1: each gene's normalized weight vs. mean
 #       shifted-log expression, top genes labeled (via code/R/volcano_helpers.R;
 #       ported from the "immgen-signature" Shiny app -- see that header for the
@@ -25,7 +25,7 @@ library(dplyr)
 library(Matrix)  # protein matrix is a dgCMatrix; attach for `[` dispatch
 
 data_path <- "data/"
-figure_path <- "figures/generated/Figure 2/"
+figure_path <- "figures/final-selected/Figure 2/"
 source("code/R/volcano_helpers.R") # plot_gp_signature_volcano(), normalize_maxabs()
 
 # ============================================================

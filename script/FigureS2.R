@@ -1,6 +1,6 @@
 # Figure S2. GP30 and GP58 loadings across T-cell subsets.
 #
-# Panels produced (see figures/final-selected/bits/Figure S2/FigureS2_caption.md
+# Panels produced (see figures/Previous/bits/Figure S2/FigureS2_caption.md
 # for the full caption text):
 #   S2A  Boxplots of GP30 loading across Tz subsets (iNKT, MAIT, other Tz)
 #        vs all other, non-Tz T cells.
@@ -28,7 +28,7 @@ library(Matrix) # protein_mat_normalized_lognorm is a dgCMatrix; rownames()
                 # to zero cells during this refactor -- keep this library() call.
 
 data_path <- "data/"
-figure_path <- "figures/generated/Figure S2/"
+figure_path <- "figures/final-selected/Figure S2/"
 source("code/R/plot_utils.R") # tukey_outliers()
 
 # ============================================================

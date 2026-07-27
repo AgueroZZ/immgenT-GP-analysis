@@ -18,11 +18,11 @@ All 200 rows are browsable below (default order: well-aligned GPs first): sort
 by clicking a column header, type a GP name into the search box under the
 **GP** column, or use the other per-column boxes to filter (e.g. a protein
 name in **Positive markers**, or a proportion range). Download the raw CSV at
-[`figures/generated/ExtendedDataTable7_protein_gating.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/generated/ExtendedDataTable7_protein_gating.csv).
+[`figures/final-selected/ExtendedDataTable7_protein_gating.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/final-selected/ExtendedDataTable7_protein_gating.csv).
 
 ```{r edt7-preview, echo=FALSE, message=FALSE}
 suppressPackageStartupMessages(library(DT))
-tab <- read.csv("../figures/generated/ExtendedDataTable7_protein_gating.csv",
+tab <- read.csv("../figures/final-selected/ExtendedDataTable7_protein_gating.csv",
                 check.names = FALSE, stringsAsFactors = FALSE)
 DT::datatable(
   tab,

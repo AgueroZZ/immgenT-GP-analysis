@@ -21,7 +21,7 @@
 # Required inputs (data/) -- see code/README.md's "Data provenance" table.
 
 data_path <- "data/"
-output_path <- "figures/generated/"
+output_path <- "figures/final-selected/"
 
 if (!requireNamespace("openxlsx", quietly = TRUE)) {
   stop("Package 'openxlsx' is required. Please install it with install.packages('openxlsx').")

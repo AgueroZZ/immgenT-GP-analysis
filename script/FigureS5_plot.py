@@ -22,7 +22,7 @@ import numpy as np
 import pandas as pd
 from scipy.cluster.hierarchy import leaves_list, linkage
 
-FIG_DIR = Path("figures/generated/Figure S5")   # final manuscript panels
+FIG_DIR = Path("figures/final-selected/Figure S5")   # final manuscript panels
 OUT_DIR = Path("output/FigureS5")               # build intermediates
 ASSET_DIR = Path("analysis/assets/FigureS5")    # web preview for the workflowr page
 EBMF_MEANS = OUT_DIR / "S5_ebmf_raw_means_level2.csv"
@@ -209,7 +209,7 @@ def main() -> None:
     ebmf_plot = ebmf_scaled.to_numpy().T[display_order]
     rqvi_plot = rqvi_scaled.to_numpy().T[display_order]
 
-    # final manuscript panels -> figures/generated/Figure S5/
+    # final manuscript panels -> figures/final-selected/Figure S5/
     _plot_heatmap_subfigure(ebmf_plot, cluster_lineages, "EBMF factors", False,
                             FIG_DIR / "S5a.pdf")
     _plot_heatmap_subfigure(rqvi_plot, cluster_lineages, "Corresponding RQVI factors", True,

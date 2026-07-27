@@ -14,7 +14,7 @@
 # is the row, as requested for the table.
 
 data_path <- "data/"
-output_path <- "figures/generated/"
+output_path <- "figures/final-selected/"
 
 Protein_flash_result <- readRDS(paste0(data_path, "protein_flash_selected_summary_lognorm_backfit200.rds"))
 Protein_F_pm_raw <- Protein_flash_result$F_pm

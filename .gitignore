@@ -18,3 +18,16 @@ output/FigureS5/S5_cell_metadata.csv.gz
 # Published supplementary tables (journal artifacts, used only as
 # verification ground truth -- see code/README.md; not produced here)
 tables/
+
+# Local exploration that isn't part of the published record: side-by-side
+# metric/ordering comparisons, their intermediate .rds handoffs, and the
+# plan/log notes that drove them. Kept on disk, out of the public repo.
+experiments/
+plan/
+log/
+
+# Collaborator's original cluster-side flashier fitting code, kept locally as
+# the source for the Methods_FlashierFit page. The fit itself is distributed
+# as flashier_snmf.rds rather than as code -- see code/README.md.
+code/other/topic_flashier_20250212.R
+code/other/topic_wrapper_20250215_alldata_backfit.sh
