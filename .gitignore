@@ -26,6 +26,17 @@ experiments/
 plan/
 log/
 
+# Regenerable non-panel diagnostics written by script/Figure2.R (the
+# active-cell/active-gene histograms and the PVE-colored scatter). The rest of
+# output/ (the Figure S5 intermediates) IS tracked.
+output/Figure2/
+
+# Local staging for panel re-lettering experiments -- copies of panels under
+# trial letters, not part of the published record. Untracked directories show
+# up in the workflowr status report embedded in every built page, which is why
+# this is listed rather than just left alone.
+reorder/
+
 # Collaborator's original cluster-side flashier fitting code, kept locally as
 # the source for the Methods_FlashierFit page. The fit itself is distributed
 # as flashier_snmf.rds rather than as code -- see code/README.md.

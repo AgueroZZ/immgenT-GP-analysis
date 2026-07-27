@@ -61,6 +61,15 @@ for pdf in "$SRC"/Figure*/*.pdf; do
 done
 echo "converted $n panel PDFs at ${DENSITY} dpi"
 
+# workflowr builds each page with rmarkdown::render() in its own session, which
+# does NOT do rmarkdown site-resource copying, so docs/assets is never refreshed
+# by wflow_build -- not even with republish = TRUE. Mirror it here, or the built
+# site keeps serving whatever PNGs were there before.
+if [ -d docs ]; then
+  rsync -a --delete --exclude '.DS_Store' "$DST"/ docs/assets/
+  echo "mirrored $DST -> docs/assets"
+fi
+
 # Fail loudly if the site references a PNG we did not produce.
 echo "checking every include_graphics() reference resolves..."
 missing=0
