@@ -124,6 +124,13 @@ except where listed below. Nothing is left unexplained.
   heatmap with a different aspect ratio.
 - **Figure S3, panel s3c** now reports activated CD4/CD8 cells at threshold
   0.1, not all cells at 0.2 as the published panel did. The caption states it.
+- **Figure S1, panel S1D** ranks its ten GPs on S1C's variance (all 35
+  standard-spleen IGTs) so that S1D's rows are the ten GPs S1C labels.
+  `Figure_batch.R` ranked S1D on the >= 500-cell subset while labelling S1C on
+  all 35, and the two rankings disagree (GP2: 7th on the subset, 11th overall;
+  GP25: 6th overall, 23rd on the subset), so the published S1D shows GP2 where
+  S1C labels GP25. We fix that rather than reproduce it. The >= 500-cell rule
+  still selects the IGT *columns* drawn.
 - **Figures 3C/3E/3G** and **s3c** had no exact source in the original scripts
   and were reconstructed (3C/3E/3G with `plot_loadings_on_mde()`, the styling
   used for 3J/3K/3L). Content matches; canvas size and the UMAP->MDE / K->GP
