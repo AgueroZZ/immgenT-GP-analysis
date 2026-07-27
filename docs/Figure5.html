@@ -515,15 +515,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeffe285cdbf2f4fde2f863a632acf8cae3955ea6ctargetblankffe285ca">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeea3ecc24d9da3261943163a384b2262252fcceeatargetblankea3ecc2a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/ffe285cdbf2f4fde2f863a632acf8cae3955ea6c" target="_blank">ffe285c</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/ea3ecc24d9da3261943163a384b2262252fcceea" target="_blank">ea3ecc2</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeffe285cdbf2f4fde2f863a632acf8cae3955ea6ctargetblankffe285ca"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeea3ecc24d9da3261943163a384b2262252fcceeatargetblankea3ecc2a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -533,7 +533,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/ffe285cdbf2f4fde2f863a632acf8cae3955ea6c" target="_blank">ffe285c</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/ea3ecc24d9da3261943163a384b2262252fcceea" target="_blank">ea3ecc2</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -577,8 +577,10 @@ Ignored files:
     Ignored:    figures/final-selected/Figure 2/.DS_Store
     Ignored:    figures/final-selected/Figure S4/.DS_Store
     Ignored:    log/
+    Ignored:    output/Figure2/
     Ignored:    output/FigureS5/S5_cell_metadata.csv.gz
     Ignored:    plan/
+    Ignored:    reorder/
     Ignored:    tables/
     Ignored:    tmp/
 
@@ -625,6 +627,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/5b1985899918814c0324ed9f67928f6ce556e7ef/docs/Figure5.html" target="_blank">5b19858</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -879,12 +898,17 @@ the images are its pre-rendered output.</p>
 <p>Data loading, shared across all panels below.</p>
 <pre class="r"><code># Figure 5. GPs and tissue.
 #
-# Panels produced (see figures/Previous/bits/Figure 5/Figure_Organ_caption.md
-# for the full caption text):
+# Panels produced. NOTE the renumbering: this figure&#39;s published counterpart is
+# figures/Previous/bits/Figure *4* (4a-4e), not &quot;Figure 5&quot; -- there is no
+# Figure 5 directory there. Full caption text:
+# ../immgen-t-factors/figures/Figure_Organ/Figure_Organ_caption.md.
 #   5a  Max AUC (organ) vs max AUC (level-1 lineage) scatter, per GP.
 #   5b  GP37+ rate by lineage, mammary gland vs. the same lineage elsewhere.
-#   5c  Marker genes of the 7 organ-specific GPs: expression dotplot across
-#       organs (left) + per-GP gene-score heatmap (right), combined.
+#   5c  Marker genes of the 7 organ-specific GPs: per-GP gene-score heatmap.
+#       The published panel (4c) paired this heatmap with an across-organ
+#       expression dotplot on its left; the dotplot half was dropped on
+#       purpose, so 5c is half the width of 4c by design (see the caption in
+#       analysis/Figure5.Rmd, which describes the heatmap only).
 #   5d  As 5a, but organ AUC vs Level-2 (fine-grained sub-lineage/cluster)
 #       AUC, with the 7 organ-specific GPs (red) and a contrasting
 #       cluster-specific set (blue) highlighted.
@@ -1042,6 +1066,7 @@ p_5a &lt;- ggplot(df, aes(Max_AUC_Organ, Max_AUC_Level1)) +
   labs(x = &quot;Max AUC (Organ Simplified)&quot;, y = &quot;Max AUC (Level-1)&quot;, title = &quot;Max AUC: Organ vs Level-1&quot;) +
   theme_minimal(base_size = 13) +
   geom_text_repel(
+    seed = 42,
     data = label_above, aes(label = label_text), color = &quot;#1f78b4&quot;, size = 2.5, lineheight = 0.85,
     direction = &quot;y&quot;, nudge_x = label_above$nudge_x, segment.color = &quot;#1f78b4&quot;,
     arrow = arrow(length = unit(0.008, &quot;npc&quot;), type = &quot;closed&quot;, angle = 20),
@@ -1049,6 +1074,7 @@ p_5a &lt;- ggplot(df, aes(Max_AUC_Organ, Max_AUC_Level1)) +
     max.time = 10, max.iter = 2e4, max.overlaps = 20, min.segment.length = 0.01, segment.alpha = 0.7
   ) +
   geom_text_repel(
+    seed = 42,
     data = label_below, aes(label = label_text), color = &quot;#e31a1c&quot;, size = 2.5, lineheight = 0.85,
     direction = &quot;y&quot;, nudge_x = label_below$nudge_x, segment.color = &quot;#e31a1c&quot;,
     arrow = arrow(length = unit(0.008, &quot;npc&quot;), type = &quot;closed&quot;, angle = 20),
@@ -1079,6 +1105,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/ea3ecc24d9da3261943163a384b2262252fcceea/docs/assets/Figure5/5a.png" target="_blank">ea3ecc2</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/2873ad24b49a4e522ffd5332f22a1e706eeb7083/docs/assets/Figure5/5a.png" target="_blank">2873ad2</a>
@@ -1226,6 +1263,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/ea3ecc24d9da3261943163a384b2262252fcceea/docs/assets/Figure5/5b.png" target="_blank">ea3ecc2</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/2873ad24b49a4e522ffd5332f22a1e706eeb7083/docs/assets/Figure5/5b.png" target="_blank">2873ad2</a>
 </td>
 <td>
@@ -1320,6 +1368,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/ea3ecc24d9da3261943163a384b2262252fcceea/docs/assets/Figure5/5c.png" target="_blank">ea3ecc2</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/37db4e68c5c2d042409dd40908f9ee61e0220f3c/docs/assets/Figure5/5c.png" target="_blank">37db4e6</a>
 </td>
 <td>
@@ -1405,23 +1464,51 @@ organ_AUC_masked_l2[!organ_AUC_positive_l2] &lt;- NA
 organ_AUC_max &lt;- apply(organ_AUC_masked_l2, 2, max, na.rm = TRUE)
 organ_AUC_max_name &lt;- apply(organ_AUC_masked_l2, 2, function(x) rownames(organ_AUC_masked_l2)[which.max(x)])
 
+# 5d needs its OWN max-AUC table -- it must not reuse 5a&#39;s `df`, whose
+# Max_AUC_Level1 column holds the Level-1 maxima. The original Figure_Organ.R
+# rebuilds `max_AUC_df`/`df` at this point from `table_level_2_AUC` (storing
+# the Level-2 maxima in a column it still calls `Max_AUC_Level1` -- a
+# misleading name we drop here in favour of `Max_AUC_Level2`). Reusing 5a&#39;s
+# `df` silently plots Level-1 AUC on this panel&#39;s &quot;Max AUC (Level-2)&quot; axis.
+level_2_AUC_masked &lt;- level_2_AUC
+level_2_AUC_masked[!level_2_AUC_positive] &lt;- NA
+level_2_AUC_max &lt;- apply(level_2_AUC_masked, 2, max, na.rm = TRUE)
+level_2_AUC_max_name &lt;- apply(level_2_AUC_masked, 2, function(x) {
+  rownames(level_2_AUC_masked)[which.max(x)]
+})
+o_l2 &lt;- order(level_2_AUC_max, decreasing = TRUE)
+table_level_2_AUC &lt;- data.frame(
+  Factor = colnames(level_2_AUC)[o_l2],
+  Max_AUC = level_2_AUC_max[o_l2],
+  Annotation = level_2_AUC_max_name[o_l2]
+)
+df_l2 &lt;- data.frame(
+  Factor = table_level_2_AUC$Factor,
+  annotation_Level2 = table_level_2_AUC$Annotation,
+  annotation_Organ = organ_AUC_max_name[match(table_level_2_AUC$Factor, names(organ_AUC_max))],
+  Max_AUC_Organ = organ_AUC_max[match(table_level_2_AUC$Factor, names(organ_AUC_max))],
+  Max_AUC_Level2 = table_level_2_AUC$Max_AUC
+) %&gt;%
+  mutate(residual = Max_AUC_Level2 - Max_AUC_Organ, abs_res = abs(residual))
+
 # ============================================================
 # 5d: Max AUC Organ vs Level-2, 7 organ-specific GPs (red) vs.
 #     contrasting cluster-specific GPs (blue) highlighted
 # ============================================================
-seven_gp_df &lt;- df |&gt;
+seven_gp_df &lt;- df_l2 |&gt;
   dplyr::filter(Factor %in% gps_of_interest) |&gt;
   dplyr::mutate(label_text = sapply(Factor, top_cats_label, auc_matrix = level_2_AUC, positive_mask = level_2_AUC_positive, threshold = 0.9, n = 3))
 
 top_left_gps &lt;- c(&quot;GP14&quot;, &quot;GP36&quot;, &quot;GP16&quot;, &quot;GP151&quot;, &quot;GP21&quot;, &quot;GP122&quot;, &quot;GP2&quot;, &quot;GP171&quot;, &quot;GP5&quot;, &quot;GP13&quot;)
-top_left_df &lt;- df |&gt;
+top_left_df &lt;- df_l2 |&gt;
   dplyr::filter(Factor %in% top_left_gps) |&gt;
   dplyr::mutate(label_text = sapply(Factor, top_cats_label, auc_matrix = level_2_AUC, positive_mask = level_2_AUC_positive, threshold = 0.9, n = 3))
 
-p_5d &lt;- ggplot(df, aes(Max_AUC_Organ, Max_AUC_Level1)) +
+p_5d &lt;- ggplot(df_l2, aes(Max_AUC_Organ, Max_AUC_Level2)) +
   geom_point(alpha = 0.2, size = 1.5, color = &quot;grey60&quot;) +
   geom_point(data = top_left_df, color = &quot;#1f78b4&quot;, size = 2.2, alpha = 0.9) +
   geom_text_repel(
+    seed = 42,
     data = top_left_df, aes(label = label_text), color = &quot;#1f78b4&quot;, lineheight = 0.85, size = 2.5,
     direction = &quot;y&quot;, nudge_x = -0.1, segment.color = &quot;#1f78b4&quot;,
     arrow = arrow(length = unit(0.008, &quot;npc&quot;), type = &quot;closed&quot;, angle = 20),
@@ -1430,6 +1517,7 @@ p_5d &lt;- ggplot(df, aes(Max_AUC_Organ, Max_AUC_Level1)) +
   ) +
   geom_point(data = seven_gp_df, color = &quot;#e31a1c&quot;, size = 2.2, alpha = 0.9) +
   geom_text_repel(
+    seed = 42,
     data = seven_gp_df, aes(label = label_text), color = &quot;#e31a1c&quot;, size = 2.5, lineheight = 0.85,
     direction = &quot;y&quot;, nudge_x = 0.18, xlim = c(1.0, NA), segment.color = &quot;#e31a1c&quot;,
     arrow = arrow(length = unit(0.008, &quot;npc&quot;), type = &quot;closed&quot;, angle = 20),
@@ -1465,6 +1553,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/ea3ecc24d9da3261943163a384b2262252fcceea/docs/assets/Figure5/5d.png" target="_blank">ea3ecc2</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/2873ad24b49a4e522ffd5332f22a1e706eeb7083/docs/assets/Figure5/5d.png" target="_blank">2873ad2</a>
@@ -1563,6 +1662,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/ea3ecc24d9da3261943163a384b2262252fcceea/docs/assets/Figure5/5e.png" target="_blank">ea3ecc2</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/2873ad24b49a4e522ffd5332f22a1e706eeb7083/docs/assets/Figure5/5e.png" target="_blank">2873ad2</a>
