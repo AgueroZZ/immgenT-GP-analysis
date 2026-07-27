@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreebf7afcfe360b8947b96a4b905fcaa82ecd923a67targetblankbf7afcfa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree39de9e0cb4370334d4fa3172da5f129ff7670cfatargetblank39de9e0a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/bf7afcfe360b8947b96a4b905fcaa82ecd923a67" target="_blank">bf7afcf</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/39de9e0cb4370334d4fa3172da5f129ff7670cfa" target="_blank">39de9e0</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreebf7afcfe360b8947b96a4b905fcaa82ecd923a67targetblankbf7afcfa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree39de9e0cb4370334d4fa3172da5f129ff7670cfatargetblank39de9e0a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/bf7afcfe360b8947b96a4b905fcaa82ecd923a67" target="_blank">bf7afcf</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/39de9e0cb4370334d4fa3172da5f129ff7670cfa" target="_blank">39de9e0</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -554,7 +554,6 @@ Ignored files:
     Ignored:    analysis/.DS_Store
     Ignored:    analysis/.Rhistory
     Ignored:    analysis/assets/.DS_Store
-    Ignored:    analysis/site_libs/
     Ignored:    code/.DS_Store
     Ignored:    code/other/topic_flashier_20250212.R
     Ignored:    code/other/topic_wrapper_20250215_alldata_backfit.sh
@@ -629,6 +628,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/39de9e0cb4370334d4fa3172da5f129ff7670cfa/analysis/FigureS1.Rmd" target="_blank">39de9e0</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+<td>
+Compute S1C and S1D from one matrix over the 18 &gt;=500-cell IGTs
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/6c1a613526a5e79e96a566eb3ed8c22e91015cba/docs/FigureS1.html" target="_blank">6c1a613</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+<td>
+Build site: S1D now follows S1C
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -998,13 +1031,14 @@ itself is produced (a much heavier, cluster-scale computation).</p>
 #   S1B  Number of GPs validated by at least X IGTs, vs X (log-log), for the
 #        same thresholds.
 #   S1C  Between-IGT variability: each GP&#39;s mean-of-per-IGT-mean-loading (x)
-#        vs. variance-of-per-IGT-mean-loading (y), spleen-standard subset.
-#   S1D  Heatmap of per-IGT mean loading (IGTs with &gt;= 500 spleen-standard
-#        cells only) for the 10 highest-variance GPs from S1C -- i.e. ranked on
-#        S1C&#39;s own variance, so the two panels agree. Figure_batch.R ranked
-#        S1D on the &gt;= 500-cell subset while labelling S1C on all 35 IGTs,
-#        which made the published S1D show GP2 where S1C labels GP25; we fix
-#        that inconsistency rather than reproduce it.
+#        vs. variance-of-per-IGT-mean-loading (y).
+#   S1D  Heatmap of per-IGT mean loading for S1C&#39;s 10 highest-variance GPs.
+#
+#        S1C and S1D share one per-IGT mean-loading matrix, over the
+#        standard-spleen subset restricted to the 18 IGTs with &gt;= 500 such
+#        cells. Figure_batch.R built it twice on different IGT sets (S1C over
+#        all 35, S1D over the 18), which made the published panels disagree --
+#        see the note in the &quot;Load data for S1C/S1D&quot; section.
 #   S1E  Scatter of the NUMBER of active genes (x) vs. proportion of active
 #        cells (y) per GP, using the same hard-threshold definitions as Figure 2
 #        (|normalized score| &gt; 0.25 for genes; normalized loading &gt; 0.1 for
@@ -1093,6 +1127,28 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/710259816a5471e4ec442a7a27b8732d9dd67e8d/docs/assets/FigureS1/S1A.png" target="_blank">7102598</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/6c1a613526a5e79e96a566eb3ed8c22e91015cba/docs/assets/FigureS1/S1A.png" target="_blank">6c1a613</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/bf7afcfe360b8947b96a4b905fcaa82ecd923a67/docs/assets/FigureS1/S1A.png" target="_blank">bf7afcf</a>
@@ -1200,6 +1256,28 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/710259816a5471e4ec442a7a27b8732d9dd67e8d/docs/assets/FigureS1/S1B.png" target="_blank">7102598</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/6c1a613526a5e79e96a566eb3ed8c22e91015cba/docs/assets/FigureS1/S1B.png" target="_blank">6c1a613</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/bf7afcfe360b8947b96a4b905fcaa82ecd923a67/docs/assets/FigureS1/S1B.png" target="_blank">bf7afcf</a>
 </td>
 <td>
@@ -1261,20 +1339,34 @@ L_pm_filtered &lt;- readRDS(paste0(data_path, &quot;L_pm_filtered.rds&quot;))
 seurat_meta &lt;- readRDS(paste0(data_path, &quot;igt1_96_withtotalvi20260206_clean_ADTonly.Rds&quot;))@meta.data
 seurat_meta_filtered &lt;- seurat_meta[rownames(L_pm_filtered), ]
 seurat_meta_filtered_spleen &lt;- seurat_meta_filtered %&gt;% filter(spleen_standard == TRUE)
-all_gps &lt;- paste0(&quot;K&quot;, 1:200)
-selected_igts &lt;- names(table(seurat_meta_filtered_spleen$IGT))[table(seurat_meta_filtered_spleen$IGT) &gt;= 500]</code></pre>
+
+# S1C and S1D are both computed from ONE per-IGT mean-loading matrix
+# (IGTs x GPs) over the standard-spleen subset, restricted to the IGTs with
+# &gt;= 500 such cells -- an IGT mean over a handful of cells is too noisy to
+# either rank on or draw. Both panels therefore describe the same 18 IGTs, and
+# S1C&#39;s ten labelled GPs are exactly S1D&#39;s ten rows.
+#
+# Figure_batch.R built this matrix twice instead: S1C over all 35 spleen IGTs,
+# S1D over the &gt;= 500-cell subset. The two rankings disagree -- GP2 is 7th on
+# the subset but 11th over all 35, GP25 is 6th over all 35 but 23rd on the
+# subset -- so the published S1C labels GP25 while the published S1D shows GP2,
+# and &quot;the top ten from (C)&quot; could not be followed across the two panels.
+# Computing it once removes the inconsistency and the chance of the two
+# drifting apart again.
+spleen_cells &lt;- intersect(rownames(L_pm_filtered), rownames(seurat_meta_filtered_spleen))
+igt_vec &lt;- seurat_meta_filtered_spleen[spleen_cells, &quot;IGT&quot;]
+selected_igts &lt;- names(table(igt_vec))[table(igt_vec) &gt;= 500]
+igt_mean_mat &lt;- do.call(rbind, lapply(selected_igts, function(igt) {
+  colMeans(L_pm_filtered[spleen_cells[igt_vec == igt], , drop = FALSE])
+}))
+rownames(igt_mean_mat) &lt;- selected_igts
+
+gp_igt_var &lt;- apply(igt_mean_mat, 2, var)
+gp_overall &lt;- colMeans(igt_mean_mat)</code></pre>
 <pre class="r"><code># ============================================================
 # S1C: GP mean-of-IGT-mean-loading vs. variance-of-IGT-mean-loading (spleen)
 # ============================================================
-common_cells_c &lt;- intersect(rownames(L_pm_filtered), rownames(seurat_meta_filtered_spleen))
-L_sub_c &lt;- L_pm_filtered[common_cells_c, ]
-igt_vec_c &lt;- seurat_meta_filtered_spleen[common_cells_c, &quot;IGT&quot;]
-igt_levels_c &lt;- unique(igt_vec_c)
-igt_mat_c &lt;- do.call(rbind, lapply(igt_levels_c, function(igt) colMeans(L_sub_c[igt_vec_c == igt, , drop = FALSE])))
-
-gp_igt_var &lt;- apply(igt_mat_c, 2, var)
-gp_overall &lt;- colMeans(igt_mat_c)
-gp_stats &lt;- data.frame(GP = colnames(L_sub_c), x = gp_overall, y = gp_igt_var) %&gt;%
+gp_stats &lt;- data.frame(GP = colnames(igt_mean_mat), x = gp_overall, y = gp_igt_var) %&gt;%
   arrange(desc(y)) %&gt;%
   mutate(label = ifelse(row_number() &lt;= 10, gp_label(as.character(GP)), &quot;&quot;))
 
@@ -1311,6 +1403,39 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/39de9e0cb4370334d4fa3172da5f129ff7670cfa/docs/assets/FigureS1/S1C.png" target="_blank">39de9e0</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/710259816a5471e4ec442a7a27b8732d9dd67e8d/docs/assets/FigureS1/S1C.png" target="_blank">7102598</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/6c1a613526a5e79e96a566eb3ed8c22e91015cba/docs/assets/FigureS1/S1C.png" target="_blank">6c1a613</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/bf7afcfe360b8947b96a4b905fcaa82ecd923a67/docs/assets/FigureS1/S1C.png" target="_blank">bf7afcf</a>
@@ -1361,42 +1486,25 @@ Ziang Zhang
 </div>
 <div class="figcaption">
 <p><strong>Fig. S1C.</strong> Between-IGT variability of GP loadings,
-computed on a standard spleen subset used for this purpose. Each GP’s
-mean loading is computed within every IGT; each point is a GP, plotting
+computed on a standard spleen subset used for this purpose and
+restricted to the IGTs contributing at least 500 such cells, so that no
+per-IGT mean rests on a handful of cells. Each GP’s mean loading is
+computed within every one of those IGTs; each point is a GP, plotting
 the mean across IGTs of these per-IGT mean loadings (x-axis) against
 their variance across IGTs (y-axis). The ten GPs with the highest
-between-IGT variance are labeled.</p>
+between-IGT variance are labeled, and are the ten shown in (D).</p>
 </div>
 </div>
 <div id="figs1d" class="section level2">
 <h2>(D) Top-variance GP heatmap</h2>
 <pre class="r"><code># ============================================================
-# S1D: heatmap of per-IGT mean loading (IGTs with &gt;= 500 spleen-standard cells
-#      only) for the top-10 between-IGT-variance GPs over those same IGTs
+# S1D: heatmap of per-IGT mean loading for S1C&#39;s ten highest-variance GPs
 # ============================================================
-spleen_cells_act &lt;- intersect(rownames(L_pm_filtered), rownames(seurat_meta_filtered_spleen))
-igt_vec_act &lt;- seurat_meta_filtered_spleen[spleen_cells_act, &quot;IGT&quot;]
-igt_mean_mat_act &lt;- do.call(rbind, lapply(selected_igts, function(igt) {
-  cells_i &lt;- spleen_cells_act[igt_vec_act == igt]
-  colMeans(L_pm_filtered[cells_i, all_gps, drop = FALSE])
-}))
-rownames(igt_mean_mat_act) &lt;- selected_igts
-
-# Ranked on S1C&#39;s `gp_igt_var` (variance of per-IGT mean loading over all 35
-# spleen-standard IGTs) so that S1D&#39;s 10 rows ARE S1C&#39;s 10 labelled GPs.
-#
-# This is a deliberate departure from the published panel. Figure_batch.R
-# recomputed the variance here on the &gt;= 500-cell subset only, so its S1D
-# ranked on 18 IGTs while its S1C labelled on 35 -- and the two disagreed:
-# GP2 is 7th on the subset but 11th overall, GP25 is 6th overall but 23rd on
-# the subset, so the published S1D shows GP2 while the published S1C labels
-# GP25. Readers cannot follow &quot;the top ten from (C)&quot; across that gap, so we
-# rank both panels the same way. The &gt;= 500-cell restriction still applies to
-# the IGT *columns* drawn below, where it keeps noisy small-IGT means out of
-# the heatmap.
+# Same `igt_mean_mat` and same `gp_igt_var` as S1C, so these ten rows are the
+# ten GPs S1C labels -- see the note where that matrix is built.
 top10_var_gps &lt;- names(sort(gp_igt_var, decreasing = TRUE))[1:10]
 
-plot_mat &lt;- t(igt_mean_mat_act[, top10_var_gps, drop = FALSE])
+plot_mat &lt;- t(igt_mean_mat[, top10_var_gps, drop = FALSE])
 plot_mat[plot_mat &lt; 0] &lt;- 0
 rownames(plot_mat) &lt;- gp_label(rownames(plot_mat))
 
@@ -1435,6 +1543,39 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/39de9e0cb4370334d4fa3172da5f129ff7670cfa/docs/assets/FigureS1/S1D.png" target="_blank">39de9e0</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/710259816a5471e4ec442a7a27b8732d9dd67e8d/docs/assets/FigureS1/S1D.png" target="_blank">7102598</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/6c1a613526a5e79e96a566eb3ed8c22e91015cba/docs/assets/FigureS1/S1D.png" target="_blank">6c1a613</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/bf7afcfe360b8947b96a4b905fcaa82ecd923a67/docs/assets/FigureS1/S1D.png" target="_blank">bf7afcf</a>
@@ -1486,10 +1627,9 @@ Ziang Zhang
 <div class="figcaption">
 <p><strong>Fig. S1D.</strong> Heatmap of the per-IGT mean loading for
 the ten GPs with the highest between-IGT variance in (C) – the same ten
-GPs labelled there, ranked on the same all-IGT variance. Columns are
-restricted to the IGTs with &gt;= 500 standard-spleen cells, so that no
-column is a mean over a handful of cells. Rows (GPs) are hierarchically
-clustered; color runs from white (low) to red (high mean loading).</p>
+GPs labelled there, over the same IGTs, from the same matrix. Rows (GPs)
+are hierarchically clustered; color runs from white (low) to red (high
+mean loading).</p>
 </div>
 </div>
 <div id="figs1e" class="section level2">
@@ -1547,6 +1687,28 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/710259816a5471e4ec442a7a27b8732d9dd67e8d/docs/assets/FigureS1/S1E.png" target="_blank">7102598</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/6c1a613526a5e79e96a566eb3ed8c22e91015cba/docs/assets/FigureS1/S1E.png" target="_blank">6c1a613</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/bf7afcfe360b8947b96a4b905fcaa82ecd923a67/docs/assets/FigureS1/S1E.png" target="_blank">bf7afcf</a>
