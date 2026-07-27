@@ -55,7 +55,11 @@ for pdf in "$SRC"/Figure*/*.pdf; do
   outdir="$DST/${dir// /}"              # "Figure S1" -> "FigureS1"
   mkdir -p "$outdir"
   out="$outdir/$(asset_name "$base").png"
-  magick -density "$DENSITY" "${pdf}[0]" -background white -alpha remove -alpha off "$out"
+  # -strip / exclude-chunk: ImageMagick otherwise writes creation-time text and
+  # tIME chunks, so re-running would rewrite all 60 PNGs with new bytes and show
+  # up as a 60-file diff even when nothing changed.
+  magick -density "$DENSITY" "${pdf}[0]" -background white -alpha remove -alpha off \
+    -strip -define png:exclude-chunk=date,time "$out"
   printf '  %-46s -> %s\n' "$pdf" "$out"
   n=$((n + 1))
 done
