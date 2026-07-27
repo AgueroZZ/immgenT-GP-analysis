@@ -24,6 +24,12 @@ trap 'rm -rf "$TMP"' EXIT
 DENSITY=${DENSITY:-110}
 
 # new_panel <TAB> published_panel   (paths relative to the two roots above)
+#
+# Pairs are matched by CONTENT, not by letter. That only matters for Figure 3's
+# J and L: we letter the gdT/CD8aa/DN loading panels GP3 = J, GP29 = K,
+# GP22 = L, where the published 2J/2K/2L were GP22/GP29/GP3. So 3J's
+# counterpart is 2L and 3L's is 2J -- comparing them letter-to-letter would
+# compare different GPs and look like a huge regression.
 MAP=$(
   cat <<'EOF'
 Figure 1/1A	Figure 1/1A
@@ -44,9 +50,9 @@ Figure 3/3F	Figure 2/2F
 Figure 3/3G	Figure 2/2G
 Figure 3/3H	Figure 2/2H
 Figure 3/3I	Figure 2/2I
-Figure 3/3J	Figure 2/2J
+Figure 3/3J	Figure 2/2L
 Figure 3/3K	Figure 2/2K
-Figure 3/3L	Figure 2/2L
+Figure 3/3L	Figure 2/2J
 Figure 3/3M	Figure 2/2M
 Figure 4/4a	Figure 3/3c
 Figure 4/4b	Figure 3/3d

@@ -148,8 +148,16 @@ except where listed below. Nothing is left unexplained.
   and were reconstructed (3C/3E/3G with `plot_loadings_on_mde()`, the styling
   used for 3J/3K/3L). Content matches; canvas size and the UMAP->MDE / K->GP
   relabeling differ.
-- **Figures 3I-3L** are identical to 2I-2L apart from that same UMAP->MDE
-  axis/legend relabeling, and **4e**'s title was renumbered.
+- **Figure 3, panels 3J/3K/3L** are lettered GP3 = J, GP29 = K, GP22 = L, so
+  the figure keeps one GP order throughout (it matches 3M's GP3/GP29/GP22
+  columns). The published 2J/2K/2L were GP22/GP29/GP3, so **J and L are
+  swapped**: our 3J is the published 2L and our 3L is the published 2J. The
+  panel *contents* are unchanged apart from the UMAP->MDE relabeling below, and
+  `verify_panels.sh` pairs them by content (3J<->2L, 3L<->2J) so the swap does
+  not read as a regression.
+- **Figure 3, panel 3I** and the J-L panels are otherwise identical to 2I-2L
+  apart from the UMAP->MDE axis/legend relabeling, and **4e**'s title was
+  renumbered.
 
 ### Panels not code-generated here
 

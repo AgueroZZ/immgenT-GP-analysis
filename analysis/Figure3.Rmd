@@ -139,7 +139,7 @@ knitr::include_graphics("assets/Figure3/3I.png")
 **Fig. 3I.** MDE restricted to gdT, CD8aa, and DN cells (excluding proliferating and miniverse subsets), colored by lineage.
 :::
 
-## (J-L) GP22, GP29, GP3 loading on the gdT/CD8aa/DN MDE {#fig3jl}
+## (J-L) GP3, GP29, GP22 loading on the gdT/CD8aa/DN MDE {#fig3jl}
 
 ```{r fig3jl-code, code=code_for("../script/Figure3.R", "3J/3K/3L"), eval=FALSE}
 ```
@@ -149,7 +149,7 @@ knitr::include_graphics(c("assets/Figure3/3J.png", "assets/Figure3/3K.png", "ass
 ```
 
 ::: {.figcaption}
-**Fig. 3J-L.** GP loading on the same gdT/CD8aa/DN MDE for GP22 (J), GP29 (K), and GP3 (L).
+**Fig. 3J-L.** GP loading on the same gdT/CD8aa/DN MDE for GP3 (J), GP29 (K), and GP22 (L) -- the same GP order as the columns of (M).
 :::
 
 ## (M) Top-30 gene score heatmap for GP3/GP29/GP22 {#fig3m}

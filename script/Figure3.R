@@ -9,7 +9,7 @@
 #   3C,3E,3G  GP loading on the global MDE, for GP68, GP30, GP58.
 #   3D,3F,3H  Per-gene view (score vs. mean expression) for GP68, GP30, GP58.
 #   3I  MDE restricted to gdT/CD8aa/DN, colored by lineage.
-#   3J,3K,3L  GP loading on the gdT/CD8aa/DN MDE, for GP22, GP29, GP3.
+#   3J,3K,3L  GP loading on the gdT/CD8aa/DN MDE, for GP3, GP29, GP22.
 #   3M  Heatmap of the top-30 up-regulated gene scores for GP3, GP29, GP22.
 #
 # Source: ported from Figure_Lineage.R, which also produced the
@@ -329,9 +329,14 @@ ggsave(
 )
 
 # ============================================================
-# 3J/3K/3L: GP22, GP29, GP3 loading on the gdT/CD8aa/DN MDE
+# 3J/3K/3L: GP3, GP29, GP22 loading on the gdT/CD8aa/DN MDE
 # ============================================================
-gp_letter <- c("GP22" = "3J", "GP29" = "3K", "GP3" = "3L")
+# Panel lettering is GP3 = J, GP29 = K, GP22 = L, matching the GP3/GP29/GP22
+# column order of 3M so the figure reads left-to-right in one order throughout.
+# The published 2J/2K/2L were GP22/GP29/GP3, i.e. J and L are deliberately
+# swapped relative to them (see script/README.md). Do not let this fall back to
+# whatever order the GPs happen to be listed in.
+gp_letter <- c("GP3" = "3J", "GP29" = "3K", "GP22" = "3L")
 for (gp_name in names(gp_letter)) {
   gp_num <- as.numeric(sub("^GP", "", gp_name))
   p_loading <- plot_loadings_on_mde(
