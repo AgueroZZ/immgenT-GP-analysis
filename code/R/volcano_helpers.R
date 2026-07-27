@@ -61,6 +61,9 @@ plot_gp_signature_volcano <- function(
     scattermore::geom_scattermore(data = bg_df, ggplot2::aes(x = Weight, y = MeanExpr), pointsize = 2, alpha = bg_alpha, colour = "grey75") +
     ggplot2::geom_point(data = top_df, ggplot2::aes(x = Weight, y = MeanExpr), colour = "dodgerblue", size = 1.9, alpha = 0.9) +
     ggrepel::geom_text_repel(
+      # Fixed seed: ggrepel otherwise re-solves the label layout on every run,
+      # so the same data produced a visibly different panel each time.
+      seed = 42,
       data = top_df, ggplot2::aes(x = Weight, y = MeanExpr, label = Feature),
       colour = "black", size = 3, segment.colour = "grey50",
       box.padding = 0.5, point.padding = 0.3, max.overlaps = Inf, min.segment.length = 0

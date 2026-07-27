@@ -1,7 +1,8 @@
 # Figure 3. GPs and lineages.
 #
-# Panels produced (see figures/Previous/bits/Figure 3/Figure2_caption.md
-# for the full caption text):
+# Panels produced. NOTE the renumbering: this figure's published counterpart is
+# figures/Previous/bits/Figure *2* (2A-2M), letter for letter. Full caption
+# text: figures/Previous/bits/Figure 2/Figure2_caption.md.
 #   3A  Swarm plot of per-GP AUC (predicting major lineage), up-regulated
 #       GPs only, with GP3/22/29 force-highlighted.
 #   3B  Structure plot of 6 lineage-defining GPs across major lineages.
@@ -370,7 +371,13 @@ mat_3m <- F_pm_norm_3m[common_genes_3m, gps_3m, drop = FALSE]
 
 p_3M <- plot_cross_gp_heatmap(
   mat_3m, gps_3m,
-  feat_label = "Gene", n_genes = 30, direction = "both",
+  # direction = "pos" ("Positive only" in the app's sidebar, not its "both"
+  # default) is what the published panel was exported with: under "both" the
+  # top-30 by max|score| pulls in 11 all-negative housekeeping genes
+  # (Tpt1/Actb/Eef1a1/...) and pushes out Ikzf2/Klrd1/Il2rb/Itgae/Dapk2/Junb/
+  # Cd3g/Ly6e/Ppia/Malat1/Mir6236. Verified: "pos" reproduces the published
+  # 30-gene set exactly.
+  feat_label = "Gene", n_genes = 30, direction = "pos",
   threshold = 0.05, colorscheme = "bwr", cluster_r = TRUE, cluster_c = FALSE,
   pin_top = c("Fcer1g", "Ccl5", "Cd7")
 )

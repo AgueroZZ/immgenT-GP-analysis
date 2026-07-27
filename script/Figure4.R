@@ -1,8 +1,9 @@
 # Figure 4. GPs associated with T-cell activation.
 #
-# Panels produced (see figures/Figure3_Activation/Figure3_caption.md for the
-# full caption text -- lettered a-e there; this script uses that same a-e
-# lettering to match the final figures/Previous/bits/Figure 4/ bundle):
+# Panels produced. NOTE the renumbering: this figure's published counterpart is
+# figures/Previous/bits/Figure *3*, panels 3c-3g (the old 3a/3b moved to
+# Figure S3). Full caption text:
+# ../immgen-t-factors/figures/Figure_Activation/Figure3_caption.md.
 #   4a  Standardized mean difference (d) in GP loading, activated vs resting,
 #       CD4 (x) vs CD8 (y); curated GPs colored by semantic group and labeled.
 #   4b  GP-gene signature network: each curated GP linked to its top 5
@@ -108,6 +109,7 @@ p_4a <- ggplot(manual_curated_df, aes(x = d_CD4, y = d_CD8)) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "blue") +
   geom_point(aes(color = point_color), size = 2) +
   ggrepel::geom_text_repel(
+    seed = 42,
     data = filter(manual_curated_df, GP %in% GPs_of_interest),
     aes(label = GP, color = point_color),
     max.overlaps = Inf,

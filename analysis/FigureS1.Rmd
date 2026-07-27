@@ -80,7 +80,7 @@ knitr::include_graphics("assets/FigureS1/S1D.png")
 ```
 
 ::: {.figcaption}
-**Fig. S1D.** Heatmap of the per-IGT mean loading (same standard spleen subset, restricted to IGTs with >= 500 cells) for the ten GPs with the highest between-IGT variance from (C). Rows (GPs) are hierarchically clustered; color runs from white (low) to red (high mean loading).
+**Fig. S1D.** Heatmap of the per-IGT mean loading (same standard spleen subset, restricted to IGTs with >= 500 cells) for the ten GPs with the highest between-IGT variance *across those IGTs*. Because the variance is ranked on this 18-IGT subset rather than on all 35 spleen IGTs as in (C), the ten GPs shown here are not exactly the ten labelled in (C). Rows (GPs) are hierarchically clustered; color runs from white (low) to red (high mean loading).
 :::
 
 ## (E) Active-gene vs. active-cell proportion per GP {#figs1e}

@@ -270,6 +270,7 @@ p_s3h <- ggplot() +
   geom_text(data = tf_focus_plot_edges, aes(x = label_x, y = label_y, label = edge_label, angle = label_angle), size = 3.0, color = "grey20") +
   geom_point(data = tf_focus_plot_nodes %>% filter(node_type == "GP"), aes(x = x, y = y), shape = 21, size = 4.0, fill = "grey78", color = "grey45", stroke = 0.5) +
   ggrepel::geom_text_repel(
+    seed = 42,
     data = tf_focus_plot_nodes %>% filter(node_type == "GP"), aes(x = x, y = y, label = name),
     size = 3.4, color = "grey20", max.overlaps = Inf, min.segment.length = Inf, box.padding = 0.2, point.padding = 0.25
   ) +

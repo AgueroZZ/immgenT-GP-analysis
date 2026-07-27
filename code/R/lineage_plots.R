@@ -120,6 +120,9 @@ plot_gp_swarm <- function(
       position = pos
     ) +
     ggrepel::geom_text_repel(
+      # Same seed as the jitter above: without it ggrepel re-solves the label
+      # layout differently on every run and the panel drifts between renders.
+      seed = seed,
       ggplot2::aes(label = label_GP),
       position = pos, size = 3.5, color = "black", fontface = "bold",
       box.padding = 0.5, point.padding = 0.3, min.segment.length = 0, segment.color = "grey50", max.overlaps = Inf

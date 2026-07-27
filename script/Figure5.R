@@ -1,11 +1,16 @@
 # Figure 5. GPs and tissue.
 #
-# Panels produced (see figures/Previous/bits/Figure 5/Figure_Organ_caption.md
-# for the full caption text):
+# Panels produced. NOTE the renumbering: this figure's published counterpart is
+# figures/Previous/bits/Figure *4* (4a-4e), not "Figure 5" -- there is no
+# Figure 5 directory there. Full caption text:
+# ../immgen-t-factors/figures/Figure_Organ/Figure_Organ_caption.md.
 #   5a  Max AUC (organ) vs max AUC (level-1 lineage) scatter, per GP.
 #   5b  GP37+ rate by lineage, mammary gland vs. the same lineage elsewhere.
-#   5c  Marker genes of the 7 organ-specific GPs: expression dotplot across
-#       organs (left) + per-GP gene-score heatmap (right), combined.
+#   5c  Marker genes of the 7 organ-specific GPs: per-GP gene-score heatmap.
+#       The published panel (4c) paired this heatmap with an across-organ
+#       expression dotplot on its left; the dotplot half was dropped on
+#       purpose, so 5c is half the width of 4c by design (see the caption in
+#       analysis/Figure5.Rmd, which describes the heatmap only).
 #   5d  As 5a, but organ AUC vs Level-2 (fine-grained sub-lineage/cluster)
 #       AUC, with the 7 organ-specific GPs (red) and a contrasting
 #       cluster-specific set (blue) highlighted.
@@ -161,6 +166,7 @@ p_5a <- ggplot(df, aes(Max_AUC_Organ, Max_AUC_Level1)) +
   labs(x = "Max AUC (Organ Simplified)", y = "Max AUC (Level-1)", title = "Max AUC: Organ vs Level-1") +
   theme_minimal(base_size = 13) +
   geom_text_repel(
+    seed = 42,
     data = label_above, aes(label = label_text), color = "#1f78b4", size = 2.5, lineheight = 0.85,
     direction = "y", nudge_x = label_above$nudge_x, segment.color = "#1f78b4",
     arrow = arrow(length = unit(0.008, "npc"), type = "closed", angle = 20),
@@ -168,6 +174,7 @@ p_5a <- ggplot(df, aes(Max_AUC_Organ, Max_AUC_Level1)) +
     max.time = 10, max.iter = 2e4, max.overlaps = 20, min.segment.length = 0.01, segment.alpha = 0.7
   ) +
   geom_text_repel(
+    seed = 42,
     data = label_below, aes(label = label_text), color = "#e31a1c", size = 2.5, lineheight = 0.85,
     direction = "y", nudge_x = label_below$nudge_x, segment.color = "#e31a1c",
     arrow = arrow(length = unit(0.008, "npc"), type = "closed", angle = 20),
@@ -204,23 +211,51 @@ organ_AUC_masked_l2[!organ_AUC_positive_l2] <- NA
 organ_AUC_max <- apply(organ_AUC_masked_l2, 2, max, na.rm = TRUE)
 organ_AUC_max_name <- apply(organ_AUC_masked_l2, 2, function(x) rownames(organ_AUC_masked_l2)[which.max(x)])
 
+# 5d needs its OWN max-AUC table -- it must not reuse 5a's `df`, whose
+# Max_AUC_Level1 column holds the Level-1 maxima. The original Figure_Organ.R
+# rebuilds `max_AUC_df`/`df` at this point from `table_level_2_AUC` (storing
+# the Level-2 maxima in a column it still calls `Max_AUC_Level1` -- a
+# misleading name we drop here in favour of `Max_AUC_Level2`). Reusing 5a's
+# `df` silently plots Level-1 AUC on this panel's "Max AUC (Level-2)" axis.
+level_2_AUC_masked <- level_2_AUC
+level_2_AUC_masked[!level_2_AUC_positive] <- NA
+level_2_AUC_max <- apply(level_2_AUC_masked, 2, max, na.rm = TRUE)
+level_2_AUC_max_name <- apply(level_2_AUC_masked, 2, function(x) {
+  rownames(level_2_AUC_masked)[which.max(x)]
+})
+o_l2 <- order(level_2_AUC_max, decreasing = TRUE)
+table_level_2_AUC <- data.frame(
+  Factor = colnames(level_2_AUC)[o_l2],
+  Max_AUC = level_2_AUC_max[o_l2],
+  Annotation = level_2_AUC_max_name[o_l2]
+)
+df_l2 <- data.frame(
+  Factor = table_level_2_AUC$Factor,
+  annotation_Level2 = table_level_2_AUC$Annotation,
+  annotation_Organ = organ_AUC_max_name[match(table_level_2_AUC$Factor, names(organ_AUC_max))],
+  Max_AUC_Organ = organ_AUC_max[match(table_level_2_AUC$Factor, names(organ_AUC_max))],
+  Max_AUC_Level2 = table_level_2_AUC$Max_AUC
+) %>%
+  mutate(residual = Max_AUC_Level2 - Max_AUC_Organ, abs_res = abs(residual))
+
 # ============================================================
 # 5d: Max AUC Organ vs Level-2, 7 organ-specific GPs (red) vs.
 #     contrasting cluster-specific GPs (blue) highlighted
 # ============================================================
-seven_gp_df <- df |>
+seven_gp_df <- df_l2 |>
   dplyr::filter(Factor %in% gps_of_interest) |>
   dplyr::mutate(label_text = sapply(Factor, top_cats_label, auc_matrix = level_2_AUC, positive_mask = level_2_AUC_positive, threshold = 0.9, n = 3))
 
 top_left_gps <- c("GP14", "GP36", "GP16", "GP151", "GP21", "GP122", "GP2", "GP171", "GP5", "GP13")
-top_left_df <- df |>
+top_left_df <- df_l2 |>
   dplyr::filter(Factor %in% top_left_gps) |>
   dplyr::mutate(label_text = sapply(Factor, top_cats_label, auc_matrix = level_2_AUC, positive_mask = level_2_AUC_positive, threshold = 0.9, n = 3))
 
-p_5d <- ggplot(df, aes(Max_AUC_Organ, Max_AUC_Level1)) +
+p_5d <- ggplot(df_l2, aes(Max_AUC_Organ, Max_AUC_Level2)) +
   geom_point(alpha = 0.2, size = 1.5, color = "grey60") +
   geom_point(data = top_left_df, color = "#1f78b4", size = 2.2, alpha = 0.9) +
   geom_text_repel(
+    seed = 42,
     data = top_left_df, aes(label = label_text), color = "#1f78b4", lineheight = 0.85, size = 2.5,
     direction = "y", nudge_x = -0.1, segment.color = "#1f78b4",
     arrow = arrow(length = unit(0.008, "npc"), type = "closed", angle = 20),
@@ -229,6 +264,7 @@ p_5d <- ggplot(df, aes(Max_AUC_Organ, Max_AUC_Level1)) +
   ) +
   geom_point(data = seven_gp_df, color = "#e31a1c", size = 2.2, alpha = 0.9) +
   geom_text_repel(
+    seed = 42,
     data = seven_gp_df, aes(label = label_text), color = "#e31a1c", size = 2.5, lineheight = 0.85,
     direction = "y", nudge_x = 0.18, xlim = c(1.0, NA), segment.color = "#e31a1c",
     arrow = arrow(length = unit(0.008, "npc"), type = "closed", angle = 20),

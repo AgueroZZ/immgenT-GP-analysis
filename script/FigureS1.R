@@ -8,8 +8,11 @@
 #        same thresholds.
 #   S1C  Between-IGT variability: each GP's mean-of-per-IGT-mean-loading (x)
 #        vs. variance-of-per-IGT-mean-loading (y), spleen-standard subset.
-#   S1D  Heatmap of per-IGT mean loading for the 10 highest-variance GPs from
-#        S1C (IGTs with >= 500 spleen-standard cells only).
+#   S1D  Heatmap of per-IGT mean loading (IGTs with >= 500 spleen-standard
+#        cells only) for the 10 GPs with the highest between-IGT variance
+#        *over those IGTs* -- ranked on the 18-IGT subset drawn here, not on
+#        S1C's all-35-IGT variance, so S1D's 10 rows are not exactly S1C's 10
+#        labelled GPs (that mismatch is inherited from Figure_batch.R).
 #   S1E  Scatter of the NUMBER of active genes (x) vs. proportion of active
 #        cells (y) per GP, using the same hard-threshold definitions as Figure 2
 #        (|normalized score| > 0.25 for genes; normalized loading > 0.1 for
@@ -123,7 +126,7 @@ gp_stats <- data.frame(GP = colnames(L_sub_c), x = gp_overall, y = gp_igt_var) %
 
 p_S1C <- ggplot(gp_stats, aes(x = x, y = y, label = label)) +
   geom_point(size = 1.5, alpha = 0.7, color = "steelblue") +
-  ggrepel::geom_text_repel(size = 3, box.padding = 0.4, max.overlaps = Inf, segment.color = "grey50") +
+  ggrepel::geom_text_repel(seed = 42, size = 3, box.padding = 0.4, max.overlaps = Inf, segment.color = "grey50") +
   cowplot::theme_cowplot() +
   labs(
     title = "GP Mean of IGT Mean Loading vs. Between-IGT VAR",
@@ -133,11 +136,9 @@ p_S1C <- ggplot(gp_stats, aes(x = x, y = y, label = label)) +
 ggsave(paste0(figure_path, "S1C.pdf"), plot = p_S1C, width = 6, height = 5, dpi = 300)
 
 # ============================================================
-# S1D: heatmap of per-IGT mean loading for the top-10 variance GPs from S1C
-#      (IGTs with >= 500 spleen-standard cells only)
+# S1D: heatmap of per-IGT mean loading (IGTs with >= 500 spleen-standard cells
+#      only) for the top-10 between-IGT-variance GPs over those same IGTs
 # ============================================================
-top10_var_gps <- names(sort(gp_igt_var, decreasing = TRUE))[1:10]
-
 spleen_cells_act <- intersect(rownames(L_pm_filtered), rownames(seurat_meta_filtered_spleen))
 igt_vec_act <- seurat_meta_filtered_spleen[spleen_cells_act, "IGT"]
 igt_mean_mat_act <- do.call(rbind, lapply(selected_igts, function(igt) {
@@ -145,6 +146,17 @@ igt_mean_mat_act <- do.call(rbind, lapply(selected_igts, function(igt) {
   colMeans(L_pm_filtered[cells_i, all_gps, drop = FALSE])
 }))
 rownames(igt_mean_mat_act) <- selected_igts
+
+# The top-10 must be ranked on THIS matrix (the 18 IGTs with >= 500
+# spleen-standard cells, i.e. the 18 columns actually drawn), not on S1C's
+# `gp_igt_var`, which is computed over all 35 spleen IGTs. The two rankings
+# disagree -- GP2 is 7th here but only 11th in S1C, and GP25 is 6th in S1C but
+# 23rd here -- so reusing `gp_igt_var` swaps GP2 for GP25 and stops matching
+# the published panel. Figure_batch.R recomputes it here; so do we.
+# (Note this means S1C's 10 labelled GPs are not exactly S1D's 10 rows: that
+# inconsistency is inherited from the original and is why GP2 carries no label
+# in S1C.)
+top10_var_gps <- names(sort(apply(igt_mean_mat_act, 2, var), decreasing = TRUE))[1:10]
 
 plot_mat <- t(igt_mean_mat_act[, top10_var_gps, drop = FALSE])
 plot_mat[plot_mat < 0] <- 0

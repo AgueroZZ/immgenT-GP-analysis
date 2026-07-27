@@ -1,3 +1,21 @@
+# DO NOT RUN -- superseded, kept only as a record of how these panels were
+# first drafted.
+#
+# Two reasons it is now actively harmful:
+#
+# 1. It writes under the OLD figure numbering (e.g. "Figure 1/1E.pdf"), which
+#    since the Figure 1 -> 1+2 split does not exist any more. Running it would
+#    drop bogus panels into figures/final-selected/.
+# 2. It re-plots the site PNGs with their own ggsave() calls instead of
+#    converting the panel PDFs, which is exactly how the site and the
+#    published panels silently diverged. Site PNGs now come from
+#    script/render_site_assets.sh.
+#
+# The panels themselves are produced by script/Figure1.R, Figure2.R and
+# FigureS1.R.
+
+stop("script/render_new_panels.R is retired -- see the header comment.")
+
 setwd("/Users/ziangzhang/Desktop/Immgen/immgenT-GP-analysis")
 
 library(ggplot2)

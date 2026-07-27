@@ -150,8 +150,12 @@ dev.off()
 # select_proteins, threshold_results_subset_manual all come from
 # citeseq_shared_setup.R above)
 # ============================================================
+# Panel lettering follows the published figure: c = GP171, d = GP12, e = GP80,
+# f = GP23. (It is NOT the order the GPs happen to be listed in below -- an
+# earlier version of this script assigned the letters positionally, which
+# silently swapped d/e/f relative to the published panels.)
 GPs_fig6 <- c("GP171", "GP23", "GP12", "GP80")
-fig6_letter <- c("GP171" = "6c", "GP23" = "6d", "GP12" = "6e", "GP80" = "6f")
+fig6_letter <- c("GP171" = "6c", "GP12" = "6d", "GP80" = "6e", "GP23" = "6f")
 enlarge_gps <- c("GP8", "GP30", "GP170", "GP107")
 for (gp in GPs_fig6) {
   k_name <- paste0("K", sub("^GP", "", gp))
@@ -202,7 +206,7 @@ plot_target_gps <- function(df, x_var, y_var, label_var, target_gps, highlight_c
     geom_hline(yintercept = 0, linetype = "dashed", color = "blue") +
     geom_vline(xintercept = 0, linetype = "dashed", color = "blue") +
     geom_point(data = highlight_df, aes(color = {{ label_var }}), size = 2) +
-    ggrepel::geom_text_repel(data = highlight_df, aes(label = .label_display, color = {{ label_var }}), max.overlaps = Inf, size = 3.5, box.padding = 0.35, point.padding = 0.5, segment.color = "grey50", show.legend = FALSE) +
+    ggrepel::geom_text_repel(seed = 42, data = highlight_df, aes(label = .label_display, color = {{ label_var }}), max.overlaps = Inf, size = 3.5, box.padding = 0.35, point.padding = 0.5, segment.color = "grey50", show.legend = FALSE) +
     scale_color_manual(values = highlight_color, guide = "none") +
     coord_cartesian(xlim = x_limits, ylim = y_limits) +
     labs(x = xlab, y = ylab, title = title) +
@@ -252,7 +256,7 @@ cd69_corr <- sapply(cd69_top_gps_subset, function(gp) cor(L_pm_filtered[shared_c
 cd69_top_gps_sorted <- names(sort(cd69_corr, decreasing = FALSE)) # most-correlated GP ends up at top of y-axis
 
 plot_factor_heatmap <- function(F_matrix, gp_vector, n_top = 5, min_abs_loading = 0.5, transpose = FALSE,
-                                 title = "Factor loadings", low_color = "steelblue", mid_color = "white", high_color = "firebrick", font_size = 9) {
+                                 title = "Factor loadings – top genes per GP", low_color = "steelblue", mid_color = "white", high_color = "firebrick", font_size = 9) {
   F_sub <- F_matrix[, gp_vector, drop = FALSE]
   selected_genes <- lapply(gp_vector, function(gp) {
     vals <- F_sub[, gp]
@@ -278,9 +282,12 @@ plot_factor_heatmap <- function(F_matrix, gp_vector, n_top = 5, min_abs_loading 
   ggplot(plot_df, aes(x = .data[[x_aes]], y = .data[[y_aes]], fill = Loading)) +
     geom_tile() +
     scale_fill_gradient2(low = low_color, mid = mid_color, high = high_color, midpoint = 0, limits = c(-limit, limit), name = "Loading") +
-    labs(title = title, x = NULL, y = NULL) +
+    # Axis titles are the faceting variables themselves ("Gene" / "GP"), as in
+    # the published 6i -- an earlier version dropped them along with the title's
+    # "- top genes per GP" suffix.
+    labs(title = title, x = x_aes, y = y_aes) +
     theme_minimal(base_size = font_size) +
-    theme(axis.text.x = element_text(angle = if (transpose) 90 else 45, hjust = 1, size = font_size), axis.text.y = element_text(size = font_size), panel.grid = element_blank())
+    theme(axis.text.x = element_text(angle = if (transpose) 90 else 45, hjust = 1, size = font_size), axis.text.y = element_text(size = font_size), panel.grid = element_blank(), plot.title = element_text(face = "bold"))
 }
 
 p_heatmap <- plot_factor_heatmap(F_matrix = F_pm_filtered_scaled, gp_vector = cd69_top_gps_sorted, n_top = 5, font_size = 9, transpose = TRUE, low_color = "#4DAF4A", mid_color = "white", high_color = "#984EA3")
