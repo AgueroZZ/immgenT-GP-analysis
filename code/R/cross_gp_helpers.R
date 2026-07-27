@@ -38,8 +38,8 @@ cross_gp_color_scale <- function(colorscheme = c("bwr", "pbg", "gwr", "rdylbu"),
 # mat: features x GPs (already max|w|=1 normalized, e.g. F_pm from
 # normalize_maxabs() in volcano_helpers.R). Matches
 # mod_cross_gp.R::.build_heatmap() exactly, EXCEPT for the optional
-# `pin_top` argument below, which is our own addition (not part of the
-# app) for manually forcing specific rows to the top of the heatmap.
+# `pin_top` and `rank_by` arguments below, which are our own additions (not
+# part of the app). Both default to the app's behaviour.
 plot_cross_gp_heatmap <- function(
   mat,
   gps,
@@ -50,12 +50,20 @@ plot_cross_gp_heatmap <- function(
   colorscheme = c("bwr", "pbg", "gwr", "rdylbu"),
   cluster_r = TRUE,
   cluster_c = FALSE,
-  pin_top = NULL # character vector of feature names to force to the top
-                 # rows (in the given order), after the usual top-n_genes
-                 # selection and clustering -- not part of the original app.
+  pin_top = NULL, # character vector of feature names to force to the top
+                  # rows (in the given order), after the usual top-n_genes
+                  # selection and clustering -- not part of the original app.
+  rank_by = c("abs", "pos") # which score picks the top n_genes -- not part of
+                            # the original app, which only does "abs":
+                            #   "abs"  max|weight| across `gps` (app behaviour;
+                            #          a feature can rank highly on a large
+                            #          NEGATIVE weight)
+                            #   "pos"  max(weight) across `gps`, i.e. the most
+                            #          up-regulated features
 ) {
   direction <- match.arg(direction)
   colorscheme <- match.arg(colorscheme)
+  rank_by <- match.arg(rank_by)
 
   max_abs <- apply(mat, 1, function(x) max(abs(x), na.rm = TRUE))
   keep <- max_abs >= threshold
@@ -66,8 +74,12 @@ plot_cross_gp_heatmap <- function(
   }
   mat_f <- mat[keep, , drop = FALSE]
 
-  max_abs_f <- apply(mat_f, 1, function(x) max(abs(x), na.rm = TRUE))
-  top_idx <- order(max_abs_f, decreasing = TRUE)[seq_len(min(n_genes, nrow(mat_f)))]
+  rank_score_f <- switch(
+    rank_by,
+    abs = apply(mat_f, 1, function(x) max(abs(x), na.rm = TRUE)),
+    pos = apply(mat_f, 1, max, na.rm = TRUE)
+  )
+  top_idx <- order(rank_score_f, decreasing = TRUE)[seq_len(min(n_genes, nrow(mat_f)))]
   mat_top <- mat_f[top_idx, , drop = FALSE]
 
   if (cluster_r && nrow(mat_top) > 2) {

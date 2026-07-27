@@ -113,9 +113,17 @@ except where listed below. Nothing is left unexplained.
   0.25) and the axes are now log-scaled, so these no longer resemble the
   published 1E/1F linear base-R histograms. The captions state the current
   definitions. `FigureS1.R`'s S1E uses the same definitions.
-- **Figure 3, panel 3M** keeps the published 30-gene set (see below) but pins
-  Fcer1g/Ccl5/Cd7 to the top three rows and orders the columns GP3/GP29/GP22 --
-  both our own editorial choices, so it is not pixel-identical to 2M.
+- **Figure 3, panel 3M** is a genuine "top 30 up-regulated genes" panel: it
+  ranks candidates by max(score) across GP3/GP29/GP22 (`rank_by = "pos"`),
+  where the published 2M ranked by max|score| and so admitted 9 genes on a
+  large *negative* score, each let past the "positive somewhere" gate by a
+  token +0.01..+0.12 elsewhere (CT010467.1, Cmss1, Tmsb4x, Ms4a4b, Cd52,
+  Mir6236, Ppia, Malat1, Ly6e -- the blue block at the bottom of 2M). Their
+  replacements are the next 9 genuinely up-regulated genes: Anxa2, Prkch,
+  Itm2b, Klra1, Cd3e, Nr4a2, Klre1, Chn2, Klrk1, which brings GP22's
+  NK-receptor set (Klra1/Klre1/Klrk1, next to the Klra7/Klrd1 already there)
+  into the figure. 21 of the 30 are unchanged. Rows are additionally pinned
+  (Fcer1g/Ccl5/Cd7 on top) and the columns ordered GP3/GP29/GP22.
 - **Figure 5, panel 5c** drops the across-organ expression dotplot that formed
   the left half of the published 4c and ships the gene-score heatmap alone, at
   half the width. The caption describes the heatmap only.
@@ -165,10 +173,20 @@ file, so they had to be recovered by matching the published panels:
 - the volcanoes' `n_label` (number of labeled genes) was bisected per panel;
   GP68 and GP58 match exactly, GP1 and GP30 are within ~30 bytes.
 - 3M's `direction` is **"pos"** ("Positive only"), not the app's `"both"`
-  default. Under `"both"` the top-30-by-max|score| pulls in 11 all-negative
-  housekeeping genes (Tpt1/Actb/Eef1a1/Tmsb10/...) and pushes out
-  Ikzf2/Klrd1/Il2rb/Itgae/Dapk2/Junb/Cd3g/Ly6e/Ppia/Malat1/Mir6236. `"pos"`
-  reproduces the published 30-gene set exactly.
+  default. This is what the published 2M was exported with: under `"both"` the
+  top-30-by-max|score| pulls in 11 all-negative housekeeping genes
+  (Tpt1/Actb/Eef1a1/Tmsb10/...) and pushes out
+  Ikzf2/Klrd1/Il2rb/Itgae/Dapk2/Junb/Cd3g/Ly6e/Ppia/Malat1/Mir6236. With
+  `direction = "pos"` and the app's ranking, our port reproduced the published
+  30-gene set exactly -- that is how the setting was recovered.
+
+  3M then deliberately moves off it via `rank_by = "pos"` (our own extension to
+  `plot_cross_gp_heatmap()`, see the deviations list above). The app has no such
+  control: it always ranks on max|score|, so "Positive only" gates which genes
+  are eligible without affecting the order they are ranked in, and a strongly
+  down-regulated gene can be selected as long as it is positive somewhere.
+  `experiments/fig3m_updown_ranking/` has the three-way comparison
+  (max|score| gated / max(score) / max|score| ungated) that settled it.
 
 ### Reproducibility
 

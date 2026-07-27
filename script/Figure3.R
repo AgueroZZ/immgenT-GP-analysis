@@ -351,15 +351,18 @@ for (gp_name in names(gp_letter)) {
 }
 
 # ============================================================
-# 3M: cross-GP heatmap, top-30 gene weights for GP3, GP29, GP22
+# 3M: cross-GP heatmap, top-30 UP-REGULATED gene weights for GP3, GP29, GP22
 # (immgen-signature app's mod_cross_gp.R heatmap mode; see
 # code/R/cross_gp_helpers.R)
 #
-# Column order (GP3, GP29, GP22) and pinning Fcer1g/Ccl5/Cd7 to the top 3
-# rows are our own editorial choices, made after the app-faithful version
-# (GP3, GP22, GP29; rows purely hclust-ordered) -- see plot_cross_gp_heatmap()'s
-# `pin_top` argument. This means 3M is no longer a byte-exact reproduction
-# of the published PDF (see script/README.md).
+# Three deliberate departures from the published 2M, so 3M is not a
+# reproduction of it (see script/README.md):
+#   - rank_by = "pos": top 30 by max(score), i.e. genuinely up-regulated,
+#     instead of the app's max|score| (see the note at the call below)
+#   - column order GP3, GP29, GP22 (the app-faithful order is GP3, GP22, GP29)
+#   - Fcer1g/Ccl5/Cd7 pinned to the top 3 rows via `pin_top`
+# The last two were settled first, against the app-faithful version; the
+# ranking change came out of experiments/fig3m_updown_ranking/.
 # ============================================================
 F_pm_filtered_3m <- readRDS(paste0(data_path, "F_pm_filtered.rds"))
 colnames(F_pm_filtered_3m) <- paste0("GP", seq_len(ncol(F_pm_filtered_3m)))
@@ -371,13 +374,21 @@ mat_3m <- F_pm_norm_3m[common_genes_3m, gps_3m, drop = FALSE]
 
 p_3M <- plot_cross_gp_heatmap(
   mat_3m, gps_3m,
-  # direction = "pos" ("Positive only" in the app's sidebar, not its "both"
-  # default) is what the published panel was exported with: under "both" the
-  # top-30 by max|score| pulls in 11 all-negative housekeeping genes
-  # (Tpt1/Actb/Eef1a1/...) and pushes out Ikzf2/Klrd1/Il2rb/Itgae/Dapk2/Junb/
-  # Cd3g/Ly6e/Ppia/Malat1/Mir6236. Verified: "pos" reproduces the published
-  # 30-gene set exactly.
-  feat_label = "Gene", n_genes = 30, direction = "pos",
+  # rank_by = "pos" makes this a genuine "top 30 up-regulated genes" panel:
+  # candidates are the genes positive in at least one of the three GPs
+  # (direction = "pos"), ranked by max(score) across them.
+  #
+  # This is a deliberate change from the published 2M, which used the app's
+  # rank-by-max|score| and so admitted 9 genes on the strength of a large
+  # NEGATIVE score, each let through the "positive somewhere" gate by a token
+  # +0.01..+0.12 elsewhere (CT010467.1 -0.91 in GP22, Cmss1, Tmsb4x, Ms4a4b,
+  # Cd52, Mir6236, Ppia, Malat1, Ly6e -- the blue block at the bottom of the
+  # published panel). Ranking on max(score) replaces them with the next 9
+  # genuinely up-regulated genes: Anxa2, Prkch, Itm2b, Klra1, Cd3e, Nr4a2,
+  # Klre1, Chn2, Klrk1 -- which brings GP22's NK-receptor set (Klra1/Klre1/
+  # Klrk1, alongside the Klra7/Klrd1 already here) into the figure.
+  # See experiments/fig3m_updown_ranking/ for the side-by-side that decided it.
+  feat_label = "Gene", n_genes = 30, direction = "pos", rank_by = "pos",
   threshold = 0.05, colorscheme = "bwr", cluster_r = TRUE, cluster_c = FALSE,
   pin_top = c("Fcer1g", "Ccl5", "Cd7")
 )
