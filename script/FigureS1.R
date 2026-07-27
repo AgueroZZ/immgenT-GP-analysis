@@ -9,10 +9,11 @@
 #   S1C  Between-IGT variability: each GP's mean-of-per-IGT-mean-loading (x)
 #        vs. variance-of-per-IGT-mean-loading (y), spleen-standard subset.
 #   S1D  Heatmap of per-IGT mean loading (IGTs with >= 500 spleen-standard
-#        cells only) for the 10 GPs with the highest between-IGT variance
-#        *over those IGTs* -- ranked on the 18-IGT subset drawn here, not on
-#        S1C's all-35-IGT variance, so S1D's 10 rows are not exactly S1C's 10
-#        labelled GPs (that mismatch is inherited from Figure_batch.R).
+#        cells only) for the 10 highest-variance GPs from S1C -- i.e. ranked on
+#        S1C's own variance, so the two panels agree. Figure_batch.R ranked
+#        S1D on the >= 500-cell subset while labelling S1C on all 35 IGTs,
+#        which made the published S1D show GP2 where S1C labels GP25; we fix
+#        that inconsistency rather than reproduce it.
 #   S1E  Scatter of the NUMBER of active genes (x) vs. proportion of active
 #        cells (y) per GP, using the same hard-threshold definitions as Figure 2
 #        (|normalized score| > 0.25 for genes; normalized loading > 0.1 for
@@ -147,16 +148,19 @@ igt_mean_mat_act <- do.call(rbind, lapply(selected_igts, function(igt) {
 }))
 rownames(igt_mean_mat_act) <- selected_igts
 
-# The top-10 must be ranked on THIS matrix (the 18 IGTs with >= 500
-# spleen-standard cells, i.e. the 18 columns actually drawn), not on S1C's
-# `gp_igt_var`, which is computed over all 35 spleen IGTs. The two rankings
-# disagree -- GP2 is 7th here but only 11th in S1C, and GP25 is 6th in S1C but
-# 23rd here -- so reusing `gp_igt_var` swaps GP2 for GP25 and stops matching
-# the published panel. Figure_batch.R recomputes it here; so do we.
-# (Note this means S1C's 10 labelled GPs are not exactly S1D's 10 rows: that
-# inconsistency is inherited from the original and is why GP2 carries no label
-# in S1C.)
-top10_var_gps <- names(sort(apply(igt_mean_mat_act, 2, var), decreasing = TRUE))[1:10]
+# Ranked on S1C's `gp_igt_var` (variance of per-IGT mean loading over all 35
+# spleen-standard IGTs) so that S1D's 10 rows ARE S1C's 10 labelled GPs.
+#
+# This is a deliberate departure from the published panel. Figure_batch.R
+# recomputed the variance here on the >= 500-cell subset only, so its S1D
+# ranked on 18 IGTs while its S1C labelled on 35 -- and the two disagreed:
+# GP2 is 7th on the subset but 11th overall, GP25 is 6th overall but 23rd on
+# the subset, so the published S1D shows GP2 while the published S1C labels
+# GP25. Readers cannot follow "the top ten from (C)" across that gap, so we
+# rank both panels the same way. The >= 500-cell restriction still applies to
+# the IGT *columns* drawn below, where it keeps noisy small-IGT means out of
+# the heatmap.
+top10_var_gps <- names(sort(gp_igt_var, decreasing = TRUE))[1:10]
 
 plot_mat <- t(igt_mean_mat_act[, top10_var_gps, drop = FALSE])
 plot_mat[plot_mat < 0] <- 0
