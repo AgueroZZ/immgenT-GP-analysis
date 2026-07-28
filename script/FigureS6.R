@@ -19,7 +19,8 @@
 #   protein_flash_selected_summary_lognorm_backfit200.rds
 #     [code/other/fit_citeseq_fixed_loading_ebmf_20260206.R]
 #   TableS4_citeseq_qc_20250513.csv             [external: manuscript's own Table S4]
-#   Thresholds_Selected_Proteins.csv            [code/pipeline/03_protein_thresholds.R]
+#   Thresholds_Selected_Proteins.csv            [curated input, hand-revised; NOT regenerated
+#     by code/pipeline/03_protein_thresholds.R -- see that script's header]
 #   CITEseq_markers_full.rds                    [code/pipeline/04_protein_projection.R, using the
 #     non-backfit200 protein summary -- see caveat above]
 

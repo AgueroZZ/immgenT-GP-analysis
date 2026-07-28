@@ -38,8 +38,9 @@ which already contains their cached outputs.
    Figure2/Figure4 and the Extended Data GP-AUC/summary tables; the broader
    non-thymocyte-only, no-healthy-filter family fed the retired Table S1 and is
    now unused -- see the "Data provenance" table below for why these differ).
-4. `03_protein_thresholds.R` — GMM + manual protein positivity thresholds
-   (feeds Figure6, FigureS6).
+4. `03_protein_thresholds.R` — GMM protein positivity thresholds, plus a
+   read-only sync check against the hand-curated manual thresholds in
+   `Thresholds_Selected_Proteins.csv` (feeds Figure6, FigureS6).
 5. `04_protein_projection.R` — projects CITE-seq protein data onto the
    fixed scRNA cell loadings using the shorter historical backfit, and derives
    `CITEseq_markers_full.rds`. The complete 20-to-200 checkpoint workflow is
@@ -106,7 +107,8 @@ across two directories.
 | `seurat_meta_20260206.rds` | `other/prepare_citeseq_protein_matrices_20260206.R` | Versioned metadata snapshot from the 20260206 ADT-only Seurat object; used for all CITE-seq cell selection. |
 | `protein_mat.rds` | `other/prepare_citeseq_protein_matrices_20260206.R` | Raw ADT counts (cells x proteins). Written as the documented input to normalization; no script reads it. |
 | `protein_mat_normalized_lognorm.rds` | `other/prepare_citeseq_protein_matrices_20260206.R` | **The ADT matrix every CITE-seq analysis uses.** Seurat LogNormalize with scale factor `round(mean(nCount_ADT)) = 3472` for the 20260206 object; the reconstructed matrix matches the cached file to floating-point precision. |
-| `Thresholds_Selected_Proteins.csv`, `GMM_Thresholds_Summary.csv` | `03_protein_thresholds.R` | Per-protein positivity thresholds. |
+| `GMM_Thresholds_Summary.csv` | `03_protein_thresholds.R` | Automatic per-protein positivity thresholds (upper edge of the negative component of a 2-component GMM). |
+| `Thresholds_Selected_Proteins.csv` | *(curated input, hand-revised)* | The manual positivity thresholds the gating actually uses (`Threshold_manual`), alongside the GMM value and a second reviewer's column (`Threshold_david`) with free-text notes. Originally written by the old `protein_thresholding_manual.R` from a hard-coded vector, then hand-revised: 5 proteins dropped and only 12 of 46 values kept. Treated as an input from `03_protein_thresholds.R` onward — that step now only checks it is still in sync with the GMM run and **must not regenerate it**. |
 | `TableS4_citeseq_qc_20250513.csv` | *(external)* | The manuscript's own Supplementary Table S4 (manually reviewed protein QC classifications) — not computationally derived. |
 | `CITEseq_markers_full.rds` | `04_protein_projection.R` | Per-GP positive/negative protein markers (\|score\| >= 0.5 on the same filtered/scaled protein factor matrix as Figure 6 panel b). Recovered from live (not commented-out) code in the original `Figure_CITEseq.R`; the marker-selection logic itself is verified byte-identical to the cached file when fed the same upstream input -- the only divergence is that this step uses the non-`backfit200` protein summary (see that row's caveat above). |
 | `protein_flash_selected_summary_lognorm.rds` | `04_protein_projection.R` | Re-estimated protein factor matrix U (Figure 6 panel a schematic). |

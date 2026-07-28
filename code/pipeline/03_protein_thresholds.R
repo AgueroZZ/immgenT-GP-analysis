@@ -1,24 +1,31 @@
 # Pipeline step 3: per-protein positivity thresholds for CITE-seq gating.
 #
 # 1. GMM-based threshold per protein (2-component Gaussian mixture on values
-#    > 0.5; threshold = upper bound of the "negative" component).
-# 2. Manually-reviewed override thresholds for a curated subset of proteins
-#    (used preferentially over the GMM threshold in the figure scripts).
-# Produces GMM_Thresholds_Summary.csv and Thresholds_Selected_Proteins.csv,
-# consumed by Figure6.R, FigureS6.R, and Protein_to_GP.R-derived analyses.
+#    > 0.5; threshold = upper bound of the "negative" component). Writes
+#    GMM_Thresholds_Summary.csv.
+# 2. Consistency check against the hand-curated override thresholds in
+#    Thresholds_Selected_Proteins.csv. That file is a curated INPUT, not an
+#    output of this step -- see below. Its Threshold_manual column is what
+#    R/citeseq_shared_setup.R gates on, and therefore what Figure 6,
+#    Figure S6, and Extended Data Table 7 use.
 #
 # The per-protein diagnostic histogram/scatter PNG galleries from the
 # original scripts (one file per protein, purely for visual QC) are dropped
 # here -- they aren't required to reproduce any figure panel.
 #
 # Source: merged from script/Protein_Binarization.R (GMM thresholding) and
-# script/protein_thresholding_manual.R (manual overrides). The manual-override
-# script referenced `target_proteins` before it was ever assigned in that
-# script (it only worked because Protein_Binarization.R happened to leave
-# the same variable name in the global environment from a prior run in the
-# same session) -- fixed here by computing it once, before first use.
+# script/protein_thresholding_manual.R (manual overrides).
+#
+# WHY STEP 2 NO LONGER WRITES Thresholds_Selected_Proteins.csv: the original
+# protein_thresholding_manual.R generated that file from a hard-coded 46-entry
+# vector, and the file was then hand-revised -- a second reviewer's pass, kept
+# in the CSV's Threshold_david column with free-text notes, 5 proteins dropped
+# (BTLA.CD272, GR1-LY6G-LY6C1-LY6C2, LY108, SLAM.CD150, THY1.2), and
+# Threshold_manual updated to match. Only 12 of the 46 original entries survive
+# that revision, so re-running the old write would silently roll every protein
+# gate back to the superseded draft. The revised CSV is authoritative; this
+# step now only verifies it is still in sync with the GMM run above.
 
-library(dplyr)
 library(mclust)
 
 data_path <- "data/"
@@ -38,7 +45,6 @@ thymocyte_cells <- seurat_meta_filtered$cellID[seurat_meta_filtered$annotation_l
 protein_mat_normalized_lognorm <- protein_mat_normalized_lognorm[!rownames(protein_mat_normalized_lognorm) %in% thymocyte_cells, ]
 
 all_proteins <- colnames(protein_mat_normalized_lognorm)
-target_proteins <- setdiff(all_proteins, "CD62L")
 
 # ============================================================
 # 1. GMM-based threshold per protein
@@ -63,24 +69,35 @@ write.csv(threshold_results, paste0(data_path, "GMM_Thresholds_Summary.csv"), ro
 message("GMM Thresholding complete.")
 
 # ============================================================
-# 2. Manual overrides for a curated subset of proteins
+# 2. Consistency check against the curated manual thresholds
+#
+# Read-only. Thresholds_Selected_Proteins.csv is hand-curated and must not be
+# regenerated here (see the header note). What we can check is that its
+# Threshold column -- which was populated from an earlier run of the GMM above
+# -- still matches the GMM thresholds just computed. A mismatch means the
+# curated file predates a change in the protein matrix or the GMM step, and
+# that the manual values were reviewed against different histograms than the
+# ones this run would produce.
 # ============================================================
-threshold_results_subset <- threshold_results[threshold_results$Protein %in% target_proteins, ]
-rownames(threshold_results_subset) <- seq_len(nrow(threshold_results_subset))
+curated_path <- paste0(data_path, "Thresholds_Selected_Proteins.csv")
+curated <- read.csv(curated_path, header = TRUE, stringsAsFactors = FALSE)
 
-threshold_results_subset_manual <- c(
-  "B220" = 2.75, "BTLA.CD272" = 3.25, "CD2" = 5.75, "CD4" = 3.85, "CD5" = 3.3,
-  "CD11A" = 5, "CD24" = 4, "CD27" = 4, "CD29" = 3.5, "CD31" = 4.5, "CD38" = 4,
-  "CD39" = 3, "CD44" = 5, "CD49B" = 3, "CD103" = 3.35, "CD155.PVR" = 3.25,
-  "CD160" = 3, "CD55.DAF" = 4.25, "CD73.5NTD" = 5, "CD80" = 3, "CD86" = 4,
-  "CD8A" = 3.95, "CD8B" = 4, "FR4" = 5, "GITR.CD357" = 3,
-  "GR1-LY6G-LY6C1-LY6C2" = 2.5, "ICAM1" = 3, "ICOS.CD278" = 3,
-  "IL7RA.CD127" = 4, "ITA4.CD49D" = 3.95, "ITAM.CD11B" = 2.25,
-  "ITAX.CD11C" = 2, "KLRG1" = 2.85, "LY49A" = 3, "LY108" = 3, "CD45RB" = 7,
-  "NEUROPILIN1.CD304" = 3, "SCA1" = 5, "SLAM.CD150" = 3.75, "TCRGD" = 3.1,
-  "TCRVG2" = 2.3, "TCRVG3" = 3.25, "THY1.2" = 7, "IL2RA.CD25" = 2.15,
-  "ITB7" = 5, "CD69" = 4
-)
-threshold_results_subset$Threshold_manual <- threshold_results_subset_manual[match(threshold_results_subset$Protein, names(threshold_results_subset_manual))]
+message(sprintf(
+  "Curated manual thresholds: %d proteins in %s (column Threshold_manual).",
+  sum(!is.na(curated$Threshold_manual)), basename(curated_path)
+))
 
-write.csv(threshold_results_subset, paste0(data_path, "Thresholds_Selected_Proteins.csv"), row.names = FALSE)
+gmm_now <- threshold_results$Threshold[match(curated$Protein, threshold_results$Protein)]
+drift <- abs(gmm_now - curated$Threshold) > 1e-6 | is.na(gmm_now)
+if (any(drift)) {
+  warning(sprintf(
+    paste0(
+      "%s is out of sync with this GMM run for %d protein(s): %s.\n",
+      "  The curated manual thresholds were set against the older GMM values. ",
+      "Re-review them before trusting the gates; do NOT overwrite the file."
+    ),
+    basename(curated_path), sum(drift), paste(curated$Protein[drift], collapse = ", ")
+  ))
+} else {
+  message("Curated file is in sync with this GMM run; manual thresholds unchanged.")
+}
