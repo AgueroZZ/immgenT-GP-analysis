@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeaeb91c8e3c61531ceef9cd7c52010b045b0c1fcdtargetblankaeb91c8a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree5248bd6cdff5cbe920721f099dc07ac7ef9afa11targetblank5248bd6a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/aeb91c8e3c61531ceef9cd7c52010b045b0c1fcd" target="_blank">aeb91c8</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/5248bd6cdff5cbe920721f099dc07ac7ef9afa11" target="_blank">5248bd6</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeaeb91c8e3c61531ceef9cd7c52010b045b0c1fcdtargetblankaeb91c8a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree5248bd6cdff5cbe920721f099dc07ac7ef9afa11targetblank5248bd6a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/aeb91c8e3c61531ceef9cd7c52010b045b0c1fcd" target="_blank">aeb91c8</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/5248bd6cdff5cbe920721f099dc07ac7ef9afa11" target="_blank">5248bd6</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -628,6 +628,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/f7817540b57f2c288830712ad10c03ddad7b8254/docs/FigureS6.html" target="_blank">f781754</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-28
+</td>
+<td>
+Build site: FigureS6 caption on omitted unthresholded markers
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1061,17 +1078,38 @@ for (page_idx in seq_len(n_pages_sorted)) {
   })
   combined &lt;- wrap_plots(rows_list, ncol = 1)
 
-  # cairo_pdf() does not reliably truncate/overwrite an existing file of a
-  # different size in place -- remove any stale output first.
+  # Render to a scratch file, then move it into place -- do not point cairo_pdf
+  # at the published path. Writing in place was observed to fail *silently*:
+  # unlink() removed the old PDF (externally verified gone), the device opened
+  # and closed without error, and the previous file then reappeared
+  # byte-identical with its original mtime. The run exited 0 with a complete log
+  # while the panels were never regenerated, which is exactly the failure mode
+  # that publishes a stale figure. Rendering elsewhere and copying is not
+  # affected, and the size check below turns any recurrence into a hard error.
   out_page &lt;- paste0(figure_path, sprintf(&quot;s6-%d.pdf&quot;, page_idx))
-  if (file.exists(out_page)) unlink(out_page)
+  tmp_page &lt;- tempfile(pattern = sprintf(&quot;s6-%d-&quot;, page_idx), fileext = &quot;.pdf&quot;)
 
   graphics.off()
-  cairo_pdf(out_page, width = 13, height = 18)
+  cairo_pdf(tmp_page, width = 13, height = 18)
   showtext::showtext_begin()
   print(combined)
   showtext::showtext_end()
   dev.off()
+
+  if (!file.exists(tmp_page) || file.size(tmp_page) == 0) {
+    stop(sprintf(&quot;cairo_pdf produced no output for %s&quot;, basename(out_page)))
+  }
+  rendered &lt;- file.size(tmp_page)
+  if (!file.copy(tmp_page, out_page, overwrite = TRUE) ||
+      !file.exists(out_page) || file.size(out_page) != rendered) {
+    stop(sprintf(
+      &quot;rendered %s (%d bytes) but could not install it at %s (on disk: %s bytes)&quot;,
+      basename(tmp_page), rendered, out_page,
+      if (file.exists(out_page)) file.size(out_page) else &quot;missing&quot;
+    ))
+  }
+  unlink(tmp_page)
+  message(sprintf(&quot;wrote %s (%.2f MB)&quot;, out_page, rendered / 1e6))
 }</code></pre>
 <p><img src="assets/FigureS6/s6-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <p>
