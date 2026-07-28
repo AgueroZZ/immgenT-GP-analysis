@@ -89,15 +89,36 @@ for (page_idx in seq_len(n_pages_sorted)) {
   })
   combined <- wrap_plots(rows_list, ncol = 1)
 
-  # cairo_pdf() does not reliably truncate/overwrite an existing file of a
-  # different size in place -- remove any stale output first.
+  # Render to a scratch file, then move it into place -- do not point cairo_pdf
+  # at the published path. Writing in place was observed to fail *silently*:
+  # unlink() removed the old PDF (externally verified gone), the device opened
+  # and closed without error, and the previous file then reappeared
+  # byte-identical with its original mtime. The run exited 0 with a complete log
+  # while the panels were never regenerated, which is exactly the failure mode
+  # that publishes a stale figure. Rendering elsewhere and copying is not
+  # affected, and the size check below turns any recurrence into a hard error.
   out_page <- paste0(figure_path, sprintf("s6-%d.pdf", page_idx))
-  if (file.exists(out_page)) unlink(out_page)
+  tmp_page <- tempfile(pattern = sprintf("s6-%d-", page_idx), fileext = ".pdf")
 
   graphics.off()
-  cairo_pdf(out_page, width = 13, height = 18)
+  cairo_pdf(tmp_page, width = 13, height = 18)
   showtext::showtext_begin()
   print(combined)
   showtext::showtext_end()
   dev.off()
+
+  if (!file.exists(tmp_page) || file.size(tmp_page) == 0) {
+    stop(sprintf("cairo_pdf produced no output for %s", basename(out_page)))
+  }
+  rendered <- file.size(tmp_page)
+  if (!file.copy(tmp_page, out_page, overwrite = TRUE) ||
+      !file.exists(out_page) || file.size(out_page) != rendered) {
+    stop(sprintf(
+      "rendered %s (%d bytes) but could not install it at %s (on disk: %s bytes)",
+      basename(tmp_page), rendered, out_page,
+      if (file.exists(out_page)) file.size(out_page) else "missing"
+    ))
+  }
+  unlink(tmp_page)
+  message(sprintf("wrote %s (%.2f MB)", out_page, rendered / 1e6))
 }

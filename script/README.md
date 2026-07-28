@@ -99,6 +99,23 @@ Note if you script this in zsh: the page selector must be written
 `"${pdf}[0]"`, since `"$pdf[0]"` is parsed as an array subscript and fails with
 a confusing "no decode delegate" error.
 
+**A re-run can silently not write.** `FigureS6.R` was seen to exit 0, with a
+complete log, having regenerated nothing: `unlink()` removed the old
+`s6-1.pdf`/`s6-2.pdf` (confirmed gone by an external `stat`), the cairo device
+opened and closed without error, and the previous files then reappeared
+*byte-identical with their original mtime*. Narrowed to the combination of a
+memory-heavy session, `cairo_pdf()`, and a multi-megabyte write to the published
+path -- the same script rendering to a scratch directory overwrites happily,
+`ggsave()` over a tracked panel PDF is unaffected, and a small `cairo_pdf()`
+write to the same directory in the same session is unaffected. Cause is outside
+R; treat it as an environment hazard, not a script bug.
+
+Mitigation, now in `FigureS6.R`: render to `tempfile()`, `file.copy()` into
+place, then compare the installed file's size with what was rendered and `stop()`
+on mismatch. If a panel script ever appears to run cleanly without updating its
+output, check the output's **mtime** before trusting the run, and reach for this
+pattern.
+
 **Verifying published *numbers*, not just panels.** Where a table publishes a
 value that a figure also computes with, the two have to be checked against each
 other -- nothing in the build enforces it. `verify_thresholds.R` does this for
