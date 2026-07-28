@@ -120,7 +120,16 @@ plot_gated_gp_vs_protein <- function(
   is_protein_gated <- rep(TRUE, nrow(protein_mat))
   names(is_protein_gated) <- rownames(protein_mat)
 
+  # Returns the markers that actually constrained the gate. A marker is dropped
+  # when it has no column in the protein matrix, or (under
+  # missing_threshold_action = "skip") no threshold in threshold_df. The panel
+  # subtitle below is built from what this returns, not from the requested
+  # signature, so a title can never advertise a marker the gate didn't apply --
+  # e.g. THY1.2 is in GP3/GP35/GP107/GP159's curated signature but was
+  # deliberately left out of the manual thresholds, and used to be printed
+  # anyway.
   apply_gate <- function(marker_list, is_positive = TRUE) {
+    applied <- character(0)
     for (p in marker_list) {
       if (p %in% colnames(protein_mat)) {
         if (p %in% threshold_df$Protein) {
@@ -130,6 +139,7 @@ plot_gated_gp_vs_protein <- function(
           } else {
             is_protein_gated <<- is_protein_gated & (protein_mat[, p] <= thresh)
           }
+          applied <- c(applied, p)
         } else {
           if (missing_threshold_action == "skip") {
             message(sprintf("[%s] Warning: %s threshold missing. Skipping this marker.", gp_name, p))
@@ -141,14 +151,24 @@ plot_gated_gp_vs_protein <- function(
             } else {
               is_protein_gated <<- is_protein_gated & (protein_mat[, p] <= thresh)
             }
+            applied <- c(applied, p)
           }
         }
+      } else {
+        message(sprintf("[%s] Warning: %s not in the protein matrix. Skipping this marker.", gp_name, p))
       }
     }
+    applied
   }
-  apply_gate(pos_markers, is_positive = TRUE)
-  apply_gate(neg_markers, is_positive = FALSE)
+  pos_gated <- apply_gate(pos_markers, is_positive = TRUE)
+  neg_gated <- apply_gate(neg_markers, is_positive = FALSE)
   n_prot <- sum(is_protein_gated)
+
+  dropped <- c(setdiff(pos_markers, pos_gated), setdiff(neg_markers, neg_gated))
+  if (length(dropped)) {
+    message(sprintf("[%s] Not gated on, omitted from the panel title: %s",
+                    gp_name, paste(dropped, collapse = ", ")))
+  }
 
   loadings <- loading_mat[, gp_name]
   if (is.null(loading_q)) {
@@ -171,8 +191,8 @@ plot_gated_gp_vs_protein <- function(
 
   common_cells <- intersect(rownames(loading_mat), rownames(mde_emb))
   emb_subset <- mde_emb[common_cells, ]
-  pos_subtitle <- if (length(pos_markers) > 0) paste0(paste(pos_markers, collapse = "+ "), "+") else "None+"
-  neg_subtitle <- if (length(neg_markers) > 0) paste0(paste(neg_markers, collapse = "- "), "-") else "None-"
+  pos_subtitle <- if (length(pos_gated) > 0) paste0(paste(pos_gated, collapse = "+ "), "+") else "None+"
+  neg_subtitle <- if (length(neg_gated) > 0) paste0(paste(neg_gated, collapse = "- "), "-") else "None-"
 
   render_plot <- function(highlight_vec, title_text, cell_count) {
     if (cell_count < min_cells) {
