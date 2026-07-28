@@ -37,6 +37,11 @@ output/Figure2/
 # this is listed rather than just left alone.
 reorder/
 
+# Manuscript caption drafts (.docx), kept locally alongside the repo. Same
+# reason as reorder/ above: an untracked directory leaks into the workflowr
+# status report embedded in every built page.
+captions/
+
 # Collaborator's original cluster-side flashier fitting code, kept locally as
 # the source for the Methods_FlashierFit page. The fit itself is distributed
 # as flashier_snmf.rds rather than as code -- see code/README.md.

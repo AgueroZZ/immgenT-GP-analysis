@@ -83,5 +83,5 @@ knitr::include_graphics(c("assets/Figure6/6i.png", "assets/Figure6/6j.png", "ass
 ```
 
 ::: {.figcaption}
-**Fig. 6i-k.** GPs associated with CD69. The ten GPs most associated with CD69 are ordered by the Spearman correlation between CD69 protein expression and GP loading. (i) Heatmap of the top five gene scores per GP (green-white-purple), with a left strip giving each GP's CD69 correlation (blue-white-red). (j) Mean loading of these GPs per tissue and (k) per lineage.
+**Fig. 6i-k.** GPs associated with CD69. Ten GPs selected from among those most strongly correlated -- positively or negatively -- with CD69 protein expression, ordered by the Spearman correlation between CD69 protein expression and GP loading. (i) Heatmap of the top five gene scores per GP (green-white-purple), with a left strip giving each GP's CD69 correlation (blue-white-red). (j) Mean loading of these GPs per tissue and (k) per lineage.
 :::

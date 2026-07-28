@@ -132,10 +132,26 @@ non-zero on any mismatch; both the pass and fail paths are tested.
 Rscript script/verify_thresholds.R
 ```
 
+`verify_cd69_gp_ranking.R` does the same for a *claim* rather than a value: the
+Fig. 6i-k GP subset (`cd69_top_gps_subset`) is hand-picked, so the caption's
+description of it and the correlation ranks quoted beside it are both unenforced.
+The script sources the real setup, recomputes the CD69 Spearman correlation over
+all 200 GPs on the figure's own cells, and checks that the curated 10 really are
+among the most strongly correlated (all within the top 20 by |rho|), that they
+are *not* a true top-10 under either ranking, that both signs are still
+represented, that Figure6.R's comment quotes the current ranks, and that neither
+file has drifted back to the old "the ten GPs most associated with CD69"
+wording.
+
+```
+Rscript script/verify_cd69_gp_ranking.R
+```
+
 **Current state.** Every script was re-run and every panel pixel-compared
 against its published counterpart. All panels reproduce the published figure
 except where listed below. Nothing is left unexplained. `verify_thresholds.R`
 passes: all 42 published thresholds are identical to the gated ones.
+`verify_cd69_gp_ranking.R` passes.
 
 ### Deliberate deviations from the published panels
 

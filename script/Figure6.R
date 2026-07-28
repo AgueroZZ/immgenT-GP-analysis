@@ -13,8 +13,9 @@
 #   6c-6f  Protein-gate vs. GP-loading comparison on the MDE embedding, for
 #       the 4 curated GPs GP171/GP23/GP12/GP80.
 #   6g,6h  KLRG1 modulation: CD8 vs CD4 (g) and CD8 vs Treg (h).
-#   6i  Heatmap of top-5 gene scores per GP for the 10 GPs most associated
-#       with CD69, with a CD69-correlation strip.
+#   6i  Heatmap of top-5 gene scores per GP for 10 curated GPs drawn from
+#       among those most strongly correlated (either sign) with CD69, with a
+#       CD69-correlation strip.
 #   6j,6k  Mean loading of those 10 GPs per tissue (j) and per lineage (k).
 #
 # Source: ported from Figure_CITEseq.R (panels b, g, h, i, j, k) and
@@ -244,12 +245,21 @@ p_6h <- plot_target_gps(
 ggsave(paste0(figure_path, "6h.pdf"), p_6h, width = 7, height = 6)
 
 # ============================================================
-# 6i/6j/6k: the 10 GPs most associated with CD69
+# 6i/6j/6k: 10 curated GPs from among those most associated with CD69
 # ============================================================
 D_scale6 <- diag(1 / apply(F_pm_filtered, 2, function(x) max(abs(x), na.rm = TRUE)))
 F_pm_filtered_scaled <- F_pm_filtered %*% D_scale6
 colnames(F_pm_filtered_scaled) <- paste0("GP", 1:ncol(F_pm_filtered_scaled))
 
+# Curated list -- NOT a top-10 computed from the correlations below. These 10
+# are drawn from among the most strongly CD69-correlated GPs, but are not the
+# top 10 under any single ranking: 8 are positively correlated (ranks 1, 3, 4,
+# 5, 6, 10, 12, 14 of 200) and GP58/GP171 are the two most *negatively*
+# correlated GPs of all 200. By |rho| they sit at ranks 1, 2, 4, 5, 6, 8, 12,
+# 14, 17, 18, skipping GP1/GP47/GP100/GP25. Treat as a hand-picked input like
+# Thresholds_Selected_Proteins.csv and well_aligned_gps -- don't "fix" it into
+# a computed ranking, and keep the caption's "from among the most associated"
+# wording in sync (analysis/Figure6.Rmd, Fig. 6i-k).
 cd69_top_gps_subset <- c("GP35", "GP6", "GP170", "GP26", "GP58", "GP171", "GP63", "GP62", "GP3", "GP29")
 shared_cells_cd69 <- intersect(rownames(L_pm_filtered), rownames(protein_mat_normalized_lognorm))
 cd69_expr_vec <- protein_mat_normalized_lognorm[shared_cells_cd69, "CD69"]
