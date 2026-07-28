@@ -74,7 +74,7 @@ flat CSV -- see the row below.
 | 4 GP AUC cluster | `ExtendedDataTable4_GP_AUC_cluster.R` | `runAUC.R` (healthy AUC, via `02_compute_auc.R`) |
 | 5 GP during activation | `ExtendedDataTable5_GP_during_activation.R` | `Figure_Activation.R` (`GP_activation_summary`) |
 | 6 Protein factor matrix | `ExtendedDataTable6_protein_factor_matrix.R` | `Figure_CITEseq.R` (`Protein_F_pm`) |
-| 7 Protein gating | `ExtendedDataTable7_protein_gating.R` | `Figure_CITEseq.R` (`compute_alignment_scores`) |
+| 7 Manual protein positivity thresholds | `ExtendedDataTable7_protein_thresholds.R` | `protein_thresholding_manual.R` (`Threshold_manual`, via `03_protein_thresholds.R`) |
 | 8 Comprehensive gene signature matrix (long, default) | `ExtendedDataTable8_gene_signature_matrix_long.R` | new (full list behind Table 1's Top Genes +/-, capped at 100 per direction) |
 | 8 Comprehensive gene signature matrix (wide) | `ExtendedDataTable8_gene_signature_matrix_wide.R` | same data as the long version, per-GP-column .xlsx layout |
 

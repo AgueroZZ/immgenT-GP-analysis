@@ -1,5 +1,5 @@
 ---
-title: "Extended Data Table 7: protein gating"
+title: "Extended Data Table 7: manual protein positivity thresholds"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -7,49 +7,46 @@ editor_options:
 ---
 
 Produced by
-[`script/ExtendedDataTable7_protein_gating.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/ExtendedDataTable7_protein_gating.R):
+[`script/ExtendedDataTable7_protein_thresholds.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/ExtendedDataTable7_protein_thresholds.R):
 
-```{r edt7-code, code=readLines("../script/ExtendedDataTable7_protein_gating.R"), eval=FALSE}
+```{r edt7-code, code=readLines("../script/ExtendedDataTable7_protein_thresholds.R"), eval=FALSE}
 ```
 
 ## Table {#edt7}
 
-All 200 rows are browsable below (default order: well-aligned GPs first): sort
-by clicking a column header, type a GP name into the search box under the
-**GP** column, or use the other per-column boxes to filter (e.g. a protein
-name in **Positive markers**, or a proportion range). Download the raw CSV at
-[`figures/final-selected/ExtendedDataTable7_protein_gating.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/final-selected/ExtendedDataTable7_protein_gating.csv).
+All 42 rows are browsable below (default order: alphabetical by protein): sort
+by clicking a column header, type a protein name into the search box under the
+**Protein** column, or filter on a value range under **Manual threshold**.
+Download the raw CSV at
+[`figures/final-selected/ExtendedDataTable7_protein_thresholds.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/final-selected/ExtendedDataTable7_protein_thresholds.csv).
 
 ```{r edt7-preview, echo=FALSE, message=FALSE}
 suppressPackageStartupMessages(library(DT))
-tab <- read.csv("../figures/final-selected/ExtendedDataTable7_protein_gating.csv",
+tab <- read.csv("../figures/final-selected/ExtendedDataTable7_protein_thresholds.csv",
                 check.names = FALSE, stringsAsFactors = FALSE)
 DT::datatable(
   tab,
   rownames = FALSE,
   filter = "top",
   options = list(
-    pageLength = 10,
-    lengthMenu = list(c(10, 25, 50, 100, -1), c("10", "25", "50", "100", "All")),
+    pageLength = 15,
+    lengthMenu = list(c(15, 25, 50, -1), c("15", "25", "50", "All")),
     scrollX = TRUE
   )
-) |> DT::formatRound(
-  columns = c(
-    "Prop. positive among gated (True Discovery Proportion)",
-    "Prop. positive among all cells"
-  ),
-  digits = 3
-)
+) |> DT::formatRound(columns = "Manual threshold", digits = 2)
 ```
 
 ::: {.figcaption}
-**Extended Data Table 7.** One row per GP: its curated positive / negative protein
-marker signature, and how well a protein gate built from that signature recovers
-cells with high GP loading. For each GP, cells are gated by its markers (positive
-markers above their threshold, negative at/below); we report the proportion of
-gated cells positive for the GP (loading > 0.1; the True Discovery Proportion)
-versus that proportion among all cells, and a **Well aligned** flag. The flag is
-the formula-positive set (TDP >= 0.25 and greater than the all-cell proportion)
-hand-trimmed to those whose protein and loading gates also agree visually on the
-MDE embedding -- reproducing the published table's curated 25-GP set.
+**Extended Data Table 7.** The surface proteins carrying a manually reviewed
+positivity threshold, and the hand-set value used to call a cell positive. Values
+are on the log-normalized ADT scale (Seurat `LogNormalize`, `scale.factor` =
+3472); a cell is protein-positive when its value is strictly above the threshold
+and protein-negative when it is at or below. Thresholds were set by eye from each
+protein's ADT distribution, starting from the automatic 2-component
+Gaussian-mixture cutoff of pipeline step 3
+([`code/pipeline/03_protein_thresholds.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/code/pipeline/03_protein_thresholds.R))
+and rounding to the reviewed value listed here. These are the thresholds used by
+every protein gate in Figure 6 and Figure S6. Proteins outside this list have no
+manual threshold and are skipped when they appear in a GP marker signature
+(BTLA.CD272, GR1-LY6G-LY6C1-LY6C2, LY108, SLAM.CD150, THY1.2).
 :::

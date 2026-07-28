@@ -59,7 +59,7 @@ anywhere in the analysis.
 Its readers are `pipeline/03_protein_thresholds.R`,
 `pipeline/04_protein_projection.R`,
 `other/fit_citeseq_fixed_loading_ebmf_20260206.R`, `R/citeseq_shared_setup.R`
-(which in turn feeds Figure 6, Figure S6, and Extended Data Table 7), and
+(which in turn feeds Figure 6 and Figure S6), and
 `script/Figure1.R`, `script/Figure2.R`, `script/FigureS2.R`.
 
 Note for anyone reading older revisions: `01_extract_data.R` and
