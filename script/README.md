@@ -99,9 +99,26 @@ Note if you script this in zsh: the page selector must be written
 `"${pdf}[0]"`, since `"$pdf[0]"` is parsed as an array subscript and fails with
 a confusing "no decode delegate" error.
 
+**Verifying published *numbers*, not just panels.** Where a table publishes a
+value that a figure also computes with, the two have to be checked against each
+other -- nothing in the build enforces it. `verify_thresholds.R` does this for
+the protein positivity thresholds: it sources the real
+`code/R/citeseq_shared_setup.R` (not a copy of its logic), takes the
+`threshold_df` that `Figure6.R:170` and `FigureS6.R:55` actually gate on, and
+diffs it against the values Extended Data Table 7 publishes -- protein set,
+every value, and whether each published threshold is even reachable through
+`select_proteins` and the ADT matrix. It also reports the reverse gap: markers
+that are gated on but have no threshold and so are silently skipped. Exits
+non-zero on any mismatch; both the pass and fail paths are tested.
+
+```
+Rscript script/verify_thresholds.R
+```
+
 **Current state.** Every script was re-run and every panel pixel-compared
 against its published counterpart. All panels reproduce the published figure
-except where listed below. Nothing is left unexplained.
+except where listed below. Nothing is left unexplained. `verify_thresholds.R`
+passes: all 42 published thresholds are identical to the gated ones.
 
 ### Deliberate deviations from the published panels
 
