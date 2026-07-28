@@ -1,5 +1,5 @@
 ---
-title: "Figure 1: Overview"
+title: "Figure 1: Overview of the 200 gene programs in immgenT"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -28,7 +28,7 @@ Panels C and D restrict to non-thymocyte cells:
 ```{r fig1-setup2, code=code_for("../script/Figure1.R", "doc:setup2"), eval=FALSE}
 ```
 
-## (A) Global MDE by lineage {#fig1a}
+## (A) All-T MDE by lineage {#fig1a}
 
 ```{r fig1a-code, code=code_for("../script/Figure1.R", "1A"), eval=FALSE}
 ```
@@ -38,12 +38,27 @@ knitr::include_graphics("assets/Figure1/1A.png")
 ```
 
 ::: {.figcaption}
-**Fig. 1A.** Global MDE embedding of all non-thymocyte cells, colored by major lineage (cells subsampled per lineage for visualization).
+**Fig. 1A.** Minimum distortion embedding (MDE) of all mature T cells profiled
+in immgenT (the "all-T MDE", i.e. all non-thymocyte cells), colored by T cell
+lineage: CD4, conventional CD4+ T cells; CD8, conventional CD8αβ+ T cells; Treg,
+CD4+ Foxp3+ regulatory T cells; CD8aa, CD8αα αβ T cells; gdT, γδ T cells; Tz,
+Zbtb16+ αβ T cells; DN, CD4-CD8αβ- αβ T cells; DP, CD4+CD8αβ+ αβ T cells. Cells
+are subsampled per lineage for visualization.
 :::
 
-## (B) Study design schematic {#fig1b}
+## (B) GP-representation schematic {#fig1b}
 
 This panel is a hand-drawn schematic, not generated from R -- there is no code or pre-rendered image to show here. See `figures/Previous/bits/Figure 1/1B.pdf` for the published panel.
+
+::: {.figcaption}
+**Fig. 1B.** Schematic of the gene-program (GP) representation of T cell
+gene-expression profiles. Each cell is represented by a combination of GP
+activities (loadings), and each GP captures coordinated up- or downregulation of
+a subset of genes. Gene programs were learned from gene expression by empirical
+Bayes matrix factorization (EBMF): X ≈ LFᵀ (cells × genes matrix ≈ cells × GPs
+matrix · GPs × genes matrix). See
+[Methods: fitting EBMF using flashier](Methods_FlashierFit.html).
+:::
 
 ## (C) Gene-program network {#fig1c}
 
@@ -55,11 +70,12 @@ knitr::include_graphics("assets/Figure1/1C.png")
 ```
 
 ::: {.figcaption}
-**Fig. 1C. Gene-program (GP) network.** A map of the 200 GPs and the signature
-genes they share. Each GP's loadings are first normalized within the GP (divided
-by that GP's maximum absolute loading, so loadings run 0–1), and every GP is
-connected to its **top 5 up-regulated signature genes** (largest positive
-normalized loadings, ≥ 0.1). **Grey balls are GPs** and **tan balls are genes**;
+**Fig. 1C. Gene-program (GP) network.** A network summarizing the 200 GPs and the
+signature genes they share. Each GP's **gene scores** are first normalized within
+the GP (divided by that GP's maximum absolute gene score, so scores run 0–1), and
+every GP is joined to its **top five up-regulated signature genes** (largest
+positive normalized gene scores, ≥ 0.1). **Grey nodes are GPs** and
+**tan nodes are genes**;
 an edge joins a GP to each of its top signature genes, so a gene that appears
 among several GPs' top genes links those GPs, and a force-directed layout places
 programs with overlapping signatures near one another. A selected set of GPs is
@@ -81,8 +97,9 @@ knitr::include_graphics("assets/Figure1/1D.png")
 ```
 
 ::: {.figcaption}
-**Fig. 1D. GP loading heatmap.** Loadings of all 200 GPs (columns) across a
-stratified sample of cells (rows), ordered by lineage then organ; the left
+**Fig. 1D. GP activity heatmap.** Activity (loading) of all 200 GPs (columns)
+across T cells from different organs and lineages -- a stratified sample of cells
+(rows), ordered by lineage then organ; the left
 strips annotate each cell's **cell type** and **organ**, and GP columns are
 clustered by loading similarity. Loadings are clipped at the 99th percentile and
 run white → blue. Only the GPs highlighted in the (C) network are marked and

@@ -1,10 +1,12 @@
 ---
-title: "Figure S5: Comparison of EBMF and RQVI gene programs across level2 clusters"
+title: "Figure S5: EBMF versus matched-RQVI factor comparison across level-2 clusters"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
   chunk_output_type: console
 ---
+
+Published as **Extended Data Figure 5**.
 
 Figure S5 asks whether the fine-grained cluster-level patterns captured by the
 200 EBMF gene programs are recovered by an independent factorization. It compares
@@ -20,6 +22,9 @@ total-loading filter), restricted to non-thymocytes (`annotation_level1 !=
 and RQVI loadings are averaged within `annotation_level2` on these common cells,
 and each RQVI program is shown on the row of its matched EBMF program. EBMF
 factors F1–F200 correspond to gene programs GP1–GP200.
+
+The published caption calls the left-hand programs **EBMF factors** and the
+right-hand ones **RQVI programs**; on this page "program" is used for both.
 
 ## Figure S5 {#figs5}
 

@@ -1,5 +1,5 @@
 ---
-title: "Extended Data Table 7: manual protein positivity thresholds"
+title: "Extended Data Table 7: protein gating (manual protein positivity thresholds)"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:

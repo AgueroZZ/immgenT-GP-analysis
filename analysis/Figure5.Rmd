@@ -1,5 +1,5 @@
 ---
-title: "Figure 5: GPs and tissue"
+title: "Figure 5: GP expression in tissues is driven by T cell composition"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -45,7 +45,7 @@ knitr::include_graphics("assets/Figure5/5b.png")
 ```
 
 ::: {.figcaption}
-**Fig. 5b.** GP37+ rate by lineage in mammary gland versus the same lineage elsewhere. A cell is GP37+ if its GP37 loading exceeds the organ-specific optimal threshold from the AUC analysis. For each lineage, the solid bar is the fraction of mammary-gland cells of that lineage that are GP37+ and the faded bar is the fraction of the same lineage outside mammary gland; bars are colored by lineage and ordered by in-organ rate, and lineages with < 100 cells in mammary gland are dropped.
+**Fig. 5b.** Proportion of GP37-active cells in each lineage in the mammary gland (solid bars) compared with the same lineage in all other organs (faded bars). A cell is GP37-active (GP37+) if its GP37 loading exceeds the organ-specific optimal threshold from the AUC analysis. Bars are colored by lineage and ordered by in-organ rate; lineages with fewer than 100 mammary-gland cells are omitted.
 :::
 
 ## (c) Marker genes of the 7 organ-specific GPs {#fig5c}
@@ -71,7 +71,7 @@ knitr::include_graphics("assets/Figure5/5d.png")
 ```
 
 ::: {.figcaption}
-**Fig. 5d.** As in (a), but predictive performance is measured against clusters obtained from ImmgenT-cosmo (y-axis; clusters with < 100 cells dropped). All GPs are shown in grey; the seven organ-specific GPs (GP3, GP6, GP11, GP26, GP29, GP37, GP177) are highlighted in red and labeled with their best clusters, while a contrasting set of cluster-specific GPs (high cluster AUC, low organ AUC) is highlighted in blue; the dashed line marks equal performance.
+**Fig. 5d.** As in (a), but predictive performance is measured against level 2 clusters (`annotation_level2`, from ImmgenT-cosmo; y-axis, clusters with < 100 cells dropped). All GPs are shown in grey; the seven organ-specific GPs from (a) -- GP3, GP6, GP11, GP26, GP29, GP37, GP177 -- are highlighted in red and labeled with their best clusters, and a contrasting set of cluster-specific GPs (high cluster AUC, low organ AUC) in blue; the dashed line marks equal performance.
 :::
 
 ## (e) Organ, GP, and cluster alluvial diagram {#fig5e}
@@ -84,5 +84,5 @@ knitr::include_graphics("assets/Figure5/5e.png")
 ```
 
 ::: {.figcaption}
-**Fig. 5e.** Alluvial diagram of GP+ cells linking organ of origin, GP, and ImmgenT-cosmo cluster. For each of the seven organ-specific GPs, GP+ cells (loading above that GP's best-organ threshold) are subsampled to <=300 per GP and traced from their organ of origin through the GP to their cluster; flows are colored by GP (using each GP's best-predicted organ color), flows representing fewer than 5 cells are dropped, and a cell may appear under more than one GP. Axis width denotes the number of GP+ cells.
+**Fig. 5e.** Alluvial plot showing how tissue-specific GP activity is distributed across clusters. For each of the seven organ-specific GPs and each organ, GP-active cells (loading above that GP's best-organ threshold) are traced from their organ of origin through the GP to their level 2 cluster annotation. Flows are colored by GP (using each GP's best-predicted organ color), and width is proportional to the number of cells shown, after subsampling to <=300 cells per GP; flows representing fewer than 5 cells are dropped, and a cell may appear under more than one GP.
 :::

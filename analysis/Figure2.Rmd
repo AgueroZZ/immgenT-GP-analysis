@@ -1,5 +1,5 @@
 ---
-title: "Figure 2: Active cells and genes in gene programs"
+title: "Figure 2: Active genes and cells in gene programs"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -33,7 +33,11 @@ knitr::include_graphics("assets/Figure2/2A.png")
 ```
 
 ::: {.figcaption}
-**Fig. 2A.** "Signature volcano" plot for one example GP (GP1): each gene's normalized score (x-axis, max |score| = 1) versus its mean shifted-log expression (y-axis), with the top-scoring genes labeled.
+**Fig. 2A.** Gene scores for GP1, a baseline program capturing the pan-T cell
+transcriptional profile. Each point represents a gene. The x axis shows the GP1
+gene score, representing the magnitude and direction of gene regulation within
+the program and scaled to a maximum absolute value of 1; the y axis shows mean
+shifted-log expression across all T cells. The top-scoring genes are labeled.
 :::
 
 ## (B) Active-cell proportion per GP {#fig2b}
@@ -46,7 +50,7 @@ knitr::include_graphics("assets/Figure2/2B.png")
 ```
 
 ::: {.figcaption}
-**Fig. 2B.** Histogram of the proportion of cells with high loading (> 0.1) per GP, across all 200 GPs (x-axis on log scale).
+**Fig. 2B.** Histogram showing the fraction of cells in which each GP was highly active (loading greater than 0.1 in each cell), across all 200 GPs (x-axis on log scale).
 :::
 
 ## (C) Active-gene count per GP {#fig2c}
@@ -59,7 +63,7 @@ knitr::include_graphics("assets/Figure2/2C.png")
 ```
 
 ::: {.figcaption}
-**Fig. 2C.** Histogram of the number of highly-active genes (|score| > 0.25 of that GP's max) per GP (x-axis on log scale).
+**Fig. 2C.** Histogram showing the number of highly active genes per GP (genes with an absolute score greater than 0.25 in each GP, after per-GP scaling to max |score| = 1); x-axis on log scale.
 :::
 
 ## (D) Active-GP count by lineage {#fig2d}
@@ -72,7 +76,7 @@ knitr::include_graphics("assets/Figure2/2D.png")
 ```
 
 ::: {.figcaption}
-**Fig. 2D.** Boxplot of the number of active GPs (loading > 0.1) per cell, grouped by major lineage.
+**Fig. 2D.** Box plot showing the number of highly active GPs (loading > 0.1) per cell across T cell lineages.
 :::
 
 ## (E) Active-GP count, activated vs. resting {#fig2e}
@@ -85,7 +89,12 @@ knitr::include_graphics("assets/Figure2/2E.png")
 ```
 
 ::: {.figcaption}
-**Fig. 2E.** Boxplot of the number of active GPs per cell, comparing activated versus resting cells.
+**Fig. 2E.** Box plot showing the number of highly active GPs per cell in
+activated versus resting T cells. Unlike the other activated-vs-resting panels
+in this paper (Figure 4, Figure S3), this one is **not** restricted to CD4 and
+CD8: every lineage with an `annotation_level2_group` of `"activated"` or
+`"resting"` is included, Treg among them -- which is what the caption's
+"T cells" refers to.
 :::
 
 ## (F) CD44 vs. active-GP count {#fig2f}
@@ -98,5 +107,9 @@ knitr::include_graphics("assets/Figure2/2F.png")
 ```
 
 ::: {.figcaption}
-**Fig. 2F.** Scatter plot of CD44 surface-protein level (log-normalized) against the number of active GPs per cell.
+**Fig. 2F.** Scatterplot showing the number of highly active GPs per cell
+correlated with CD44 protein expression (CITE-seq; log-normalized ADT counts).
+The blue line indicates the least-squares fit; Pearson's *r* = 0.44. The
+correlation is computed over all cells with non-zero CD44 (the scatter itself is
+subsampled to 10,000 cells for rendering only).
 :::

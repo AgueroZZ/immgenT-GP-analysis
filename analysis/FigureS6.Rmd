@@ -1,5 +1,5 @@
 ---
-title: "Figure S6: GP loadings recover protein-gated populations across GPs"
+title: "Figure S6: Gallery of surface-protein gating strategies associated with GP activity"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -9,6 +9,8 @@ editor_options:
 ```{r doc-code, include=FALSE}
 source("../code/R/doc_code.R")
 ```
+
+Published as **Extended Data Figure 6**.
 
 Both pages are produced by
 [`script/FigureS6.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS6.R),
@@ -34,5 +36,13 @@ knitr::include_graphics(c("assets/FigureS6/s6-1.png", "assets/FigureS6/s6-2.png"
 ```
 
 ::: {.figcaption}
-**Fig. S6.** Extension of Figure 6c-f to all well-aligned GPs, shown as two gallery pages (s6-1 and s6-2). For each GP, cells are shown twice on the same MDE embedding: left, cells passing a protein gate built from the GP's curated marker signature (positive markers above, negative below), with the gate size reported as "Matched n"; right, an equally sized set of cells with the highest GP loading. Highlighted cells are colored by two-dimensional density and all other cells are grey; thymocytes, proliferating, and "miniverse" cells are excluded. Each panel is labeled with its GP and the markers the gate actually applied. A marker from the curated signature that has no manually reviewed positivity threshold ([Extended Data Table 7](ExtendedDataTable7.html)) cannot be gated on, and so is omitted from the label rather than listed: THY1.2 for GP3, GP35, GP107 and GP159, plus GR1-LY6G-LY6C1-LY6C2 for GP159.
+**Fig. S6.** Examples of gating strategies used to identify GP-active cells --
+Figure 6c-f extended to all well-aligned GPs, shown as two gallery pages (s6-1
+and s6-2). For each GP, all-T MDE plots highlight cells selected by the proposed
+strategy (left) and the corresponding GP-active cells (right): left, cells
+passing a protein gate built from the GP's curated marker signature (positive
+markers above, negative below), with the gate size reported as "Matched n";
+right, an equally sized set of cells with the highest GP activity. Color indicates
+cell density (two-dimensional); all other cells are grey. Thymocytes,
+proliferating, and "miniverse" cells are excluded. Each panel is labeled with its GP and the markers the gate actually applied. A marker from the curated signature that has no manually reviewed positivity threshold ([Extended Data Table 7](ExtendedDataTable7.html)) cannot be gated on, and so is omitted from the label rather than listed: THY1.2 for GP3, GP35, GP107 and GP159, plus GR1-LY6G-LY6C1-LY6C2 for GP159.
 :::

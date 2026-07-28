@@ -10,6 +10,8 @@ editor_options:
 source("../code/R/doc_code.R")
 ```
 
+Published as **Extended Data Figure 4**.
+
 Figure S4 is produced by
 [`script/FigureS4.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS4.R).
 Both panels show the final full row-centered matrices, with all 200 GPs and all
@@ -31,11 +33,12 @@ knitr::include_graphics("assets/FigureS4/S4a_centered_mean_loading.png")
 ```
 
 ::: {.figcaption}
-**Fig. S4a.** Row-centered mean GP loading across all 18
+**Fig. S4a.** Row-centered mean GP activity across the 18
 `organ_simplified` tissues for all 200 GPs. Each GP is assigned to the tissue
-with its largest raw mean loading; tissues are ordered by their number of
-dominant GPs, and GPs within each dominant-tissue block are ordered by
-decreasing dominance gap. The centered color scale is fixed at -0.2 to 0.2.
+with its largest raw mean activity; tissues are ordered by their number of
+assigned GPs, and GPs are grouped by assigned tissue -- within each block,
+ordered by decreasing dominance gap. The centered color scale is fixed at
+-0.2 to 0.2.
 :::
 
 ## (b) Level2 mean loading {#figs4b}
@@ -45,12 +48,13 @@ knitr::include_graphics("assets/FigureS4/S4b_centered_mean_loading.png")
 ```
 
 ::: {.figcaption}
-**Fig. S4b.** Row-centered mean GP loading across all 107
-`annotation_level2` clusters for all 200 GPs. Columns follow the Figure 1
-level1 sequence (`CD8`, `CD4`, `Treg`, `gdT`, `CD8aa`, `Tz`, `DN`, then `DP`)
-and are alphabetized within each level1 block. GPs are arranged into
-dominant-level2 blocks. The colored top strips show level1 and level2
-annotations, and the centered color scale is fixed at -0.2 to 0.2.
+**Fig. S4b.** Row-centered mean GP activity across the 107
+`annotation_level2` clusters for all 200 GPs. Columns follow the lineage order of
+[Figure 3](Figure3.html) -- the same level1 sequence as the Figure 1D heatmap
+(`CD8`, `CD4`, `Treg`, `gdT`, `CD8aa`, `Tz`, `DN`, then `DP`) -- and are
+alphabetized within each level1 block. GPs are arranged into dominant-level2
+blocks. The colored top strips annotate level1 and level2 identity, and the
+centered color scale is fixed at -0.2 to 0.2.
 :::
 
 ## Panel rendering

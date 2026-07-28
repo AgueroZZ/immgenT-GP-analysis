@@ -1,5 +1,5 @@
 ---
-title: "Figure 3: GPs and lineages"
+title: "Figure 3: T cell lineage-related GPs"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -32,7 +32,15 @@ knitr::include_graphics("assets/Figure3/3A.png")
 ```
 
 ::: {.figcaption}
-**Fig. 3A.** Swarm plot of per-GP predictive performance (one-vs-rest AUC, computed on healthy non-thymocyte cells) across the seven major lineages (CD8, CD4, Treg, gdT, CD8aa, Tz, DN). Only up-regulated GPs (mean loading >= the overall mean) are plotted as circles; triangles mark forced-highlight GPs (GP3, GP22, GP29) that are down-regulated in gdT, CD8aa, and DN; the dashed line marks AUC = 0.5, and the most predictive GP per lineage is labeled.
+**Fig. 3A.** Swarm plot showing the AUC of each GP for predicting major T cell
+lineage (one-vs-rest AUC, computed on healthy non-thymocyte cells) across the
+seven major lineages (CD8, CD4, Treg, gdT, CD8aa, Tz, DN). Only GPs
+up-regulated in a given lineage (mean loading >= the overall mean) are plotted
+for it as circles. The most predictive GP per lineage is labeled -- GP58 (CD8),
+GP74 (CD4), GP68 (Treg), GP3 (gdT), GP29 (CD8aa), GP30 (Tz) and GP22 (DN) -- as
+are GP3, GP29 and GP22 in each of gdT, CD8aa and DN; all three are shown in all
+three of those lineages, with triangles marking the ones that are
+down-regulated there. The dashed line marks AUC = 0.5.
 :::
 
 ## (B) Structure plot of lineage-defining GPs {#fig3b}
@@ -45,10 +53,16 @@ knitr::include_graphics("assets/Figure3/3B.png")
 ```
 
 ::: {.figcaption}
-**Fig. 3B.** Structure plot of the membership (GP loading) of six lineage-defining GPs (GP58, GP68, GP30, GP3, GP29, GP22) across cells grouped by major lineages (CD8, CD4, Treg, gdT, CD8aa, Tz, DN); CD4 and CD8 cells are subsampled for visualization.
+**Fig. 3B.** Structure plot showing single-cell activity (membership / GP loading)
+of the lineage-related GPs identified in (A), grouped by lineage (CD8, CD4, Treg,
+gdT, CD8aa, Tz, DN); CD4 and CD8 cells are subsampled for visualization. Six of
+the seven most-predictive GPs from (A) are shown, one per lineage -- GP58 (CD8),
+GP68 (Treg), GP30 (Tz), GP3 (gdT), GP29 (CD8aa) and GP22 (DN). CD4's top GP in
+(A), GP74, is not included: no single GP marks conventional CD4 cells strongly
+(its AUC is only ~0.68, the lowest of the seven).
 :::
 
-## (C) GP68 loading on the global MDE {#fig3c}
+## (C) GP68 activity on the all-T MDE {#fig3c}
 
 ```{r fig3c-code, code=code_for("../script/Figure3.R", "3C/3E/3G"), eval=FALSE}
 ```
@@ -58,7 +72,7 @@ knitr::include_graphics("assets/Figure3/3C.png")
 ```
 
 ::: {.figcaption}
-**Fig. 3C.** GP68 loading projected onto the global MDE embedding; each point is a cell, colored by its loading for GP68.
+**Fig. 3C.** GP68 activity on the all-T MDE; each point is a cell, colored by its GP68 activity (loading).
 :::
 
 ## (D) GP68 signature volcano {#fig3d}
@@ -71,10 +85,10 @@ knitr::include_graphics("assets/Figure3/3D.png")
 ```
 
 ::: {.figcaption}
-**Fig. 3D.** Per-gene view of GP68: each gene's score in the GP (x-axis, scaled so the maximum |score| = 1) versus its mean shifted-log expression (y-axis); top genes are labeled.
+**Fig. 3D.** Gene scores for GP68. The x axis shows the GP68 gene score, scaled as in Figure 2A (per-GP maximum |score| = 1), and the y axis shows mean shifted-log expression across all T cells; top genes are labeled.
 :::
 
-## (E) GP30 loading on the global MDE {#fig3e}
+## (E) GP30 activity on the all-T MDE {#fig3e}
 
 ```{r fig3e-code, code=code_for("../script/Figure3.R", "doc:3e"), eval=FALSE}
 ```
@@ -84,7 +98,7 @@ knitr::include_graphics("assets/Figure3/3E.png")
 ```
 
 ::: {.figcaption}
-**Fig. 3E.** GP30 loading projected onto the global MDE embedding; each point is a cell, colored by its loading for GP30.
+**Fig. 3E.** GP30 activity on the all-T MDE; each point is a cell, colored by its GP30 activity (loading).
 :::
 
 ## (F) GP30 signature volcano {#fig3f}
@@ -97,10 +111,10 @@ knitr::include_graphics("assets/Figure3/3F.png")
 ```
 
 ::: {.figcaption}
-**Fig. 3F.** Per-gene view of GP30: each gene's score in the GP (x-axis, scaled so the maximum |score| = 1) versus its mean shifted-log expression (y-axis); top genes are labeled.
+**Fig. 3F.** Gene scores for GP30. The x axis shows the GP30 gene score, scaled as in Figure 2A (per-GP maximum |score| = 1), and the y axis shows mean shifted-log expression across all T cells; top genes are labeled.
 :::
 
-## (G) GP58 loading on the global MDE {#fig3g}
+## (G) GP58 activity on the all-T MDE {#fig3g}
 
 ```{r fig3g-code, code=code_for("../script/Figure3.R", "doc:3g"), eval=FALSE}
 ```
@@ -110,7 +124,7 @@ knitr::include_graphics("assets/Figure3/3G.png")
 ```
 
 ::: {.figcaption}
-**Fig. 3G.** GP58 loading projected onto the global MDE embedding; each point is a cell, colored by its loading for GP58.
+**Fig. 3G.** GP58 activity on the all-T MDE; each point is a cell, colored by its GP58 activity (loading).
 :::
 
 ## (H) GP58 signature volcano {#fig3h}
@@ -123,7 +137,7 @@ knitr::include_graphics("assets/Figure3/3H.png")
 ```
 
 ::: {.figcaption}
-**Fig. 3H.** Per-gene view of GP58: each gene's score in the GP (x-axis, scaled so the maximum |score| = 1) versus its mean shifted-log expression (y-axis); top genes are labeled.
+**Fig. 3H.** Gene scores for GP58. The x axis shows the GP58 gene score, scaled as in Figure 2A (per-GP maximum |score| = 1), and the y axis shows mean shifted-log expression across all T cells; top genes are labeled.
 :::
 
 ## (I) gdT/CD8aa/DN MDE by lineage {#fig3i}
@@ -136,7 +150,9 @@ knitr::include_graphics("assets/Figure3/3I.png")
 ```
 
 ::: {.figcaption}
-**Fig. 3I.** MDE restricted to gdT, CD8aa, and DN cells (excluding proliferating and miniverse subsets), colored by lineage.
+**Fig. 3I.** All-T MDE subsetted to show only γδ T cells, CD8aa T cells and DN T
+cells (excluding proliferating and miniverse subsets), colored by lineage: γδ T
+in green, CD8aa in purple, and DN in blue.
 :::
 
 ## (J-L) GP3, GP29, GP22 loading on the gdT/CD8aa/DN MDE {#fig3jl}
@@ -149,7 +165,7 @@ knitr::include_graphics(c("assets/Figure3/3J.png", "assets/Figure3/3K.png", "ass
 ```
 
 ::: {.figcaption}
-**Fig. 3J-L.** GP loading on the same gdT/CD8aa/DN MDE for GP3 (J), GP29 (K), and GP22 (L) -- the same GP order as the columns of (M).
+**Fig. 3J-L.** GP activity on the same gdT/CD8aa/DN MDE for GP3 (J), GP29 (K), and GP22 (L) -- the same GP order as the columns of (M).
 :::
 
 ## (M) Top-30 gene score heatmap for GP3/GP29/GP22 {#fig3m}

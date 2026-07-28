@@ -1,5 +1,5 @@
 ---
-title: "Extended Data Table 5: GP during activation"
+title: "Extended Data Table 5: GP activity during activation"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
