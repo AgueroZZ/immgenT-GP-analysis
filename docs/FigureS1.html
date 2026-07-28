@@ -12,7 +12,7 @@
 <meta name="author" content="Ziang Zhang" />
 
 
-<title>Figure S1: GP reproducibility across IGTs</title>
+<title>Figure S1: Reproducibility across IGTs and batch-effect evaluation</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -353,8 +353,8 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Figure S1: GP reproducibility across
-IGTs</h1>
+<h1 class="title toc-ignore">Figure S1: Reproducibility across IGTs and
+batch-effect evaluation</h1>
 <h4 class="author">Ziang Zhang</h4>
 
 </div>
@@ -384,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-27
+<strong>Last updated:</strong> 2026-07-28
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreed04f8b886b34fd59785f7924bef2a9b1bc599c18targetblankd04f8b8a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0f5b5da36f3b327ab40f0093ca637c474b94cb03targetblank0f5b5daa">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/d04f8b886b34fd59785f7924bef2a9b1bc599c18" target="_blank">d04f8b8</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0f5b5da36f3b327ab40f0093ca637c474b94cb03" target="_blank">0f5b5da</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreed04f8b886b34fd59785f7924bef2a9b1bc599c18targetblankd04f8b8a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0f5b5da36f3b327ab40f0093ca637c474b94cb03targetblank0f5b5daa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/d04f8b886b34fd59785f7924bef2a9b1bc599c18" target="_blank">d04f8b8</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0f5b5da36f3b327ab40f0093ca637c474b94cb03" target="_blank">0f5b5da</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -554,6 +554,7 @@ Ignored files:
     Ignored:    analysis/.DS_Store
     Ignored:    analysis/.Rhistory
     Ignored:    analysis/assets/.DS_Store
+    Ignored:    captions/
     Ignored:    code/.DS_Store
     Ignored:    code/other/topic_flashier_20250212.R
     Ignored:    code/other/topic_wrapper_20250215_alldata_backfit.sh
@@ -628,6 +629,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/0f5b5da36f3b327ab40f0093ca637c474b94cb03/analysis/FigureS1.Rmd" target="_blank">0f5b5da</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-28
+</td>
+<td>
+Align all figure captions with captions_20260728_final.docx
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/3fc3789564693606e9f83c3aafa73b7186e3907a/docs/FigureS1.html" target="_blank">3fc3789</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+<td>
+Republish all 24 pages
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1046,6 +1081,7 @@ Initial commit: immgenT-GP-analysis
 </div>
 </div>
 </div>
+<p>Published as <strong>Extended Data Figure 1</strong>.</p>
 <p>All panels are produced by <a
 href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS1.R"><code>script/FigureS1.R</code></a>.
 The code below is shown for reference (not re-executed on this page);
@@ -1232,15 +1268,15 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. S1A.</strong> GPs were tested for reproducibility in
-individual datasets (IGTs): for each IGT a dataset-specific EBMF
-factorization was computed and its factors were matched to the global
-GPs by Hungarian assignment on the cosine similarity of gene-score
-vectors (restricted to shared genes, with columns scaled), and a GP is
-counted as “validated” in an IGT when this cosine similarity reaches a
-given threshold. Adding IGTs one at a time in index order, the curves
-show the cumulative number of GPs (of 200) validated in at least one IGT
-included so far, for cosine thresholds of 0.2-0.8.</p>
+<p><strong>Fig. S1A.</strong> Cumulative number of GPs, out of the 200
+identified in the full immgenT solution, reproduced in at least one
+dataset (IGT). For each dataset an EBMF factorization was computed and
+its factors were matched to the 200 immgenT GPs by Hungarian assignment
+using the cosine similarity of gene-score vectors (restricted to shared
+genes, with columns scaled); a GP was considered reproduced in a dataset
+when this cosine similarity exceeded the threshold indicated for each
+curve. Adding IGTs one at a time in index order, the curves show the
+cumulative count for cosine-similarity thresholds of 0.2-0.8.</p>
 </div>
 </div>
 <div id="figs1b" class="section level2">
@@ -1359,9 +1395,11 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. S1B.</strong> Using the same per-IGT cosine matching,
-the number of GPs validated by at least X IGTs as a function of X (both
-axes log-scaled), for thresholds of 0.2-0.8.</p>
+<p><strong>Fig. S1B.</strong> Distribution of GP reproducibility across
+datasets. Using the same per-IGT cosine matching, the curves show the
+number of GPs reproduced in at least that many datasets, for
+cosine-similarity thresholds ranging from 0.2 to 0.8 (both axes
+log-scaled).</p>
 </div>
 </div>
 <div id="figs1c" class="section level2">
@@ -1519,14 +1557,16 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. S1C.</strong> Between-IGT variability of GP loadings,
-computed on a standard spleen subset used for this purpose and
-restricted to the IGTs contributing at least 500 such cells, so that no
-per-IGT mean rests on a handful of cells. Each GP’s mean loading is
-computed within every one of those IGTs; each point is a GP, plotting
-the mean across IGTs of these per-IGT mean loadings (x-axis) against
-their variance across IGTs (y-axis). The ten GPs with the highest
-between-IGT variance are labeled, and are the ten shown in (D).</p>
+<p><strong>Fig. S1C.</strong> Batch-effect evaluation using the spleen
+standards spiked into each dataset (IGT): variance versus mean GP
+loading across datasets, considering only spleen-standard cells, in the
+<strong>18 datasets</strong> contributing at least 500 such cells – so
+that no per-IGT mean rests on a handful of cells. Each GP’s mean loading
+is computed within every one of those 18 IGTs; each point is a GP,
+plotting the mean across IGTs of these per-IGT mean loadings (x-axis)
+against their variance across IGTs (y-axis). The ten GPs with the
+highest between-dataset variance are labeled, and are the ten shown in
+(D).</p>
 </div>
 </div>
 <div id="figs1d" class="section level2">
@@ -1659,11 +1699,11 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. S1D.</strong> Heatmap of the per-IGT mean loading for
-the ten GPs with the highest between-IGT variance in (C) – the same ten
-GPs labelled there, over the same IGTs, from the same matrix. Rows (GPs)
-are hierarchically clustered; color runs from white (low) to red (high
-mean loading).</p>
+<p><strong>Fig. S1D.</strong> Heatmap showing the mean loading of these
+same ten GPs across the same 18 datasets – the same ten GPs labelled in
+(C), over the same IGTs, from the same matrix. Rows (GPs) are
+hierarchically clustered; color runs from white (low) to red (high mean
+loading).</p>
 </div>
 </div>
 <div id="figs1e" class="section level2">
@@ -1793,8 +1833,8 @@ Ziang Zhang
 </div>
 <div class="figcaption">
 <p><strong>Fig. S1E.</strong> For each GP, the number of active genes
-(x-axis) versus the proportion of active cells (y-axis), using the same
-hard-threshold definitions as Figure 2: a gene is active in a GP if its
+(x-axis) versus the fraction of active cells (y-axis), using the same
+thresholds as Figure 2: a gene is active in a GP if its
 per-GP-normalized score exceeds 0.25 in absolute value, and a cell is
 active if its per-GP-normalized loading exceeds 0.1; computed over
 non-thymocyte cells. Both axes on log scale; each dot is one of the 200

@@ -12,7 +12,7 @@
 <meta name="author" content="Ziang Zhang" />
 
 
-<title>Figure 1: Overview</title>
+<title>Figure 1: Overview of the 200 gene programs in immgenT</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -353,7 +353,8 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Figure 1: Overview</h1>
+<h1 class="title toc-ignore">Figure 1: Overview of the 200 gene programs
+in immgenT</h1>
 <h4 class="author">Ziang Zhang</h4>
 
 </div>
@@ -383,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-27
+<strong>Last updated:</strong> 2026-07-28
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -515,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreed04f8b886b34fd59785f7924bef2a9b1bc599c18targetblankd04f8b8a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0f5b5da36f3b327ab40f0093ca637c474b94cb03targetblank0f5b5daa">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/d04f8b886b34fd59785f7924bef2a9b1bc599c18" target="_blank">d04f8b8</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0f5b5da36f3b327ab40f0093ca637c474b94cb03" target="_blank">0f5b5da</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreed04f8b886b34fd59785f7924bef2a9b1bc599c18targetblankd04f8b8a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0f5b5da36f3b327ab40f0093ca637c474b94cb03targetblank0f5b5daa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -533,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/d04f8b886b34fd59785f7924bef2a9b1bc599c18" target="_blank">d04f8b8</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0f5b5da36f3b327ab40f0093ca637c474b94cb03" target="_blank">0f5b5da</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -553,6 +554,7 @@ Ignored files:
     Ignored:    analysis/.DS_Store
     Ignored:    analysis/.Rhistory
     Ignored:    analysis/assets/.DS_Store
+    Ignored:    captions/
     Ignored:    code/.DS_Store
     Ignored:    code/other/topic_flashier_20250212.R
     Ignored:    code/other/topic_wrapper_20250215_alldata_backfit.sh
@@ -627,6 +629,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/0f5b5da36f3b327ab40f0093ca637c474b94cb03/analysis/Figure1.Rmd" target="_blank">0f5b5da</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-28
+</td>
+<td>
+Align all figure captions with captions_20260728_final.docx
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/3fc3789564693606e9f83c3aafa73b7186e3907a/docs/Figure1.html" target="_blank">3fc3789</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+<td>
+Republish all 24 pages
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1139,7 +1175,7 @@ seurat_meta_filtered &lt;- seurat_meta_filtered[non_thymo_cells, ]
 protein_mat_normalized_lognorm &lt;- protein_mat_normalized_lognorm[non_thymo_cells]</code></pre>
 </div>
 <div id="fig1a" class="section level2">
-<h2>(A) Global MDE by lineage</h2>
+<h2>(A) All-T MDE by lineage</h2>
 <pre class="r"><code># ============================================================
 # 1A: Global MDE colored by major lineage, subsampled per lineage
 # ============================================================
@@ -1265,17 +1301,31 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 1A.</strong> Global MDE embedding of all non-thymocyte
-cells, colored by major lineage (cells subsampled per lineage for
-visualization).</p>
+<p><strong>Fig. 1A.</strong> Minimum distortion embedding (MDE) of all
+mature T cells profiled in immgenT (the “all-T MDE”, i.e. all
+non-thymocyte cells), colored by T cell lineage: CD4, conventional CD4+
+T cells; CD8, conventional CD8αβ+ T cells; Treg, CD4+ Foxp3+ regulatory
+T cells; CD8aa, CD8αα αβ T cells; gdT, γδ T cells; Tz, Zbtb16+ αβ T
+cells; DN, CD4-CD8αβ- αβ T cells; DP, CD4+CD8αβ+ αβ T cells. Cells are
+subsampled per lineage for visualization.</p>
 </div>
 </div>
 <div id="fig1b" class="section level2">
-<h2>(B) Study design schematic</h2>
+<h2>(B) GP-representation schematic</h2>
 <p>This panel is a hand-drawn schematic, not generated from R – there is
 no code or pre-rendered image to show here. See
 <code>figures/Previous/bits/Figure 1/1B.pdf</code> for the published
 panel.</p>
+<div class="figcaption">
+<p><strong>Fig. 1B.</strong> Schematic of the gene-program (GP)
+representation of T cell gene-expression profiles. Each cell is
+represented by a combination of GP activities (loadings), and each GP
+captures coordinated up- or downregulation of a subset of genes. Gene
+programs were learned from gene expression by empirical Bayes matrix
+factorization (EBMF): X ≈ LFᵀ (cells × genes matrix ≈ cells × GPs matrix
+· GPs × genes matrix). See <a href="Methods_FlashierFit.html">Methods:
+fitting EBMF using flashier</a>.</p>
+</div>
 </div>
 <div id="fig1c" class="section level2">
 <h2>(C) Gene-program network</h2>
@@ -1476,24 +1526,24 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 1C. Gene-program (GP) network.</strong> A map of the 200
-GPs and the signature genes they share. Each GP’s loadings are first
-normalized within the GP (divided by that GP’s maximum absolute loading,
-so loadings run 0–1), and every GP is connected to its <strong>top 5
-up-regulated signature genes</strong> (largest positive normalized
-loadings, ≥ 0.1). <strong>Grey balls are GPs</strong> and <strong>tan
-balls are genes</strong>; an edge joins a GP to each of its top
-signature genes, so a gene that appears among several GPs’ top genes
-links those GPs, and a force-directed layout places programs with
-overlapping signatures near one another. A selected set of GPs is
-<strong>highlighted</strong>, each in its own color carried along its
-edges to its (labeled) top signature genes: GP68 (pink), GP58 (orange),
-GP35 (purple), GP171 (blue), GP1 (cyan), GP56 (red), GP161 (dark red),
-GP6 (light green), GP7 (green), GP196 (yellow). This shows each
-highlighted program’s signature and how programs that share genes sit
-together — e.g. the Treg program GP68 (<em>Foxp3, Il2ra, Izumo1r</em>)
-and the CD8 program GP58 (<em>Cd8a, Cd8b1</em>) occupy distinct
-neighborhoods.</p>
+<p><strong>Fig. 1C. Gene-program (GP) network.</strong> A network
+summarizing the 200 GPs and the signature genes they share. Each GP’s
+<strong>gene scores</strong> are first normalized within the GP (divided
+by that GP’s maximum absolute gene score, so scores run 0–1), and every
+GP is joined to its <strong>top five up-regulated signature
+genes</strong> (largest positive normalized gene scores, ≥ 0.1).
+<strong>Grey nodes are GPs</strong> and <strong>tan nodes are
+genes</strong>; an edge joins a GP to each of its top signature genes,
+so a gene that appears among several GPs’ top genes links those GPs, and
+a force-directed layout places programs with overlapping signatures near
+one another. A selected set of GPs is <strong>highlighted</strong>, each
+in its own color carried along its edges to its (labeled) top signature
+genes: GP68 (pink), GP58 (orange), GP35 (purple), GP171 (blue), GP1
+(cyan), GP56 (red), GP161 (dark red), GP6 (light green), GP7 (green),
+GP196 (yellow). This shows each highlighted program’s signature and how
+programs that share genes sit together — e.g. the Treg program GP68
+(<em>Foxp3, Il2ra, Izumo1r</em>) and the CD8 program GP58 (<em>Cd8a,
+Cd8b1</em>) occupy distinct neighborhoods.</p>
 </div>
 </div>
 <div id="fig1d" class="section level2">
@@ -1701,19 +1751,20 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 1D. GP loading heatmap.</strong> Loadings of all 200 GPs
-(columns) across a stratified sample of cells (rows), ordered by lineage
-then organ; the left strips annotate each cell’s <strong>cell
-type</strong> and <strong>organ</strong>, and GP columns are clustered
-by loading similarity. Loadings are clipped at the 99th percentile and
-run white → blue. Only the GPs highlighted in the (C) network are marked
-and labeled here (background GP column indices are omitted); each is
-shown in its matching color via a top color bar, a colored column label,
-and a box drawn around its <strong>column</strong>, so a program’s
-cross-cell loading pattern can be read alongside its position in the
-network. Colors: GP68 (pink), GP58 (orange), GP35 (purple), GP171
-(blue), GP1 (cyan), GP56 (red), GP161 (dark red), GP6 (light green), GP7
-(green), GP196 (yellow).</p>
+<p><strong>Fig. 1D. GP activity heatmap.</strong> Activity (loading) of
+all 200 GPs (columns) across T cells from different organs and lineages
+– a stratified sample of cells (rows), ordered by lineage then organ;
+the left strips annotate each cell’s <strong>cell type</strong> and
+<strong>organ</strong>, and GP columns are clustered by loading
+similarity. Loadings are clipped at the 99th percentile and run white →
+blue. Only the GPs highlighted in the (C) network are marked and labeled
+here (background GP column indices are omitted); each is shown in its
+matching color via a top color bar, a colored column label, and a box
+drawn around its <strong>column</strong>, so a program’s cross-cell
+loading pattern can be read alongside its position in the network.
+Colors: GP68 (pink), GP58 (orange), GP35 (purple), GP171 (blue), GP1
+(cyan), GP56 (red), GP161 (dark red), GP6 (light green), GP7 (green),
+GP196 (yellow).</p>
 </div>
 <br>
 <p>

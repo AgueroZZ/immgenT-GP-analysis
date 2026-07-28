@@ -12,7 +12,7 @@
 <meta name="author" content="Ziang Zhang" />
 
 
-<title>Figure S3: Characterizing activation GPs</title>
+<title>Figure S3: Characterizing activation-associated GPs</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -353,8 +353,8 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Figure S3: Characterizing activation
-GPs</h1>
+<h1 class="title toc-ignore">Figure S3: Characterizing
+activation-associated GPs</h1>
 <h4 class="author">Ziang Zhang</h4>
 
 </div>
@@ -384,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-27
+<strong>Last updated:</strong> 2026-07-28
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreed04f8b886b34fd59785f7924bef2a9b1bc599c18targetblankd04f8b8a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0f5b5da36f3b327ab40f0093ca637c474b94cb03targetblank0f5b5daa">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/d04f8b886b34fd59785f7924bef2a9b1bc599c18" target="_blank">d04f8b8</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0f5b5da36f3b327ab40f0093ca637c474b94cb03" target="_blank">0f5b5da</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreed04f8b886b34fd59785f7924bef2a9b1bc599c18targetblankd04f8b8a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0f5b5da36f3b327ab40f0093ca637c474b94cb03targetblank0f5b5daa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/d04f8b886b34fd59785f7924bef2a9b1bc599c18" target="_blank">d04f8b8</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0f5b5da36f3b327ab40f0093ca637c474b94cb03" target="_blank">0f5b5da</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -554,6 +554,7 @@ Ignored files:
     Ignored:    analysis/.DS_Store
     Ignored:    analysis/.Rhistory
     Ignored:    analysis/assets/.DS_Store
+    Ignored:    captions/
     Ignored:    code/.DS_Store
     Ignored:    code/other/topic_flashier_20250212.R
     Ignored:    code/other/topic_wrapper_20250215_alldata_backfit.sh
@@ -628,6 +629,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/0f5b5da36f3b327ab40f0093ca637c474b94cb03/analysis/FigureS3.Rmd" target="_blank">0f5b5da</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-28
+</td>
+<td>
+Align all figure captions with captions_20260728_final.docx
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/3fc3789564693606e9f83c3aafa73b7186e3907a/docs/FigureS3.html" target="_blank">3fc3789</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+<td>
+Republish all 24 pages
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -958,12 +993,15 @@ Initial commit: immgenT-GP-analysis
 </div>
 </div>
 </div>
-<p>All panels are produced by <a
+<p>Published as <strong>Extended Data Figure 3</strong>.</p>
+<p>Panels (s3c)-(s3h) are produced by <a
 href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS3.R"><code>script/FigureS3.R</code></a>,
 which shares its curated GP set with <a href="Figure4.html">Figure 4</a>
 via <code>code/R/activation_shared_setup.R</code>. The code below is
 shown for reference (not re-executed on this page); the images are its
 pre-rendered output.</p>
+<p>Panels (s3a) and (s3b) are <strong>not produced in this
+repository</strong> – see below.</p>
 <div id="setup" class="section level2">
 <h2>Setup</h2>
 <pre class="r"><code># Figure S3. Characterizing activation GPs.
@@ -1018,6 +1056,29 @@ seurat_meta_filtered &lt;- seurat_meta[rownames(L_pm_filtered), ]
 df_sig &lt;- read.csv(paste0(data_path, &quot;GSEA_signatures_select_toplot.csv&quot;), header = TRUE, sep = &quot;,&quot;)
 
 source(&quot;code/R/activation_shared_setup.R&quot;)</code></pre>
+</div>
+<div id="figs3ab" class="section level2">
+<h2>(s3a, s3b) Definition of resting and activated CD4/CD8 cells</h2>
+<p>These two panels are <strong>missing from this site</strong>: no code
+in <code>script/FigureS3.R</code> produces them, and there is no
+<code>s3a</code>/<code>s3b</code> asset under
+<code>analysis/assets/FigureS3/</code>,
+<code>figures/final-selected/Figure S3/</code>, or
+<code>figures/Previous/bits/</code>. The published captions describe
+them as follows.</p>
+<div class="figcaption">
+<p><strong>Fig. S3a.</strong> Definition of resting and activated CD4+
+and CD8+ T cells. Activated CD44+CD62L- (top) and resting CD62L+CD44-
+(bottom) cells are highlighted in each lineage-specific MDE.</p>
+<p><strong>Fig. S3b.</strong> Gated cells are shown in the adjacent
+CD62L versus CD44 protein-expression plot (CITE-seq; log-normalized ADT
+counts).</p>
+</div>
+<p>The <code>annotation_level2_group</code> “activated”/“resting” labels
+that every other panel on this page (and all of <a
+href="Figure4.html">Figure 4</a>) filters on are the labels these two
+panels define, so the gate itself is already in use here – only the two
+figures illustrating it are absent.</p>
 </div>
 <div id="figs3c" class="section level2">
 <h2>(s3c) GP26+ rate by organ</h2>
@@ -1162,9 +1223,9 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. S3c.</strong> Bar plot of the fraction of
-<strong>activated CD4/CD8 cells</strong> in each organ
-(<code>organ_simplified</code>) with GP26 loading above
+<p><strong>Fig. S3c.</strong> Bar plot showing the percentage of
+<strong>activated CD4+ and CD8+ T cells</strong> in each organ
+(<code>organ_simplified</code>) with GP26 activity above
 <strong>0.1</strong>, sorted from highest to lowest. Activated cells are
 those with <code>annotation_level2_group == "activated"</code> among the
 CD4 and CD8 lineages.</p>
@@ -1286,11 +1347,12 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. S3d.</strong> GSEA dot plot relating the activation GPs
-to curated immunologic signature gene sets. Each dot is a significant
-GP-gene-set association; color denotes -log10 adjusted p-value and size
-denotes the normalized enrichment score (NES). GP labels are colored by
-activation class.</p>
+<p><strong>Fig. S3d.</strong> Gene set enrichment analysis (GSEA) dot
+plot relating activation-associated GPs to curated immunologic signature
+gene sets. Each dot is a significant GP-gene-set association; color
+denotes -log10 adjusted <em>P</em> value and dot size denotes the
+normalized enrichment score (NES). GP labels are colored by activation
+class.</p>
 </div>
 </div>
 <div id="figs3e" class="section level2">
@@ -1443,11 +1505,12 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. S3e.</strong> Bar plot of the fraction of activated CD4
-cells with GP79 loading above 0.1, across condition categories
-(condition_detailed_simplified) that contain &gt;= 50 activated CD4
-cells, sorted from highest to lowest and colored by broad condition
-category.</p>
+<p><strong>Fig. S3e.</strong> Bar plot showing the percentage of
+GP79-active cells (GP79 activity above 0.1) among all activated CD4+ T
+cells across immunological challenges – condition categories
+(<code>condition_detailed_simplified</code>) that contain &gt;= 50
+activated CD4 cells, sorted from highest to lowest and colored by broad
+condition category.</p>
 </div>
 </div>
 <div id="figs3f" class="section level2">
@@ -1670,13 +1733,15 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. S3f.</strong> Heatmap of per-cell log2 fold-change in GP
-loading relative to the resting baseline of the same lineage (each
+<p><strong>Fig. S3f.</strong> Heatmap showing single-cell GP activity in
+activated CD4+ and CD8+ T cells: per-cell log2 fold change in GP
+activity relative to the resting baseline of the same lineage (each
 activated CD4 cell versus the CD4 resting mean; each activated CD8 cell
-versus the CD8 resting mean), capped at +-2. Rows are the activation GPs
-in semantic-group order; columns are individual activated cells grouped
-by sub-lineage (Level-2) within CD4 and CD8; color runs from purple
-(low) through black to gold (high).</p>
+versus the CD8 resting mean), capped at +-2. Rows are the
+activation-associated GPs in semantic-group order; columns are
+individual activated cells grouped by cluster (Level-2 sub-lineage)
+within CD4 and CD8; color runs from purple (low) through black to gold
+(high).</p>
 </div>
 </div>
 <div id="figs3g" class="section level2">
@@ -1813,10 +1878,10 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. S3g.</strong> Fraction of activated CD8 and CD4 cells
-with GP57 loading above 0.1, comparing cancer conditions against all
-other conditions combined; bar labels give the percentage and the
-underlying cell counts.</p>
+<p><strong>Fig. S3g.</strong> Bar plot showing the percentage of
+GP57-active cells (GP57 activity above 0.1) among activated CD8+ and
+CD4+ T cells in cancer versus all other conditions combined; bar labels
+give the percentage and the underlying cell counts.</p>
 </div>
 </div>
 <div id="figs3h" class="section level2">
@@ -1998,12 +2063,12 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. S3h.</strong> Bipartite transcription factor (TF)-GP
-network for the lineage-defining TFs Gata3, Rorc, and Tbx21. An edge
-connects a TF to a GP when the TF’s per-GP-normalized gene score has
-magnitude &gt;= 0.1; edge color denotes sign (red, positive; blue,
-negative), width scales with magnitude, and labels give the signed
-score.</p>
+<p><strong>Fig. S3h.</strong> GP network centered on the
+lineage-defining TFs Gata3, Rorc, and Tbx21. An edge connects a TF to a
+GP when the TF’s per-GP absolute gene score is &gt;= 0.1; edges are
+colored by the sign of the score (red, up-regulated; blue,
+down-regulated), edge width is proportional to the score, and labels
+give the signed score.</p>
 </div>
 <br>
 <p>

@@ -12,7 +12,7 @@
 <meta name="author" content="Ziang Zhang" />
 
 
-<title>Figure 2: Active cells and genes in gene programs</title>
+<title>Figure 2: Active genes and cells in gene programs</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -353,7 +353,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Figure 2: Active cells and genes in gene
+<h1 class="title toc-ignore">Figure 2: Active genes and cells in gene
 programs</h1>
 <h4 class="author">Ziang Zhang</h4>
 
@@ -384,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-27
+<strong>Last updated:</strong> 2026-07-28
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreed04f8b886b34fd59785f7924bef2a9b1bc599c18targetblankd04f8b8a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0f5b5da36f3b327ab40f0093ca637c474b94cb03targetblank0f5b5daa">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/d04f8b886b34fd59785f7924bef2a9b1bc599c18" target="_blank">d04f8b8</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0f5b5da36f3b327ab40f0093ca637c474b94cb03" target="_blank">0f5b5da</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreed04f8b886b34fd59785f7924bef2a9b1bc599c18targetblankd04f8b8a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0f5b5da36f3b327ab40f0093ca637c474b94cb03targetblank0f5b5daa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/d04f8b886b34fd59785f7924bef2a9b1bc599c18" target="_blank">d04f8b8</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0f5b5da36f3b327ab40f0093ca637c474b94cb03" target="_blank">0f5b5da</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -554,6 +554,7 @@ Ignored files:
     Ignored:    analysis/.DS_Store
     Ignored:    analysis/.Rhistory
     Ignored:    analysis/assets/.DS_Store
+    Ignored:    captions/
     Ignored:    code/.DS_Store
     Ignored:    code/other/topic_flashier_20250212.R
     Ignored:    code/other/topic_wrapper_20250215_alldata_backfit.sh
@@ -628,6 +629,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/0f5b5da36f3b327ab40f0093ca637c474b94cb03/analysis/Figure2.Rmd" target="_blank">0f5b5da</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-28
+</td>
+<td>
+Align all figure captions with captions_20260728_final.docx
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/3fc3789564693606e9f83c3aafa73b7186e3907a/docs/Figure2.html" target="_blank">3fc3789</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+<td>
+Republish all 24 pages
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1161,10 +1196,12 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 2A.</strong> “Signature volcano” plot for one example GP
-(GP1): each gene’s normalized score (x-axis, max |score| = 1) versus its
-mean shifted-log expression (y-axis), with the top-scoring genes
-labeled.</p>
+<p><strong>Fig. 2A.</strong> Gene scores for GP1, a baseline program
+capturing the pan-T cell transcriptional profile. Each point represents
+a gene. The x axis shows the GP1 gene score, representing the magnitude
+and direction of gene regulation within the program and scaled to a
+maximum absolute value of 1; the y axis shows mean shifted-log
+expression across all T cells. The top-scoring genes are labeled.</p>
 </div>
 </div>
 <div id="fig2b" class="section level2">
@@ -1288,9 +1325,9 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 2B.</strong> Histogram of the proportion of cells with
-high loading (&gt; 0.1) per GP, across all 200 GPs (x-axis on log
-scale).</p>
+<p><strong>Fig. 2B.</strong> Histogram showing the fraction of cells in
+which each GP was highly active (loading greater than 0.1 in each cell),
+across all 200 GPs (x-axis on log scale).</p>
 </div>
 </div>
 <div id="fig2c" class="section level2">
@@ -1413,9 +1450,10 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 2C.</strong> Histogram of the number of highly-active
-genes (|score| &gt; 0.25 of that GP’s max) per GP (x-axis on log
-scale).</p>
+<p><strong>Fig. 2C.</strong> Histogram showing the number of highly
+active genes per GP (genes with an absolute score greater than 0.25 in
+each GP, after per-GP scaling to max |score| = 1); x-axis on log
+scale.</p>
 </div>
 </div>
 <div id="fig2d" class="section level2">
@@ -1546,8 +1584,8 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 2D.</strong> Boxplot of the number of active GPs
-(loading &gt; 0.1) per cell, grouped by major lineage.</p>
+<p><strong>Fig. 2D.</strong> Box plot showing the number of highly
+active GPs (loading &gt; 0.1) per cell across T cell lineages.</p>
 </div>
 </div>
 <div id="fig2e" class="section level2">
@@ -1674,8 +1712,13 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 2E.</strong> Boxplot of the number of active GPs per
-cell, comparing activated versus resting cells.</p>
+<p><strong>Fig. 2E.</strong> Box plot showing the number of highly
+active GPs per cell in activated versus resting T cells. Unlike the
+other activated-vs-resting panels in this paper (Figure 4, Figure S3),
+this one is <strong>not</strong> restricted to CD4 and CD8: every
+lineage with an <code>annotation_level2_group</code> of
+<code>"activated"</code> or <code>"resting"</code> is included, Treg
+among them – which is what the caption’s “T cells” refers to.</p>
 </div>
 </div>
 <div id="fig2f" class="section level2">
@@ -1801,8 +1844,12 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 2F.</strong> Scatter plot of CD44 surface-protein level
-(log-normalized) against the number of active GPs per cell.</p>
+<p><strong>Fig. 2F.</strong> Scatterplot showing the number of highly
+active GPs per cell correlated with CD44 protein expression (CITE-seq;
+log-normalized ADT counts). The blue line indicates the least-squares
+fit; Pearson’s <em>r</em> = 0.44. The correlation is computed over all
+cells with non-zero CD44 (the scatter itself is subsampled to 10,000
+cells for rendering only).</p>
 </div>
 <br>
 <p>
