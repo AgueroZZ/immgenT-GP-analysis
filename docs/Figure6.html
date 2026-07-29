@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreed538aa21ca31faac7d6daceb42bcef57800ff26ctargetblankd538aa2a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree8d73953c2b3155783f945af721fa4fd3f194df8etargetblank8d73953a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/d538aa21ca31faac7d6daceb42bcef57800ff26c" target="_blank">d538aa2</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/8d73953c2b3155783f945af721fa4fd3f194df8e" target="_blank">8d73953</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreed538aa21ca31faac7d6daceb42bcef57800ff26ctargetblankd538aa2a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree8d73953c2b3155783f945af721fa4fd3f194df8etargetblank8d73953a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/d538aa21ca31faac7d6daceb42bcef57800ff26c" target="_blank">d538aa2</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/8d73953c2b3155783f945af721fa4fd3f194df8e" target="_blank">8d73953</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -629,6 +629,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/8d73953c2b3155783f945af721fa4fd3f194df8e/analysis/Figure6.Rmd" target="_blank">8d73953</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-28
+</td>
+<td>
+Align captions with captions_20260729_final.docx
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/ae21d37a76e0dc844ebb67e0f4c8c4ab65d66ad4/docs/Figure6.html" target="_blank">ae21d37</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-28
+</td>
+<td>
+Build site: republish after the reorder commits
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1624,22 +1658,21 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 6d.</strong> Genes up- and down-regulated across the GPs
-associated with CD69 protein expression. Ten representative GPs
-associated with CD69, selected from among those most strongly correlated
-– positively or negatively – with CD69 protein expression, ordered by
-the Spearman correlation between GP activity and CD69 expression.
-Heatmap of the genes most strongly <strong>up- and
-down-regulated</strong> across these GPs: per GP, the top five
-positively and top five negatively scoring genes, then restricted to
-genes reaching |score| &gt;= 0.5 in at least one of the ten
-(green-white-purple), with the left strip indicating each GP’s Spearman
-correlation with CD69 (blue-white-red). The same ten GPs’ mean activity
-across tissues and across lineages is shown in <a
-href="FigureS6.html#figs6bc">Fig. S6b, c</a>.</p>
-<p>The ten GPs are a <strong>hand-picked</strong> set, not a computed
-top-10: eight are positively correlated with CD69 (ranks 1, 3, 4, 5, 6,
-10, 12 and 14 of 200) and GP58/GP171 are the two most
+<p><strong>Fig. 6d.</strong> GPs associated with CD69 protein
+expression. Heatmap of the genes most strongly <strong>up- and
+down-regulated</strong> across ten representative CD69-associated GPs,
+ordered by the Spearman correlation between GP activity and CD69
+expression, with the left strip indicating that correlation
+(blue-white-red). The genes shown are, per GP, its top five positively
+and top five negatively scoring genes, then restricted to those reaching
+|score| &gt;= 0.5 in at least one of the ten (green-white-purple). Mean
+activity of the same ten GPs across tissues and lineages is shown in <a
+href="FigureS6.html#figs6bc">Fig. S6b, c</a> (published as Extended Data
+Figure 6b, c).</p>
+<p>The ten GPs are a <strong>hand-picked</strong> set drawn from among
+the GPs most strongly correlated – positively or negatively – with CD69,
+not a computed top-10: eight are positively correlated (ranks 1, 3, 4,
+5, 6, 10, 12 and 14 of 200) and GP58/GP171 are the two most
 <em>negatively</em> correlated GPs of all 200.
 <code>script/verify_cd69_gp_ranking.R</code> recomputes the correlation
 over all 200 GPs and fails if this wording and the code drift apart.</p>
@@ -2306,11 +2339,13 @@ GP23, (i) GP77 and (j) GP8</strong>. For each GP, cells are shown twice
 on the same MDE embedding. Left, cells selected by the proposed protein
 gate, built from the GP’s curated marker signature (positive markers
 above, and negative markers below), with the gate size reported in the
-panel title as “Matched n”; right, exactly that many cells, taken as the
-ones with the highest GP activity. Color indicates cell density
-(two-dimensional); all other cells are grey. Thymocytes, proliferating,
-and “miniverse” cells are excluded. Four further GPs are gated the same
-way in <a href="FigureS6.html#figs6dg">Fig. S6d-g</a>.</p>
+panel title as “Matched n”; right, an equally sized set of cells with
+the highest GP activity – exactly as many cells as the protein gate
+selected. Color indicates cell density (two-dimensional); all other
+cells are grey. Thymocytes, proliferating, and “miniverse” cells are
+excluded. Four further GPs are gated the same way in <a
+href="FigureS6.html#figs6dg">Fig. S6d-g</a> (published as Extended Data
+Figure 6d-g).</p>
 </div>
 <br>
 <p>
