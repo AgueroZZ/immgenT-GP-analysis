@@ -384,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-28
+<strong>Last updated:</strong> 2026-07-29
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreed538aa21ca31faac7d6daceb42bcef57800ff26ctargetblankd538aa2a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree77f33371be6efa811f7f65099294d1e1649c7b9dtargetblank77f3337a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/d538aa21ca31faac7d6daceb42bcef57800ff26c" target="_blank">d538aa2</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/77f33371be6efa811f7f65099294d1e1649c7b9d" target="_blank">77f3337</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreed538aa21ca31faac7d6daceb42bcef57800ff26ctargetblankd538aa2a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree77f33371be6efa811f7f65099294d1e1649c7b9dtargetblank77f3337a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/d538aa21ca31faac7d6daceb42bcef57800ff26c" target="_blank">d538aa2</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/77f33371be6efa811f7f65099294d1e1649c7b9d" target="_blank">77f3337</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -577,12 +577,13 @@ Ignored files:
     Ignored:    figures/final-selected/.DS_Store
     Ignored:    figures/final-selected/Figure 1/.DS_Store
     Ignored:    figures/final-selected/Figure 2/.DS_Store
+    Ignored:    figures/final-selected/Figure 4/.DS_Store
     Ignored:    figures/final-selected/Figure S4/.DS_Store
+    Ignored:    figures/templates_20260729/
     Ignored:    log/
     Ignored:    output/Figure2/
     Ignored:    output/Figure7b/7b_cell_metadata.csv.gz
     Ignored:    plan/
-    Ignored:    reorder/
     Ignored:    tables/
     Ignored:    tmp/
 
@@ -629,6 +630,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/77f33371be6efa811f7f65099294d1e1649c7b9d/analysis/Figure4.Rmd" target="_blank">77f3337</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-29
+</td>
+<td>
+Drop Figure 4’s TF-GP network; re-letter 4d/4e to 4c/4d
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/ae21d37a76e0dc844ebb67e0f4c8c4ab65d66ad4/docs/Figure4.html" target="_blank">ae21d37</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-28
+</td>
+<td>
+Build site: republish after the reorder commits
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1085,6 +1120,12 @@ which shares its curated GP set with <a href="FigureS3.html">Figure
 S3</a> via <code>code/R/activation_shared_setup.R</code>. The code below
 is shown for reference (not re-executed on this page); the images are
 its pre-rendered output.</p>
+<p><strong>A panel was dropped on 2026-07-29.</strong> The bipartite
+TF-GP network for the 25 curated activation GPs is no longer part of the
+figure, and the two heatmaps that followed it each moved up a letter:
+the published 3f and 3g are now (4c) and (4d). The figure is a-d. A
+TF-GP network for the lineage-defining TFs Gata3, Rorc and Tbx21 is
+still shown as <a href="FigureS3.html#figs3g">Fig. S3g</a>.</p>
 <div id="setup" class="section level2">
 <h2>Setup</h2>
 <p>Data loading, shared across all panels below.</p>
@@ -1098,11 +1139,17 @@ its pre-rendered output.</p>
 #       CD4 (x) vs CD8 (y); curated GPs colored by semantic group and labeled.
 #   4b  GP-gene signature network: each curated GP linked to its top 5
 #       positively/negatively regulated genes.
-#   4c  Bipartite TF-GP network for the curated activation GPs.
-#   4d  Heatmap of log2FC in mean GP loading across experimental conditions,
+#   4c  Heatmap of log2FC in mean GP loading across experimental conditions,
 #       for activated CD4/CD8 cells.
-#   4e  Heatmap of mean GP loading per Level-2 sub-lineage, across the 7
+#   4d  Heatmap of mean GP loading per Level-2 sub-lineage, across the 7
 #       T-cell lineages.
+#
+# Re-lettered 2026-07-29: the bipartite TF-GP network for the curated activation
+# GPs was dropped from the figure, and the two heatmaps after it each moved up a
+# letter. So against figures/Previous/bits/Figure 3: 4a = 3c, 4b = 3d,
+# 4c = 3f, 4d = 3g, and the published 3e has no counterpart here any more. The
+# dropped panel was this script&#39;s only caller of code/R/tf_network.R -- Figure S3
+# panel s3g draws its own TF-GP network inline, so that helper is now unused.
 #
 # Source: ported from Figure_Activation.R, which also produced the
 # Figure S3 panels (see FigureS3.R) from the same curated GP set and cell
@@ -1125,7 +1172,6 @@ library(scales)
 data_path &lt;- &quot;data/&quot;
 figure_path &lt;- &quot;figures/final-selected/Figure 4/&quot;
 source(&quot;code/R/plot_utils.R&quot;) # scale_cols()
-source(&quot;code/R/tf_network.R&quot;) # optimize_bipartite_order(), plot_tf_gp_network_v2()
 
 # ============================================================
 # Load data
@@ -1603,66 +1649,92 @@ colored as in (4a).</p>
 </div>
 </div>
 <div id="fig4c" class="section level2">
-<h2>(4c) TF-GP network</h2>
+<h2>(4c) Log2FC heatmap across conditions</h2>
 <pre class="r"><code># ============================================================
-# 4c: Bipartite TF-GP network
+# 4c: log2FC heatmap of activated CD4+CD8 cells across conditions,
+#     relative to the per-GP mean across all CD4/CD8 cells
 # ============================================================
-mm &lt;- org.Mm.eg.db::org.Mm.eg.db
-go2eg &lt;- as.list(org.Mm.eg.db::org.Mm.egGO2ALLEGS)
-tf_symbols &lt;- AnnotationDbi::select(
-  mm,
-  keys = unique(unlist(go2eg)),
-  columns = &quot;SYMBOL&quot;,
-  keytype = &quot;ENTREZID&quot;
-)
-tf &lt;- c(
-  sort(tf_symbols$SYMBOL[
-    tf_symbols$ENTREZID %in% unique(go2eg[[&quot;GO:0003700&quot;]])
-  ]),
-  &quot;Tox&quot;,
-  &quot;Tox2&quot;,
-  &quot;Tox3&quot;,
-  &quot;Tox4&quot;
-) %&gt;%
-  sort() %&gt;%
-  unique()
+act_keep &lt;- seurat_meta_filtered$annotation_level1 %in%
+  c(&quot;CD4&quot;, &quot;CD8&quot;) &amp;
+  seurat_meta_filtered$annotation_level2_group == &quot;activated&quot;
+meta_act &lt;- seurat_meta_filtered[act_keep, ]
+L_act &lt;- L_subset[act_keep, , drop = FALSE]
 
-F_sub_tf &lt;- F_pm_filtered_norm[, GPs_of_interest, drop = FALSE]
-tf_gp_threshold &lt;- 0.25
-tf_in_F &lt;- intersect(tf, rownames(F_sub_tf))
-tf_max_score &lt;- apply(F_sub_tf[tf_in_F, , drop = FALSE], 1, max, na.rm = TRUE)
-selected_tfs &lt;- sort(names(tf_max_score)[tf_max_score &gt; tf_gp_threshold])
-
-# Top-to-bottom group order in the network: both-up -&gt; CD8-only -&gt; both-down -&gt; CD4-only
-gp_color_group_order &lt;- c(&quot;darkred&quot;, &quot;darkorange2&quot;, &quot;darkgreen&quot;, &quot;blue&quot;)
-
-tf_network_plot &lt;- plot_tf_gp_network_v2(
-  F = F_sub_tf,
-  selected_tfs = selected_tfs,
-  tf_gp_threshold = tf_gp_threshold,
-  top_genes_per_gp = 5,
-  gp_colors = highlight_colors,
-  gp_group_order = gp_color_group_order,
-  optimize_layout = TRUE,
-  barycenter_iter = 12,
-  gp_spacing = 1.5,
-  node_size_tf = 6,
-  node_size_gp = 5,
-  label_size_tf = 4.5,
-  label_size_gp = 4,
-  label_size_gene = 3.4
+min_cells_cond &lt;- 50
+cd_lin &lt;- table(
+  meta_act$condition_detailed_simplified,
+  meta_act$annotation_level1
 )
-plot_height_tf &lt;- min(
-  60,
-  max(12, length(selected_tfs) * 0.35, length(GPs_of_interest) * 1.5 * 0.55 + 2)
+cond_keep &lt;- rownames(cd_lin)[
+  cd_lin[, &quot;CD4&quot;] &gt;= min_cells_cond &amp; cd_lin[, &quot;CD8&quot;] &gt;= min_cells_cond
+]
+
+cd_br &lt;- table(meta_act$condition_detailed_simplified, meta_act$condition_broad)
+cd_to_broad &lt;- setNames(
+  colnames(cd_br)[apply(cd_br, 1, which.max)],
+  rownames(cd_br)
+)[cond_keep]
+
+# Column order: `healthy` broad first (with `baseline` as its first condition)
+broad_rank &lt;- ifelse(cd_to_broad == &quot;healthy&quot;, 0L, 1L)
+within_broad_rank &lt;- ifelse(
+  cd_to_broad == &quot;healthy&quot; &amp; cond_keep == &quot;baseline&quot;,
+  0L,
+  1L
 )
-ggsave(
-  filename = paste0(figure_path, &quot;4c.pdf&quot;),
-  plot = tf_network_plot,
-  width = 18,
-  height = plot_height_tf,
-  limitsize = FALSE
-)</code></pre>
+col_order_cond &lt;- order(broad_rank, cd_to_broad, within_broad_rank, cond_keep)
+cond_keep &lt;- cond_keep[col_order_cond]
+cd_to_broad &lt;- cd_to_broad[cond_keep]
+
+mean_mat_cond &lt;- vapply(
+  cond_keep,
+  function(cond) {
+    colMeans(L_act[
+      meta_act$condition_detailed_simplified == cond,
+      ,
+      drop = FALSE
+    ])
+  },
+  numeric(ncol(L_act))
+)
+mean_mat_cond &lt;- mean_mat_cond[gp_row_order, , drop = FALSE]
+broad_levels &lt;- unique(cd_to_broad)
+col_anno_cond &lt;- data.frame(
+  condition_broad = factor(cd_to_broad, levels = broad_levels),
+  row.names = colnames(mean_mat_cond)
+)
+row_label_cols &lt;- group_colors[gp_to_group[gp_row_order]]
+
+pc_lfc &lt;- 1e-10
+cap_lfc &lt;- 2
+cd4cd8_idx &lt;- seurat_meta_filtered$annotation_level1 %in% c(&quot;CD4&quot;, &quot;CD8&quot;)
+L_cd4cd8 &lt;- L_subset[cd4cd8_idx, , drop = FALSE]
+mu_lfc_mean &lt;- colMeans(L_cd4cd8, na.rm = TRUE)[rownames(mean_mat_cond)]
+lfc_mat_mean &lt;- log2((mean_mat_cond + pc_lfc) / (mu_lfc_mean + pc_lfc))
+lfc_mat_mean &lt;- pmax(pmin(lfc_mat_mean, cap_lfc), -cap_lfc)
+
+ph_cond_lfc_mean &lt;- pheatmap(
+  lfc_mat_mean,
+  cluster_rows = FALSE,
+  cluster_cols = FALSE,
+  color = colorRampPalette(c(&quot;#7A0177&quot;, &quot;black&quot;, &quot;#FFD700&quot;))(101),
+  breaks = seq(-cap_lfc, cap_lfc, length.out = 102),
+  annotation_col = col_anno_cond,
+  gaps_row = head(cumsum(lengths(gp_groups)), -1),
+  gaps_col = head(cumsum(rle(as.character(cd_to_broad))$lengths), -1),
+  main = &quot;log2FC vs per-GP MEAN across all CD4/CD8 (activated CD4+CD8 by condition_detailed_simplified)&quot;,
+  silent = TRUE
+)
+row_idx_lfc_m &lt;- which(ph_cond_lfc_mean$gtable$layout$name == &quot;row_names&quot;)
+ph_cond_lfc_mean$gtable$grobs[[row_idx_lfc_m]]$gp$col &lt;- row_label_cols
+
+pdf(
+  paste0(figure_path, &quot;4c.pdf&quot;),
+  width = max(8, 0.18 * ncol(lfc_mat_mean) + 4),
+  height = 6
+)
+grid::grid.draw(ph_cond_lfc_mean$gtable)
+invisible(dev.off())</code></pre>
 <p><img src="assets/Figure4/4c.png" width="50%" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-4c">
@@ -1790,102 +1862,84 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 4c.</strong> Transcription factor (TF)-GP network: TFs
-(<a href="GO:0003700" class="uri">GO:0003700</a> DNA-binding TFs plus
-the Tox family) with a score greater than 0.25 in any of these 25 GPs
-are shown, connected to those GPs by directed edges whose width scales
-with the score (color identifies the TF). The top five up-regulated
-<strong>non-TF</strong> genes in each GP are listed beside the
-corresponding GP node (genes already drawn as TF nodes are excluded from
-that list).</p>
+<p><strong>Fig. 4c.</strong> Heatmap of log2 fold change in mean GP
+activity across experimental conditions for activated CD4+ and CD8+ T
+cells, computed relative to each GP’s mean loading across all CD4+/CD8+
+cells (resting and activated, all conditions) and capped at +-2, with a
+small pseudocount (1e-10) added to stabilize computation. Columns are
+conditions with &gt;=50 activated CD4 and &gt;=50 activated CD8 cells,
+grouped and annotated by broad condition category (including healthy
+controls), with color from purple (low) through black (no change) to
+gold (high). GPs are ordered and colored as in (4a).</p>
 </div>
 </div>
 <div id="fig4d" class="section level2">
-<h2>(4d) Log2FC heatmap across conditions</h2>
+<h2>(4d) Mean loading by sub-lineage</h2>
 <pre class="r"><code># ============================================================
-# 4d: log2FC heatmap of activated CD4+CD8 cells across conditions,
-#     relative to the per-GP mean across all CD4/CD8 cells
+# 4d: Mean GP loading per Level-2 sub-lineage
 # ============================================================
-act_keep &lt;- seurat_meta_filtered$annotation_level1 %in%
-  c(&quot;CD4&quot;, &quot;CD8&quot;) &amp;
-  seurat_meta_filtered$annotation_level2_group == &quot;activated&quot;
-meta_act &lt;- seurat_meta_filtered[act_keep, ]
-L_act &lt;- L_subset[act_keep, , drop = FALSE]
+keep_cells &lt;- seurat_meta_filtered$annotation_level1 %in% lineages
+meta_sub &lt;- seurat_meta_filtered[keep_cells, ]
+L_keep &lt;- L_subset[keep_cells, , drop = FALSE]
 
-min_cells_cond &lt;- 50
-cd_lin &lt;- table(
-  meta_act$condition_detailed_simplified,
-  meta_act$annotation_level1
+l2_counts &lt;- table(meta_sub$annotation_level2)
+l2_keep &lt;- names(l2_counts)[l2_counts &gt;= 50]
+# Drop the &quot;P&quot; cluster and any &quot;w...&quot; clusters (wM, wW, etc.) across all lineages
+l2_stripped &lt;- sub(&quot;^[^._]+[._]&quot;, &quot;&quot;, l2_keep)
+exclude_l2 &lt;- l2_stripped == &quot;P&quot; |
+  grepl(&quot;^w&quot;, l2_stripped, ignore.case = TRUE) |
+  grepl(&quot;[._]w&quot;, l2_keep, ignore.case = TRUE)
+l2_keep &lt;- l2_keep[!exclude_l2]
+
+mean_mat &lt;- vapply(
+  l2_keep,
+  function(l2) {
+    colMeans(L_keep[meta_sub$annotation_level2 == l2, , drop = FALSE])
+  },
+  numeric(ncol(L_keep))
 )
-cond_keep &lt;- rownames(cd_lin)[
-  cd_lin[, &quot;CD4&quot;] &gt;= min_cells_cond &amp; cd_lin[, &quot;CD8&quot;] &gt;= min_cells_cond
-]
-
-cd_br &lt;- table(meta_act$condition_detailed_simplified, meta_act$condition_broad)
-cd_to_broad &lt;- setNames(
-  colnames(cd_br)[apply(cd_br, 1, which.max)],
-  rownames(cd_br)
-)[cond_keep]
-
-# Column order: `healthy` broad first (with `baseline` as its first condition)
-broad_rank &lt;- ifelse(cd_to_broad == &quot;healthy&quot;, 0L, 1L)
-within_broad_rank &lt;- ifelse(
-  cd_to_broad == &quot;healthy&quot; &amp; cond_keep == &quot;baseline&quot;,
-  0L,
-  1L
-)
-col_order_cond &lt;- order(broad_rank, cd_to_broad, within_broad_rank, cond_keep)
-cond_keep &lt;- cond_keep[col_order_cond]
-cd_to_broad &lt;- cd_to_broad[cond_keep]
-
-mean_mat_cond &lt;- vapply(
-  cond_keep,
-  function(cond) {
-    colMeans(L_act[
-      meta_act$condition_detailed_simplified == cond,
-      ,
-      drop = FALSE
+l2_to_l1 &lt;- vapply(
+  l2_keep,
+  function(l2) {
+    as.character(meta_sub$annotation_level1[meta_sub$annotation_level2 == l2][
+      1
     ])
   },
-  numeric(ncol(L_act))
+  character(1)
 )
-mean_mat_cond &lt;- mean_mat_cond[gp_row_order, , drop = FALSE]
-broad_levels &lt;- unique(cd_to_broad)
-col_anno_cond &lt;- data.frame(
-  condition_broad = factor(cd_to_broad, levels = broad_levels),
-  row.names = colnames(mean_mat_cond)
+col_order &lt;- order(match(l2_to_l1, lineages), l2_keep)
+mean_mat &lt;- mean_mat[gp_row_order, col_order]
+l2_to_l1 &lt;- l2_to_l1[col_order]
+
+immgen_cols &lt;- ZemmourLib::immgent_colors
+col_anno &lt;- data.frame(
+  Lineage = factor(l2_to_l1, levels = lineages),
+  row.names = colnames(mean_mat)
 )
+anno_colors_mean &lt;- list(Lineage = immgen_cols$level1[lineages])
 row_label_cols &lt;- group_colors[gp_to_group[gp_row_order]]
+col_label_cols &lt;- immgen_cols$level2[colnames(mean_mat)]
+col_label_cols[is.na(col_label_cols)] &lt;- &quot;black&quot;
 
-pc_lfc &lt;- 1e-10
-cap_lfc &lt;- 2
-cd4cd8_idx &lt;- seurat_meta_filtered$annotation_level1 %in% c(&quot;CD4&quot;, &quot;CD8&quot;)
-L_cd4cd8 &lt;- L_subset[cd4cd8_idx, , drop = FALSE]
-mu_lfc_mean &lt;- colMeans(L_cd4cd8, na.rm = TRUE)[rownames(mean_mat_cond)]
-lfc_mat_mean &lt;- log2((mean_mat_cond + pc_lfc) / (mu_lfc_mean + pc_lfc))
-lfc_mat_mean &lt;- pmax(pmin(lfc_mat_mean, cap_lfc), -cap_lfc)
-
-ph_cond_lfc_mean &lt;- pheatmap(
-  lfc_mat_mean,
+ph &lt;- pheatmap(
+  mean_mat,
   cluster_rows = FALSE,
   cluster_cols = FALSE,
-  color = colorRampPalette(c(&quot;#7A0177&quot;, &quot;black&quot;, &quot;#FFD700&quot;))(101),
-  breaks = seq(-cap_lfc, cap_lfc, length.out = 102),
-  annotation_col = col_anno_cond,
+  color = colorRampPalette(c(&quot;white&quot;, &quot;red&quot;))(200),
+  annotation_col = col_anno,
+  annotation_colors = anno_colors_mean,
   gaps_row = head(cumsum(lengths(gp_groups)), -1),
-  gaps_col = head(cumsum(rle(as.character(cd_to_broad))$lengths), -1),
-  main = &quot;log2FC vs per-GP MEAN across all CD4/CD8 (activated CD4+CD8 by condition_detailed_simplified)&quot;,
+  gaps_col = head(cumsum(rle(l2_to_l1)$lengths), -1),
+  main = &quot;Average loading of Figure 4 GPs per Level-2 sub-lineage&quot;,
   silent = TRUE
 )
-row_idx_lfc_m &lt;- which(ph_cond_lfc_mean$gtable$layout$name == &quot;row_names&quot;)
-ph_cond_lfc_mean$gtable$grobs[[row_idx_lfc_m]]$gp$col &lt;- row_label_cols
+row_idx &lt;- which(ph$gtable$layout$name == &quot;row_names&quot;)
+col_idx &lt;- which(ph$gtable$layout$name == &quot;col_names&quot;)
+ph$gtable$grobs[[row_idx]]$gp$col &lt;- row_label_cols
+ph$gtable$grobs[[col_idx]]$gp$col &lt;- col_label_cols
 
-pdf(
-  paste0(figure_path, &quot;4d.pdf&quot;),
-  width = max(8, 0.18 * ncol(lfc_mat_mean) + 4),
-  height = 6
-)
-grid::grid.draw(ph_cond_lfc_mean$gtable)
+pdf(paste0(figure_path, &quot;4d.pdf&quot;), width = 11, height = 5.5)
+grid::grid.draw(ph$gtable)
 invisible(dev.off())</code></pre>
 <p><img src="assets/Figure4/4d.png" width="50%" style="display: block; margin: auto;" /></p>
 <p>
@@ -2014,214 +2068,7 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 4d.</strong> Heatmap of log2 fold change in mean GP
-activity across experimental conditions for activated CD4+ and CD8+ T
-cells, computed relative to each GP’s mean loading across all CD4+/CD8+
-cells (resting and activated, all conditions) and capped at +-2, with a
-small pseudocount (1e-10) added to stabilize computation. Columns are
-conditions with &gt;=50 activated CD4 and &gt;=50 activated CD8 cells,
-grouped and annotated by broad condition category (including healthy
-controls), with color from purple (low) through black (no change) to
-gold (high). GPs are ordered and colored as in (4a).</p>
-</div>
-</div>
-<div id="fig4e" class="section level2">
-<h2>(4e) Mean loading by sub-lineage</h2>
-<pre class="r"><code># ============================================================
-# 4e: Mean GP loading per Level-2 sub-lineage (built before 4d since 4d
-#     reuses gp_row_order/group_colors computed here)
-# ============================================================
-keep_cells &lt;- seurat_meta_filtered$annotation_level1 %in% lineages
-meta_sub &lt;- seurat_meta_filtered[keep_cells, ]
-L_keep &lt;- L_subset[keep_cells, , drop = FALSE]
-
-l2_counts &lt;- table(meta_sub$annotation_level2)
-l2_keep &lt;- names(l2_counts)[l2_counts &gt;= 50]
-# Drop the &quot;P&quot; cluster and any &quot;w...&quot; clusters (wM, wW, etc.) across all lineages
-l2_stripped &lt;- sub(&quot;^[^._]+[._]&quot;, &quot;&quot;, l2_keep)
-exclude_l2 &lt;- l2_stripped == &quot;P&quot; |
-  grepl(&quot;^w&quot;, l2_stripped, ignore.case = TRUE) |
-  grepl(&quot;[._]w&quot;, l2_keep, ignore.case = TRUE)
-l2_keep &lt;- l2_keep[!exclude_l2]
-
-mean_mat &lt;- vapply(
-  l2_keep,
-  function(l2) {
-    colMeans(L_keep[meta_sub$annotation_level2 == l2, , drop = FALSE])
-  },
-  numeric(ncol(L_keep))
-)
-l2_to_l1 &lt;- vapply(
-  l2_keep,
-  function(l2) {
-    as.character(meta_sub$annotation_level1[meta_sub$annotation_level2 == l2][
-      1
-    ])
-  },
-  character(1)
-)
-col_order &lt;- order(match(l2_to_l1, lineages), l2_keep)
-mean_mat &lt;- mean_mat[gp_row_order, col_order]
-l2_to_l1 &lt;- l2_to_l1[col_order]
-
-immgen_cols &lt;- ZemmourLib::immgent_colors
-col_anno &lt;- data.frame(
-  Lineage = factor(l2_to_l1, levels = lineages),
-  row.names = colnames(mean_mat)
-)
-anno_colors_mean &lt;- list(Lineage = immgen_cols$level1[lineages])
-row_label_cols &lt;- group_colors[gp_to_group[gp_row_order]]
-col_label_cols &lt;- immgen_cols$level2[colnames(mean_mat)]
-col_label_cols[is.na(col_label_cols)] &lt;- &quot;black&quot;
-
-ph &lt;- pheatmap(
-  mean_mat,
-  cluster_rows = FALSE,
-  cluster_cols = FALSE,
-  color = colorRampPalette(c(&quot;white&quot;, &quot;red&quot;))(200),
-  annotation_col = col_anno,
-  annotation_colors = anno_colors_mean,
-  gaps_row = head(cumsum(lengths(gp_groups)), -1),
-  gaps_col = head(cumsum(rle(l2_to_l1)$lengths), -1),
-  main = &quot;Average loading of Figure 4 GPs per Level-2 sub-lineage&quot;,
-  silent = TRUE
-)
-row_idx &lt;- which(ph$gtable$layout$name == &quot;row_names&quot;)
-col_idx &lt;- which(ph$gtable$layout$name == &quot;col_names&quot;)
-ph$gtable$grobs[[row_idx]]$gp$col &lt;- row_label_cols
-ph$gtable$grobs[[col_idx]]$gp$col &lt;- col_label_cols
-
-pdf(paste0(figure_path, &quot;4e.pdf&quot;), width = 11, height = 5.5)
-grid::grid.draw(ph$gtable)
-invisible(dev.off())</code></pre>
-<p><img src="assets/Figure4/4e.png" width="50%" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-4e">
-Past versions of 4e.png
-</button>
-</p>
-<div id="fig-4e" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/710259816a5471e4ec442a7a27b8732d9dd67e8d/docs/assets/Figure4/4e.png" target="_blank">7102598</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/6c1a613526a5e79e96a566eb3ed8c22e91015cba/docs/assets/Figure4/4e.png" target="_blank">6c1a613</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/bf7afcfe360b8947b96a4b905fcaa82ecd923a67/docs/assets/Figure4/4e.png" target="_blank">bf7afcf</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/ea3ecc24d9da3261943163a384b2262252fcceea/docs/assets/Figure4/4e.png" target="_blank">ea3ecc2</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/620afcaa272b99b7805d5d0752a9723f5fe7eae1/docs/assets/Figure4/4e.png" target="_blank">620afca</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-24
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/2873ad24b49a4e522ffd5332f22a1e706eeb7083/docs/assets/Figure4/4e.png" target="_blank">2873ad2</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/b19749995d4ab13fc8dcd3502c93428b47802a9a/docs/assets/Figure4/4e.png" target="_blank">b197499</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/78e3bbad835aff2b513ff86f600f6b01b2beb5e3/docs/assets/Figure4/4e.png" target="_blank">78e3bba</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/06b2461eba2147f353f2ce082bdebe22f5dcee26/docs/assets/Figure4/4e.png" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="figcaption">
-<p><strong>Fig. 4e.</strong> Heatmap of mean GP activity per level 2
+<p><strong>Fig. 4d.</strong> Heatmap of mean GP activity per level 2
 cluster (sub-lineage), with the top bar denoting parent lineage;
 thymocytes and DP cells are excluded, leaving the seven T-cell lineages
 (CD8, CD4, Treg, gdT, CD8aa, Tz, DN) and only sub-types with &gt;=50
