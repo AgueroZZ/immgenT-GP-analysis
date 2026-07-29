@@ -1,5 +1,5 @@
 ---
-title: "Figure S6: Protein programs, CD69-associated GPs, and further gating strategies"
+title: "Figure S6: Protein programs, CD69-associated GPs, and further surface-protein gating strategies"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -73,17 +73,15 @@ knitr::include_graphics(c("assets/FigureS6/s6b.png", "assets/FigureS6/s6c.png"))
 ```
 
 ::: {.figcaption}
-**Fig. S6b, c.** Mean activity of the GPs associated with CD69 protein
-expression, **(b) across tissues** (`organ_simplified`) and **(c) across
-lineages** (`annotation_level1`). These are the same ten representative
-CD69-associated GPs drawn in [Fig. 6d](Figure6.html#fig6d), on the same y-axis
-order: selected from among the GPs most strongly correlated -- positively or
-negatively -- with CD69 protein expression, and ordered by the Spearman
-correlation between GP activity and CD69 expression. Color runs from white (zero)
-to firebrick (each panel's largest mean activity). The ten GPs are a
-**hand-picked** set, not a computed top-10; `script/verify_cd69_gp_ranking.R`
-recomputes the correlation over all 200 GPs and fails if this wording and the
-code drift apart.
+**Fig. S6b, c.** Mean activity of the ten CD69-associated GPs of
+[Fig. 6d](Figure6.html#fig6d), in the same order, **(b) across tissues**
+(`organ_simplified`) and **(c) across lineages** (`annotation_level1`). That
+order is the Spearman correlation between GP activity and CD69 protein
+expression. Color runs from white (zero) to firebrick (each panel's largest mean
+activity). The ten GPs are a **hand-picked** set drawn from among the GPs most
+strongly correlated -- positively or negatively -- with CD69, not a computed
+top-10; `script/verify_cd69_gp_ranking.R` recomputes the correlation over all 200
+GPs and fails if this wording and the code drift apart.
 :::
 
 ## (s6d-g) Further protein-gated vs. GP-loading populations {#figs6dg}
@@ -99,17 +97,16 @@ knitr::include_graphics(c(
 ```
 
 ::: {.figcaption}
-**Fig. S6d-g.** Examples of gating strategies used to identify GP-active cells --
-[Fig. 6e-j](Figure6.html#fig6ej) extended to four further GPs, **(d) GP29,
-(e) GP58, (f) GP22 and (g) GP68**. Drawn exactly as in Figure 6: for each GP,
-all-T MDE plots highlight cells passing a protein gate built from the GP's
-curated marker signature (left; positive markers above threshold, negative
-markers at or below, with the gate size reported in the panel title as
-"Matched n") and, on the right, exactly that many cells, taken as the ones with
-the highest GP activity. Color indicates cell density (two-dimensional); all
-other cells are grey. Thymocytes, proliferating, and "miniverse" cells are
-excluded. Each panel is labeled with its GP and the markers the gate actually
-applied; every marker in these four signatures has a manually reviewed
-positivity threshold ([Extended Data Table 7](ExtendedDataTable7.html)), so
-none is silently dropped.
+**Fig. S6d-g.** Examples of gating strategies used to identify GP-active cells, as
+in [Fig. 6e-j](Figure6.html#fig6ej), for **(d) GP29, (e) GP58, (f) GP22 and
+(g) GP68**. For each GP, all-T MDE plots highlight cells passing a protein gate
+built from the GP's curated marker signature (left; positive markers above
+threshold, negative markers at or below, with the gate size reported in the panel
+title as "Matched n") and, on the right, an equally sized set of cells with the
+highest GP activity -- exactly as many cells as the protein gate selected. Color
+indicates cell density (two-dimensional); all other cells are grey. Thymocytes,
+proliferating, and "miniverse" cells are excluded. Each panel is labeled with its
+GP and the markers the gate actually applied; every marker in these four
+signatures has a manually reviewed positivity threshold
+([Extended Data Table 7](ExtendedDataTable7.html)), so none is silently dropped.
 :::

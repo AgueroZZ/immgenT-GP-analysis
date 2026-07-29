@@ -1,4 +1,5 @@
-# Figure S6. Protein programs, CD69-associated GPs, and further gating examples.
+# Figure S6. Protein programs, CD69-associated GPs, and further surface-protein
+# gating strategies.
 #
 # Panels produced (see analysis/FigureS6.Rmd for the caption text):
 #   s6a  Heatmap of the re-estimated protein matrix U (sparse: |score| < 0.5

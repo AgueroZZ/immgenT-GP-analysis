@@ -1,5 +1,5 @@
 ---
-title: "Figure 7b: EBMF versus matched-RQVI factor comparison across level-2 clusters"
+title: "Figure 7b: Cluster-level activity of EBMF GPs and their matched RQVI GPs"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -22,22 +22,19 @@ pipeline). Extended Data Figure 5 no longer exists; the remaining Extended Data
 figures keep their numbers.
 
 Figure 7b asks whether the fine-grained cluster-level patterns captured by the
-200 EBMF gene programs are recovered by an independent factorization. It compares
-each EBMF gene program with a matched program from RQVI, an alternative matrix
-factorization of the same cells run across 10 random-seed initializations (256
-programs per seed). The two heatmaps share the same row and column order and use
-a white-to-blue scale of per-program relative loading on `[0, 1]`, with broad
-lineage annotations above the columns.
+200 EBMF GPs are recovered by an independent factorization. It compares each EBMF
+GP with a matched RQVI GP -- RQVI being an alternative matrix factorization of
+the same cells, run across 10 random-seed initializations (256 GPs per seed). The
+two heatmaps share the same row and column order and use a white-to-blue scale of
+per-GP relative loading on `[0, 1]`, with broad lineage annotations above the
+columns.
 
-Cells are the `L_pm_filtered` gene-program loadings (cells passing the iterative
+Cells are the `L_pm_filtered` GP loadings (cells passing the iterative
 total-loading filter), restricted to non-thymocytes (`annotation_level1 !=
 "thymocyte"`, all conditions) and to cells that also carry an RQVI loading. EBMF
 and RQVI loadings are averaged within `annotation_level2` on these common cells,
-and each RQVI program is shown on the row of its matched EBMF program. EBMF
-factors F1–F200 correspond to gene programs GP1–GP200.
-
-The published caption calls the left-hand programs **EBMF factors** and the
-right-hand ones **RQVI programs**; on this page "program" is used for both.
+and each RQVI GP is shown on the row of its matched EBMF GP. In the code and in
+the intermediate files the EBMF GPs are named F1-F200; those are GP1-GP200.
 
 ## Figure 7b {#fig7b}
 
@@ -46,20 +43,19 @@ knitr::include_graphics("assets/Figure7/7B.png")
 ```
 
 ::: {.figcaption}
-**Fig. 7b. Cluster-level activity profiles of EBMF gene programs and matched RQVI
-programs.** EBMF and RQVI program loadings were averaged within 107 fine-grained
-`annotation_level2` clusters, using all non-thymocyte cells that carry both an
-EBMF and an RQVI loading (n = 629,551 cells). The left heatmap shows the 200 EBMF
-gene programs ordered by hierarchical clustering of their cluster-level profiles.
-The right heatmap shows, on the same row and column order, the RQVI program
-matched to each EBMF program by a one-to-one maximum-correlation assignment over
-all 2,560 candidate programs (10 random-seed runs, 256 programs each). Loadings
-were independently rescaled to `[0, 1]` within each program for display; broad
-lineage annotations are shown above the columns. The median per-program Pearson
-correlation across the displayed clusters was 0.766, and 92.5% of programs had
-r >= 0.5. The assembled panel is saved as `7B.pdf` in
-`figures/final-selected/Figure 7/`; its two halves and the standalone colorbar
-are kept as build intermediates in `output/Figure7b/`.
+**Fig. 7b. Cluster-level activity of EBMF GPs and their matched RQVI GPs.**
+Loadings were averaged within the 107 level 2 clusters of non-thymocyte cells --
+specifically, all non-thymocyte cells carrying both an EBMF and an RQVI loading
+(n = 629,551). Left, the 200 EBMF GPs, ordered by hierarchical clustering of their
+cluster-level profiles; right, on the same row and column order, the RQVI GP
+matched one-to-one to each EBMF GP by maximum correlation (see
+[Matching](#matching), below) -- a global assignment over all 2,560 candidates
+(10 random-seed runs, 256 GPs each), computed on all shared clusters including
+the thymocyte one. Loadings are rescaled to `[0, 1]` within each GP, and broad lineage
+annotations are shown above the columns. The median per-GP Pearson correlation
+across clusters was 0.766, and 92.5% of GPs had r >= 0.5. The assembled panel is
+saved as `7B.pdf` in `figures/final-selected/Figure 7/`; its two halves and the
+standalone colorbar are kept as build intermediates in `output/Figure7b/`.
 :::
 
 ## How the figure is made
@@ -79,7 +75,7 @@ git-ignored symlink and is not tracked here.
 ### Cluster means
 
 `script/Figure7b.R` builds the raw `annotation_level2` cluster-mean matrix for the
-EBMF programs on the common non-thymocyte cells, together with the column order
+EBMF GPs on the common non-thymocyte cells, together with the column order
 (Figure-1 level1 lineage order, alphabetical within each lineage) and the lineage
 color palette. The matched RQVI cluster means are produced by the matching step
 below.
@@ -89,21 +85,21 @@ below.
 
 ### Matching
 
-Each program's mean-loading profile is z-scored across clusters; the signed
-Pearson correlation between every EBMF program and all 2,560 RQVI candidate
-programs is computed; candidates with a constant profile are excluded; and a
+Each GP's mean-loading profile is z-scored across clusters; the signed
+Pearson correlation between every EBMF GP and all 2,560 candidate RQVI
+GPs is computed; candidates with a constant profile are excluded; and a
 maximum-weight one-to-one assignment (`scipy.optimize.linear_sum_assignment`)
-matches each EBMF program to a distinct RQVI program so that the total signed
+matches each EBMF GP to a distinct RQVI GP so that the total signed
 correlation is maximized. The assignment is computed over all common cells (108
 `annotation_level2` clusters); the figure displays the 107 non-thymocyte
-clusters. The median per-program correlation is 0.766, with 92.5% at r >= 0.5.
+clusters. The median per-GP correlation is 0.766, with 92.5% at r >= 0.5.
 Code:
 [`script/Figure7b_rematch.py`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure7b_rematch.py).
 
 ### Plotting
 
 `script/Figure7b_plot.py` orders the EBMF rows by hierarchical clustering (average
-linkage, correlation distance, optimal leaf ordering), rescales every program to
+linkage, correlation distance, optimal leaf ordering), rescales every GP to
 `[0, 1]` across clusters, and draws the two heatmaps with a shared colorbar; the
 matched RQVI panel reuses the EBMF row order. The published PDF and the PNG this
 page shows come out of the same matplotlib figure in one call, so the two cannot
