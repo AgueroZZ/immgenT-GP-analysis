@@ -8,11 +8,17 @@
 #       CD4 (x) vs CD8 (y); curated GPs colored by semantic group and labeled.
 #   4b  GP-gene signature network: each curated GP linked to its top 5
 #       positively/negatively regulated genes.
-#   4c  Bipartite TF-GP network for the curated activation GPs.
-#   4d  Heatmap of log2FC in mean GP loading across experimental conditions,
+#   4c  Heatmap of log2FC in mean GP loading across experimental conditions,
 #       for activated CD4/CD8 cells.
-#   4e  Heatmap of mean GP loading per Level-2 sub-lineage, across the 7
+#   4d  Heatmap of mean GP loading per Level-2 sub-lineage, across the 7
 #       T-cell lineages.
+#
+# Re-lettered 2026-07-29: the bipartite TF-GP network for the curated activation
+# GPs was dropped from the figure, and the two heatmaps after it each moved up a
+# letter. So against figures/Previous/bits/Figure 3: 4a = 3c, 4b = 3d,
+# 4c = 3f, 4d = 3g, and the published 3e has no counterpart here any more. The
+# dropped panel was this script's only caller of code/R/tf_network.R -- Figure S3
+# panel s3g draws its own TF-GP network inline, so that helper is now unused.
 #
 # Source: ported from Figure_Activation.R, which also produced the
 # Figure S3 panels (see FigureS3.R) from the same curated GP set and cell
@@ -35,7 +41,6 @@ library(scales)
 data_path <- "data/"
 figure_path <- "figures/final-selected/Figure 4/"
 source("code/R/plot_utils.R") # scale_cols()
-source("code/R/tf_network.R") # optimize_bipartite_order(), plot_tf_gp_network_v2()
 
 # ============================================================
 # Load data
@@ -259,135 +264,7 @@ ggsave(
 )
 
 # ============================================================
-# 4c: Bipartite TF-GP network
-# ============================================================
-mm <- org.Mm.eg.db::org.Mm.eg.db
-go2eg <- as.list(org.Mm.eg.db::org.Mm.egGO2ALLEGS)
-tf_symbols <- AnnotationDbi::select(
-  mm,
-  keys = unique(unlist(go2eg)),
-  columns = "SYMBOL",
-  keytype = "ENTREZID"
-)
-tf <- c(
-  sort(tf_symbols$SYMBOL[
-    tf_symbols$ENTREZID %in% unique(go2eg[["GO:0003700"]])
-  ]),
-  "Tox",
-  "Tox2",
-  "Tox3",
-  "Tox4"
-) %>%
-  sort() %>%
-  unique()
-
-F_sub_tf <- F_pm_filtered_norm[, GPs_of_interest, drop = FALSE]
-tf_gp_threshold <- 0.25
-tf_in_F <- intersect(tf, rownames(F_sub_tf))
-tf_max_score <- apply(F_sub_tf[tf_in_F, , drop = FALSE], 1, max, na.rm = TRUE)
-selected_tfs <- sort(names(tf_max_score)[tf_max_score > tf_gp_threshold])
-
-# Top-to-bottom group order in the network: both-up -> CD8-only -> both-down -> CD4-only
-gp_color_group_order <- c("darkred", "darkorange2", "darkgreen", "blue")
-
-tf_network_plot <- plot_tf_gp_network_v2(
-  F = F_sub_tf,
-  selected_tfs = selected_tfs,
-  tf_gp_threshold = tf_gp_threshold,
-  top_genes_per_gp = 5,
-  gp_colors = highlight_colors,
-  gp_group_order = gp_color_group_order,
-  optimize_layout = TRUE,
-  barycenter_iter = 12,
-  gp_spacing = 1.5,
-  node_size_tf = 6,
-  node_size_gp = 5,
-  label_size_tf = 4.5,
-  label_size_gp = 4,
-  label_size_gene = 3.4
-)
-plot_height_tf <- min(
-  60,
-  max(12, length(selected_tfs) * 0.35, length(GPs_of_interest) * 1.5 * 0.55 + 2)
-)
-ggsave(
-  filename = paste0(figure_path, "4c.pdf"),
-  plot = tf_network_plot,
-  width = 18,
-  height = plot_height_tf,
-  limitsize = FALSE
-)
-
-# ============================================================
-# 4e: Mean GP loading per Level-2 sub-lineage (built before 4d since 4d
-#     reuses gp_row_order/group_colors computed here)
-# ============================================================
-keep_cells <- seurat_meta_filtered$annotation_level1 %in% lineages
-meta_sub <- seurat_meta_filtered[keep_cells, ]
-L_keep <- L_subset[keep_cells, , drop = FALSE]
-
-l2_counts <- table(meta_sub$annotation_level2)
-l2_keep <- names(l2_counts)[l2_counts >= 50]
-# Drop the "P" cluster and any "w..." clusters (wM, wW, etc.) across all lineages
-l2_stripped <- sub("^[^._]+[._]", "", l2_keep)
-exclude_l2 <- l2_stripped == "P" |
-  grepl("^w", l2_stripped, ignore.case = TRUE) |
-  grepl("[._]w", l2_keep, ignore.case = TRUE)
-l2_keep <- l2_keep[!exclude_l2]
-
-mean_mat <- vapply(
-  l2_keep,
-  function(l2) {
-    colMeans(L_keep[meta_sub$annotation_level2 == l2, , drop = FALSE])
-  },
-  numeric(ncol(L_keep))
-)
-l2_to_l1 <- vapply(
-  l2_keep,
-  function(l2) {
-    as.character(meta_sub$annotation_level1[meta_sub$annotation_level2 == l2][
-      1
-    ])
-  },
-  character(1)
-)
-col_order <- order(match(l2_to_l1, lineages), l2_keep)
-mean_mat <- mean_mat[gp_row_order, col_order]
-l2_to_l1 <- l2_to_l1[col_order]
-
-immgen_cols <- ZemmourLib::immgent_colors
-col_anno <- data.frame(
-  Lineage = factor(l2_to_l1, levels = lineages),
-  row.names = colnames(mean_mat)
-)
-anno_colors_mean <- list(Lineage = immgen_cols$level1[lineages])
-row_label_cols <- group_colors[gp_to_group[gp_row_order]]
-col_label_cols <- immgen_cols$level2[colnames(mean_mat)]
-col_label_cols[is.na(col_label_cols)] <- "black"
-
-ph <- pheatmap(
-  mean_mat,
-  cluster_rows = FALSE,
-  cluster_cols = FALSE,
-  color = colorRampPalette(c("white", "red"))(200),
-  annotation_col = col_anno,
-  annotation_colors = anno_colors_mean,
-  gaps_row = head(cumsum(lengths(gp_groups)), -1),
-  gaps_col = head(cumsum(rle(l2_to_l1)$lengths), -1),
-  main = "Average loading of Figure 4 GPs per Level-2 sub-lineage",
-  silent = TRUE
-)
-row_idx <- which(ph$gtable$layout$name == "row_names")
-col_idx <- which(ph$gtable$layout$name == "col_names")
-ph$gtable$grobs[[row_idx]]$gp$col <- row_label_cols
-ph$gtable$grobs[[col_idx]]$gp$col <- col_label_cols
-
-pdf(paste0(figure_path, "4e.pdf"), width = 11, height = 5.5)
-grid::grid.draw(ph$gtable)
-invisible(dev.off())
-
-# ============================================================
-# 4d: log2FC heatmap of activated CD4+CD8 cells across conditions,
+# 4c: log2FC heatmap of activated CD4+CD8 cells across conditions,
 #     relative to the per-GP mean across all CD4/CD8 cells
 # ============================================================
 act_keep <- seurat_meta_filtered$annotation_level1 %in%
@@ -465,9 +342,76 @@ row_idx_lfc_m <- which(ph_cond_lfc_mean$gtable$layout$name == "row_names")
 ph_cond_lfc_mean$gtable$grobs[[row_idx_lfc_m]]$gp$col <- row_label_cols
 
 pdf(
-  paste0(figure_path, "4d.pdf"),
+  paste0(figure_path, "4c.pdf"),
   width = max(8, 0.18 * ncol(lfc_mat_mean) + 4),
   height = 6
 )
 grid::grid.draw(ph_cond_lfc_mean$gtable)
+invisible(dev.off())
+
+# ============================================================
+# 4d: Mean GP loading per Level-2 sub-lineage
+# ============================================================
+keep_cells <- seurat_meta_filtered$annotation_level1 %in% lineages
+meta_sub <- seurat_meta_filtered[keep_cells, ]
+L_keep <- L_subset[keep_cells, , drop = FALSE]
+
+l2_counts <- table(meta_sub$annotation_level2)
+l2_keep <- names(l2_counts)[l2_counts >= 50]
+# Drop the "P" cluster and any "w..." clusters (wM, wW, etc.) across all lineages
+l2_stripped <- sub("^[^._]+[._]", "", l2_keep)
+exclude_l2 <- l2_stripped == "P" |
+  grepl("^w", l2_stripped, ignore.case = TRUE) |
+  grepl("[._]w", l2_keep, ignore.case = TRUE)
+l2_keep <- l2_keep[!exclude_l2]
+
+mean_mat <- vapply(
+  l2_keep,
+  function(l2) {
+    colMeans(L_keep[meta_sub$annotation_level2 == l2, , drop = FALSE])
+  },
+  numeric(ncol(L_keep))
+)
+l2_to_l1 <- vapply(
+  l2_keep,
+  function(l2) {
+    as.character(meta_sub$annotation_level1[meta_sub$annotation_level2 == l2][
+      1
+    ])
+  },
+  character(1)
+)
+col_order <- order(match(l2_to_l1, lineages), l2_keep)
+mean_mat <- mean_mat[gp_row_order, col_order]
+l2_to_l1 <- l2_to_l1[col_order]
+
+immgen_cols <- ZemmourLib::immgent_colors
+col_anno <- data.frame(
+  Lineage = factor(l2_to_l1, levels = lineages),
+  row.names = colnames(mean_mat)
+)
+anno_colors_mean <- list(Lineage = immgen_cols$level1[lineages])
+row_label_cols <- group_colors[gp_to_group[gp_row_order]]
+col_label_cols <- immgen_cols$level2[colnames(mean_mat)]
+col_label_cols[is.na(col_label_cols)] <- "black"
+
+ph <- pheatmap(
+  mean_mat,
+  cluster_rows = FALSE,
+  cluster_cols = FALSE,
+  color = colorRampPalette(c("white", "red"))(200),
+  annotation_col = col_anno,
+  annotation_colors = anno_colors_mean,
+  gaps_row = head(cumsum(lengths(gp_groups)), -1),
+  gaps_col = head(cumsum(rle(l2_to_l1)$lengths), -1),
+  main = "Average loading of Figure 4 GPs per Level-2 sub-lineage",
+  silent = TRUE
+)
+row_idx <- which(ph$gtable$layout$name == "row_names")
+col_idx <- which(ph$gtable$layout$name == "col_names")
+ph$gtable$grobs[[row_idx]]$gp$col <- row_label_cols
+ph$gtable$grobs[[col_idx]]$gp$col <- col_label_cols
+
+pdf(paste0(figure_path, "4d.pdf"), width = 11, height = 5.5)
+grid::grid.draw(ph$gtable)
 invisible(dev.off())

@@ -34,6 +34,8 @@ DENSITY=${DENSITY:-110}
 # (its KLRG1 and CD69 panels moved to the front, the protein-program heatmap and
 # the two CD69 mean-activity heatmaps moved into Figure S6), and Figure S3's
 # panels each dropped one letter when its s3a/s3b were merged into a single s3a.
+# And for Figure 4 after 2026-07-29: its TF-GP network was dropped, so the two
+# heatmaps that followed moved up a letter and the published 3e is now unpaired.
 MAP=$(
   cat <<'EOF'
 Figure 1/1A	Figure 1/1A
@@ -60,9 +62,8 @@ Figure 3/3L	Figure 2/2J
 Figure 3/3M	Figure 2/2M
 Figure 4/4a	Figure 3/3c
 Figure 4/4b	Figure 3/3d
-Figure 4/4c	Figure 3/3e
-Figure 4/4d	Figure 3/3f
-Figure 4/4e	Figure 3/3g
+Figure 4/4c	Figure 3/3f
+Figure 4/4d	Figure 3/3g
 Figure 5/5a	Figure 4/4a
 Figure 5/5b	Figure 4/4b
 Figure 5/5c	Figure 4/4c
@@ -94,6 +95,8 @@ Figure S3/s3f	Figure S3/s3g
 Figure S3/s3g	Figure S3/s3h
 EOF
 )
+# Published panels with no counterpart HERE any more: Figure 3/3e, the TF-GP
+# network dropped from Figure 4 on 2026-07-29.
 # Panels with no published counterpart: Figure 1/1C, Figure S1/S1E,
 # Figure S4/*, Figure 6/6i (GP77) and 6j (GP8), Figure S6/s6d-s6g (their GPs
 # were only ever drawn inside the retired s6-1/s6-2 gallery pages, not as

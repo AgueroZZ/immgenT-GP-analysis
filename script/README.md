@@ -37,7 +37,7 @@ The rest of Figure 7, and all of S7, are **out of scope** (see below). There is
 no S5: it became main Figure 7b, and the other Extended Data figures kept their
 numbers rather than shifting up.
 
-## The 2026-07-28 re-lettering
+## The 2026-07-28 / 07-29 re-lettering
 
 Four figures were reordered at once. Each script's header carries its own
 old-to-new table; in brief:
@@ -53,6 +53,12 @@ old-to-new table; in brief:
 - **Figure S3**'s s3a and s3b were merged into one s3a (they were always one
   panel), so every panel after them dropped a letter: published s3c-s3h are now
   s3b-s3g.
+- **Figure 4** (2026-07-29) dropped its bipartite TF-GP network, the published
+  3e, so the two heatmaps after it moved up a letter: published 3f, 3g are now
+  4c, 4d and the figure is a-d. That panel was the only caller anywhere of
+  `code/R/tf_network.R`, which is therefore now unused -- Figure S3's s3g draws
+  its own TF-GP network inline. The helper is kept for provenance, and
+  `FigureS3.R`'s `source()` of it (which never called into it) was removed.
 - **Extended Data Figure 5** became main **Figure 7b**, assembled from its two
   half-panels into one PDF, replacing a different collaborator panel.
 
@@ -61,7 +67,8 @@ old-to-new table; in brief:
 `figures/Previous/bits/` is the published panel set and still uses the OLD
 numbering. Figure 1 was split into Figures 1+2 and everything from the old
 Figure 2 onward shifted up by one, and Figures 6 / S3 / S6 were re-lettered on
-2026-07-28, so a same-letter filename comparison is wrong almost everywhere:
+2026-07-28 and Figure 4 on 2026-07-29, so a same-letter filename comparison is
+wrong almost everywhere:
 
 | ours | published (`figures/Previous/bits/`) |
 |---|---|
@@ -70,7 +77,8 @@ Figure 2 onward shifted up by one, and Figures 6 / S3 / S6 were re-lettered on
 | 1D | **1C** (the giant loading heatmap; ours adds the highlight bar/boxes) |
 | 2A-2F | **1D-1I** |
 | 3A-3M | **2A-2M** (letter for letter) |
-| 4a-4e | **3c-3g** (the old 3a/3b moved to Figure S3's a/b slot) |
+| 4a, 4b | Figure 3/**3c, 3d** (the old 3a/3b moved to Figure S3's a/b slot) |
+| 4c, 4d | Figure 3/**3f, 3g** (the published 3e, a TF-GP network, was dropped from the figure on 2026-07-29 and has no counterpart here) |
 | 5a-5e | **4a-4e** |
 | 6a | Figure 6/**6a** |
 | 6b, 6c | Figure 6/**6g, 6h** (KLRG1) |
@@ -277,7 +285,7 @@ moved letters and nothing else. The one panel whose content changed on purpose i
   `verify_panels.sh` pairs them by content (3J<->2L, 3L<->2J) so the swap does
   not read as a regression.
 - **Figure 3, panel 3I** and the J-L panels are otherwise identical to 2I-2L
-  apart from the UMAP->MDE axis/legend relabeling, and **4e**'s title was
+  apart from the UMAP->MDE axis/legend relabeling, and **4d**'s title was
   renumbered.
 
 ### Panels not code-generated here
@@ -325,8 +333,9 @@ bit-for-bit (modulo the PDF creation date):
 - cell subsampling / MDE sampling: `set.seed()` at the top of each panel's
   section, carried over from the original scripts;
 - swarm jitter: `position_jitter(seed = )` via `plot_gp_swarm(seed = 42)`;
-- graph layouts: `set.seed()` before each `ggraph()` call; the TF-GP layout in
-  `code/R/tf_network.R` is a deterministic barycenter ordering, no RNG;
+- graph layouts: `set.seed()` before each `ggraph()` call (the barycenter
+  TF-GP layout in `code/R/tf_network.R` was deterministic and RNG-free anyway,
+  and is unused since Figure 4's TF-GP panel was dropped);
 - **label repulsion: every `geom_text_repel()` call passes `seed = 42`.**
   Without it `ggrepel` picks a different layout on every run, which is what
   made panels drift between the PDFs and the site PNGs.

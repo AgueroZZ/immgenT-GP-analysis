@@ -99,8 +99,9 @@ ordered_GPs <- c(
 
 # ============================================================
 # Normalized gene-score matrix (max |score| = 1 per GP) -- used by the
-# GP-gene network (Fig3b), the TF-GP networks (Fig3c, S3E), and reused
-# wherever a per-GP-normalized score is needed.
+# GP-gene network (Fig 4b) and Figure S3's TF-GP network (s3g), and reused
+# wherever a per-GP-normalized score is needed. (It also fed Figure 4's own
+# TF-GP network until that panel was dropped on 2026-07-29.)
 # ============================================================
 F_pm_filtered_norm <- scale_cols(F_pm_filtered, 1 / apply(abs(F_pm_filtered), 2, max))
 colnames(F_pm_filtered_norm) <- paste0("GP", seq_len(ncol(F_pm_filtered_norm)))

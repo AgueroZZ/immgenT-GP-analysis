@@ -44,7 +44,6 @@ library(scales)
 data_path <- "data/"
 figure_path <- "figures/final-selected/Figure S3/"
 source("code/R/plot_utils.R") # scale_cols()
-source("code/R/tf_network.R") # optimize_bipartite_order(), plot_tf_gp_network_v2()
 
 # ============================================================
 # Load data

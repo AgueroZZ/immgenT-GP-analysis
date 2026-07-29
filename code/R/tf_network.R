@@ -1,6 +1,9 @@
 # Bipartite TF-GP network layout + plotting.
-# Used by script/Figure3.R (panel c) and FigureS3.R are both built
-# from this shared machinery, ported from Figure_Activation.R (which
+#
+# CURRENTLY UNUSED. Its only caller was Figure 4's bipartite TF-GP network panel,
+# which was dropped from the figure on 2026-07-29; Figure S3's s3g builds its own
+# TF-GP network inline and never called into this file. Kept for provenance.
+# Ported from Figure_Activation.R (which
 # itself absorbed this logic from Figure_TF.R and
 # Figure_TF_and_Activation.R -- all three files had their own
 # near-identical copy before this refactor).
