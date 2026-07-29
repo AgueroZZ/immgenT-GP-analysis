@@ -1,9 +1,9 @@
 # Extended Data Table 6: protein factor matrix.
 #
-# The final processed CITE-seq protein factor matrix used by Figure 6 (panel 6b
+# The final processed CITE-seq protein factor matrix used by Figure S6 (panel s6a
 # heatmap), exported as a plain table: one row per GP (GP1..GP200), one column
 # per protein, holding the protein's factor score in that GP. Built exactly as
-# script/Figure6.R (lines 58-65) does from the projected protein EBMF fit --
+# script/FigureS6.R does in its s6a block from the projected protein EBMF fit --
 # drop isotype / THY1.1 / excluded / non-"good" proteins, then scale each GP
 # column so its maximum absolute score is 1 (the same max|.|=1 normalization the
 # heatmap uses). See code/pipeline/04_protein_projection.R for how the raw

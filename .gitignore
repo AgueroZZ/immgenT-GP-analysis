@@ -9,8 +9,8 @@
 # gitignore's directory-only "data/" pattern doesn't match a symlink.
 data
 
-# Large regenerable script-to-script handoff (rebuilt by script/FigureS5.R)
-output/FigureS5/S5_cell_metadata.csv.gz
+# Large regenerable script-to-script handoff (rebuilt by script/Figure7b.R)
+output/Figure7b/7b_cell_metadata.csv.gz
 
 # Local Claude Code config (machine-specific absolute paths)
 .claude/
@@ -28,7 +28,7 @@ log/
 
 # Regenerable non-panel diagnostics written by script/Figure2.R (the
 # active-cell/active-gene histograms and the PVE-colored scatter). The rest of
-# output/ (the Figure S5 intermediates) IS tracked.
+# output/ (the Figure 7b intermediates) IS tracked.
 output/Figure2/
 
 # Local staging for panel re-lettering experiments -- copies of panels under

@@ -25,16 +25,19 @@ DST="analysis/assets"
 
 # Panels deliberately NOT on the site:
 #   Figure 1/1B, Figure 6/6a  -- hand-drawn schematics, no code, not shown
-#   Figure 7/*                -- out of scope (Figma + Matplotlib, no source)
+#   Figure 7/7A, 7C-7G        -- out of scope (Figma + Matplotlib, no source)
 # Panels whose asset filename differs from the PDF basename:
 #   Figure S4/s4a -> S4a_centered_mean_loading, s4b -> S4b_centered_mean_loading
-# Not handled here (not a single-panel conversion):
-#   FigureS5/S5_ebmf_rqvi_level2_comparison.png -- written by FigureS5_plot.py
+# Not handled here:
+#   Figure 7/7B -- script/Figure7b_plot.py saves the published PDF and
+#   analysis/assets/Figure7/7B.png from the SAME matplotlib figure in one call,
+#   so unlike every other panel there is no second plotting path that could
+#   drift from the first, and converting the PDF here would only lower the
+#   preview's resolution.
 skip() {
   case "$1" in
     "Figure 1/1B" | "Figure 6/6a") return 0 ;;
     "Figure 7/"*) return 0 ;;
-    "Figure S5/"*) return 0 ;;
     *) return 1 ;;
   esac
 }

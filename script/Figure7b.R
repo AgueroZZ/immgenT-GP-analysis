@@ -1,4 +1,4 @@
-# Figure S5 (data step): EBMF cluster-mean matrix and column/palette metadata for
+# Figure 7b (data step): EBMF cluster-mean matrix and column/palette metadata for
 # the EBMF vs RQVI gene-program comparison across annotation_level2 clusters.
 #
 #   * Cells: L_pm_filtered gene-program loadings (cells passing the iterative
@@ -13,8 +13,8 @@
 #
 # This script writes the EBMF cluster-mean matrix, a cell->annotation table, and
 # the column order + lineage palette. The RQVI cluster means and the one-to-one
-# EBMF-RQVI matching are computed by script/FigureS5_rematch.py; row ordering,
-# per-program [0,1] scaling, and the heatmaps by script/FigureS5_plot.py.
+# EBMF-RQVI matching are computed by script/Figure7b_rematch.py; row ordering,
+# per-program [0,1] scaling, and the heatmaps by script/Figure7b_plot.py.
 
 suppressPackageStartupMessages({
   library(arrow)
@@ -27,7 +27,7 @@ if (!file.exists("code/R/setup_data.R")) {
 }
 source("code/R/setup_data.R")
 
-outdir <- "output/FigureS5"   # build intermediates; final panels come from FigureS5_plot.py
+outdir <- "output/Figure7b"   # build intermediates; final panels come from Figure7b_plot.py
 dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
 
 PKG <- "data/rqvi_loading/RQVI_EBMF_heatmap_data_v1/data"
@@ -91,25 +91,25 @@ hex <- vapply(l1pal, function(cc) {
 pal_df <- data.frame(level1 = names(hex), color = unname(hex), stringsAsFactors = FALSE)
 
 ## ---- write outputs ----
-# cell -> level1/level2 for all L_pm_filtered cells; consumed by FigureS5_rematch.py
+# cell -> level1/level2 for all L_pm_filtered cells; consumed by Figure7b_rematch.py
 # to define common cells and clusters (avoids any machine-specific path).
 fwrite(data.frame(
   cellID            = rownames(L),
   annotation_level1 = as.character(meta$annotation_level1),
   annotation_level2 = as.character(meta$annotation_level2),
   stringsAsFactors  = FALSE
-), file.path(outdir, "S5_cell_metadata.csv.gz"))
+), file.path(outdir, "7b_cell_metadata.csv.gz"))
 
 fwrite(data.frame(level2_cluster = rownames(ebmf_means), ebmf_means, check.names = FALSE),
-       file.path(outdir, "S5_ebmf_raw_means_level2.csv"))
-fwrite(cluster_order, file.path(outdir, "S5_cluster_order.csv"))
-fwrite(pal_df,        file.path(outdir, "S5_level1_palette.csv"))
+       file.path(outdir, "7b_ebmf_raw_means_level2.csv"))
+fwrite(cluster_order, file.path(outdir, "7b_cluster_order.csv"))
+fwrite(pal_df,        file.path(outdir, "7b_level1_palette.csv"))
 fwrite(data.frame(
   metric = c("common_cells", "healthy_cells", "nonhealthy_cells", "level2_clusters", "ebmf_factors"),
   value  = c(length(common_ids),
              sum(meta$condition_broad[match(common_ids, rownames(meta))] == "healthy"),
              sum(meta$condition_broad[match(common_ids, rownames(meta))] != "healthy"),
              nlevels(grp), 200L)
-), file.path(outdir, "S5_build_summary.csv"))
+), file.path(outdir, "7b_build_summary.csv"))
 
 message("Wrote Fig S5 data inputs to ", normalizePath(outdir))

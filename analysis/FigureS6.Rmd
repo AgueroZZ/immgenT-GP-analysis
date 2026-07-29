@@ -1,5 +1,5 @@
 ---
-title: "Figure S6: Gallery of surface-protein gating strategies associated with GP activity"
+title: "Figure S6: Protein programs, CD69-associated GPs, and further gating strategies"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -12,37 +12,104 @@ source("../code/R/doc_code.R")
 
 Published as **Extended Data Figure 6**.
 
-Both pages are produced by
+All panels are produced by
 [`script/FigureS6.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS6.R),
-which shares its CITE-seq setup and gating logic with
-[Figure 6c-f](Figure6.html#fig6cf) via `code/R/citeseq_shared_setup.R`
-and `code/R/gated_protein_helpers.R`. The code below is shown for
-reference (not re-executed on this page, since this script takes roughly a
-minute and a half to render ~25 GPs x 2 embeddings each); the images are its
-pre-rendered output.
+which shares its CITE-seq setup, gating logic and CD69 GP subset with
+[Figure 6](Figure6.html) via `code/R/citeseq_shared_setup.R` and
+`code/R/gated_protein_helpers.R`. The code below is shown for
+reference (not re-executed on this page, since this script takes about a minute
+to run); the images are its pre-rendered output.
+
+**This figure was reworked on 2026-07-28.** It used to be a two-page gallery
+(`s6-1`, `s6-2`) of all 23 well-aligned GPs that Figure 6 did not show. The
+gallery is retired; four of its GPs are kept here as panels (d)-(g), two were
+promoted into the main figure ([Fig. 6i, j](Figure6.html#fig6ej)), and the
+remaining 17 are no longer published. Panels (a)-(c) moved here from Figure 6,
+where they were the published 6b, 6j and 6k. `script/FigureS6.R` carries the full
+old-to-new table in its header.
 
 ## Setup
 
-```{r figs6-setup, code=code_for("../script/FigureS6.R", "^"), eval=FALSE}
+```{r figs6-setup, code=code_for("../script/FigureS6.R", "doc:setup"), eval=FALSE}
 ```
 
-## Gallery pages {#figs6-gallery}
+## (s6a) Protein-program heatmap {#figs6a}
 
-```{r figs6-code, code=code_for("../script/FigureS6.R", "doc:gallery"), eval=FALSE}
+```{r figs6a-code, code=code_for("../script/FigureS6.R", "s6a"), eval=FALSE}
 ```
 
-```{r figs6-img, echo=FALSE, out.width="100%"}
-knitr::include_graphics(c("assets/FigureS6/s6-1.png", "assets/FigureS6/s6-2.png"))
+```{r figs6a-img, echo=FALSE, out.width="100%"}
+knitr::include_graphics("assets/FigureS6/s6a.png")
 ```
 
 ::: {.figcaption}
-**Fig. S6.** Examples of gating strategies used to identify GP-active cells --
-Figure 6c-f extended to all well-aligned GPs, shown as two gallery pages (s6-1
-and s6-2). For each GP, all-T MDE plots highlight cells selected by the proposed
-strategy (left) and the corresponding GP-active cells (right): left, cells
-passing a protein gate built from the GP's curated marker signature (positive
-markers above, negative below), with the gate size reported as "Matched n";
-right, an equally sized set of cells with the highest GP activity. Color indicates
-cell density (two-dimensional); all other cells are grey. Thymocytes,
-proliferating, and "miniverse" cells are excluded. Each panel is labeled with its GP and the markers the gate actually applied. A marker from the curated signature that has no manually reviewed positivity threshold ([Extended Data Table 7](ExtendedDataTable7.html)) cannot be gated on, and so is omitted from the label rather than listed: THY1.2 for GP3, GP35, GP107 and GP159, plus GR1-LY6G-LY6C1-LY6C2 for GP159.
+**Fig. S6a.** Heatmap of scaled protein scores for each GP (the re-estimated
+protein matrix **U**), with the protein scores in each GP scaled so its maximum
+|score| = 1. We focused on the **47 proteins** that performed best in the immgenT
+CITE-seq dataset (isotype and low-quality proteins removed).
+**Seventeen GPs lacked meaningful protein correlates** -- every protein score is
+exactly zero -- and were omitted. Four putative contamination programs (GP40,
+GP50, GP55 and GP188) were also removed, leaving **179 GPs**
+(200 - 17 - 4 = 179); 47 proteins (rows) x 179 GPs (columns). Entries with an
+absolute score below 0.5 are shown in white, with color running from blue (-1)
+through white to red (+1). GP columns are ordered from the most to the fewest visible proteins. Protein rows are ordered by the position of their rightmost visible GP, placing proteins that extend into the sparse right side first and exposing a triangular support boundary; visible count and a rarity-weighted support score break ties. This triangular-first row order is not monotone in per-protein sparsity. GP labels are vertical and sized to the available heatmap-cell width; protein labels are sized to the available row height.
+:::
+
+## (s6b, s6c) CD69-associated GPs across tissues and lineages {#figs6bc}
+
+The ten GPs and their order are defined in `code/R/citeseq_shared_setup.R`, so
+that these two panels and [Fig. 6d](Figure6.html#fig6d) -- which live in
+different figures and therefore in different scripts -- cannot disagree about
+which GPs they show or in what order:
+
+```{r figs6bc-gps, code=code_for("../code/R/citeseq_shared_setup.R", "doc:cd69"), eval=FALSE}
+```
+
+```{r figs6bc-code, code=code_for("../script/FigureS6.R", "s6b"), eval=FALSE}
+```
+
+```{r figs6bc-img, echo=FALSE, out.width="49%"}
+knitr::include_graphics(c("assets/FigureS6/s6b.png", "assets/FigureS6/s6c.png"))
+```
+
+::: {.figcaption}
+**Fig. S6b, c.** Mean activity of the GPs associated with CD69 protein
+expression, **(b) across tissues** (`organ_simplified`) and **(c) across
+lineages** (`annotation_level1`). These are the same ten representative
+CD69-associated GPs drawn in [Fig. 6d](Figure6.html#fig6d), on the same y-axis
+order: selected from among the GPs most strongly correlated -- positively or
+negatively -- with CD69 protein expression, and ordered by the Spearman
+correlation between GP activity and CD69 expression. Color runs from white (zero)
+to firebrick (each panel's largest mean activity). The ten GPs are a
+**hand-picked** set, not a computed top-10; `script/verify_cd69_gp_ranking.R`
+recomputes the correlation over all 200 GPs and fails if this wording and the
+code drift apart.
+:::
+
+## (s6d-g) Further protein-gated vs. GP-loading populations {#figs6dg}
+
+```{r figs6dg-code, code=code_for("../script/FigureS6.R", "s6d"), eval=FALSE}
+```
+
+```{r figs6dg-img, echo=FALSE, out.width="49%"}
+knitr::include_graphics(c(
+  "assets/FigureS6/s6d.png", "assets/FigureS6/s6e.png",
+  "assets/FigureS6/s6f.png", "assets/FigureS6/s6g.png"
+))
+```
+
+::: {.figcaption}
+**Fig. S6d-g.** Examples of gating strategies used to identify GP-active cells --
+[Fig. 6e-j](Figure6.html#fig6ej) extended to four further GPs, **(d) GP29,
+(e) GP58, (f) GP22 and (g) GP68**. Drawn exactly as in Figure 6: for each GP,
+all-T MDE plots highlight cells passing a protein gate built from the GP's
+curated marker signature (left; positive markers above threshold, negative
+markers at or below, with the gate size reported in the panel title as
+"Matched n") and, on the right, exactly that many cells, taken as the ones with
+the highest GP activity. Color indicates cell density (two-dimensional); all
+other cells are grey. Thymocytes, proliferating, and "miniverse" cells are
+excluded. Each panel is labeled with its GP and the markers the gate actually
+applied; every marker in these four signatures has a manually reviewed
+positivity threshold ([Extended Data Table 7](ExtendedDataTable7.html)), so
+none is silently dropped.
 :::

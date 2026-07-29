@@ -7,9 +7,11 @@
 #
 # Requires data_path to already be set. Defines/overwrites: L_pm_filtered,
 # F_pm_filtered, seurat_meta_filtered, protein_mat_normalized_lognorm,
-# mde_result, Protein_F_pm_raw, select_proteins, threshold_results_subset_manual,
-# df_markers2, thymocyte_cells, proliferating_cells, miniverse_cells,
-# well_aligned_gps.
+# mde_result, Protein_F_pm_raw, isotype_proteins, good_proteins,
+# exclude_proteins, thy11_proteins, select_proteins,
+# threshold_results_subset_manual, df_markers2, thymocyte_cells,
+# proliferating_cells, miniverse_cells, well_aligned_gps, L_pm_for_gating,
+# enlarge_gps, cd69_top_gps_subset, cd69_corr, cd69_top_gps_sorted.
 
 L_pm_filtered <- readRDS(paste0(data_path, "L_pm_filtered.rds"))
 F_pm_filtered <- readRDS(paste0(data_path, "F_pm_filtered.rds"))
@@ -74,8 +76,11 @@ proliferating_cells <- seurat_meta_filtered %>% dplyr::filter(annotation_level2_
 miniverse_cells <- seurat_meta_filtered %>% dplyr::filter(annotation_level2_group == "miniverse") %>% dplyr::pull(cellID)
 
 # GPs judged well-aligned between protein gating and GP loading (manually
-# curated; see data/CITEseq_alignment_scores_manual.csv), used by Figure6.R's
-# panel 6b heatmap and FigureS6.R's gallery.
+# curated; see data/CITEseq_alignment_scores_manual.csv). The gating panels that
+# ship are a curated subset of this list: Figure 6e-6j (GP171, GP12, GP80, GP23,
+# GP77, GP8) and Figure S6d-S6g (GP29, GP58, GP22, GP68). The remaining 17 were
+# shown as a two-page gallery until 2026-07-28 and are no longer published;
+# script/verify_gating_gps.R checks the ten shipped GPs against this list.
 well_aligned_gps <- c(
   "GP10", "GP26", "GP68", "GP171", "GP58", "GP8", "GP30", "GP27", "GP170", "GP80",
   "GP35", "GP12", "GP3", "GP29", "GP77", "GP22", "GP25", "GP41", "GP181", "GP63",
@@ -87,3 +92,32 @@ well_aligned_gps <- c(
 # copy so the "GP##" renaming above isn't disturbed for callers that want it.
 L_pm_for_gating <- L_pm_filtered
 colnames(L_pm_for_gating) <- paste0("K", seq_len(ncol(L_pm_for_gating)))
+
+# A few GPs get slightly larger highlighted points in their gating panels, for
+# visibility even at high cell counts. Shared so Figure 6 and Figure S6 cannot
+# draw the same GP at two different point sizes.
+enlarge_gps <- c("GP8", "GP30", "GP170", "GP107")
+
+# --- doc:cd69 ---
+# The CD69-associated GP subset, shared by Figure 6d (the up/down gene heatmap)
+# and Figure S6b/S6c (the same GPs' mean activity per tissue and per lineage).
+# Those three panels are in two different figures and so in two different
+# scripts, but they must show the same GPs on the same axis order -- hence one
+# definition here rather than a copy in each script.
+#
+# Curated list -- NOT a top-10 computed from the correlations below. These 10
+# are drawn from among the most strongly CD69-correlated GPs, but are not the
+# top 10 under any single ranking: 8 are positively correlated (ranks 1, 3, 4,
+# 5, 6, 10, 12, 14 of 200) and GP58/GP171 are the two most *negatively*
+# correlated GPs of all 200. By |rho| they sit at ranks 1, 2, 4, 5, 6, 8, 12,
+# 14, 17, 18, skipping GP1/GP47/GP100/GP25. Treat as a hand-picked input like
+# Thresholds_Selected_Proteins.csv and well_aligned_gps -- don't "fix" it into
+# a computed ranking, and keep the captions' "from among the most associated"
+# wording in sync (analysis/Figure6.Rmd Fig. 6d, analysis/FigureS6.Rmd
+# Fig. S6b, c). script/verify_cd69_gp_ranking.R enforces all of this.
+cd69_top_gps_subset <- c("GP35", "GP6", "GP170", "GP26", "GP58", "GP171", "GP63", "GP62", "GP3", "GP29")
+shared_cells_cd69 <- intersect(rownames(L_pm_filtered), rownames(protein_mat_normalized_lognorm))
+cd69_expr_vec <- protein_mat_normalized_lognorm[shared_cells_cd69, "CD69"]
+cd69_corr <- sapply(cd69_top_gps_subset, function(gp) cor(L_pm_filtered[shared_cells_cd69, gp], cd69_expr_vec, method = "spearman"))
+# most-correlated GP ends up at the top of the y-axis in all three panels
+cd69_top_gps_sorted <- names(sort(cd69_corr, decreasing = FALSE))

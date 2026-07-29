@@ -9,7 +9,7 @@
 # agree, and nothing in the build enforces it:
 #
 #   the curated CSV  ->  threshold_results_subset_manual   (code/R/citeseq_shared_setup.R)
-#                    ->  the threshold_df that Figure6.R:170 / FigureS6.R:55 gate on
+#                    ->  the threshold_df that Figure6.R and FigureS6.R gate on
 #                    ->  Extended Data Table 7, which publishes the values
 #
 # This script builds the middle one by sourcing the real setup -- not a copy of
@@ -65,9 +65,11 @@ skipped <- sort(setdiff(markers, published$Protein))
 cat(sprintf("markers in play: %d | silently skipped: %s\n", length(markers), paste(skipped, collapse = ", ")))
 # Not a failure -- these 5 were deliberately dropped from the curated CSV. Kept
 # visible because the GP marker signatures still name them (Extended Data
-# Table 7's caption lists them; the Figure 6 / S6 panel subtitles do not).
+# Table 7's caption lists them). None of them appears in the 10 GP signatures
+# that Figure 6e-6j / S6d-S6g actually gate on -- script/verify_gating_gps.R
+# checks that, so the panel subtitles cannot be hiding a dropped marker.
 
-cat("\n=== 5. Figure 6g/6h KLRG1 cutoff (Figure6.R:217) ===\n")
+cat("\n=== 5. Figure 6b/6c KLRG1 cutoff (Figure6.R, the 6b/6c block) ===\n")
 klrg1 <- c(runtime = runtime$Threshold[runtime$Protein == "KLRG1"],
            published = published$Threshold[published$Protein == "KLRG1"])
 print(klrg1)

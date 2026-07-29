@@ -1,13 +1,19 @@
-"""Figure S5 (plot step): draw the EBMF vs RQVI level2-cluster heatmaps.
+"""Figure 7b (plot step): draw the EBMF vs RQVI level2-cluster heatmaps.
 
-Reads the raw cluster-mean matrices written by script/FigureS5.R, orders EBMF
+Reads the raw cluster-mean matrices written by script/Figure7b.R, orders EBMF
 programs by hierarchical clustering (average linkage, correlation distance,
 optimal leaf ordering), scales every program to [0, 1] across clusters, and draws
 two Blues heatmaps (EBMF | corresponding RQVI) sharing row order, columns, and a
 "Relative loading" colorbar.
 
+This was Extended Data Figure 5 until 2026-07-28, published as two half-panels
+(S5a, S5b) plus a detached colorbar. It is now a single assembled panel, main
+Figure 7b, replacing the collaborator's earlier 7B (a cell-level EBMF-vs-RQVI
+correlation heatmap). The two halves and the standalone colorbar are still drawn,
+but into output/ as intermediates -- the published artifact is one PDF.
+
 Run from the repository root:
-    python script/FigureS5_plot.py
+    python script/Figure7b_plot.py
 """
 from __future__ import annotations
 
@@ -22,15 +28,15 @@ import numpy as np
 import pandas as pd
 from scipy.cluster.hierarchy import leaves_list, linkage
 
-FIG_DIR = Path("figures/final-selected/Figure S5")   # final manuscript panels
-OUT_DIR = Path("output/FigureS5")               # build intermediates
-ASSET_DIR = Path("analysis/assets/FigureS5")    # web preview for the workflowr page
-EBMF_MEANS = OUT_DIR / "S5_ebmf_raw_means_level2.csv"
-RQVI_MEANS = OUT_DIR / "S5_rqvi_rematched_raw_means_level2.csv"
-CLUSTER_ORDER = OUT_DIR / "S5_cluster_order.csv"
-LEVEL1_PALETTE = OUT_DIR / "S5_level1_palette.csv"
+FIG_DIR = Path("figures/final-selected/Figure 7")   # final manuscript panel (7B.pdf)
+OUT_DIR = Path("output/Figure7b")               # build intermediates
+ASSET_DIR = Path("analysis/assets/Figure7")    # web preview for the workflowr page
+EBMF_MEANS = OUT_DIR / "7b_ebmf_raw_means_level2.csv"
+RQVI_MEANS = OUT_DIR / "7b_rqvi_rematched_raw_means_level2.csv"
+CLUSTER_ORDER = OUT_DIR / "7b_cluster_order.csv"
+LEVEL1_PALETTE = OUT_DIR / "7b_level1_palette.csv"
 
-# populated from S5_level1_palette.csv in main()
+# populated from 7b_level1_palette.csv in main()
 LEVEL1_COLORS: dict[str, str] = {}
 
 
@@ -209,27 +215,32 @@ def main() -> None:
     ebmf_plot = ebmf_scaled.to_numpy().T[display_order]
     rqvi_plot = rqvi_scaled.to_numpy().T[display_order]
 
-    # final manuscript panels -> figures/final-selected/Figure S5/
-    _plot_heatmap_subfigure(ebmf_plot, cluster_lineages, "EBMF factors", False,
-                            FIG_DIR / "S5a.pdf")
-    _plot_heatmap_subfigure(rqvi_plot, cluster_lineages, "Corresponding RQVI factors", True,
-                            FIG_DIR / "S5b.pdf")
-    _plot_shared_colorbar(FIG_DIR / "S5_shared_relative_loading_colorbar.pdf")
+    # the published panel: one assembled figure -> figures/final-selected/Figure 7/
+    # The web preview PNG comes out of the same matplotlib figure in the same
+    # call, which is why script/render_site_assets.sh does not re-derive it from
+    # the PDF the way it does for every other panel: there is no second plotting
+    # path here that could drift from the first.
+    panel_pdf = FIG_DIR / "7B.pdf"
+    _plot(ebmf_plot, rqvi_plot, cluster_lineages, panel_pdf, ASSET_DIR / "7B.png")
 
-    # assembled figure -> intermediates; web preview PNG -> analysis/assets
-    _plot(ebmf_plot, rqvi_plot, cluster_lineages,
-          OUT_DIR / "S5_ebmf_rqvi_level2_comparison.pdf",
-          ASSET_DIR / "S5_ebmf_rqvi_level2_comparison.png")
+    # The two halves and the detached colorbar were the published artifacts while
+    # this was Extended Data Figure 5. They are kept as intermediates in case the
+    # panel ever has to be laid out from its parts again.
+    _plot_heatmap_subfigure(ebmf_plot, cluster_lineages, "EBMF factors", False,
+                            OUT_DIR / "7b_ebmf_half.pdf")
+    _plot_heatmap_subfigure(rqvi_plot, cluster_lineages, "Corresponding RQVI factors", True,
+                            OUT_DIR / "7b_rqvi_half.pdf")
+    _plot_shared_colorbar(OUT_DIR / "7b_shared_relative_loading_colorbar.pdf")
 
     ordered_factors = [factors[i] for i in display_order]
     pd.DataFrame(ebmf_plot, index=ordered_factors, columns=cluster_labels).to_csv(
-        OUT_DIR / "S5_ebmf_scaled_display.csv")
+        OUT_DIR / "7b_ebmf_scaled_display.csv")
     pd.DataFrame(rqvi_plot, index=ordered_factors, columns=cluster_labels).to_csv(
-        OUT_DIR / "S5_rqvi_scaled_display.csv")
+        OUT_DIR / "7b_rqvi_scaled_display.csv")
 
     print(f"rows: {len(display_order)} programs; cols: {len(cluster_labels)} level2 clusters")
-    print(f"wrote panels (S5a.pdf, S5b.pdf, colorbar) to {FIG_DIR}")
-    print(f"wrote assembled figure to {OUT_DIR}; web preview to {ASSET_DIR}")
+    print(f"wrote the published panel to {panel_pdf}; web preview to {ASSET_DIR}")
+    print(f"wrote halves, colorbar and scaled display matrices to {OUT_DIR}")
 
 
 if __name__ == "__main__":

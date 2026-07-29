@@ -1,25 +1,35 @@
 # Figure 6. Linking GPs to proteins.
 #
-# Panels produced (see figures/Figure6_CITEseq/Figure6_caption.md for the
-# full caption text):
+# Panels produced (see analysis/Figure6.Rmd for the caption text):
 #   6a  Schematic of the projection (EBMF on scRNA, then EBMF on CITE-seq
 #       with cell loadings fixed). Hand-drawn in other software -- NOT
 #       code-generated, no source to port. Not produced by this script.
-#   6b  Heatmap of the re-estimated protein matrix U (sparse: |score| < 0.5
-#       shown white), after removing isotype/low-quality proteins and 4
-#       contamination GPs (GP40/50/55/188). GPs are columns ordered from dense
-#       to sparse; proteins are rows ordered by their rightmost visible GP to
-#       expose a triangular support boundary.
-#   6c-6f  Protein-gate vs. GP-loading comparison on the MDE embedding, for
-#       the 4 curated GPs GP171/GP23/GP12/GP80.
-#   6g,6h  KLRG1 modulation: CD8 vs CD4 (g) and CD8 vs Treg (h).
-#   6i  Heatmap of top-5 gene scores per GP for 10 curated GPs drawn from
-#       among those most strongly correlated (either sign) with CD69, with a
-#       CD69-correlation strip.
-#   6j,6k  Mean loading of those 10 GPs per tissue (j) and per lineage (k).
+#   6b,6c  KLRG1 modulation: CD8 vs CD4 (b) and CD8 vs Treg (c).
+#   6d  Heatmap of top-5 gene scores per GP for the 10 curated CD69-associated
+#       GPs (cd69_top_gps_subset, defined in code/R/citeseq_shared_setup.R),
+#       with a CD69-correlation strip.
+#   6e-6j  Protein-gate vs. GP-loading comparison on the MDE embedding, for the
+#       6 curated GPs GP171/GP12/GP80/GP23/GP77/GP8.
 #
-# Source: ported from Figure_CITEseq.R (panels b, g, h, i, j, k) and
-# gated_protein_loading_plot.R (panels c-f, using
+# Reordered 2026-07-28. The published figure was a-k and lettered differently;
+# for anyone diffing against figures/Previous/bits/Figure 6/:
+#
+#   now  was    what
+#   6a   6a     schematic (unchanged)
+#   6b   6g     KLRG1 CD8 vs CD4
+#   6c   6h     KLRG1 CD8 vs Treg
+#   6d   6i     CD69 up/down gene heatmap
+#   6e   6c     gating, GP171
+#   6f   6d     gating, GP12
+#   6g   6e     gating, GP80
+#   6h   6f     gating, GP23
+#   6i   --     gating, GP77   (new panel)
+#   6j   --     gating, GP8    (new panel, promoted from the retired S6 gallery)
+#   --   6b     protein-program heatmap  -> moved to Figure S6, panel s6a
+#   --   6j,6k  CD69 GPs per tissue/lineage -> moved to Figure S6, s6b/s6c
+#
+# Source: ported from Figure_CITEseq.R (panels b, c, d) and
+# gated_protein_loading_plot.R (panels e-j, using
 # plot_gated_gp_vs_protein() from code/R/gated_protein_helpers.R,
 # shared with FigureS6.R).
 #
@@ -42,7 +52,6 @@ library(ggplot2)
 library(ggrepel)
 library(dplyr)
 library(patchwork)
-library(pheatmap)
 library(tidyr)
 library(Matrix) # protein matrices are dgCMatrix; must be attached for `[` to dispatch
 
@@ -57,128 +66,8 @@ source("code/R/gated_protein_helpers.R")
 # ============================================================
 source("code/R/citeseq_shared_setup.R")
 
-# Re-derive the normalized protein matrix used only by this script's panel
-# 6b (Protein_F_pm_raw filtered/scaled -- FigureS6.R doesn't need it).
-Protein_F_pm <- Protein_F_pm_raw[!rownames(Protein_F_pm_raw) %in% isotype_proteins, ]
-Protein_F_pm <- Protein_F_pm[rownames(Protein_F_pm) %in% good_proteins, ]
-Protein_F_pm <- Protein_F_pm[!rownames(Protein_F_pm) %in% exclude_proteins, ]
-Protein_F_pm <- Protein_F_pm[!rownames(Protein_F_pm) %in% thy11_proteins, ]
-D_lognorm <- diag(1 / apply(Protein_F_pm, 2, function(x) max(abs(x))))
-Protein_F_pm <- Protein_F_pm %*% D_lognorm
-colnames(Protein_F_pm) <- paste0("GP", 1:ncol(Protein_F_pm))
-Protein_F_pm[is.na(Protein_F_pm)] <- 0
-
 # ============================================================
-# 6b: sparse protein-program heatmap, contamination GPs removed
-# ============================================================
-threshold_simplified <- 0
-keep_rows_simplified <- apply(Protein_F_pm, 1, function(v) any(abs(v) > threshold_simplified, na.rm = TRUE))
-Protein_F_pm_simplified <- Protein_F_pm[keep_rows_simplified, , drop = FALSE]
-keep_cols_simplified <- apply(Protein_F_pm_simplified, 2, function(v) any(abs(v) > threshold_simplified, na.rm = TRUE))
-Protein_F_pm_simplified <- Protein_F_pm_simplified[, keep_cols_simplified, drop = FALSE]
-
-GP_contamination <- c("GP40", "GP50", "GP55", "GP188")
-Protein_F_pm_simplified_no_contamination <- Protein_F_pm_simplified[, !colnames(Protein_F_pm_simplified) %in% GP_contamination, drop = FALSE]
-
-sparse_cutoff <- 0.5
-bk_sparse <- unique(c(seq(-1, -sparse_cutoff, length.out = 26), seq(-sparse_cutoff, sparse_cutoff, length.out = 51), seq(sparse_cutoff, 1, length.out = 26)))
-cols_sparse <- c(colorRampPalette(c("#4575B4", "white"))(25), rep("white", 50), colorRampPalette(c("white", "#D73027"))(25))
-
-# Display proteins as rows and GPs as columns. Order GP columns from most to
-# fewest visible proteins. Order protein rows by their rightmost visible GP, so
-# proteins extending into the sparse right side appear first and form a
-# triangular boundary. Visible count and a rarity-weighted support score provide
-# deterministic secondary ordering.
-wide_matrix_6b <- as.matrix(Protein_F_pm_simplified_no_contamination)
-wide_visible_mask_6b <- abs(wide_matrix_6b) >= sparse_cutoff
-wide_gp_visible_count_6b <- colSums(wide_visible_mask_6b)
-wide_protein_visible_count_6b <- rowSums(wide_visible_mask_6b)
-wide_gp_number_6b <- as.integer(sub("^GP", "", colnames(wide_matrix_6b)))
-
-wide_gp_order_6b <- order(-wide_gp_visible_count_6b, wide_gp_number_6b)
-wide_mask_ordered_cols_6b <- wide_visible_mask_6b[
-  ,
-  wide_gp_order_6b,
-  drop = FALSE
-]
-wide_rightmost_visible_gp_6b <- apply(
-  wide_mask_ordered_cols_6b,
-  1,
-  function(values) max(which(values))
-)
-wide_rarity_weights_6b <- seq_len(ncol(wide_mask_ordered_cols_6b))^2
-wide_protein_rarity_score_6b <- as.numeric(
-  wide_mask_ordered_cols_6b %*% wide_rarity_weights_6b
-)
-wide_protein_order_6b <- order(
-  -wide_rightmost_visible_gp_6b,
-  -wide_protein_visible_count_6b,
-  -wide_protein_rarity_score_6b,
-  rownames(wide_matrix_6b)
-)
-wide_ordered_matrix_6b <- wide_matrix_6b[
-  wide_protein_order_6b,
-  wide_gp_order_6b,
-  drop = FALSE
-]
-
-pdf(paste0(figure_path, "6b.pdf"), width = 48, height = 14)
-pheatmap::pheatmap(
-  wide_ordered_matrix_6b,
-  main = sprintf(
-    paste0(
-      "Protein programs - GP columns, triangular-first protein rows ",
-      "(|score| >= %.1f; protein-row sparsity is not monotone)"
-    ),
-    sparse_cutoff
-  ),
-  color = cols_sparse,
-  breaks = bk_sparse,
-  cluster_rows = FALSE,
-  cluster_cols = FALSE,
-  border_color = "grey75",
-  fontsize = 16,
-  fontsize_row = 16,
-  fontsize_col = 16,
-  angle_col = 90,
-  legend_breaks = c(-1, -sparse_cutoff, 0, sparse_cutoff, 1),
-  legend_labels = c("-1", "-0.5", "0 (white)", "0.5", "1")
-)
-dev.off()
-
-# ============================================================
-# 6c-6f: protein-gate vs. GP-loading comparison for the 4 curated main-figure GPs
-# (df_markers2, thymocyte/proliferating/miniverse_cells, L_pm_for_gating,
-# select_proteins, threshold_results_subset_manual all come from
-# citeseq_shared_setup.R above)
-# ============================================================
-# Panel lettering follows the published figure: c = GP171, d = GP12, e = GP80,
-# f = GP23. (It is NOT the order the GPs happen to be listed in below -- an
-# earlier version of this script assigned the letters positionally, which
-# silently swapped d/e/f relative to the published panels.)
-GPs_fig6 <- c("GP171", "GP23", "GP12", "GP80")
-fig6_letter <- c("GP171" = "6c", "GP12" = "6d", "GP80" = "6e", "GP23" = "6f")
-enlarge_gps <- c("GP8", "GP30", "GP170", "GP107")
-for (gp in GPs_fig6) {
-  k_name <- paste0("K", sub("^GP", "", gp))
-  plot_gated_gp_vs_protein(
-    gp_name = k_name,
-    df_markers = df_markers2,
-    protein_mat = protein_mat_normalized_lognorm,
-    loading_mat = L_pm_for_gating,
-    mde_emb = mde_result,
-    missing_threshold_action = "skip",
-    threshold_df = threshold_results_subset_manual,
-    exclude_cells = c(thymocyte_cells, proliferating_cells, miniverse_cells),
-    selected_proteins = select_proteins,
-    loading_q = NULL,
-    min_pointsize = if (gp %in% enlarge_gps) 3L else 0L,
-    save_path = paste0(figure_path, fig6_letter[gp], ".pdf")
-  )
-}
-
-# ============================================================
-# 6g/6h: KLRG1 modulation (CD8 vs CD4, CD8 vs Treg)
+# 6b/6c: KLRG1 modulation (CD8 vs CD4, CD8 vs Treg)
 # ============================================================
 FlashierDGE_corrected <- function(F1, L1, group1, group2, title_plot = "") {
   loadings_group1 <- colMeans(L1[group1, ])
@@ -224,47 +113,34 @@ diff_CD8 <- run_checked_dge(cd8_split, F_pm_filtered, L_pm_filtered, "CD8") %>% 
 diff_CD4 <- run_checked_dge(CD4_split, F_pm_filtered, L_pm_filtered, "CD4") %>% rename(mean_change_CD4 = mean_change_loadings, AveExpr_CD4 = AveExpr)
 diff_Treg <- run_checked_dge(treg_split, F_pm_filtered, L_pm_filtered, "Treg") %>% rename(mean_change_Treg = mean_change_loadings, AveExpr_Treg = AveExpr)
 
-# 6g: CD8 vs CD4
+# 6b: CD8 vs CD4
 merged_cd4 <- inner_join(diff_CD4, diff_CD8, by = "SYMBOL")
-p_6g <- plot_target_gps(
+p_6b <- plot_target_gps(
   df = merged_cd4, x_var = mean_change_CD8, y_var = mean_change_CD4, label_var = SYMBOL,
   target_gps = c("GP10", "GP58", "GP25", "GP26", "GP43"), background_alpha = 0.8, x_limits = c(-0.2, 0.4), y_limits = c(-0.2, 0.4),
   highlight_color = c("GP10" = "darkorange2", "GP25" = "blue", "GP43" = "blue", "GP26" = "blue", "GP58" = "darkorange2"),
   title = "KLRG1 Modulation: CD8 vs CD4", xlab = "Effect Size in CD8 (KLRG1+ - KLRG1-)", ylab = "Effect Size in CD4 (KLRG1+ - KLRG1-)"
 ) + theme_bw()
-ggsave(paste0(figure_path, "6g.pdf"), p_6g, width = 7, height = 6)
+ggsave(paste0(figure_path, "6b.pdf"), p_6b, width = 7, height = 6)
 
-# 6h: CD8 vs Treg
+# 6c: CD8 vs Treg
 merged_treg <- inner_join(diff_Treg, diff_CD8, by = "SYMBOL")
-p_6h <- plot_target_gps(
+p_6c <- plot_target_gps(
   df = merged_treg, x_var = mean_change_CD8, y_var = mean_change_Treg, label_var = SYMBOL,
   target_gps = c("GP6", "GP10", "GP12", "GP27", "GP68", "GP58"), background_alpha = 0.8, x_limits = c(-0.2, 0.4), y_limits = c(-0.2, 0.4),
   highlight_color = c("GP10" = "darkorange2", "GP27" = "deeppink", "GP6" = "deeppink", "GP68" = "deeppink", "GP12" = "deeppink", "GP58" = "darkorange2"),
   title = "KLRG1 Modulation: CD8 vs Treg", xlab = "Effect Size in CD8 (KLRG1+ - KLRG1-)", ylab = "Effect Size in Treg (KLRG1+ - KLRG1-)"
 ) + theme_bw()
-ggsave(paste0(figure_path, "6h.pdf"), p_6h, width = 7, height = 6)
+ggsave(paste0(figure_path, "6c.pdf"), p_6c, width = 7, height = 6)
 
 # ============================================================
-# 6i/6j/6k: 10 curated GPs from among those most associated with CD69
+# 6d: up/down genes across the 10 curated CD69-associated GPs
+# (cd69_top_gps_subset / cd69_corr / cd69_top_gps_sorted come from
+# citeseq_shared_setup.R, which Figure S6's s6b/s6c panels share)
 # ============================================================
 D_scale6 <- diag(1 / apply(F_pm_filtered, 2, function(x) max(abs(x), na.rm = TRUE)))
 F_pm_filtered_scaled <- F_pm_filtered %*% D_scale6
 colnames(F_pm_filtered_scaled) <- paste0("GP", 1:ncol(F_pm_filtered_scaled))
-
-# Curated list -- NOT a top-10 computed from the correlations below. These 10
-# are drawn from among the most strongly CD69-correlated GPs, but are not the
-# top 10 under any single ranking: 8 are positively correlated (ranks 1, 3, 4,
-# 5, 6, 10, 12, 14 of 200) and GP58/GP171 are the two most *negatively*
-# correlated GPs of all 200. By |rho| they sit at ranks 1, 2, 4, 5, 6, 8, 12,
-# 14, 17, 18, skipping GP1/GP47/GP100/GP25. Treat as a hand-picked input like
-# Thresholds_Selected_Proteins.csv and well_aligned_gps -- don't "fix" it into
-# a computed ranking, and keep the caption's "from among the most associated"
-# wording in sync (analysis/Figure6.Rmd, Fig. 6i-k).
-cd69_top_gps_subset <- c("GP35", "GP6", "GP170", "GP26", "GP58", "GP171", "GP63", "GP62", "GP3", "GP29")
-shared_cells_cd69 <- intersect(rownames(L_pm_filtered), rownames(protein_mat_normalized_lognorm))
-cd69_expr_vec <- protein_mat_normalized_lognorm[shared_cells_cd69, "CD69"]
-cd69_corr <- sapply(cd69_top_gps_subset, function(gp) cor(L_pm_filtered[shared_cells_cd69, gp], cd69_expr_vec, method = "spearman"))
-cd69_top_gps_sorted <- names(sort(cd69_corr, decreasing = FALSE)) # most-correlated GP ends up at top of y-axis
 
 plot_factor_heatmap <- function(F_matrix, gp_vector, n_top = 5, min_abs_loading = 0.5, transpose = FALSE,
                                  title = "Factor loadings – top genes per GP", low_color = "steelblue", mid_color = "white", high_color = "firebrick", font_size = 9) {
@@ -312,36 +188,34 @@ p_corr_strip <- ggplot(corr_strip_df, aes(x = x, y = GP, fill = Correlation)) +
   theme_minimal(base_size = 9) +
   theme(axis.text.x = element_text(size = 9, angle = 45, hjust = 1), axis.text.y = element_blank(), axis.ticks.y = element_blank(), panel.grid = element_blank())
 
-p_6i <- p_corr_strip + p_heatmap + patchwork::plot_layout(widths = c(0.06, 1), guides = "collect")
-ggsave(paste0(figure_path, "6i.pdf"), p_6i, width = 11, height = 5)
+p_6d <- p_corr_strip + p_heatmap + patchwork::plot_layout(widths = c(0.06, 1), guides = "collect")
+ggsave(paste0(figure_path, "6d.pdf"), p_6d, width = 11, height = 5)
 
-# 6j/6k: mean loading of these GPs per tissue (j) and per lineage (k)
-cells_for_heatmap <- intersect(rownames(L_pm_filtered), rownames(seurat_meta_filtered))
-L_cd69_sub <- L_pm_filtered[cells_for_heatmap, cd69_top_gps_sorted, drop = FALSE]
-meta_hm <- seurat_meta_filtered[cells_for_heatmap, c("annotation_level1", "organ_simplified")]
-
-mean_loading_long <- function(L_mat, group_vec, gp_levels) {
-  as.data.frame(L_mat) %>%
-    mutate(group = group_vec) %>%
-    tidyr::pivot_longer(cols = -group, names_to = "GP", values_to = "Loading") %>%
-    group_by(group, GP) %>%
-    summarise(mean_loading = mean(Loading, na.rm = TRUE), .groups = "drop") %>%
-    mutate(GP = factor(GP, levels = gp_levels))
+# ============================================================
+# 6e-6j: protein-gate vs. GP-loading comparison for the 6 curated main-figure
+# GPs (df_markers2, thymocyte/proliferating/miniverse_cells, L_pm_for_gating,
+# select_proteins, threshold_results_subset_manual, enlarge_gps all come from
+# citeseq_shared_setup.R above)
+# ============================================================
+# Panel lettering is carried by this named vector and the loop iterates over its
+# names, so a GP can never be drawn under another GP's letter. (An earlier
+# version kept the GP list and the letters in two separate vectors and assigned
+# the letters positionally, which silently permuted three of the panels.)
+fig6_gating <- c("GP171" = "6e", "GP12" = "6f", "GP80" = "6g", "GP23" = "6h", "GP77" = "6i", "GP8" = "6j")
+for (gp in names(fig6_gating)) {
+  k_name <- paste0("K", sub("^GP", "", gp))
+  plot_gated_gp_vs_protein(
+    gp_name = k_name,
+    df_markers = df_markers2,
+    protein_mat = protein_mat_normalized_lognorm,
+    loading_mat = L_pm_for_gating,
+    mde_emb = mde_result,
+    missing_threshold_action = "skip",
+    threshold_df = threshold_results_subset_manual,
+    exclude_cells = c(thymocyte_cells, proliferating_cells, miniverse_cells),
+    selected_proteins = select_proteins,
+    loading_q = NULL,
+    min_pointsize = if (gp %in% enlarge_gps) 3L else 0L,
+    save_path = paste0(figure_path, fig6_gating[gp], ".pdf")
+  )
 }
-make_mean_loading_heatmap <- function(df, title) {
-  fill_max <- max(df$mean_loading, na.rm = TRUE)
-  ggplot(df, aes(x = group, y = GP, fill = mean_loading)) +
-    geom_tile() +
-    scale_fill_gradient(low = "white", high = "firebrick", limits = c(0, fill_max), name = "Mean\nloading") +
-    labs(title = title, x = NULL, y = NULL) +
-    theme_minimal(base_size = 9) +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 9), axis.text.y = element_text(size = 9), panel.grid = element_blank())
-}
-
-df_organ <- mean_loading_long(L_cd69_sub, meta_hm$organ_simplified, cd69_top_gps_sorted)
-p_6j <- make_mean_loading_heatmap(df_organ, "Mean GP loading by tissue (organ_simplified)")
-ggsave(paste0(figure_path, "6j.pdf"), p_6j, width = 9, height = 5)
-
-df_level1 <- mean_loading_long(L_cd69_sub, meta_hm$annotation_level1, cd69_top_gps_sorted)
-p_6k <- make_mean_loading_heatmap(df_level1, "Mean GP loading by cell type (level1)")
-ggsave(paste0(figure_path, "6k.pdf"), p_6k, width = 7, height = 5)

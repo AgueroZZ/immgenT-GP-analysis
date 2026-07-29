@@ -48,5 +48,9 @@ Gaussian-mixture cutoff of pipeline step 3
 and rounding to the reviewed value listed here. These are the thresholds used by
 every protein gate in Figure 6 and Figure S6. Proteins outside this list have no
 manual threshold and are skipped when they appear in a GP marker signature
-(BTLA.CD272, GR1-LY6G-LY6C1-LY6C2, LY108, SLAM.CD150, THY1.2).
+(BTLA.CD272, GR1-LY6G-LY6C1-LY6C2, LY108, SLAM.CD150, THY1.2). None of the five
+appears in the marker signature of any GP still gated in a published panel
+([Fig. 6e-j](Figure6.html#fig6ej), [Fig. S6d-g](FigureS6.html#figs6dg)), so no
+panel subtitle currently omits a marker; `script/verify_gating_gps.R` fails if
+that stops being true.
 :::

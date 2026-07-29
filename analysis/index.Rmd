@@ -20,22 +20,25 @@ produced it, the figure itself, and a short caption explaining what it shows.
 + [Figure 4: GPs associated with T cell activation](Figure4.html)
 + [Figure 5: GP expression in tissues is driven by T cell composition](Figure5.html)
 + [Figure 6: Surface proteins associated with GP activity](Figure6.html)
++ [Figure 7b: EBMF versus matched-RQVI factor comparison across level-2 clusters](Figure7.html)
 
 Figure 7 (RQVI validates EBMF-derived gene programs with a non-linear deep
-learning framework) is produced by our collaborator's RQVI pipeline, not by this
-repository, and so has no page here.
+learning framework) is otherwise produced by our collaborator's RQVI pipeline,
+not by this repository; only its panel **b** is ours, and the page above covers
+that panel alone.
 
 ## Extended Data figures
 
-Published as **Extended Data Figures 1-7**; the page names below keep the older
-`FigureS*` form so existing links stay valid.
+Published as **Extended Data Figures 1-4, 6 and 7**; the page names below keep the
+older `FigureS*` form so existing links stay valid. There is deliberately no
+Extended Data Figure 5: it became main [Figure 7b](Figure7.html) on 2026-07-28
+and the remaining figures kept their numbers rather than shifting up.
 
 + [Figure S1 / Extended Data Figure 1: Reproducibility across IGTs and batch-effect evaluation](FigureS1.html)
 + [Figure S2 / Extended Data Figure 2: Tz- and CD8-specific GPs (GP30 and GP58)](FigureS2.html)
 + [Figure S3 / Extended Data Figure 3: Characterizing activation-associated GPs](FigureS3.html)
 + [Figure S4 / Extended Data Figure 4: Healthy non-thymocyte GP mean-loading heatmaps](FigureS4.html)
-+ [Figure S5 / Extended Data Figure 5: EBMF versus matched-RQVI factor comparison across level-2 clusters](FigureS5.html)
-+ [Figure S6 / Extended Data Figure 6: Gallery of surface-protein gating strategies associated with GP activity](FigureS6.html)
++ [Figure S6 / Extended Data Figure 6: Protein programs, CD69-associated GPs, and further gating strategies](FigureS6.html)
 
 Extended Data Figure 7 (RQVI scalability and representative matches to
 lineage-associated EBMF GPs) is likewise produced by the collaborator's RQVI

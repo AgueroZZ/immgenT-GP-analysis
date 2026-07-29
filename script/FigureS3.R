@@ -1,24 +1,32 @@
 # Figure S3. Characterizing activation GPs.
 #
 # Panels produced (see figures/Previous/bits/Figure S3/FigureS3_caption.md
-# for the full caption text; captioned A-F there but the final files are
-# lettered s3c-s3h -- this script uses that final lettering):
-#   s3c  Fraction of activated CD4/CD8 cells per organ with GP26 > 0.1, sorted.
-#   s3d  GSEA dot plot relating the activation GPs to curated gene sets.
-#   s3e  Fraction of activated CD4 cells with GP79 loading > 0.1, by condition.
-#   s3f  Per-cell log2FC heatmap of activation GPs vs resting baseline.
-#   s3g  Fraction of activated CD8/CD4 cells with GP57 loading > 0.1: cancer
+# for the full caption text; captioned A-F there, and published as s3c-s3h
+# before the 2026-07-28 re-lettering below -- this script uses the current
+# lettering):
+#
+# s3a is the definition of resting vs activated CD4/CD8 cells (the
+# lineage-specific MDEs plus the adjacent CD62L-vs-CD44 protein plot, one
+# panel). It is NOT produced here -- no code in this repository draws it; see
+# analysis/FigureS3.Rmd. Its two halves used to be lettered s3a and s3b, which
+# is why every panel below is one letter lower than the published figure.
+#
+#   s3b  Fraction of activated CD4/CD8 cells per organ with GP26 > 0.1, sorted.
+#   s3c  GSEA dot plot relating the activation GPs to curated gene sets.
+#   s3d  Fraction of activated CD4 cells with GP79 loading > 0.1, by condition.
+#   s3e  Per-cell log2FC heatmap of activation GPs vs resting baseline.
+#   s3f  Fraction of activated CD8/CD4 cells with GP57 loading > 0.1: cancer
 #        vs all other conditions.
-#   s3h  Bipartite TF-GP network for Gata3, Rorc, Tbx21.
+#   s3g  Bipartite TF-GP network for Gata3, Rorc, Tbx21.
 #
 # Source: ported from Figure_Activation.R (see Figure4.R for the main
 # Figure 4 panels from the same file). Shared curated-GP setup lives in
 # code/R/activation_shared_setup.R.
 #
-# Panel s3c is computed on activated CD4/CD8 cells only (annotation_level1 in
+# Panel s3b is computed on activated CD4/CD8 cells only (annotation_level1 in
 # {CD4, CD8} and annotation_level2_group == "activated"): the per-organ fraction
 # with GP26 loading > 0.1. This exactly reproduces the collaborator's panel
-# (all 22 organ rates match to the decimal); see the s3c block below.
+# (all 22 organ rates match to the decimal); see the s3b block below.
 #
 # Required inputs (data/) -- see code/README.md's "Data provenance" table
 # for the full picture:
@@ -52,7 +60,7 @@ df_sig <- read.csv(paste0(data_path, "GSEA_signatures_select_toplot.csv"), heade
 source("code/R/activation_shared_setup.R")
 
 # ============================================================
-# s3c: Fraction of activated CD4/CD8 cells per organ with GP26 loading > 0.1
+# s3b: Fraction of activated CD4/CD8 cells per organ with GP26 loading > 0.1
 # ============================================================
 act_cd4_cd8 <- seurat_meta_filtered$annotation_level1 %in% c("CD4", "CD8") &
   seurat_meta_filtered$annotation_level2_group == "activated"
@@ -75,7 +83,7 @@ organ_abbrev <- c("submandibular gland" = "submand. gland",
                   "small intestine LP"  = "sm intestine LP",
                   "peritoneal cavity"   = "perit. cav.")
 
-p_s3c <- ggplot(gp26_organ_df, aes(x = organ, y = pct)) +
+p_s3b <- ggplot(gp26_organ_df, aes(x = organ, y = pct)) +
   geom_col(fill = "#4C72B0", width = 0.7) +
   geom_text(aes(label = pct_lab), vjust = -0.4, size = 3, color = "grey20") +
   scale_x_discrete(labels = function(x) ifelse(x %in% names(organ_abbrev), organ_abbrev[x], x)) +
@@ -86,10 +94,10 @@ p_s3c <- ggplot(gp26_organ_df, aes(x = organ, y = pct)) +
   theme_classic(base_size = 12) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         plot.title = element_text(hjust = 0.5))
-ggsave(filename = paste0(figure_path, "s3c.pdf"), plot = p_s3c, width = 9, height = 4.8)
+ggsave(filename = paste0(figure_path, "s3b.pdf"), plot = p_s3b, width = 9, height = 4.8)
 
 # ============================================================
-# s3d: GSEA dot plot for the activation GPs
+# s3c: GSEA dot plot for the activation GPs
 # ============================================================
 df_sig <- df_sig %>% mutate(factor = str_replace(factor, "^F", "GP"))
 present_GPs <- intersect(ordered_GPs, unique(df_sig$factor))
@@ -100,17 +108,17 @@ df_plot <- df_sig %>%
 y_factors <- levels(df_plot$factor)
 y_colors <- highlight_colors[y_factors]
 
-p_s3d <- ggplot(df_plot, aes(x = pathway, y = factor)) +
+p_s3c <- ggplot(df_plot, aes(x = pathway, y = factor)) +
   geom_point(aes(size = NES, color = log10padj)) +
   scale_color_viridis_c(name = "-log10(p-adj)") +
   scale_size(range = c(3, 10)) +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1), axis.text.y = element_text(color = y_colors, face = "bold")) +
   labs(size = "NES", x = "Pathway", y = "Gene Program")
-ggsave(filename = paste0(figure_path, "s3d.pdf"), plot = p_s3d, width = 8, height = 10)
+ggsave(filename = paste0(figure_path, "s3c.pdf"), plot = p_s3c, width = 8, height = 10)
 
 # ============================================================
-# s3g: GP57 high-loading proportion, cancer vs other conditions
+# s3f: GP57 high-loading proportion, cancer vs other conditions
 #      (activated CD4 and CD8)
 # ============================================================
 gp57_condition_df <- data.frame(
@@ -135,7 +143,7 @@ gp57_condition_summary <- gp57_condition_df %>%
 gp57_ymax <- max(gp57_condition_summary$proportion_gp57_high, na.rm = TRUE)
 gp57_ymax <- ifelse(gp57_ymax > 0, gp57_ymax * 1.25, 0.05)
 
-p_s3g <- ggplot(gp57_condition_summary, aes(x = lineage, y = proportion_gp57_high, fill = condition_group)) +
+p_s3f <- ggplot(gp57_condition_summary, aes(x = lineage, y = proportion_gp57_high, fill = condition_group)) +
   geom_col(position = position_dodge(width = 0.72), width = 0.62, color = "grey20", linewidth = 0.25) +
   geom_text(
     aes(label = paste0(scales::percent(proportion_gp57_high, accuracy = 0.1), "\n", n_gp57_high, "/", n_cells)),
@@ -146,10 +154,10 @@ p_s3g <- ggplot(gp57_condition_summary, aes(x = lineage, y = proportion_gp57_hig
   labs(x = NULL, y = "Proportion of activated cells", fill = "Condition", title = "GP57 loading > 0.1 in activated CD8 and CD4 cells") +
   theme_classic(base_size = 12) +
   theme(legend.position = "top", legend.title = element_text(face = "bold"), axis.text.x = element_text(face = "bold"), plot.title = element_text(face = "bold", hjust = 0.5))
-ggsave(filename = paste0(figure_path, "s3g.pdf"), plot = p_s3g, width = 5.4, height = 4.2)
+ggsave(filename = paste0(figure_path, "s3f.pdf"), plot = p_s3f, width = 5.4, height = 4.2)
 
 # ============================================================
-# s3e: GP79 high-loading proportion across conditions, activated CD4 cells
+# s3d: GP79 high-loading proportion across conditions, activated CD4 cells
 # ============================================================
 min_cells_gp79_condition <- 50
 gp79_cd4_condition_df <- data.frame(
@@ -184,7 +192,7 @@ gp79_xmax <- ifelse(gp79_xmax > 0, gp79_xmax, 0.05)
 gp79_label_pad <- gp79_xmax * 0.015
 gp79_plot_height <- max(7, 0.18 * nrow(gp79_cd4_condition_plot_df) + 2)
 
-p_s3e <- ggplot(gp79_cd4_condition_plot_df, aes(x = proportion_gp79_high, y = condition_label, fill = condition_broad)) +
+p_s3d <- ggplot(gp79_cd4_condition_plot_df, aes(x = proportion_gp79_high, y = condition_label, fill = condition_broad)) +
   geom_col(width = 0.75, color = "grey25", linewidth = 0.2) +
   geom_text(aes(x = proportion_gp79_high + gp79_label_pad, label = scales::percent(proportion_gp79_high, accuracy = 1)), hjust = 0, size = 2.7) +
   scale_x_continuous(labels = scales::percent_format(accuracy = 10), expand = expansion(mult = c(0, 0.02))) +
@@ -201,10 +209,10 @@ p_s3e <- ggplot(gp79_cd4_condition_plot_df, aes(x = proportion_gp79_high, y = co
     plot.title = element_text(face = "bold", hjust = 0.5), plot.subtitle = element_text(hjust = 0.5),
     axis.text.y = element_text(size = 8), plot.margin = margin(10, 45, 10, 10)
   )
-ggsave(filename = paste0(figure_path, "s3e.pdf"), plot = p_s3e, width = 9, height = gp79_plot_height, limitsize = FALSE)
+ggsave(filename = paste0(figure_path, "s3d.pdf"), plot = p_s3d, width = 9, height = gp79_plot_height, limitsize = FALSE)
 
 # ============================================================
-# s3h: Bipartite TF-GP network for Gata3, Rorc, Tbx21
+# s3g: Bipartite TF-GP network for Gata3, Rorc, Tbx21
 # ============================================================
 tf_focus <- c("Gata3", "Rorc", "Tbx21")
 tf_focus_threshold <- 0.1
@@ -265,7 +273,7 @@ tf_focus_plot_edges <- tf_focus_edges %>%
     label_angle = case_when(label_angle > 90 ~ label_angle - 180, label_angle < -90 ~ label_angle + 180, TRUE ~ label_angle)
   )
 
-p_s3h <- ggplot() +
+p_s3g <- ggplot() +
   geom_segment(data = tf_focus_plot_edges, aes(x = x0, y = y0, xend = x1, yend = y1, color = edge_sign, linewidth = abs_value), alpha = 0.65, lineend = "round") +
   geom_text(data = tf_focus_plot_edges, aes(x = label_x, y = label_y, label = edge_label, angle = label_angle), size = 3.0, color = "grey20") +
   geom_point(data = tf_focus_plot_nodes %>% filter(node_type == "GP"), aes(x = x, y = y), shape = 21, size = 4.0, fill = "grey78", color = "grey45", stroke = 0.5) +
@@ -285,10 +293,10 @@ p_s3h <- ggplot() +
   labs(title = paste0("TF <-> GP network (", length(tf_focus), " TFs, ", nrow(tf_focus_edges), " edges)")) +
   theme_void(base_size = 12) +
   theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 15), legend.position = "right", legend.title = element_text(face = "bold"), plot.margin = margin(15, 25, 15, 25))
-ggsave(filename = paste0(figure_path, "s3h.pdf"), plot = p_s3h, width = 10, height = 8.5)
+ggsave(filename = paste0(figure_path, "s3g.pdf"), plot = p_s3g, width = 10, height = 8.5)
 
 # ============================================================
-# s3f: Per-cell log2FC heatmap of activation GPs (activated cells only),
+# s3e: Per-cell log2FC heatmap of activation GPs (activated cells only),
 #      relative to each cell's own-lineage resting baseline
 # ============================================================
 L <- L_pm_filtered[c(CD4_cells, CD8_cells), GPs_of_interest, drop = FALSE]
@@ -408,6 +416,6 @@ pheatmap(
   annotation_col = ann_col_act, annotation_colors = ann_colors_act, annotation_names_col = TRUE,
   useRaster = TRUE,
   main = "GP Log2FC vs per-lineage RESTING baseline (CD4 cells vs CD4 resting; CD8 vs CD8 resting)",
-  filename = paste0(figure_path, "s3f.pdf"),
+  filename = paste0(figure_path, "s3e.pdf"),
   width = 12, height = 4
 )

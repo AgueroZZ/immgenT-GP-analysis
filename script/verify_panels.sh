@@ -25,11 +25,15 @@ DENSITY=${DENSITY:-110}
 
 # new_panel <TAB> published_panel   (paths relative to the two roots above)
 #
-# Pairs are matched by CONTENT, not by letter. That only matters for Figure 3's
+# Pairs are matched by CONTENT, not by letter. That matters for Figure 3's
 # J and L: we letter the gdT/CD8aa/DN loading panels GP3 = J, GP29 = K,
 # GP22 = L, where the published 2J/2K/2L were GP22/GP29/GP3. So 3J's
 # counterpart is 2L and 3L's is 2J -- comparing them letter-to-letter would
-# compare different GPs and look like a huge regression.
+# compare different GPs and look like a huge regression. It also matters for
+# Figures 6 / S3 / S6 after the 2026-07-28 re-lettering: Figure 6 was reordered
+# (its KLRG1 and CD69 panels moved to the front, the protein-program heatmap and
+# the two CD69 mean-activity heatmaps moved into Figure S6), and Figure S3's
+# panels each dropped one letter when its s3a/s3b were merged into a single s3a.
 MAP=$(
   cat <<'EOF'
 Figure 1/1A	Figure 1/1A
@@ -65,16 +69,16 @@ Figure 5/5c	Figure 4/4c
 Figure 5/5d	Figure 4/4d
 Figure 5/5e	Figure 4/4e
 Figure 6/6a	Figure 6/6a
-Figure 6/6b	Figure 6/6b
-Figure 6/6c	Figure 6/6c
-Figure 6/6d	Figure 6/6d
-Figure 6/6e	Figure 6/6e
-Figure 6/6f	Figure 6/6f
-Figure 6/6g	Figure 6/6g
-Figure 6/6h	Figure 6/6h
-Figure 6/6i	Figure 6/6i
-Figure 6/6j	Figure 6/6j
-Figure 6/6k	Figure 6/6k
+Figure 6/6b	Figure 6/6g
+Figure 6/6c	Figure 6/6h
+Figure 6/6d	Figure 6/6i
+Figure 6/6e	Figure 6/6c
+Figure 6/6f	Figure 6/6d
+Figure 6/6g	Figure 6/6e
+Figure 6/6h	Figure 6/6f
+Figure S6/s6a	Figure 6/6b
+Figure S6/s6b	Figure 6/6j
+Figure S6/s6c	Figure 6/6k
 Figure S1/S1A	Figure S1/S1A
 Figure S1/S1B	Figure S1/S1B
 Figure S1/S1C	Figure S1/S1C
@@ -82,18 +86,21 @@ Figure S1/S1D	Figure S1/S1D
 Figure S2/S2A	Figure S2/S2A
 Figure S2/S2B	Figure S2/S2B
 Figure S2/S2C	Figure S2/S2C
-Figure S3/s3c	Figure S3/s3c
-Figure S3/s3d	Figure S3/s3d
-Figure S3/s3e	Figure S3/s3e
-Figure S3/s3f	Figure S3/s3f
-Figure S3/s3g	Figure S3/s3g
-Figure S3/s3h	Figure S3/s3h
-Figure S6/s6-1	Figure S6/s6-1
-Figure S6/s6-2	Figure S6/s6-2
+Figure S3/s3b	Figure S3/s3c
+Figure S3/s3c	Figure S3/s3d
+Figure S3/s3d	Figure S3/s3e
+Figure S3/s3e	Figure S3/s3f
+Figure S3/s3f	Figure S3/s3g
+Figure S3/s3g	Figure S3/s3h
 EOF
 )
 # Panels with no published counterpart: Figure 1/1C, Figure S1/S1E,
-# Figure S4/*, Figure S5/*. Figure 7 / S7 are out of scope (straight copies).
+# Figure S4/*, Figure 6/6i (GP77) and 6j (GP8), Figure S6/s6d-s6g (their GPs
+# were only ever drawn inside the retired s6-1/s6-2 gallery pages, not as
+# standalone panels), and Figure 7/7B (ours since 2026-07-28 -- it is the former
+# Extended Data Figure 5, assembled into one panel, and it replaced a different
+# collaborator panel, so the published 7B is NOT its counterpart).
+# The rest of Figure 7 and all of S7 are out of scope (straight copies).
 
 render() { # $1 = pdf, $2 = out png -- normalise onto one square canvas so a
            # changed aspect ratio shows up as a difference rather than an error

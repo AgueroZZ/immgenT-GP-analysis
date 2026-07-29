@@ -1,6 +1,6 @@
 # Protein-gate vs. GP-loading comparison on an MDE embedding. Ported
 # from gated_protein_loading_plot.R; shared by script/Figure6.R
-# (panels c-f, the 4 main-figure GPs) and FigureS6.R (the full gallery).
+# (panels 6e-6j, the 6 main-figure GPs) and FigureS6.R (panels s6d-s6g, 4 more).
 
 gp_label <- function(x) sub("^K", "GP", x)
 
@@ -172,19 +172,26 @@ plot_gated_gp_vs_protein <- function(
 
   loadings <- loading_mat[, gp_name]
   if (is.null(loading_q)) {
-    if (n_prot <= 1) {
-      loading_q_val <- 0.999
-    } else {
-      loading_q_val <- 1 - (n_prot / length(loadings))
-      loading_q_val <- max(0, min(0.9999, loading_q_val))
-    }
     q_label <- paste0("Matched n=", n_prot)
+    if (n_prot <= 1) {
+      # Degenerate protein gate (0 or 1 cell): the protein panel will render as
+      # "Too few cells", so match nothing and fall back to a fixed top 0.1% so
+      # the loading panel still shows the program's high-activity cells.
+      is_loading_gated <- loadings >= quantile(loadings, 0.999)
+    } else {
+      # Take exactly the n_prot highest-loading cells, which is what the
+      # "Matched n=" label and the captions' "equally sized set" both claim.
+      # This used to be a quantile cutoff at 1 - n_prot/N with the quantile
+      # clamped to 0.9999, so any gate smaller than 0.01% of the eligible cells
+      # silently got the top ~0.01% instead: GP77's 18-cell gate was matched
+      # against 47 loading-gated cells. Ranking is exact at every gate size and
+      # reproduces the quantile result wherever the quantile was already exact.
+      is_loading_gated <- rank(-loadings, ties.method = "first") <= min(n_prot, length(loadings))
+    }
   } else {
-    loading_q_val <- loading_q
-    q_label <- paste0("Top ", round((1 - loading_q_val) * 100), "%")
+    q_label <- paste0("Top ", round((1 - loading_q) * 100), "%")
+    is_loading_gated <- loadings >= quantile(loadings, loading_q)
   }
-  loading_cutoff <- quantile(loadings, loading_q_val)
-  is_loading_gated <- loadings >= loading_cutoff
   n_load <- sum(is_loading_gated)
 
   message(sprintf("[%s] Final Gate: Protein=%d, Loading=%d", gp_name, n_prot, n_load))

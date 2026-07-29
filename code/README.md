@@ -16,7 +16,7 @@ Reusable R code backing `script/`. Nothing here writes to `figures/` — see
 | `activation_shared_setup.R` | Figure3, FigureS3 | CD4/CD8 resting-vs-activated cell groups, the curated activation-GP set + semantic color grouping, `F_pm_filtered_norm`, and the GP-group ordering used by both figures' heatmaps. |
 | `tf_network.R` | Figure3, FigureS3 | `optimize_bipartite_order()`, `plot_tf_gp_network_v2()` (bipartite TF-GP network layout/plot). |
 | `gated_protein_helpers.R` | Figure6, FigureS6 | `MyDimPlotHighlightDensity_df()`, `plot_gated_gp_vs_protein()` (protein-gate vs. GP-loading comparison). |
-| `citeseq_shared_setup.R` | Figure6, FigureS6 | CITE-seq cell/protein filtering, curated marker-override table (`df_markers2`), cell exclusions, `well_aligned_gps`. |
+| `citeseq_shared_setup.R` | Figure6, FigureS6 | CITE-seq cell/protein filtering, curated marker-override table (`df_markers2`), cell exclusions, `well_aligned_gps`, and the curated CD69-associated GP subset + its correlation order (shared by Figure 6d and Figure S6b/c, which live in different scripts). |
 
 ## pipeline/ — data preparation (upstream of the figure scripts)
 
