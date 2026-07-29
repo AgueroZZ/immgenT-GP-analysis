@@ -12,7 +12,7 @@
 <meta name="author" content="Ziang Zhang" />
 
 
-<title>Figure S6: Gallery of surface-protein gating strategies associated with GP activity</title>
+<title>Figure S6: Protein programs, CD69-associated GPs, and further gating strategies</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -353,8 +353,8 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Figure S6: Gallery of surface-protein
-gating strategies associated with GP activity</h1>
+<h1 class="title toc-ignore">Figure S6: Protein programs,
+CD69-associated GPs, and further gating strategies</h1>
 <h4 class="author">Ziang Zhang</h4>
 
 </div>
@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0f5b5da36f3b327ab40f0093ca637c474b94cb03targetblank0f5b5daa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree4c076701e72fdfb533f3d28c552116e5b48b9932targetblank4c07670a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0f5b5da36f3b327ab40f0093ca637c474b94cb03" target="_blank">0f5b5da</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/4c076701e72fdfb533f3d28c552116e5b48b9932" target="_blank">4c07670</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0f5b5da36f3b327ab40f0093ca637c474b94cb03targetblank0f5b5daa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree4c076701e72fdfb533f3d28c552116e5b48b9932targetblank4c07670a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0f5b5da36f3b327ab40f0093ca637c474b94cb03" target="_blank">0f5b5da</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/4c076701e72fdfb533f3d28c552116e5b48b9932" target="_blank">4c07670</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -580,7 +580,7 @@ Ignored files:
     Ignored:    figures/final-selected/Figure S4/.DS_Store
     Ignored:    log/
     Ignored:    output/Figure2/
-    Ignored:    output/FigureS5/S5_cell_metadata.csv.gz
+    Ignored:    output/Figure7b/7b_cell_metadata.csv.gz
     Ignored:    plan/
     Ignored:    reorder/
     Ignored:    tables/
@@ -629,6 +629,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/4c076701e72fdfb533f3d28c552116e5b48b9932/analysis/FigureS6.Rmd" target="_blank">4c07670</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-28
+</td>
+<td>
+Reorder Figures 6, S6 and S3; make the ex-S5 figure Figure 7b
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/029b0ae35fa5141e04f10d921297ffb5cbf0cef4/docs/FigureS6.html" target="_blank">029b0ae</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-28
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1011,64 +1045,247 @@ Initial commit: immgenT-GP-analysis
 </div>
 </div>
 <p>Published as <strong>Extended Data Figure 6</strong>.</p>
-<p>Both pages are produced by <a
+<p>All panels are produced by <a
 href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS6.R"><code>script/FigureS6.R</code></a>,
-which shares its CITE-seq setup and gating logic with <a
-href="Figure6.html#fig6cf">Figure 6c-f</a> via
+which shares its CITE-seq setup, gating logic and CD69 GP subset with <a
+href="Figure6.html">Figure 6</a> via
 <code>code/R/citeseq_shared_setup.R</code> and
 <code>code/R/gated_protein_helpers.R</code>. The code below is shown for
-reference (not re-executed on this page, since this script takes roughly
-a minute and a half to render ~25 GPs x 2 embeddings each); the images
-are its pre-rendered output.</p>
+reference (not re-executed on this page, since this script takes about a
+minute to run); the images are its pre-rendered output.</p>
+<p><strong>This figure was reworked on 2026-07-28.</strong> It used to
+be a two-page gallery (<code>s6-1</code>, <code>s6-2</code>) of all 23
+well-aligned GPs that Figure 6 did not show. The gallery is retired;
+four of its GPs are kept here as panels (d)-(g), two were promoted into
+the main figure (<a href="Figure6.html#fig6ej">Fig. 6i, j</a>), and the
+remaining 17 are no longer published. Panels (a)-(c) moved here from
+Figure 6, where they were the published 6b, 6j and 6k.
+<code>script/FigureS6.R</code> carries the full old-to-new table in its
+header.</p>
 <div id="setup" class="section level2">
 <h2>Setup</h2>
-<pre class="r"><code># Figure S6. GP loadings recover protein-gated populations across GPs.
-#
-# Extension of Figure 6c-f to all well-aligned GPs (see
-# figures/Previous/bits/Figure S6/FigureS6_caption.md), shown as two
-# gallery pages (s6-1 and s6-2). For each GP, cells are shown twice on the
-# same MDE embedding: left, cells passing the GP&#39;s curated protein gate;
-# right, an equally sized set of cells with the highest GP loading.
-#
-# Source: ported from gated_protein_loading_plot.R&#39;s live gallery
-# section (the ~450 preceding lines of commented-out single-GP exploratory
-# calls are dropped -- they never produced a saved output).
-#
-# Required inputs (data/), read via code/R/citeseq_shared_setup.R below --
-# see code/README.md&#39;s &quot;Data provenance&quot; table for the full picture:
-#   L_pm_filtered.rds, F_pm_filtered.rds        [code/pipeline/01b_filter_cells.R]
-#   igt1_96_..._ADTonly.Rds                     [primary input Seurat object]
-#   protein_mat_normalized_lognorm.rds          [code/other/prepare_citeseq_protein_matrices_20260206.R]
-#   umap_result.rds                             [gap, no producer script here]
-#   protein_flash_selected_summary_lognorm_backfit200.rds
-#     [code/other/fit_citeseq_fixed_loading_ebmf_20260206.R]
-#   TableS4_citeseq_qc_20250513.csv             [external: manuscript&#39;s own Table S4]
-#   Thresholds_Selected_Proteins.csv            [curated input, hand-revised; NOT regenerated
-#     by code/pipeline/03_protein_thresholds.R -- see that script&#39;s header]
-#   CITEseq_markers_full.rds                    [code/pipeline/04_protein_projection.R, using the
-#     non-backfit200 protein summary -- see caveat above]
-
-library(ggplot2)
+<pre class="r"><code>library(ggplot2)
 library(dplyr)
 library(patchwork)
-library(Matrix)
+library(pheatmap)
+library(tidyr)
+library(Matrix) # protein matrices are dgCMatrix; must be attached for `[` to dispatch
 
 data_path &lt;- &quot;data/&quot;
 figure_path &lt;- &quot;figures/final-selected/Figure S6/&quot;
 source(&quot;code/R/gated_protein_helpers.R&quot;)
-source(&quot;code/R/citeseq_shared_setup.R&quot;)</code></pre>
+source(&quot;code/R/citeseq_shared_setup.R&quot;)
+
+# A figure script here was once seen to exit 0 with a complete log and write
+# nothing at all (see script/README.md, &quot;A re-run can silently not write&quot;), so
+# record when this run started and assert at the end that every panel is newer.
+run_started_at &lt;- Sys.time()</code></pre>
 </div>
-<div id="figs6-gallery" class="section level2">
-<h2>Gallery pages</h2>
-<pre class="r"><code># GPs shown in main Figure 6 (panels 6c-6f) are excluded from this gallery.
-GPs_fig6 &lt;- c(&quot;GP171&quot;, &quot;GP23&quot;, &quot;GP12&quot;, &quot;GP80&quot;)
-other_GPs &lt;- setdiff(well_aligned_gps, GPs_fig6)
+<div id="figs6a" class="section level2">
+<h2>(s6a) Protein-program heatmap</h2>
+<pre class="r"><code># ============================================================
+# s6a: sparse protein-program heatmap, contamination GPs removed
+# ============================================================
+# The normalized protein matrix is derived here rather than in
+# citeseq_shared_setup.R because this is its only consumer among the figures
+# (Extended Data Table 6 rebuilds it the same way for its own export).
+Protein_F_pm &lt;- Protein_F_pm_raw[!rownames(Protein_F_pm_raw) %in% isotype_proteins, ]
+Protein_F_pm &lt;- Protein_F_pm[rownames(Protein_F_pm) %in% good_proteins, ]
+Protein_F_pm &lt;- Protein_F_pm[!rownames(Protein_F_pm) %in% exclude_proteins, ]
+Protein_F_pm &lt;- Protein_F_pm[!rownames(Protein_F_pm) %in% thy11_proteins, ]
+D_lognorm &lt;- diag(1 / apply(Protein_F_pm, 2, function(x) max(abs(x))))
+Protein_F_pm &lt;- Protein_F_pm %*% D_lognorm
+colnames(Protein_F_pm) &lt;- paste0(&quot;GP&quot;, 1:ncol(Protein_F_pm))
+Protein_F_pm[is.na(Protein_F_pm)] &lt;- 0
 
-# A few GPs get slightly larger highlighted points for visibility even at
-# high cell counts.
-enlarge_gps &lt;- c(&quot;GP8&quot;, &quot;GP30&quot;, &quot;GP170&quot;, &quot;GP107&quot;)
+threshold_simplified &lt;- 0
+keep_rows_simplified &lt;- apply(Protein_F_pm, 1, function(v) any(abs(v) &gt; threshold_simplified, na.rm = TRUE))
+Protein_F_pm_simplified &lt;- Protein_F_pm[keep_rows_simplified, , drop = FALSE]
+keep_cols_simplified &lt;- apply(Protein_F_pm_simplified, 2, function(v) any(abs(v) &gt; threshold_simplified, na.rm = TRUE))
+Protein_F_pm_simplified &lt;- Protein_F_pm_simplified[, keep_cols_simplified, drop = FALSE]
 
-plots_all &lt;- lapply(other_GPs, function(gp) {
+GP_contamination &lt;- c(&quot;GP40&quot;, &quot;GP50&quot;, &quot;GP55&quot;, &quot;GP188&quot;)
+Protein_F_pm_simplified_no_contamination &lt;- Protein_F_pm_simplified[, !colnames(Protein_F_pm_simplified) %in% GP_contamination, drop = FALSE]
+
+sparse_cutoff &lt;- 0.5
+bk_sparse &lt;- unique(c(seq(-1, -sparse_cutoff, length.out = 26), seq(-sparse_cutoff, sparse_cutoff, length.out = 51), seq(sparse_cutoff, 1, length.out = 26)))
+cols_sparse &lt;- c(colorRampPalette(c(&quot;#4575B4&quot;, &quot;white&quot;))(25), rep(&quot;white&quot;, 50), colorRampPalette(c(&quot;white&quot;, &quot;#D73027&quot;))(25))
+
+# Display proteins as rows and GPs as columns. Order GP columns from most to
+# fewest visible proteins. Order protein rows by their rightmost visible GP, so
+# proteins extending into the sparse right side appear first and form a
+# triangular boundary. Visible count and a rarity-weighted support score provide
+# deterministic secondary ordering.
+wide_matrix_s6a &lt;- as.matrix(Protein_F_pm_simplified_no_contamination)
+wide_visible_mask_s6a &lt;- abs(wide_matrix_s6a) &gt;= sparse_cutoff
+wide_gp_visible_count_s6a &lt;- colSums(wide_visible_mask_s6a)
+wide_protein_visible_count_s6a &lt;- rowSums(wide_visible_mask_s6a)
+wide_gp_number_s6a &lt;- as.integer(sub(&quot;^GP&quot;, &quot;&quot;, colnames(wide_matrix_s6a)))
+
+wide_gp_order_s6a &lt;- order(-wide_gp_visible_count_s6a, wide_gp_number_s6a)
+wide_mask_ordered_cols_s6a &lt;- wide_visible_mask_s6a[
+  ,
+  wide_gp_order_s6a,
+  drop = FALSE
+]
+wide_rightmost_visible_gp_s6a &lt;- apply(
+  wide_mask_ordered_cols_s6a,
+  1,
+  function(values) max(which(values))
+)
+wide_rarity_weights_s6a &lt;- seq_len(ncol(wide_mask_ordered_cols_s6a))^2
+wide_protein_rarity_score_s6a &lt;- as.numeric(
+  wide_mask_ordered_cols_s6a %*% wide_rarity_weights_s6a
+)
+wide_protein_order_s6a &lt;- order(
+  -wide_rightmost_visible_gp_s6a,
+  -wide_protein_visible_count_s6a,
+  -wide_protein_rarity_score_s6a,
+  rownames(wide_matrix_s6a)
+)
+wide_ordered_matrix_s6a &lt;- wide_matrix_s6a[
+  wide_protein_order_s6a,
+  wide_gp_order_s6a,
+  drop = FALSE
+]
+
+pdf(paste0(figure_path, &quot;s6a.pdf&quot;), width = 48, height = 14)
+pheatmap::pheatmap(
+  wide_ordered_matrix_s6a,
+  main = sprintf(
+    paste0(
+      &quot;Protein programs - GP columns, triangular-first protein rows &quot;,
+      &quot;(|score| &gt;= %.1f; protein-row sparsity is not monotone)&quot;
+    ),
+    sparse_cutoff
+  ),
+  color = cols_sparse,
+  breaks = bk_sparse,
+  cluster_rows = FALSE,
+  cluster_cols = FALSE,
+  border_color = &quot;grey75&quot;,
+  fontsize = 16,
+  fontsize_row = 16,
+  fontsize_col = 16,
+  angle_col = 90,
+  legend_breaks = c(-1, -sparse_cutoff, 0, sparse_cutoff, 1),
+  legend_labels = c(&quot;-1&quot;, &quot;-0.5&quot;, &quot;0 (white)&quot;, &quot;0.5&quot;, &quot;1&quot;)
+)
+dev.off()</code></pre>
+<p><img src="assets/FigureS6/s6a.png" width="100%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. S6a.</strong> Heatmap of scaled protein scores for each
+GP (the re-estimated protein matrix <strong>U</strong>), with the
+protein scores in each GP scaled so its maximum |score| = 1. We focused
+on the <strong>47 proteins</strong> that performed best in the immgenT
+CITE-seq dataset (isotype and low-quality proteins removed).
+<strong>Seventeen GPs lacked meaningful protein correlates</strong> –
+every protein score is exactly zero – and were omitted. Four putative
+contamination programs (GP40, GP50, GP55 and GP188) were also removed,
+leaving <strong>179 GPs</strong> (200 - 17 - 4 = 179); 47 proteins
+(rows) x 179 GPs (columns). Entries with an absolute score below 0.5 are
+shown in white, with color running from blue (-1) through white to red
+(+1). GP columns are ordered from the most to the fewest visible
+proteins. Protein rows are ordered by the position of their rightmost
+visible GP, placing proteins that extend into the sparse right side
+first and exposing a triangular support boundary; visible count and a
+rarity-weighted support score break ties. This triangular-first row
+order is not monotone in per-protein sparsity. GP labels are vertical
+and sized to the available heatmap-cell width; protein labels are sized
+to the available row height.</p>
+</div>
+</div>
+<div id="figs6bc" class="section level2">
+<h2>(s6b, s6c) CD69-associated GPs across tissues and lineages</h2>
+<p>The ten GPs and their order are defined in
+<code>code/R/citeseq_shared_setup.R</code>, so that these two panels and
+<a href="Figure6.html#fig6d">Fig. 6d</a> – which live in different
+figures and therefore in different scripts – cannot disagree about which
+GPs they show or in what order:</p>
+<pre class="r"><code># The CD69-associated GP subset, shared by Figure 6d (the up/down gene heatmap)
+# and Figure S6b/S6c (the same GPs&#39; mean activity per tissue and per lineage).
+# Those three panels are in two different figures and so in two different
+# scripts, but they must show the same GPs on the same axis order -- hence one
+# definition here rather than a copy in each script.
+#
+# Curated list -- NOT a top-10 computed from the correlations below. These 10
+# are drawn from among the most strongly CD69-correlated GPs, but are not the
+# top 10 under any single ranking: 8 are positively correlated (ranks 1, 3, 4,
+# 5, 6, 10, 12, 14 of 200) and GP58/GP171 are the two most *negatively*
+# correlated GPs of all 200. By |rho| they sit at ranks 1, 2, 4, 5, 6, 8, 12,
+# 14, 17, 18, skipping GP1/GP47/GP100/GP25. Treat as a hand-picked input like
+# Thresholds_Selected_Proteins.csv and well_aligned_gps -- don&#39;t &quot;fix&quot; it into
+# a computed ranking, and keep the captions&#39; &quot;from among the most associated&quot;
+# wording in sync (analysis/Figure6.Rmd Fig. 6d, analysis/FigureS6.Rmd
+# Fig. S6b, c). script/verify_cd69_gp_ranking.R enforces all of this.
+cd69_top_gps_subset &lt;- c(&quot;GP35&quot;, &quot;GP6&quot;, &quot;GP170&quot;, &quot;GP26&quot;, &quot;GP58&quot;, &quot;GP171&quot;, &quot;GP63&quot;, &quot;GP62&quot;, &quot;GP3&quot;, &quot;GP29&quot;)
+shared_cells_cd69 &lt;- intersect(rownames(L_pm_filtered), rownames(protein_mat_normalized_lognorm))
+cd69_expr_vec &lt;- protein_mat_normalized_lognorm[shared_cells_cd69, &quot;CD69&quot;]
+cd69_corr &lt;- sapply(cd69_top_gps_subset, function(gp) cor(L_pm_filtered[shared_cells_cd69, gp], cd69_expr_vec, method = &quot;spearman&quot;))
+# most-correlated GP ends up at the top of the y-axis in all three panels
+cd69_top_gps_sorted &lt;- names(sort(cd69_corr, decreasing = FALSE))</code></pre>
+<pre class="r"><code># ============================================================
+# s6b/s6c: mean loading of the 10 curated CD69-associated GPs, per tissue (b)
+# and per lineage (c). cd69_top_gps_sorted comes from citeseq_shared_setup.R
+# and is the same GP order Figure 6d draws.
+# ============================================================
+cells_for_heatmap &lt;- intersect(rownames(L_pm_filtered), rownames(seurat_meta_filtered))
+L_cd69_sub &lt;- L_pm_filtered[cells_for_heatmap, cd69_top_gps_sorted, drop = FALSE]
+meta_hm &lt;- seurat_meta_filtered[cells_for_heatmap, c(&quot;annotation_level1&quot;, &quot;organ_simplified&quot;)]
+
+mean_loading_long &lt;- function(L_mat, group_vec, gp_levels) {
+  as.data.frame(L_mat) %&gt;%
+    mutate(group = group_vec) %&gt;%
+    tidyr::pivot_longer(cols = -group, names_to = &quot;GP&quot;, values_to = &quot;Loading&quot;) %&gt;%
+    group_by(group, GP) %&gt;%
+    summarise(mean_loading = mean(Loading, na.rm = TRUE), .groups = &quot;drop&quot;) %&gt;%
+    mutate(GP = factor(GP, levels = gp_levels))
+}
+make_mean_loading_heatmap &lt;- function(df, title) {
+  fill_max &lt;- max(df$mean_loading, na.rm = TRUE)
+  ggplot(df, aes(x = group, y = GP, fill = mean_loading)) +
+    geom_tile() +
+    scale_fill_gradient(low = &quot;white&quot;, high = &quot;firebrick&quot;, limits = c(0, fill_max), name = &quot;Mean\nloading&quot;) +
+    labs(title = title, x = NULL, y = NULL) +
+    theme_minimal(base_size = 9) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 9), axis.text.y = element_text(size = 9), panel.grid = element_blank())
+}
+
+df_organ &lt;- mean_loading_long(L_cd69_sub, meta_hm$organ_simplified, cd69_top_gps_sorted)
+p_s6b &lt;- make_mean_loading_heatmap(df_organ, &quot;Mean GP loading by tissue (organ_simplified)&quot;)
+ggsave(paste0(figure_path, &quot;s6b.pdf&quot;), p_s6b, width = 9, height = 5)
+
+df_level1 &lt;- mean_loading_long(L_cd69_sub, meta_hm$annotation_level1, cd69_top_gps_sorted)
+p_s6c &lt;- make_mean_loading_heatmap(df_level1, &quot;Mean GP loading by cell type (level1)&quot;)
+ggsave(paste0(figure_path, &quot;s6c.pdf&quot;), p_s6c, width = 7, height = 5)</code></pre>
+<p><img src="assets/FigureS6/s6b.png" width="49%" style="display: block; margin: auto;" /><img src="assets/FigureS6/s6c.png" width="49%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. S6b, c.</strong> Mean activity of the GPs associated
+with CD69 protein expression, <strong>(b) across tissues</strong>
+(<code>organ_simplified</code>) and <strong>(c) across lineages</strong>
+(<code>annotation_level1</code>). These are the same ten representative
+CD69-associated GPs drawn in <a href="Figure6.html#fig6d">Fig. 6d</a>,
+on the same y-axis order: selected from among the GPs most strongly
+correlated – positively or negatively – with CD69 protein expression,
+and ordered by the Spearman correlation between GP activity and CD69
+expression. Color runs from white (zero) to firebrick (each panel’s
+largest mean activity). The ten GPs are a <strong>hand-picked</strong>
+set, not a computed top-10; <code>script/verify_cd69_gp_ranking.R</code>
+recomputes the correlation over all 200 GPs and fails if this wording
+and the code drift apart.</p>
+</div>
+</div>
+<div id="figs6dg" class="section level2">
+<h2>(s6d-g) Further protein-gated vs. GP-loading populations</h2>
+<pre class="r"><code># ============================================================
+# s6d-s6g: protein-gate vs. GP-loading comparison for the 4 curated
+# supplementary GPs. Same helper, same inputs and same panel geometry as
+# Figure 6e-6j -- only the GPs differ, and the two sets are disjoint.
+# ============================================================
+# As in Figure6.R, the loop iterates over the names of the letter map so a GP
+# cannot be drawn under another GP&#39;s letter.
+figs6_gating &lt;- c(&quot;GP29&quot; = &quot;s6d&quot;, &quot;GP58&quot; = &quot;s6e&quot;, &quot;GP22&quot; = &quot;s6f&quot;, &quot;GP68&quot; = &quot;s6g&quot;)
+for (gp in names(figs6_gating)) {
   k_name &lt;- paste0(&quot;K&quot;, sub(&quot;^GP&quot;, &quot;&quot;, gp))
   plot_gated_gp_vs_protein(
     gp_name = k_name,
@@ -1081,297 +1298,27 @@ plots_all &lt;- lapply(other_GPs, function(gp) {
     exclude_cells = c(thymocyte_cells, proliferating_cells, miniverse_cells),
     selected_proteins = select_proteins,
     loading_q = NULL,
-    min_pointsize = if (gp %in% enlarge_gps) 3L else 0L
+    min_pointsize = if (gp %in% enlarge_gps) 3L else 0L,
+    save_path = paste0(figure_path, figs6_gating[gp], &quot;.pdf&quot;)
   )
-})
-
-v_bar &lt;- ggplot() + theme_void() + theme(plot.background = element_rect(fill = &quot;grey60&quot;, color = NA))
-
-# Sorted gallery: GPs in numerical order, one PDF per page (2 pages here),
-# 2 GP-units per row x 6 rows = 12 GPs per page; panels labeled a, b, c...
-sort_idx &lt;- order(as.integer(sub(&quot;^GP&quot;, &quot;&quot;, other_GPs)))
-plots_sorted &lt;- plots_all[sort_idx]
-
-n_pages_sorted &lt;- ceiling(length(plots_sorted) / 12)
-for (page_idx in seq_len(n_pages_sorted)) {
-  idx_start &lt;- (page_idx - 1) * 12 + 1
-  idx_end &lt;- min(page_idx * 12, length(plots_sorted))
-  page_plots &lt;- plots_sorted[idx_start:idx_end]
-  n_on_page &lt;- length(page_plots)
-
-  labeled_page_plots &lt;- lapply(seq_len(n_on_page), function(i) {
-    unit &lt;- page_plots[[i]]
-    p1_labeled &lt;- unit[[1]] + labs(tag = letters[i]) + theme(plot.tag = element_text(size = 14, face = &quot;bold&quot;))
-    p1_labeled + unit[[2]] + plot_layout(ncol = 2)
-  })
-
-  rows_list &lt;- lapply(1:6, function(r) {
-    i_left &lt;- (r - 1) * 2 + 1
-    i_right &lt;- (r - 1) * 2 + 2
-    gp_left &lt;- if (i_left &lt;= n_on_page) labeled_page_plots[[i_left]] else plot_spacer()
-    gp_right &lt;- if (i_right &lt;= n_on_page) labeled_page_plots[[i_right]] else plot_spacer()
-    (gp_left | v_bar | gp_right) + plot_layout(widths = c(1, 0.03, 1))
-  })
-  combined &lt;- wrap_plots(rows_list, ncol = 1)
-
-  # Render to a scratch file, then move it into place -- do not point cairo_pdf
-  # at the published path. Writing in place was observed to fail *silently*:
-  # unlink() removed the old PDF (externally verified gone), the device opened
-  # and closed without error, and the previous file then reappeared
-  # byte-identical with its original mtime. The run exited 0 with a complete log
-  # while the panels were never regenerated, which is exactly the failure mode
-  # that publishes a stale figure. Rendering elsewhere and copying is not
-  # affected, and the size check below turns any recurrence into a hard error.
-  out_page &lt;- paste0(figure_path, sprintf(&quot;s6-%d.pdf&quot;, page_idx))
-  tmp_page &lt;- tempfile(pattern = sprintf(&quot;s6-%d-&quot;, page_idx), fileext = &quot;.pdf&quot;)
-
-  graphics.off()
-  cairo_pdf(tmp_page, width = 13, height = 18)
-  showtext::showtext_begin()
-  print(combined)
-  showtext::showtext_end()
-  dev.off()
-
-  if (!file.exists(tmp_page) || file.size(tmp_page) == 0) {
-    stop(sprintf(&quot;cairo_pdf produced no output for %s&quot;, basename(out_page)))
-  }
-  rendered &lt;- file.size(tmp_page)
-  if (!file.copy(tmp_page, out_page, overwrite = TRUE) ||
-      !file.exists(out_page) || file.size(out_page) != rendered) {
-    stop(sprintf(
-      &quot;rendered %s (%d bytes) but could not install it at %s (on disk: %s bytes)&quot;,
-      basename(tmp_page), rendered, out_page,
-      if (file.exists(out_page)) file.size(out_page) else &quot;missing&quot;
-    ))
-  }
-  unlink(tmp_page)
-  message(sprintf(&quot;wrote %s (%.2f MB)&quot;, out_page, rendered / 1e6))
 }</code></pre>
-<p><img src="assets/FigureS6/s6-1.png" width="100%" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-s6-1">
-Past versions of s6-1.png
-</button>
-</p>
-<div id="fig-s6-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/aeb91c8e3c61531ceef9cd7c52010b045b0c1fcd/docs/assets/FigureS6/s6-1.png" target="_blank">aeb91c8</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-28
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/710259816a5471e4ec442a7a27b8732d9dd67e8d/docs/assets/FigureS6/s6-1.png" target="_blank">7102598</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/6c1a613526a5e79e96a566eb3ed8c22e91015cba/docs/assets/FigureS6/s6-1.png" target="_blank">6c1a613</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/bf7afcfe360b8947b96a4b905fcaa82ecd923a67/docs/assets/FigureS6/s6-1.png" target="_blank">bf7afcf</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/ea3ecc24d9da3261943163a384b2262252fcceea/docs/assets/FigureS6/s6-1.png" target="_blank">ea3ecc2</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/78e3bbad835aff2b513ff86f600f6b01b2beb5e3/docs/assets/FigureS6/s6-1.png" target="_blank">78e3bba</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/06b2461eba2147f353f2ce082bdebe22f5dcee26/docs/assets/FigureS6/s6-1.png" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><img src="assets/FigureS6/s6-2.png" width="100%" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-s6-2">
-Past versions of s6-2.png
-</button>
-</p>
-<div id="fig-s6-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/aeb91c8e3c61531ceef9cd7c52010b045b0c1fcd/docs/assets/FigureS6/s6-2.png" target="_blank">aeb91c8</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-28
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/710259816a5471e4ec442a7a27b8732d9dd67e8d/docs/assets/FigureS6/s6-2.png" target="_blank">7102598</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/6c1a613526a5e79e96a566eb3ed8c22e91015cba/docs/assets/FigureS6/s6-2.png" target="_blank">6c1a613</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/bf7afcfe360b8947b96a4b905fcaa82ecd923a67/docs/assets/FigureS6/s6-2.png" target="_blank">bf7afcf</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/ea3ecc24d9da3261943163a384b2262252fcceea/docs/assets/FigureS6/s6-2.png" target="_blank">ea3ecc2</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/78e3bbad835aff2b513ff86f600f6b01b2beb5e3/docs/assets/FigureS6/s6-2.png" target="_blank">78e3bba</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/06b2461eba2147f353f2ce082bdebe22f5dcee26/docs/assets/FigureS6/s6-2.png" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="assets/FigureS6/s6d.png" width="49%" style="display: block; margin: auto;" /><img src="assets/FigureS6/s6e.png" width="49%" style="display: block; margin: auto;" /><img src="assets/FigureS6/s6f.png" width="49%" style="display: block; margin: auto;" /><img src="assets/FigureS6/s6g.png" width="49%" style="display: block; margin: auto;" /></p>
 <div class="figcaption">
-<p><strong>Fig. S6.</strong> Examples of gating strategies used to
-identify GP-active cells – Figure 6c-f extended to all well-aligned GPs,
-shown as two gallery pages (s6-1 and s6-2). For each GP, all-T MDE plots
-highlight cells selected by the proposed strategy (left) and the
-corresponding GP-active cells (right): left, cells passing a protein
-gate built from the GP’s curated marker signature (positive markers
-above, negative below), with the gate size reported as “Matched n”;
-right, an equally sized set of cells with the highest GP activity. Color
-indicates cell density (two-dimensional); all other cells are grey.
-Thymocytes, proliferating, and “miniverse” cells are excluded. Each
-panel is labeled with its GP and the markers the gate actually applied.
-A marker from the curated signature that has no manually reviewed
-positivity threshold (<a href="ExtendedDataTable7.html">Extended Data
-Table 7</a>) cannot be gated on, and so is omitted from the label rather
-than listed: THY1.2 for GP3, GP35, GP107 and GP159, plus
-GR1-LY6G-LY6C1-LY6C2 for GP159.</p>
+<p><strong>Fig. S6d-g.</strong> Examples of gating strategies used to
+identify GP-active cells – <a href="Figure6.html#fig6ej">Fig. 6e-j</a>
+extended to four further GPs, <strong>(d) GP29, (e) GP58, (f) GP22 and
+(g) GP68</strong>. Drawn exactly as in Figure 6: for each GP, all-T MDE
+plots highlight cells passing a protein gate built from the GP’s curated
+marker signature (left; positive markers above threshold, negative
+markers at or below, with the gate size reported in the panel title as
+“Matched n”) and, on the right, exactly that many cells, taken as the
+ones with the highest GP activity. Color indicates cell density
+(two-dimensional); all other cells are grey. Thymocytes, proliferating,
+and “miniverse” cells are excluded. Each panel is labeled with its GP
+and the markers the gate actually applied; every marker in these four
+signatures has a manually reviewed positivity threshold (<a
+href="ExtendedDataTable7.html">Extended Data Table 7</a>), so none is
+silently dropped.</p>
 </div>
 <br>
 <p>

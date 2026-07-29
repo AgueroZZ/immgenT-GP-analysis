@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0f5b5da36f3b327ab40f0093ca637c474b94cb03targetblank0f5b5daa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree4c076701e72fdfb533f3d28c552116e5b48b9932targetblank4c07670a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0f5b5da36f3b327ab40f0093ca637c474b94cb03" target="_blank">0f5b5da</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/4c076701e72fdfb533f3d28c552116e5b48b9932" target="_blank">4c07670</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0f5b5da36f3b327ab40f0093ca637c474b94cb03targetblank0f5b5daa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree4c076701e72fdfb533f3d28c552116e5b48b9932targetblank4c07670a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0f5b5da36f3b327ab40f0093ca637c474b94cb03" target="_blank">0f5b5da</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/4c076701e72fdfb533f3d28c552116e5b48b9932" target="_blank">4c07670</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -580,7 +580,7 @@ Ignored files:
     Ignored:    figures/final-selected/Figure S4/.DS_Store
     Ignored:    log/
     Ignored:    output/Figure2/
-    Ignored:    output/FigureS5/S5_cell_metadata.csv.gz
+    Ignored:    output/Figure7b/7b_cell_metadata.csv.gz
     Ignored:    plan/
     Ignored:    reorder/
     Ignored:    tables/
@@ -629,6 +629,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/4c076701e72fdfb533f3d28c552116e5b48b9932/analysis/FigureS3.Rmd" target="_blank">4c07670</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-28
+</td>
+<td>
+Reorder Figures 6, S6 and S3; make the ex-S5 figure Figure 7b
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/029b0ae35fa5141e04f10d921297ffb5cbf0cef4/docs/FigureS3.html" target="_blank">029b0ae</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-28
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -994,37 +1028,50 @@ Initial commit: immgenT-GP-analysis
 </div>
 </div>
 <p>Published as <strong>Extended Data Figure 3</strong>.</p>
-<p>Panels (s3c)-(s3h) are produced by <a
+<p>Panels (s3b)-(s3g) are produced by <a
 href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS3.R"><code>script/FigureS3.R</code></a>,
 which shares its curated GP set with <a href="Figure4.html">Figure 4</a>
 via <code>code/R/activation_shared_setup.R</code>. The code below is
 shown for reference (not re-executed on this page); the images are its
 pre-rendered output.</p>
-<p>Panels (s3a) and (s3b) are <strong>not produced in this
-repository</strong> – see below.</p>
+<p>Panel (s3a) is <strong>not produced in this repository</strong> – see
+below.</p>
+<p><strong>Lettering note.</strong> The gate definition in (s3a) used to
+be split into two panels, s3a (the MDEs) and s3b (the protein plot);
+they are one panel, so every panel after it is now one letter lower than
+in the published figure – s3b here is the published s3c, and s3g is the
+published s3h.</p>
 <div id="setup" class="section level2">
 <h2>Setup</h2>
 <pre class="r"><code># Figure S3. Characterizing activation GPs.
 #
 # Panels produced (see figures/Previous/bits/Figure S3/FigureS3_caption.md
-# for the full caption text; captioned A-F there but the final files are
-# lettered s3c-s3h -- this script uses that final lettering):
-#   s3c  Fraction of activated CD4/CD8 cells per organ with GP26 &gt; 0.1, sorted.
-#   s3d  GSEA dot plot relating the activation GPs to curated gene sets.
-#   s3e  Fraction of activated CD4 cells with GP79 loading &gt; 0.1, by condition.
-#   s3f  Per-cell log2FC heatmap of activation GPs vs resting baseline.
-#   s3g  Fraction of activated CD8/CD4 cells with GP57 loading &gt; 0.1: cancer
+# for the full caption text; captioned A-F there, and published as s3c-s3h
+# before the 2026-07-28 re-lettering below -- this script uses the current
+# lettering):
+#
+# s3a is the definition of resting vs activated CD4/CD8 cells (the
+# lineage-specific MDEs plus the adjacent CD62L-vs-CD44 protein plot, one
+# panel). It is NOT produced here -- no code in this repository draws it; see
+# analysis/FigureS3.Rmd. Its two halves used to be lettered s3a and s3b, which
+# is why every panel below is one letter lower than the published figure.
+#
+#   s3b  Fraction of activated CD4/CD8 cells per organ with GP26 &gt; 0.1, sorted.
+#   s3c  GSEA dot plot relating the activation GPs to curated gene sets.
+#   s3d  Fraction of activated CD4 cells with GP79 loading &gt; 0.1, by condition.
+#   s3e  Per-cell log2FC heatmap of activation GPs vs resting baseline.
+#   s3f  Fraction of activated CD8/CD4 cells with GP57 loading &gt; 0.1: cancer
 #        vs all other conditions.
-#   s3h  Bipartite TF-GP network for Gata3, Rorc, Tbx21.
+#   s3g  Bipartite TF-GP network for Gata3, Rorc, Tbx21.
 #
 # Source: ported from Figure_Activation.R (see Figure4.R for the main
 # Figure 4 panels from the same file). Shared curated-GP setup lives in
 # code/R/activation_shared_setup.R.
 #
-# Panel s3c is computed on activated CD4/CD8 cells only (annotation_level1 in
+# Panel s3b is computed on activated CD4/CD8 cells only (annotation_level1 in
 # {CD4, CD8} and annotation_level2_group == &quot;activated&quot;): the per-organ fraction
 # with GP26 loading &gt; 0.1. This exactly reproduces the collaborator&#39;s panel
-# (all 22 organ rates match to the decimal); see the s3c block below.
+# (all 22 organ rates match to the decimal); see the s3b block below.
 #
 # Required inputs (data/) -- see code/README.md&#39;s &quot;Data provenance&quot; table
 # for the full picture:
@@ -1057,33 +1104,31 @@ df_sig &lt;- read.csv(paste0(data_path, &quot;GSEA_signatures_select_toplot.csv&
 
 source(&quot;code/R/activation_shared_setup.R&quot;)</code></pre>
 </div>
-<div id="figs3ab" class="section level2">
-<h2>(s3a, s3b) Definition of resting and activated CD4/CD8 cells</h2>
-<p>These two panels are <strong>missing from this site</strong>: no code
-in <code>script/FigureS3.R</code> produces them, and there is no
-<code>s3a</code>/<code>s3b</code> asset under
-<code>analysis/assets/FigureS3/</code>,
+<div id="figs3a" class="section level2">
+<h2>(s3a) Definition of resting and activated CD4/CD8 cells</h2>
+<p>This panel is <strong>missing from this site</strong>: no code in
+<code>script/FigureS3.R</code> produces it, and there is no
+<code>s3a</code> asset under <code>analysis/assets/FigureS3/</code>,
 <code>figures/final-selected/Figure S3/</code>, or
-<code>figures/Previous/bits/</code>. The published captions describe
-them as follows.</p>
+<code>figures/Previous/bits/</code>. The published caption describes it
+as follows.</p>
 <div class="figcaption">
 <p><strong>Fig. S3a.</strong> Definition of resting and activated CD4+
 and CD8+ T cells. Activated CD44+CD62L- (top) and resting CD62L+CD44-
-(bottom) cells are highlighted in each lineage-specific MDE.</p>
-<p><strong>Fig. S3b.</strong> Gated cells are shown in the adjacent
-CD62L versus CD44 protein-expression plot (CITE-seq; log-normalized ADT
-counts).</p>
+(bottom) cells are highlighted in each lineage-specific MDE, and the
+gated cells are shown in the adjacent CD62L versus CD44
+protein-expression plot (CITE-seq; log-normalized ADT counts).</p>
 </div>
 <p>The <code>annotation_level2_group</code> “activated”/“resting” labels
 that every other panel on this page (and all of <a
-href="Figure4.html">Figure 4</a>) filters on are the labels these two
-panels define, so the gate itself is already in use here – only the two
-figures illustrating it are absent.</p>
+href="Figure4.html">Figure 4</a>) filters on are the labels this panel
+defines, so the gate itself is already in use here – only the figure
+illustrating it is absent.</p>
 </div>
-<div id="figs3c" class="section level2">
-<h2>(s3c) GP26+ rate by organ</h2>
+<div id="figs3b" class="section level2">
+<h2>(s3b) GP26+ rate by organ</h2>
 <pre class="r"><code># ============================================================
-# s3c: Fraction of activated CD4/CD8 cells per organ with GP26 loading &gt; 0.1
+# s3b: Fraction of activated CD4/CD8 cells per organ with GP26 loading &gt; 0.1
 # ============================================================
 act_cd4_cd8 &lt;- seurat_meta_filtered$annotation_level1 %in% c(&quot;CD4&quot;, &quot;CD8&quot;) &amp;
   seurat_meta_filtered$annotation_level2_group == &quot;activated&quot;
@@ -1106,7 +1151,7 @@ organ_abbrev &lt;- c(&quot;submandibular gland&quot; = &quot;submand. gland&quot
                   &quot;small intestine LP&quot;  = &quot;sm intestine LP&quot;,
                   &quot;peritoneal cavity&quot;   = &quot;perit. cav.&quot;)
 
-p_s3c &lt;- ggplot(gp26_organ_df, aes(x = organ, y = pct)) +
+p_s3b &lt;- ggplot(gp26_organ_df, aes(x = organ, y = pct)) +
   geom_col(fill = &quot;#4C72B0&quot;, width = 0.7) +
   geom_text(aes(label = pct_lab), vjust = -0.4, size = 3, color = &quot;grey20&quot;) +
   scale_x_discrete(labels = function(x) ifelse(x %in% names(organ_abbrev), organ_abbrev[x], x)) +
@@ -1117,7 +1162,39 @@ p_s3c &lt;- ggplot(gp26_organ_df, aes(x = organ, y = pct)) +
   theme_classic(base_size = 12) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         plot.title = element_text(hjust = 0.5))
-ggsave(filename = paste0(figure_path, &quot;s3c.pdf&quot;), plot = p_s3c, width = 9, height = 4.8)</code></pre>
+ggsave(filename = paste0(figure_path, &quot;s3b.pdf&quot;), plot = p_s3b, width = 9, height = 4.8)</code></pre>
+<p><img src="assets/FigureS3/s3b.png" width="32%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. S3b.</strong> Bar plot showing the percentage of
+<strong>activated CD4+ and CD8+ T cells</strong> in each organ
+(<code>organ_simplified</code>) with GP26 activity above
+<strong>0.1</strong>, sorted from highest to lowest. Activated cells are
+those with <code>annotation_level2_group == "activated"</code> among the
+CD4 and CD8 lineages.</p>
+</div>
+</div>
+<div id="figs3c" class="section level2">
+<h2>(s3c) GSEA dot plot</h2>
+<pre class="r"><code># ============================================================
+# s3c: GSEA dot plot for the activation GPs
+# ============================================================
+df_sig &lt;- df_sig %&gt;% mutate(factor = str_replace(factor, &quot;^F&quot;, &quot;GP&quot;))
+present_GPs &lt;- intersect(ordered_GPs, unique(df_sig$factor))
+y_levels &lt;- rev(present_GPs) # first GP (GP56) appears at the top of the y-axis
+df_plot &lt;- df_sig %&gt;%
+  filter(factor %in% present_GPs) %&gt;%
+  mutate(pathway = factor(pathway, levels = unique(pathway)), factor = factor(factor, levels = y_levels), log10padj = -log10(padj))
+y_factors &lt;- levels(df_plot$factor)
+y_colors &lt;- highlight_colors[y_factors]
+
+p_s3c &lt;- ggplot(df_plot, aes(x = pathway, y = factor)) +
+  geom_point(aes(size = NES, color = log10padj)) +
+  scale_color_viridis_c(name = &quot;-log10(p-adj)&quot;) +
+  scale_size(range = c(3, 10)) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1), axis.text.y = element_text(color = y_colors, face = &quot;bold&quot;)) +
+  labs(size = &quot;NES&quot;, x = &quot;Pathway&quot;, y = &quot;Gene Program&quot;)
+ggsave(filename = paste0(figure_path, &quot;s3c.pdf&quot;), plot = p_s3c, width = 8, height = 10)</code></pre>
 <p><img src="assets/FigureS3/s3c.png" width="32%" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-s3c">
@@ -1223,37 +1300,71 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. S3c.</strong> Bar plot showing the percentage of
-<strong>activated CD4+ and CD8+ T cells</strong> in each organ
-(<code>organ_simplified</code>) with GP26 activity above
-<strong>0.1</strong>, sorted from highest to lowest. Activated cells are
-those with <code>annotation_level2_group == "activated"</code> among the
-CD4 and CD8 lineages.</p>
+<p><strong>Fig. S3c.</strong> Gene set enrichment analysis (GSEA) dot
+plot relating activation-associated GPs to curated immunologic signature
+gene sets. Each dot is a significant GP-gene-set association; color
+denotes -log10 adjusted <em>P</em> value and dot size denotes the
+normalized enrichment score (NES). GP labels are colored by activation
+class.</p>
 </div>
 </div>
 <div id="figs3d" class="section level2">
-<h2>(s3d) GSEA dot plot</h2>
+<h2>(s3d) GP79+ rate across conditions</h2>
 <pre class="r"><code># ============================================================
-# s3d: GSEA dot plot for the activation GPs
+# s3d: GP79 high-loading proportion across conditions, activated CD4 cells
 # ============================================================
-df_sig &lt;- df_sig %&gt;% mutate(factor = str_replace(factor, &quot;^F&quot;, &quot;GP&quot;))
-present_GPs &lt;- intersect(ordered_GPs, unique(df_sig$factor))
-y_levels &lt;- rev(present_GPs) # first GP (GP56) appears at the top of the y-axis
-df_plot &lt;- df_sig %&gt;%
-  filter(factor %in% present_GPs) %&gt;%
-  mutate(pathway = factor(pathway, levels = unique(pathway)), factor = factor(factor, levels = y_levels), log10padj = -log10(padj))
-y_factors &lt;- levels(df_plot$factor)
-y_colors &lt;- highlight_colors[y_factors]
+min_cells_gp79_condition &lt;- 50
+gp79_cd4_condition_df &lt;- data.frame(
+  condition_broad = as.character(seurat_meta_filtered$condition_broad),
+  condition_detailed_simplified = as.character(seurat_meta_filtered$condition_detailed_simplified),
+  lineage = seurat_meta_filtered$annotation_level1,
+  activation_group = seurat_meta_filtered$annotation_level2_group,
+  gp79_loading = L_pm_filtered[, &quot;GP79&quot;],
+  stringsAsFactors = FALSE
+) %&gt;%
+  filter(lineage == &quot;CD4&quot;, activation_group == &quot;activated&quot;, !is.na(condition_detailed_simplified), condition_detailed_simplified != &quot;&quot;) %&gt;%
+  mutate(gp79_high = gp79_loading &gt; 0.1)
 
-p_s3d &lt;- ggplot(df_plot, aes(x = pathway, y = factor)) +
-  geom_point(aes(size = NES, color = log10padj)) +
-  scale_color_viridis_c(name = &quot;-log10(p-adj)&quot;) +
-  scale_size(range = c(3, 10)) +
-  theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1), axis.text.y = element_text(color = y_colors, face = &quot;bold&quot;)) +
-  labs(size = &quot;NES&quot;, x = &quot;Pathway&quot;, y = &quot;Gene Program&quot;)
-ggsave(filename = paste0(figure_path, &quot;s3d.pdf&quot;), plot = p_s3d, width = 8, height = 10)</code></pre>
-<p><img src="assets/FigureS3/s3d.png" width="32%" style="display: block; margin: auto;" /></p>
+gp79_cd4_condition_summary &lt;- gp79_cd4_condition_df %&gt;%
+  group_by(condition_detailed_simplified) %&gt;%
+  summarise(
+    condition_broad = names(sort(table(condition_broad), decreasing = TRUE))[1],
+    n_cells = n(), n_gp79_high = sum(gp79_high), proportion_gp79_high = mean(gp79_high), .groups = &quot;drop&quot;
+  ) %&gt;%
+  mutate(included_in_plot = n_cells &gt;= min_cells_gp79_condition) %&gt;%
+  arrange(desc(proportion_gp79_high), condition_detailed_simplified)
+
+gp79_cd4_condition_plot_df &lt;- gp79_cd4_condition_summary %&gt;%
+  filter(included_in_plot) %&gt;%
+  arrange(proportion_gp79_high, condition_detailed_simplified) %&gt;%
+  mutate(condition_label = factor(condition_detailed_simplified, levels = condition_detailed_simplified))
+
+gp79_broad_levels &lt;- sort(unique(gp79_cd4_condition_plot_df$condition_broad))
+gp79_broad_colors &lt;- setNames(scales::hue_pal()(length(gp79_broad_levels)), gp79_broad_levels)
+gp79_xmax &lt;- max(gp79_cd4_condition_plot_df$proportion_gp79_high, na.rm = TRUE)
+gp79_xmax &lt;- ifelse(gp79_xmax &gt; 0, gp79_xmax, 0.05)
+gp79_label_pad &lt;- gp79_xmax * 0.015
+gp79_plot_height &lt;- max(7, 0.18 * nrow(gp79_cd4_condition_plot_df) + 2)
+
+p_s3d &lt;- ggplot(gp79_cd4_condition_plot_df, aes(x = proportion_gp79_high, y = condition_label, fill = condition_broad)) +
+  geom_col(width = 0.75, color = &quot;grey25&quot;, linewidth = 0.2) +
+  geom_text(aes(x = proportion_gp79_high + gp79_label_pad, label = scales::percent(proportion_gp79_high, accuracy = 1)), hjust = 0, size = 2.7) +
+  scale_x_continuous(labels = scales::percent_format(accuracy = 10), expand = expansion(mult = c(0, 0.02))) +
+  scale_fill_manual(values = gp79_broad_colors) +
+  coord_cartesian(xlim = c(0, gp79_xmax * 1.15), clip = &quot;off&quot;) +
+  labs(
+    x = &quot;Proportion of activated CD4 cells with GP79 loading &gt; 0.1&quot;, y = NULL, fill = &quot;Condition broad&quot;,
+    title = &quot;GP79-high fraction across activated CD4 conditions&quot;,
+    subtitle = paste0(&quot;condition_detailed_simplified categories with &gt;= &quot;, min_cells_gp79_condition, &quot; activated CD4 cells&quot;)
+  ) +
+  theme_classic(base_size = 11) +
+  theme(
+    legend.position = &quot;right&quot;, legend.title = element_text(face = &quot;bold&quot;),
+    plot.title = element_text(face = &quot;bold&quot;, hjust = 0.5), plot.subtitle = element_text(hjust = 0.5),
+    axis.text.y = element_text(size = 8), plot.margin = margin(10, 45, 10, 10)
+  )
+ggsave(filename = paste0(figure_path, &quot;s3d.pdf&quot;), plot = p_s3d, width = 9, height = gp79_plot_height, limitsize = FALSE)</code></pre>
+<p><img src="assets/FigureS3/s3d.png" width="49%" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-s3d">
 Past versions of s3d.png
@@ -1347,165 +1458,7 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. S3d.</strong> Gene set enrichment analysis (GSEA) dot
-plot relating activation-associated GPs to curated immunologic signature
-gene sets. Each dot is a significant GP-gene-set association; color
-denotes -log10 adjusted <em>P</em> value and dot size denotes the
-normalized enrichment score (NES). GP labels are colored by activation
-class.</p>
-</div>
-</div>
-<div id="figs3e" class="section level2">
-<h2>(s3e) GP79+ rate across conditions</h2>
-<pre class="r"><code># ============================================================
-# s3e: GP79 high-loading proportion across conditions, activated CD4 cells
-# ============================================================
-min_cells_gp79_condition &lt;- 50
-gp79_cd4_condition_df &lt;- data.frame(
-  condition_broad = as.character(seurat_meta_filtered$condition_broad),
-  condition_detailed_simplified = as.character(seurat_meta_filtered$condition_detailed_simplified),
-  lineage = seurat_meta_filtered$annotation_level1,
-  activation_group = seurat_meta_filtered$annotation_level2_group,
-  gp79_loading = L_pm_filtered[, &quot;GP79&quot;],
-  stringsAsFactors = FALSE
-) %&gt;%
-  filter(lineage == &quot;CD4&quot;, activation_group == &quot;activated&quot;, !is.na(condition_detailed_simplified), condition_detailed_simplified != &quot;&quot;) %&gt;%
-  mutate(gp79_high = gp79_loading &gt; 0.1)
-
-gp79_cd4_condition_summary &lt;- gp79_cd4_condition_df %&gt;%
-  group_by(condition_detailed_simplified) %&gt;%
-  summarise(
-    condition_broad = names(sort(table(condition_broad), decreasing = TRUE))[1],
-    n_cells = n(), n_gp79_high = sum(gp79_high), proportion_gp79_high = mean(gp79_high), .groups = &quot;drop&quot;
-  ) %&gt;%
-  mutate(included_in_plot = n_cells &gt;= min_cells_gp79_condition) %&gt;%
-  arrange(desc(proportion_gp79_high), condition_detailed_simplified)
-
-gp79_cd4_condition_plot_df &lt;- gp79_cd4_condition_summary %&gt;%
-  filter(included_in_plot) %&gt;%
-  arrange(proportion_gp79_high, condition_detailed_simplified) %&gt;%
-  mutate(condition_label = factor(condition_detailed_simplified, levels = condition_detailed_simplified))
-
-gp79_broad_levels &lt;- sort(unique(gp79_cd4_condition_plot_df$condition_broad))
-gp79_broad_colors &lt;- setNames(scales::hue_pal()(length(gp79_broad_levels)), gp79_broad_levels)
-gp79_xmax &lt;- max(gp79_cd4_condition_plot_df$proportion_gp79_high, na.rm = TRUE)
-gp79_xmax &lt;- ifelse(gp79_xmax &gt; 0, gp79_xmax, 0.05)
-gp79_label_pad &lt;- gp79_xmax * 0.015
-gp79_plot_height &lt;- max(7, 0.18 * nrow(gp79_cd4_condition_plot_df) + 2)
-
-p_s3e &lt;- ggplot(gp79_cd4_condition_plot_df, aes(x = proportion_gp79_high, y = condition_label, fill = condition_broad)) +
-  geom_col(width = 0.75, color = &quot;grey25&quot;, linewidth = 0.2) +
-  geom_text(aes(x = proportion_gp79_high + gp79_label_pad, label = scales::percent(proportion_gp79_high, accuracy = 1)), hjust = 0, size = 2.7) +
-  scale_x_continuous(labels = scales::percent_format(accuracy = 10), expand = expansion(mult = c(0, 0.02))) +
-  scale_fill_manual(values = gp79_broad_colors) +
-  coord_cartesian(xlim = c(0, gp79_xmax * 1.15), clip = &quot;off&quot;) +
-  labs(
-    x = &quot;Proportion of activated CD4 cells with GP79 loading &gt; 0.1&quot;, y = NULL, fill = &quot;Condition broad&quot;,
-    title = &quot;GP79-high fraction across activated CD4 conditions&quot;,
-    subtitle = paste0(&quot;condition_detailed_simplified categories with &gt;= &quot;, min_cells_gp79_condition, &quot; activated CD4 cells&quot;)
-  ) +
-  theme_classic(base_size = 11) +
-  theme(
-    legend.position = &quot;right&quot;, legend.title = element_text(face = &quot;bold&quot;),
-    plot.title = element_text(face = &quot;bold&quot;, hjust = 0.5), plot.subtitle = element_text(hjust = 0.5),
-    axis.text.y = element_text(size = 8), plot.margin = margin(10, 45, 10, 10)
-  )
-ggsave(filename = paste0(figure_path, &quot;s3e.pdf&quot;), plot = p_s3e, width = 9, height = gp79_plot_height, limitsize = FALSE)</code></pre>
-<p><img src="assets/FigureS3/s3e.png" width="49%" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-s3e">
-Past versions of s3e.png
-</button>
-</p>
-<div id="fig-s3e" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/710259816a5471e4ec442a7a27b8732d9dd67e8d/docs/assets/FigureS3/s3e.png" target="_blank">7102598</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/6c1a613526a5e79e96a566eb3ed8c22e91015cba/docs/assets/FigureS3/s3e.png" target="_blank">6c1a613</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/bf7afcfe360b8947b96a4b905fcaa82ecd923a67/docs/assets/FigureS3/s3e.png" target="_blank">bf7afcf</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/ea3ecc24d9da3261943163a384b2262252fcceea/docs/assets/FigureS3/s3e.png" target="_blank">ea3ecc2</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/78e3bbad835aff2b513ff86f600f6b01b2beb5e3/docs/assets/FigureS3/s3e.png" target="_blank">78e3bba</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/06b2461eba2147f353f2ce082bdebe22f5dcee26/docs/assets/FigureS3/s3e.png" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="figcaption">
-<p><strong>Fig. S3e.</strong> Bar plot showing the percentage of
+<p><strong>Fig. S3d.</strong> Bar plot showing the percentage of
 GP79-active cells (GP79 activity above 0.1) among all activated CD4+ T
 cells across immunological challenges – condition categories
 (<code>condition_detailed_simplified</code>) that contain &gt;= 50
@@ -1513,10 +1466,10 @@ activated CD4 cells, sorted from highest to lowest and colored by broad
 condition category.</p>
 </div>
 </div>
-<div id="figs3f" class="section level2">
-<h2>(s3f) Per-cell log2FC heatmap</h2>
+<div id="figs3e" class="section level2">
+<h2>(s3e) Per-cell log2FC heatmap</h2>
 <pre class="r"><code># ============================================================
-# s3f: Per-cell log2FC heatmap of activation GPs (activated cells only),
+# s3e: Per-cell log2FC heatmap of activation GPs (activated cells only),
 #      relative to each cell&#39;s own-lineage resting baseline
 # ============================================================
 L &lt;- L_pm_filtered[c(CD4_cells, CD8_cells), GPs_of_interest, drop = FALSE]
@@ -1636,10 +1589,155 @@ pheatmap(
   annotation_col = ann_col_act, annotation_colors = ann_colors_act, annotation_names_col = TRUE,
   useRaster = TRUE,
   main = &quot;GP Log2FC vs per-lineage RESTING baseline (CD4 cells vs CD4 resting; CD8 vs CD8 resting)&quot;,
-  filename = paste0(figure_path, &quot;s3f.pdf&quot;),
+  filename = paste0(figure_path, &quot;s3e.pdf&quot;),
   width = 12, height = 4
 )</code></pre>
-<p><img src="assets/FigureS3/s3f.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="assets/FigureS3/s3e.png" width="100%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-s3e">
+Past versions of s3e.png
+</button>
+</p>
+<div id="fig-s3e" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/710259816a5471e4ec442a7a27b8732d9dd67e8d/docs/assets/FigureS3/s3e.png" target="_blank">7102598</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/6c1a613526a5e79e96a566eb3ed8c22e91015cba/docs/assets/FigureS3/s3e.png" target="_blank">6c1a613</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/bf7afcfe360b8947b96a4b905fcaa82ecd923a67/docs/assets/FigureS3/s3e.png" target="_blank">bf7afcf</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/ea3ecc24d9da3261943163a384b2262252fcceea/docs/assets/FigureS3/s3e.png" target="_blank">ea3ecc2</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-27
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/78e3bbad835aff2b513ff86f600f6b01b2beb5e3/docs/assets/FigureS3/s3e.png" target="_blank">78e3bba</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-03
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/06b2461eba2147f353f2ce082bdebe22f5dcee26/docs/assets/FigureS3/s3e.png" target="_blank">06b2461</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="figcaption">
+<p><strong>Fig. S3e.</strong> Heatmap showing single-cell GP activity in
+activated CD4+ and CD8+ T cells: per-cell log2 fold change in GP
+activity relative to the resting baseline of the same lineage (each
+activated CD4 cell versus the CD4 resting mean; each activated CD8 cell
+versus the CD8 resting mean), capped at +-2. Rows are the
+activation-associated GPs in semantic-group order; columns are
+individual activated cells grouped by cluster (Level-2 sub-lineage)
+within CD4 and CD8; color runs from purple (low) through black to gold
+(high).</p>
+</div>
+</div>
+<div id="figs3f" class="section level2">
+<h2>(s3f) GP57+ rate, cancer vs. other conditions</h2>
+<pre class="r"><code># ============================================================
+# s3f: GP57 high-loading proportion, cancer vs other conditions
+#      (activated CD4 and CD8)
+# ============================================================
+gp57_condition_df &lt;- data.frame(
+  lineage = seurat_meta_filtered$annotation_level1,
+  activation_group = seurat_meta_filtered$annotation_level2_group,
+  condition_broad = as.character(seurat_meta_filtered$condition_broad),
+  gp57_loading = L_pm_filtered[, &quot;GP57&quot;],
+  stringsAsFactors = FALSE
+) %&gt;%
+  filter(lineage %in% c(&quot;CD8&quot;, &quot;CD4&quot;), activation_group == &quot;activated&quot;) %&gt;%
+  mutate(
+    lineage = factor(lineage, levels = c(&quot;CD8&quot;, &quot;CD4&quot;)),
+    condition_group = if_else(condition_broad == &quot;cancer&quot;, &quot;Cancer&quot;, &quot;Other conditions&quot;),
+    condition_group = factor(condition_group, levels = c(&quot;Cancer&quot;, &quot;Other conditions&quot;)),
+    gp57_high = gp57_loading &gt; 0.1
+  )
+
+gp57_condition_summary &lt;- gp57_condition_df %&gt;%
+  group_by(lineage, condition_group) %&gt;%
+  summarise(n_cells = n(), n_gp57_high = sum(gp57_high), proportion_gp57_high = mean(gp57_high), .groups = &quot;drop&quot;)
+
+gp57_ymax &lt;- max(gp57_condition_summary$proportion_gp57_high, na.rm = TRUE)
+gp57_ymax &lt;- ifelse(gp57_ymax &gt; 0, gp57_ymax * 1.25, 0.05)
+
+p_s3f &lt;- ggplot(gp57_condition_summary, aes(x = lineage, y = proportion_gp57_high, fill = condition_group)) +
+  geom_col(position = position_dodge(width = 0.72), width = 0.62, color = &quot;grey20&quot;, linewidth = 0.25) +
+  geom_text(
+    aes(label = paste0(scales::percent(proportion_gp57_high, accuracy = 0.1), &quot;\n&quot;, n_gp57_high, &quot;/&quot;, n_cells)),
+    position = position_dodge(width = 0.72), vjust = -0.25, size = 3.4, lineheight = 0.9
+  ) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1), limits = c(0, gp57_ymax), expand = expansion(mult = c(0, 0.04))) +
+  scale_fill_manual(values = c(&quot;Cancer&quot; = &quot;#C44E52&quot;, &quot;Other conditions&quot; = &quot;#4C72B0&quot;)) +
+  labs(x = NULL, y = &quot;Proportion of activated cells&quot;, fill = &quot;Condition&quot;, title = &quot;GP57 loading &gt; 0.1 in activated CD8 and CD4 cells&quot;) +
+  theme_classic(base_size = 12) +
+  theme(legend.position = &quot;top&quot;, legend.title = element_text(face = &quot;bold&quot;), axis.text.x = element_text(face = &quot;bold&quot;), plot.title = element_text(face = &quot;bold&quot;, hjust = 0.5))
+ggsave(filename = paste0(figure_path, &quot;s3f.pdf&quot;), plot = p_s3f, width = 5.4, height = 4.2)</code></pre>
+<p><img src="assets/FigureS3/s3f.png" width="49%" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-s3f">
 Past versions of s3f.png
@@ -1733,57 +1831,97 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. S3f.</strong> Heatmap showing single-cell GP activity in
-activated CD4+ and CD8+ T cells: per-cell log2 fold change in GP
-activity relative to the resting baseline of the same lineage (each
-activated CD4 cell versus the CD4 resting mean; each activated CD8 cell
-versus the CD8 resting mean), capped at +-2. Rows are the
-activation-associated GPs in semantic-group order; columns are
-individual activated cells grouped by cluster (Level-2 sub-lineage)
-within CD4 and CD8; color runs from purple (low) through black to gold
-(high).</p>
+<p><strong>Fig. S3f.</strong> Bar plot showing the percentage of
+GP57-active cells (GP57 activity above 0.1) among activated CD8+ and
+CD4+ T cells in cancer versus all other conditions combined; bar labels
+give the percentage and the underlying cell counts.</p>
 </div>
 </div>
 <div id="figs3g" class="section level2">
-<h2>(s3g) GP57+ rate, cancer vs. other conditions</h2>
+<h2>(s3g) TF-GP network for Gata3/Rorc/Tbx21</h2>
 <pre class="r"><code># ============================================================
-# s3g: GP57 high-loading proportion, cancer vs other conditions
-#      (activated CD4 and CD8)
+# s3g: Bipartite TF-GP network for Gata3, Rorc, Tbx21
 # ============================================================
-gp57_condition_df &lt;- data.frame(
-  lineage = seurat_meta_filtered$annotation_level1,
-  activation_group = seurat_meta_filtered$annotation_level2_group,
-  condition_broad = as.character(seurat_meta_filtered$condition_broad),
-  gp57_loading = L_pm_filtered[, &quot;GP57&quot;],
-  stringsAsFactors = FALSE
-) %&gt;%
-  filter(lineage %in% c(&quot;CD8&quot;, &quot;CD4&quot;), activation_group == &quot;activated&quot;) %&gt;%
+tf_focus &lt;- c(&quot;Gata3&quot;, &quot;Rorc&quot;, &quot;Tbx21&quot;)
+tf_focus_threshold &lt;- 0.1
+tf_focus_edges &lt;- do.call(rbind, lapply(tf_focus, function(tf_name) {
+  vals &lt;- setNames(as.numeric(F_pm_filtered_norm[tf_name, ]), colnames(F_pm_filtered_norm))
+  idx &lt;- which(is.finite(vals) &amp; abs(vals) &gt;= tf_focus_threshold)
+  data.frame(TF = tf_name, GP = names(vals)[idx], value = vals[idx], stringsAsFactors = FALSE)
+})) %&gt;%
   mutate(
-    lineage = factor(lineage, levels = c(&quot;CD8&quot;, &quot;CD4&quot;)),
-    condition_group = if_else(condition_broad == &quot;cancer&quot;, &quot;Cancer&quot;, &quot;Other conditions&quot;),
-    condition_group = factor(condition_group, levels = c(&quot;Cancer&quot;, &quot;Other conditions&quot;)),
-    gp57_high = gp57_loading &gt; 0.1
+    GP_number = as.numeric(sub(&quot;^GP&quot;, &quot;&quot;, GP)),
+    edge_sign = if_else(value &lt; 0, &quot;Negative&quot;, &quot;Positive&quot;),
+    abs_value = abs(value),
+    edge_label = sprintf(&quot;%+.2f&quot;, value)
+  ) %&gt;%
+  arrange(match(TF, tf_focus), GP_number)
+
+tf_focus_nodes &lt;- data.frame(name = tf_focus, x = c(0, 2.7, 1.65), y = c(0, -2.75, 2.35), node_type = &quot;TF&quot;, stringsAsFactors = FALSE)
+tf_focus_colors &lt;- c(Gata3 = &quot;#E41A1C&quot;, Rorc = &quot;#1F78B4&quot;, Tbx21 = &quot;#33A02C&quot;)
+
+gp_tf_membership &lt;- tf_focus_edges %&gt;%
+  group_by(GP) %&gt;%
+  summarise(tf_members = list(sort(unique(TF))), degree_tf = n_distinct(TF), .groups = &quot;drop&quot;)
+
+shared_gp_nodes &lt;- gp_tf_membership %&gt;%
+  filter(degree_tf &gt; 1) %&gt;%
+  rowwise() %&gt;%
+  mutate(
+    x = mean(tf_focus_nodes$x[match(tf_members, tf_focus_nodes$name)]),
+    y = mean(tf_focus_nodes$y[match(tf_members, tf_focus_nodes$name)])
+  ) %&gt;%
+  ungroup() %&gt;%
+  transmute(name = GP, x, y, node_type = &quot;GP&quot;)
+
+tf_arc_range &lt;- list(Gata3 = c(170, -105), Rorc = c(205, -20), Tbx21 = c(165, -15))
+tf_arc_radius &lt;- c(Gata3 = 1.65, Rorc = 1.35, Tbx21 = 1.30)
+make_tf_arc_nodes &lt;- function(tf_name, gp_names) {
+  if (length(gp_names) == 0) return(NULL)
+  center &lt;- tf_focus_nodes[tf_focus_nodes$name == tf_name, ]
+  angles &lt;- seq(tf_arc_range[[tf_name]][1], tf_arc_range[[tf_name]][2], length.out = length(gp_names)) * pi / 180
+  radius &lt;- tf_arc_radius[[tf_name]]
+  data.frame(name = gp_names, x = center$x + radius * cos(angles), y = center$y + radius * sin(angles), node_type = &quot;GP&quot;, stringsAsFactors = FALSE)
+}
+exclusive_gp_nodes &lt;- do.call(rbind, lapply(tf_focus, function(tf_name) {
+  gp_names &lt;- gp_tf_membership %&gt;%
+    filter(degree_tf == 1, vapply(tf_members, identical, logical(1), tf_name)) %&gt;%
+    pull(GP)
+  gp_names &lt;- gp_names[order(as.numeric(sub(&quot;^GP&quot;, &quot;&quot;, gp_names)))]
+  make_tf_arc_nodes(tf_name, gp_names)
+}))
+
+tf_focus_plot_nodes &lt;- bind_rows(tf_focus_nodes, shared_gp_nodes, exclusive_gp_nodes)
+tf_focus_plot_edges &lt;- tf_focus_edges %&gt;%
+  left_join(tf_focus_plot_nodes %&gt;% select(name, x, y) %&gt;% rename(x0 = x, y0 = y), by = c(&quot;TF&quot; = &quot;name&quot;)) %&gt;%
+  left_join(tf_focus_plot_nodes %&gt;% select(name, x, y) %&gt;% rename(x1 = x, y1 = y), by = c(&quot;GP&quot; = &quot;name&quot;)) %&gt;%
+  mutate(
+    label_x = x0 + 0.55 * (x1 - x0), label_y = y0 + 0.55 * (y1 - y0),
+    label_angle = atan2(y1 - y0, x1 - x0) * 180 / pi,
+    label_angle = case_when(label_angle &gt; 90 ~ label_angle - 180, label_angle &lt; -90 ~ label_angle + 180, TRUE ~ label_angle)
   )
 
-gp57_condition_summary &lt;- gp57_condition_df %&gt;%
-  group_by(lineage, condition_group) %&gt;%
-  summarise(n_cells = n(), n_gp57_high = sum(gp57_high), proportion_gp57_high = mean(gp57_high), .groups = &quot;drop&quot;)
-
-gp57_ymax &lt;- max(gp57_condition_summary$proportion_gp57_high, na.rm = TRUE)
-gp57_ymax &lt;- ifelse(gp57_ymax &gt; 0, gp57_ymax * 1.25, 0.05)
-
-p_s3g &lt;- ggplot(gp57_condition_summary, aes(x = lineage, y = proportion_gp57_high, fill = condition_group)) +
-  geom_col(position = position_dodge(width = 0.72), width = 0.62, color = &quot;grey20&quot;, linewidth = 0.25) +
-  geom_text(
-    aes(label = paste0(scales::percent(proportion_gp57_high, accuracy = 0.1), &quot;\n&quot;, n_gp57_high, &quot;/&quot;, n_cells)),
-    position = position_dodge(width = 0.72), vjust = -0.25, size = 3.4, lineheight = 0.9
+p_s3g &lt;- ggplot() +
+  geom_segment(data = tf_focus_plot_edges, aes(x = x0, y = y0, xend = x1, yend = y1, color = edge_sign, linewidth = abs_value), alpha = 0.65, lineend = &quot;round&quot;) +
+  geom_text(data = tf_focus_plot_edges, aes(x = label_x, y = label_y, label = edge_label, angle = label_angle), size = 3.0, color = &quot;grey20&quot;) +
+  geom_point(data = tf_focus_plot_nodes %&gt;% filter(node_type == &quot;GP&quot;), aes(x = x, y = y), shape = 21, size = 4.0, fill = &quot;grey78&quot;, color = &quot;grey45&quot;, stroke = 0.5) +
+  ggrepel::geom_text_repel(
+    seed = 42,
+    data = tf_focus_plot_nodes %&gt;% filter(node_type == &quot;GP&quot;), aes(x = x, y = y, label = name),
+    size = 3.4, color = &quot;grey20&quot;, max.overlaps = Inf, min.segment.length = Inf, box.padding = 0.2, point.padding = 0.25
   ) +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1), limits = c(0, gp57_ymax), expand = expansion(mult = c(0, 0.04))) +
-  scale_fill_manual(values = c(&quot;Cancer&quot; = &quot;#C44E52&quot;, &quot;Other conditions&quot; = &quot;#4C72B0&quot;)) +
-  labs(x = NULL, y = &quot;Proportion of activated cells&quot;, fill = &quot;Condition&quot;, title = &quot;GP57 loading &gt; 0.1 in activated CD8 and CD4 cells&quot;) +
-  theme_classic(base_size = 12) +
-  theme(legend.position = &quot;top&quot;, legend.title = element_text(face = &quot;bold&quot;), axis.text.x = element_text(face = &quot;bold&quot;), plot.title = element_text(face = &quot;bold&quot;, hjust = 0.5))
-ggsave(filename = paste0(figure_path, &quot;s3g.pdf&quot;), plot = p_s3g, width = 5.4, height = 4.2)</code></pre>
+  geom_label(
+    data = tf_focus_plot_nodes %&gt;% filter(node_type == &quot;TF&quot;), aes(x = x, y = y, label = name, fill = name),
+    color = &quot;white&quot;, fontface = &quot;bold&quot;, size = 4.6, label.padding = unit(0.22, &quot;lines&quot;), label.r = unit(0.16, &quot;lines&quot;), linewidth = 0, show.legend = FALSE
+  ) +
+  scale_color_manual(values = c(Negative = &quot;#2B6CB0&quot;, Positive = &quot;#D62728&quot;), name = &quot;Edge sign&quot;) +
+  scale_fill_manual(values = tf_focus_colors) +
+  scale_linewidth_continuous(range = c(0.45, 3.2), guide = &quot;none&quot;) +
+  coord_equal(clip = &quot;off&quot;) +
+  labs(title = paste0(&quot;TF &lt;-&gt; GP network (&quot;, length(tf_focus), &quot; TFs, &quot;, nrow(tf_focus_edges), &quot; edges)&quot;)) +
+  theme_void(base_size = 12) +
+  theme(plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;, size = 15), legend.position = &quot;right&quot;, legend.title = element_text(face = &quot;bold&quot;), plot.margin = margin(15, 25, 15, 25))
+ggsave(filename = paste0(figure_path, &quot;s3g.pdf&quot;), plot = p_s3g, width = 10, height = 8.5)</code></pre>
 <p><img src="assets/FigureS3/s3g.png" width="49%" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-s3g">
@@ -1878,192 +2016,7 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. S3g.</strong> Bar plot showing the percentage of
-GP57-active cells (GP57 activity above 0.1) among activated CD8+ and
-CD4+ T cells in cancer versus all other conditions combined; bar labels
-give the percentage and the underlying cell counts.</p>
-</div>
-</div>
-<div id="figs3h" class="section level2">
-<h2>(s3h) TF-GP network for Gata3/Rorc/Tbx21</h2>
-<pre class="r"><code># ============================================================
-# s3h: Bipartite TF-GP network for Gata3, Rorc, Tbx21
-# ============================================================
-tf_focus &lt;- c(&quot;Gata3&quot;, &quot;Rorc&quot;, &quot;Tbx21&quot;)
-tf_focus_threshold &lt;- 0.1
-tf_focus_edges &lt;- do.call(rbind, lapply(tf_focus, function(tf_name) {
-  vals &lt;- setNames(as.numeric(F_pm_filtered_norm[tf_name, ]), colnames(F_pm_filtered_norm))
-  idx &lt;- which(is.finite(vals) &amp; abs(vals) &gt;= tf_focus_threshold)
-  data.frame(TF = tf_name, GP = names(vals)[idx], value = vals[idx], stringsAsFactors = FALSE)
-})) %&gt;%
-  mutate(
-    GP_number = as.numeric(sub(&quot;^GP&quot;, &quot;&quot;, GP)),
-    edge_sign = if_else(value &lt; 0, &quot;Negative&quot;, &quot;Positive&quot;),
-    abs_value = abs(value),
-    edge_label = sprintf(&quot;%+.2f&quot;, value)
-  ) %&gt;%
-  arrange(match(TF, tf_focus), GP_number)
-
-tf_focus_nodes &lt;- data.frame(name = tf_focus, x = c(0, 2.7, 1.65), y = c(0, -2.75, 2.35), node_type = &quot;TF&quot;, stringsAsFactors = FALSE)
-tf_focus_colors &lt;- c(Gata3 = &quot;#E41A1C&quot;, Rorc = &quot;#1F78B4&quot;, Tbx21 = &quot;#33A02C&quot;)
-
-gp_tf_membership &lt;- tf_focus_edges %&gt;%
-  group_by(GP) %&gt;%
-  summarise(tf_members = list(sort(unique(TF))), degree_tf = n_distinct(TF), .groups = &quot;drop&quot;)
-
-shared_gp_nodes &lt;- gp_tf_membership %&gt;%
-  filter(degree_tf &gt; 1) %&gt;%
-  rowwise() %&gt;%
-  mutate(
-    x = mean(tf_focus_nodes$x[match(tf_members, tf_focus_nodes$name)]),
-    y = mean(tf_focus_nodes$y[match(tf_members, tf_focus_nodes$name)])
-  ) %&gt;%
-  ungroup() %&gt;%
-  transmute(name = GP, x, y, node_type = &quot;GP&quot;)
-
-tf_arc_range &lt;- list(Gata3 = c(170, -105), Rorc = c(205, -20), Tbx21 = c(165, -15))
-tf_arc_radius &lt;- c(Gata3 = 1.65, Rorc = 1.35, Tbx21 = 1.30)
-make_tf_arc_nodes &lt;- function(tf_name, gp_names) {
-  if (length(gp_names) == 0) return(NULL)
-  center &lt;- tf_focus_nodes[tf_focus_nodes$name == tf_name, ]
-  angles &lt;- seq(tf_arc_range[[tf_name]][1], tf_arc_range[[tf_name]][2], length.out = length(gp_names)) * pi / 180
-  radius &lt;- tf_arc_radius[[tf_name]]
-  data.frame(name = gp_names, x = center$x + radius * cos(angles), y = center$y + radius * sin(angles), node_type = &quot;GP&quot;, stringsAsFactors = FALSE)
-}
-exclusive_gp_nodes &lt;- do.call(rbind, lapply(tf_focus, function(tf_name) {
-  gp_names &lt;- gp_tf_membership %&gt;%
-    filter(degree_tf == 1, vapply(tf_members, identical, logical(1), tf_name)) %&gt;%
-    pull(GP)
-  gp_names &lt;- gp_names[order(as.numeric(sub(&quot;^GP&quot;, &quot;&quot;, gp_names)))]
-  make_tf_arc_nodes(tf_name, gp_names)
-}))
-
-tf_focus_plot_nodes &lt;- bind_rows(tf_focus_nodes, shared_gp_nodes, exclusive_gp_nodes)
-tf_focus_plot_edges &lt;- tf_focus_edges %&gt;%
-  left_join(tf_focus_plot_nodes %&gt;% select(name, x, y) %&gt;% rename(x0 = x, y0 = y), by = c(&quot;TF&quot; = &quot;name&quot;)) %&gt;%
-  left_join(tf_focus_plot_nodes %&gt;% select(name, x, y) %&gt;% rename(x1 = x, y1 = y), by = c(&quot;GP&quot; = &quot;name&quot;)) %&gt;%
-  mutate(
-    label_x = x0 + 0.55 * (x1 - x0), label_y = y0 + 0.55 * (y1 - y0),
-    label_angle = atan2(y1 - y0, x1 - x0) * 180 / pi,
-    label_angle = case_when(label_angle &gt; 90 ~ label_angle - 180, label_angle &lt; -90 ~ label_angle + 180, TRUE ~ label_angle)
-  )
-
-p_s3h &lt;- ggplot() +
-  geom_segment(data = tf_focus_plot_edges, aes(x = x0, y = y0, xend = x1, yend = y1, color = edge_sign, linewidth = abs_value), alpha = 0.65, lineend = &quot;round&quot;) +
-  geom_text(data = tf_focus_plot_edges, aes(x = label_x, y = label_y, label = edge_label, angle = label_angle), size = 3.0, color = &quot;grey20&quot;) +
-  geom_point(data = tf_focus_plot_nodes %&gt;% filter(node_type == &quot;GP&quot;), aes(x = x, y = y), shape = 21, size = 4.0, fill = &quot;grey78&quot;, color = &quot;grey45&quot;, stroke = 0.5) +
-  ggrepel::geom_text_repel(
-    seed = 42,
-    data = tf_focus_plot_nodes %&gt;% filter(node_type == &quot;GP&quot;), aes(x = x, y = y, label = name),
-    size = 3.4, color = &quot;grey20&quot;, max.overlaps = Inf, min.segment.length = Inf, box.padding = 0.2, point.padding = 0.25
-  ) +
-  geom_label(
-    data = tf_focus_plot_nodes %&gt;% filter(node_type == &quot;TF&quot;), aes(x = x, y = y, label = name, fill = name),
-    color = &quot;white&quot;, fontface = &quot;bold&quot;, size = 4.6, label.padding = unit(0.22, &quot;lines&quot;), label.r = unit(0.16, &quot;lines&quot;), linewidth = 0, show.legend = FALSE
-  ) +
-  scale_color_manual(values = c(Negative = &quot;#2B6CB0&quot;, Positive = &quot;#D62728&quot;), name = &quot;Edge sign&quot;) +
-  scale_fill_manual(values = tf_focus_colors) +
-  scale_linewidth_continuous(range = c(0.45, 3.2), guide = &quot;none&quot;) +
-  coord_equal(clip = &quot;off&quot;) +
-  labs(title = paste0(&quot;TF &lt;-&gt; GP network (&quot;, length(tf_focus), &quot; TFs, &quot;, nrow(tf_focus_edges), &quot; edges)&quot;)) +
-  theme_void(base_size = 12) +
-  theme(plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;, size = 15), legend.position = &quot;right&quot;, legend.title = element_text(face = &quot;bold&quot;), plot.margin = margin(15, 25, 15, 25))
-ggsave(filename = paste0(figure_path, &quot;s3h.pdf&quot;), plot = p_s3h, width = 10, height = 8.5)</code></pre>
-<p><img src="assets/FigureS3/s3h.png" width="49%" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-s3h">
-Past versions of s3h.png
-</button>
-</p>
-<div id="fig-s3h" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/710259816a5471e4ec442a7a27b8732d9dd67e8d/docs/assets/FigureS3/s3h.png" target="_blank">7102598</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/6c1a613526a5e79e96a566eb3ed8c22e91015cba/docs/assets/FigureS3/s3h.png" target="_blank">6c1a613</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/bf7afcfe360b8947b96a4b905fcaa82ecd923a67/docs/assets/FigureS3/s3h.png" target="_blank">bf7afcf</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/ea3ecc24d9da3261943163a384b2262252fcceea/docs/assets/FigureS3/s3h.png" target="_blank">ea3ecc2</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/78e3bbad835aff2b513ff86f600f6b01b2beb5e3/docs/assets/FigureS3/s3h.png" target="_blank">78e3bba</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/06b2461eba2147f353f2ce082bdebe22f5dcee26/docs/assets/FigureS3/s3h.png" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="figcaption">
-<p><strong>Fig. S3h.</strong> GP network centered on the
+<p><strong>Fig. S3g.</strong> GP network centered on the
 lineage-defining TFs Gata3, Rorc, and Tbx21. An edge connects a TF to a
 GP when the TF’s per-GP absolute gene score is &gt;= 0.1; edges are
 colored by the sign of the score (red, up-regulated; blue,
