@@ -384,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-28
+<strong>Last updated:</strong> 2026-07-30
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreed538aa21ca31faac7d6daceb42bcef57800ff26ctargetblankd538aa2a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree8c2f7c9d4f0d29223b6414596c9fc71f0a3cdc5atargetblank8c2f7c9a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/d538aa21ca31faac7d6daceb42bcef57800ff26c" target="_blank">d538aa2</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/8c2f7c9d4f0d29223b6414596c9fc71f0a3cdc5a" target="_blank">8c2f7c9</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreed538aa21ca31faac7d6daceb42bcef57800ff26ctargetblankd538aa2a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree8c2f7c9d4f0d29223b6414596c9fc71f0a3cdc5atargetblank8c2f7c9a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/d538aa21ca31faac7d6daceb42bcef57800ff26c" target="_blank">d538aa2</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/8c2f7c9d4f0d29223b6414596c9fc71f0a3cdc5a" target="_blank">8c2f7c9</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -577,12 +577,13 @@ Ignored files:
     Ignored:    figures/final-selected/.DS_Store
     Ignored:    figures/final-selected/Figure 1/.DS_Store
     Ignored:    figures/final-selected/Figure 2/.DS_Store
+    Ignored:    figures/final-selected/Figure 4/.DS_Store
     Ignored:    figures/final-selected/Figure S4/.DS_Store
+    Ignored:    figures/templates_20260729/
     Ignored:    log/
     Ignored:    output/Figure2/
     Ignored:    output/Figure7b/7b_cell_metadata.csv.gz
     Ignored:    plan/
-    Ignored:    reorder/
     Ignored:    tables/
     Ignored:    tmp/
 
@@ -629,6 +630,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/8c2f7c9d4f0d29223b6414596c9fc71f0a3cdc5a/analysis/FigureS1.Rmd" target="_blank">8c2f7c9</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-30
+</td>
+<td>
+Figure S1: replace S1c/S1d, add S1e, old S1e becomes S1f
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/ae21d37a76e0dc844ebb67e0f4c8c4ab65d66ad4/docs/FigureS1.html" target="_blank">ae21d37</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-28
+</td>
+<td>
+Build site: republish after the reorder commits
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1134,24 +1169,33 @@ itself is produced (a much heavier, cluster-scale computation).</p>
 #        0.2-0.8) as IGTs are added one at a time, in IGT index order.
 #   S1B  Number of GPs validated by at least X IGTs, vs X (log-log), for the
 #        same thresholds.
-#   S1C  Between-IGT variability: each GP&#39;s mean-of-per-IGT-mean-loading (x)
-#        vs. variance-of-per-IGT-mean-loading (y).
-#   S1D  Heatmap of per-IGT mean loading for S1C&#39;s 10 highest-variance GPs.
-#
-#        S1C and S1D share one per-IGT mean-loading matrix, over the
-#        standard-spleen subset restricted to the 18 IGTs with &gt;= 500 such
-#        cells. Figure_batch.R built it twice on different IGT sets (S1C over
-#        all 35, S1D over the 18), which made the published panels disagree --
-#        see the note in the &quot;Load data for S1C/S1D&quot; section.
-#   S1E  Scatter of the NUMBER of active genes (x) vs. proportion of active
+#   S1C  Per-GP proportion of loading variance explained by IGT (x) vs. by
+#        cell type / annotation_level2 (y), one-way ANOVA eta^2, over the
+#        standard-spleen cells.
+#   S1D  GP9 loading across IGTs (standard-spleen cells) -- the shape of the
+#        most extreme x-axis point in S1C.
+#   S1E  GP9 loading across the four individual samples inside IGT13/IGT14,
+#        showing the effect is not one aberrant mouse.
+#   S1F  Scatter of the NUMBER of active genes (x) vs. proportion of active
 #        cells (y) per GP, using the same hard-threshold definitions as Figure 2
 #        (|normalized score| &gt; 0.25 for genes; normalized loading &gt; 0.1 for
 #        cells), over non-thymocyte cells -- not the EBMF sparsity prior. One
 #        dot per GP.
 #
-# Source: S1A/S1B ported from Figure_Saturation.R; S1C/S1D from
-# Figure_batch.R (panels a/b only -- that script&#39;s `plot_gp_loading()`
-# helper is defined but never called for a saved output, so it&#39;s dropped).
+#        S1C-S1E replaced, on 2026-07-30, the previous S1C (mean vs. variance of
+#        per-IGT mean loading) and S1D (heatmap of the ten highest-variance GPs),
+#        both of which were computed on the 18 IGTs with &gt;= 500 standard-spleen
+#        cells. The old panels quantified between-IGT spread on an unnormalized
+#        scale, which cannot be compared against any other grouping: the
+#        variance of per-group mean loadings is dominated by the GP&#39;s own
+#        loading scale, so an IGT axis and a cell-type axis come out nearly
+#        identical (Spearman 0.93) whatever the underlying structure. Dividing
+#        by the total variance (eta^2) removes that and makes the two
+#        directly comparable, which is what S1C now shows. The old S1E keeps
+#        its content and becomes S1F.
+#
+# Source: S1A/S1B ported from Figure_Saturation.R; S1C-S1E written for this
+# figure (the retired S1C/S1D came from Figure_batch.R panels a/b).
 #
 # S1A/S1B reuse the per-IGT cosine-matching score matrix
 # (data/igt_specific_cosine_scores.csv) rather than recomputing it here --
@@ -1167,8 +1211,7 @@ itself is produced (a much heavier, cluster-scale computation).</p>
 
 library(dplyr)
 library(tidyr)
-library(ggplot2)
-library(pheatmap)</code></pre>
+library(ggplot2)</code></pre>
 <p>Panels A and B both use the cached per-IGT cosine score matrix:</p>
 <pre class="r"><code>data_path &lt;- &quot;data/&quot;
 figure_path &lt;- &quot;figures/final-selected/Figure S1/&quot;
@@ -1437,56 +1480,74 @@ log-scaled).</p>
 </div>
 </div>
 <div id="figs1c" class="section level2">
-<h2>(C) Between-IGT variability</h2>
+<h2>(C) Variance explained by dataset vs. by cell type</h2>
 <pre class="r"><code># ============================================================
-# Load data for S1C/S1D
+# Load data for S1C/S1D/S1E
 # ============================================================
 L_pm_filtered &lt;- readRDS(paste0(data_path, &quot;L_pm_filtered.rds&quot;))
 seurat_meta &lt;- readRDS(paste0(data_path, &quot;igt1_96_withtotalvi20260206_clean_ADTonly.Rds&quot;))@meta.data
 seurat_meta_filtered &lt;- seurat_meta[rownames(L_pm_filtered), ]
 seurat_meta_filtered_spleen &lt;- seurat_meta_filtered %&gt;% filter(spleen_standard == TRUE)
 
-# S1C and S1D are both computed from ONE per-IGT mean-loading matrix
-# (IGTs x GPs) over the standard-spleen subset, restricted to the IGTs with
-# &gt;= 500 such cells -- an IGT mean over a handful of cells is too noisy to
-# either rank on or draw. Both panels therefore describe the same 18 IGTs, and
-# S1C&#39;s ten labelled GPs are exactly S1D&#39;s ten rows.
-#
-# Figure_batch.R built this matrix twice instead: S1C over all 35 spleen IGTs,
-# S1D over the &gt;= 500-cell subset. The two rankings disagree -- GP2 is 7th on
-# the subset but 11th over all 35, GP25 is 6th over all 35 but 23rd on the
-# subset -- so the published S1C labels GP25 while the published S1D shows GP2,
-# and &quot;the top ten from (C)&quot; could not be followed across the two panels.
-# Computing it once removes the inconsistency and the chance of the two
-# drifting apart again.
+# All three panels use the same cell set: every standard-spleen cell, with no
+# per-group size filter. S1C needs all of them because the two groupings it
+# compares have different numbers of groups and dropping small ones would drop
+# them asymmetrically; S1D/S1E then show one GP over that same population.
 spleen_cells &lt;- intersect(rownames(L_pm_filtered), rownames(seurat_meta_filtered_spleen))
-igt_vec &lt;- seurat_meta_filtered_spleen[spleen_cells, &quot;IGT&quot;]
-selected_igts &lt;- names(table(igt_vec))[table(igt_vec) &gt;= 500]
-igt_mean_mat &lt;- do.call(rbind, lapply(selected_igts, function(igt) {
-  colMeans(L_pm_filtered[spleen_cells[igt_vec == igt], , drop = FALSE])
-}))
-rownames(igt_mean_mat) &lt;- selected_igts
-
-gp_igt_var &lt;- apply(igt_mean_mat, 2, var)
-gp_overall &lt;- colMeans(igt_mean_mat)</code></pre>
+L_spleen &lt;- L_pm_filtered[spleen_cells, , drop = FALSE]
+igt_vec &lt;- as.character(seurat_meta_filtered_spleen[spleen_cells, &quot;IGT&quot;])
+lv2_vec &lt;- as.character(seurat_meta_filtered_spleen[spleen_cells, &quot;annotation_level2&quot;])
+n_spleen &lt;- length(spleen_cells)</code></pre>
 <pre class="r"><code># ============================================================
-# S1C: GP mean-of-IGT-mean-loading vs. variance-of-IGT-mean-loading (spleen)
+# S1C: proportion of loading variance explained by IGT vs. by cell type
 # ============================================================
-gp_stats &lt;- data.frame(GP = colnames(igt_mean_mat), x = gp_overall, y = gp_igt_var) %&gt;%
-  arrange(desc(y)) %&gt;%
-  mutate(label = ifelse(row_number() &lt;= 10, gp_label(as.character(GP)), &quot;&quot;))
+# One-way ANOVA eta^2 per GP for each grouping, on the same cells:
+#   eta^2 = SS_between / SS_total,  SS_between = sum_g n_g (mean_g - mean)^2
+# Note this is NOT var(group means) / var(loading): SS_between weights each
+# group by its cell count and uses the cell-level grand mean, whereas the
+# unweighted variance of group means carries a G/(G-1) inflation and ignores
+# the 1-to-9320 spread in group sizes. On this data the unweighted ratio runs
+# 0.44x-4.06x the true eta^2 (median 1.40x).
+grand_mean &lt;- colMeans(L_spleen)
+ss_total &lt;- apply(L_spleen, 2, var) * (n_spleen - 1)
+eta2_by &lt;- function(group) {
+  n_g &lt;- as.numeric(table(group))
+  group_means &lt;- rowsum(L_spleen, group) / n_g
+  colSums(n_g * sweep(group_means, 2, grand_mean)^2) / ss_total
+}
+eta2_igt &lt;- eta2_by(igt_vec)
+eta2_lv2 &lt;- eta2_by(lv2_vec)
 
-p_S1C &lt;- ggplot(gp_stats, aes(x = x, y = y, label = label)) +
-  geom_point(size = 1.5, alpha = 0.7, color = &quot;steelblue&quot;) +
-  ggrepel::geom_text_repel(seed = 42, size = 3, box.padding = 0.4, max.overlaps = Inf, segment.color = &quot;grey50&quot;) +
-  cowplot::theme_cowplot() +
+# eta^2 grows with the number of groups even with no signal: its null
+# expectation is (G-1)/(N-1). The two dotted guides mark 5x that floor, which
+# differs between the axes because level2 has ~3x as many groups as IGT.
+floor_igt &lt;- (length(unique(igt_vec)) - 1) / (n_spleen - 1)
+floor_lv2 &lt;- (length(unique(lv2_vec)) - 1) / (n_spleen - 1)
+
+pve_df &lt;- data.frame(GP = colnames(L_spleen), x = eta2_igt, y = eta2_lv2)
+top_n &lt;- 12   # label the strongest GPs on each axis
+pve_df$label &lt;- ifelse(
+  seq_len(nrow(pve_df)) %in% union(order(-pve_df$x)[1:top_n], order(-pve_df$y)[1:top_n]),
+  gp_label(as.character(pve_df$GP)), &quot;&quot;
+)
+
+p_S1C &lt;- ggplot(pve_df, aes(x = x, y = y, label = label)) +
+  geom_abline(slope = 1, intercept = 0, linetype = 2, colour = &quot;grey50&quot;) +
+  geom_vline(xintercept = 5 * floor_igt, linetype = 3, colour = &quot;grey55&quot;) +
+  geom_hline(yintercept = 5 * floor_lv2, linetype = 3, colour = &quot;grey55&quot;) +
+  geom_point(size = 1.6, alpha = 0.75, colour = &quot;steelblue&quot;) +
+  ggrepel::geom_text_repel(seed = 42, size = 2.8, max.overlaps = Inf, segment.color = &quot;grey60&quot;) +
+  cowplot::theme_cowplot(font_size = 11) +
   labs(
-    title = &quot;GP Mean of IGT Mean Loading vs. Between-IGT VAR&quot;,
-    x = &quot;Mean of IGT Mean Loading&quot;,
-    y = &quot;Variance of IGT Mean Loading&quot;
+    title = &quot;PVE per GP: IGT vs level2 (control spleen, all cells)&quot;,
+    subtitle = sprintf(&quot;all %s cells, %d IGTs, %d level2 types; linear axes; dashed = y=x&quot;,
+                       format(n_spleen, big.mark = &quot;,&quot;),
+                       length(unique(igt_vec)), length(unique(lv2_vec))),
+    x = expression(&quot;PVE by IGT (&quot; * eta^2 * &quot;)&quot;),
+    y = expression(&quot;PVE by level2 (&quot; * eta^2 * &quot;)&quot;)
   )
-ggsave(paste0(figure_path, &quot;S1C.pdf&quot;), plot = p_S1C, width = 6, height = 5, dpi = 300)</code></pre>
-<p><img src="assets/FigureS1/S1C.png" width="49%" style="display: block; margin: auto;" /></p>
+ggsave(paste0(figure_path, &quot;S1C.pdf&quot;), plot = p_S1C, width = 6.5, height = 5.5, dpi = 300)</code></pre>
+<p><img src="assets/FigureS1/S1C.png" width="60%" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-S1C">
 Past versions of S1C.png
@@ -1509,6 +1570,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/8c2f7c9d4f0d29223b6414596c9fc71f0a3cdc5a/docs/assets/FigureS1/S1C.png" target="_blank">8c2f7c9</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-30
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/39de9e0cb4370334d4fa3172da5f129ff7670cfa/docs/assets/FigureS1/S1C.png" target="_blank">39de9e0</a>
@@ -1592,43 +1664,52 @@ Ziang Zhang
 </div>
 <div class="figcaption">
 <p><strong>Fig. S1C.</strong> Batch-effect evaluation using the spleen
-standards spiked into each dataset (IGT): variance versus mean GP
-loading across datasets, considering only spleen-standard cells, in the
-<strong>18 datasets</strong> contributing at least 500 such cells – so
-that no per-IGT mean rests on a handful of cells. Each GP’s mean loading
-is computed within every one of those 18 IGTs; each point is a GP,
-plotting the mean across IGTs of these per-IGT mean loadings (x-axis)
-against their variance across IGTs (y-axis). The ten GPs with the
-highest between-dataset variance are labeled, and are the ten shown in
-(D).</p>
+standards spiked into each dataset (IGT). For each GP, the proportion of
+loading variance explained by dataset (x-axis) is plotted against the
+proportion explained by cell type (<code>annotation_level2</code>,
+y-axis), both computed over the same 47,253 spleen-standard cells (35
+datasets, 102 cell types) as the one-way ANOVA <span
+class="math inline">\(\eta^2 =
+\mathrm{SS_{between}}/\mathrm{SS_{total}}\)</span>, where each group’s
+contribution is weighted by its cell count. Each point is one of the 200
+GPs; the twelve highest on each axis are labeled. The dashed line is
+<span class="math inline">\(y = x\)</span>; the two dotted guides mark
+five times the null expectation <span
+class="math inline">\((G-1)/(N-1)\)</span> of <span
+class="math inline">\(\eta^2\)</span> under no group effect, which
+differs between axes because the two groupings have different numbers of
+groups. Most GPs sit near the origin, i.e. are explained by neither; the
+GPs that separate do so along one axis or the other, with only GP32
+close to <span class="math inline">\(y = x\)</span>.</p>
 </div>
 </div>
 <div id="figs1d" class="section level2">
-<h2>(D) Top-variance GP heatmap</h2>
+<h2>(D) GP9 loading across datasets</h2>
 <pre class="r"><code># ============================================================
-# S1D: heatmap of per-IGT mean loading for S1C&#39;s ten highest-variance GPs
+# S1D: GP9 loading across IGTs (standard spleen)
 # ============================================================
-# Same `igt_mean_mat` and same `gp_igt_var` as S1C, so these ten rows are the
-# ten GPs S1C labels -- see the note where that matrix is built.
-top10_var_gps &lt;- names(sort(gp_igt_var, decreasing = TRUE))[1:10]
+# GP9 is the extreme point on S1C&#39;s x-axis (eta^2 = 0.91 by IGT vs 0.08 by
+# level2). Drawn over the IGTs with &gt;= 100 standard-spleen cells, so that no box
+# summarises a handful of cells; ordered by median loading, which puts the two
+# IGTs carrying the effect at the top rather than assuming where they land.
+gp_focus &lt;- &quot;K9&quot;
+igt_keep &lt;- names(table(igt_vec))[table(igt_vec) &gt;= 100]
+box_igt &lt;- data.frame(igt = igt_vec, loading = L_spleen[, gp_focus]) %&gt;%
+  filter(igt %in% igt_keep)
+igt_order &lt;- names(sort(tapply(box_igt$loading, box_igt$igt, median)))
+box_igt$igt &lt;- factor(box_igt$igt, levels = igt_order)
 
-plot_mat &lt;- t(igt_mean_mat[, top10_var_gps, drop = FALSE])
-plot_mat[plot_mat &lt; 0] &lt;- 0
-rownames(plot_mat) &lt;- gp_label(rownames(plot_mat))
-
-pdf(paste0(figure_path, &quot;S1D.pdf&quot;), width = 5, height = 5)
-pheatmap(
-  plot_mat,
-  cluster_rows = TRUE,
-  cluster_cols = FALSE,
-  main = &quot;Top 10 GPs by Variance of IGT Mean Loading&quot;,
-  color = colorRampPalette(c(&quot;white&quot;, &quot;red&quot;))(100),
-  border_color = &quot;white&quot;,
-  fontsize_row = 8,
-  angle_col = 45
-)
-dev.off()</code></pre>
-<p><img src="assets/FigureS1/S1D.png" width="49%" style="display: block; margin: auto;" /></p>
+p_S1D &lt;- ggplot(box_igt, aes(x = loading, y = igt)) +
+  geom_boxplot(outlier.size = 0.3, outlier.alpha = 0.25, fill = &quot;grey92&quot;, linewidth = 0.35) +
+  cowplot::theme_cowplot(font_size = 11) +
+  labs(
+    title = paste0(gp_label(gp_focus), &quot; loading across IGTs (control spleen)&quot;),
+    subtitle = sprintf(&quot;%d IGTs with &gt;= 100 standard-spleen cells, ordered by median loading&quot;,
+                       length(igt_keep)),
+    x = paste0(gp_label(gp_focus), &quot; loading&quot;), y = NULL
+  )
+ggsave(paste0(figure_path, &quot;S1D.pdf&quot;), plot = p_S1D, width = 5.5, height = 6, dpi = 300)</code></pre>
+<p><img src="assets/FigureS1/S1D.png" width="52%" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-S1D">
 Past versions of S1D.png
@@ -1651,6 +1732,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/8c2f7c9d4f0d29223b6414596c9fc71f0a3cdc5a/docs/assets/FigureS1/S1D.png" target="_blank">8c2f7c9</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-30
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/39de9e0cb4370334d4fa3172da5f129ff7670cfa/docs/assets/FigureS1/S1D.png" target="_blank">39de9e0</a>
@@ -1733,46 +1825,52 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. S1D.</strong> Heatmap showing the mean loading of these
-same ten GPs across the same 18 datasets – the same ten GPs labelled in
-(C), over the same IGTs, from the same matrix. Rows (GPs) are
-hierarchically clustered; color runs from white (low) to red (high mean
-loading).</p>
+<p><strong>Fig. S1D.</strong> The extreme point on (C)’s x-axis, shown
+directly: the distribution of GP9 loading in spleen-standard cells of
+each dataset, for the 31 datasets contributing at least 100 such cells,
+ordered by median loading. GP9 is elevated in IGT13 and IGT14 (medians
+0.60 and 0.56) and uniformly low in every other dataset (medians
+0.02-0.12), which is what a dataset-specific – rather than
+cell-type-specific – program looks like.</p>
 </div>
 </div>
 <div id="figs1e" class="section level2">
-<h2>(E) Active-gene vs. active-cell proportion per GP</h2>
+<h2>(E) GP9 loading per sample within IGT13/IGT14</h2>
 <pre class="r"><code># ============================================================
-# S1E: active-gene vs active-cell scatter per GP, using the SAME hard-threshold
-# definitions as Figure 2 (per-GP-normalized): number of active genes = count of
-# genes with |score| &gt; 0.25 of the GP&#39;s max; proportion of active cells = fraction
-# of cells with loading &gt; 0.1 of the GP&#39;s max. Non-thymocyte cells, matching
-# Figure 2. (Replaces the earlier EBMF-sparsity-prior version.)
+# S1E: GP9 loading across the individual samples inside IGT13/IGT14
 # ============================================================
-non_thymo_s1e &lt;- seurat_meta_filtered$cellID[seurat_meta_filtered$annotation_level1 != &quot;thymocyte&quot;]
-L_s1e &lt;- L_pm_filtered[non_thymo_s1e, ]
-L_norm_s1e &lt;- L_s1e / matrix(apply(L_s1e, 2, max), nrow = nrow(L_s1e), ncol = ncol(L_s1e), byrow = TRUE)
-prop_cells &lt;- colSums(L_norm_s1e &gt; 0.1) / nrow(L_norm_s1e)   # proportion of active cells per GP
+# The two IGTs that carry GP9 are two 10x runs of the SAME two mice
+# (mouse0021, male; mouse0022, female), hashed as HT1/HT9 -- so
+# `sample_code` splits them into four samples, and the panel shows the effect is
+# present in every one of the four rather than in a single aberrant mouse. The
+# reference line is the mean over all other standard-spleen IGTs.
+igt_focus &lt;- c(&quot;IGT13&quot;, &quot;IGT14&quot;)
+in_focus &lt;- igt_vec %in% igt_focus
+box_sample &lt;- data.frame(
+  igt = igt_vec[in_focus],
+  sample_code = as.character(seurat_meta_filtered_spleen[spleen_cells[in_focus], &quot;sample_code&quot;]),
+  ht = as.character(seurat_meta_filtered_spleen[spleen_cells[in_focus], &quot;HT&quot;]),
+  sample_name = as.character(seurat_meta_filtered_spleen[spleen_cells[in_focus], &quot;sample_name&quot;]),
+  loading = L_spleen[in_focus, gp_focus]
+) %&gt;%
+  mutate(mouse = sub(&quot;^.*_(mouse\\d+)$&quot;, &quot;\\1&quot;, sample_code),
+         lab = paste0(igt, &quot; &quot;, ht, &quot;  (&quot;, sample_name, &quot;, &quot;, mouse, &quot;)&quot;))
+elsewhere_mean &lt;- mean(L_spleen[!in_focus, gp_focus])
 
-F_s1e &lt;- readRDS(paste0(data_path, &quot;F_pm_filtered.rds&quot;))
-F_norm_s1e &lt;- F_s1e / matrix(apply(F_s1e, 2, function(x) max(abs(x))), nrow = nrow(F_s1e), ncol = ncol(F_s1e), byrow = TRUE)
-n_genes_act &lt;- colSums(abs(F_norm_s1e) &gt; 0.25)               # number of active genes per GP
-
-scatter_df_s1e &lt;- data.frame(n_genes = n_genes_act, prop_cells = prop_cells)
-pct_breaks &lt;- c(0.0001, 0.001, 0.01, 0.05, 0.1, 0.3, 0.5, 1)
-p_S1E &lt;- ggplot(scatter_df_s1e, aes(x = n_genes, y = prop_cells)) +
-  geom_point(size = 2, alpha = 0.7, color = &quot;steelblue&quot;) +
-  scale_x_log10(labels = scales::label_comma()) +
-  scale_y_log10(breaks = pct_breaks, labels = function(x) paste0(x * 100, &quot;%&quot;)) +
-  annotation_logticks(sides = &quot;bl&quot;) +
+p_S1E &lt;- ggplot(box_sample, aes(x = loading, y = lab, fill = igt)) +
+  geom_vline(xintercept = elsewhere_mean, linetype = 2, colour = &quot;firebrick&quot;) +
+  geom_boxplot(outlier.size = 0.3, outlier.alpha = 0.25, linewidth = 0.35) +
+  scale_fill_manual(values = c(IGT13 = &quot;#cfe0ee&quot;, IGT14 = &quot;#eee2cf&quot;), name = NULL) +
+  cowplot::theme_cowplot(font_size = 11) +
   labs(
-    x = &quot;Number of active genes per GP (log scale)&quot;,
-    y = &quot;Proportion of active cells per GP (log scale)&quot;,
-    title = &quot;Active genes vs. active-cell proportion per GP&quot;
+    title = paste0(gp_label(gp_focus), &quot; loading per sample within IGT13/IGT14&quot;),
+    subtitle = sprintf(&quot;two mice x two runs; dashed = mean over the other %d spleen IGTs (%.3f)&quot;,
+                       length(setdiff(unique(igt_vec), igt_focus)), elsewhere_mean),
+    x = paste0(gp_label(gp_focus), &quot; loading&quot;), y = NULL
   ) +
-  theme_minimal(base_size = 13)
-ggsave(paste0(figure_path, &quot;S1E.pdf&quot;), plot = p_S1E, width = 6, height = 5, dpi = 300)</code></pre>
-<p><img src="assets/FigureS1/S1E.png" width="60%" style="display: block; margin: auto;" /></p>
+  theme(legend.position = &quot;none&quot;)
+ggsave(paste0(figure_path, &quot;S1E.pdf&quot;), plot = p_S1E, width = 7.5, height = 3.2, dpi = 300)</code></pre>
+<p><img src="assets/FigureS1/S1E.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-S1E">
 Past versions of S1E.png
@@ -1795,6 +1893,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/8c2f7c9d4f0d29223b6414596c9fc71f0a3cdc5a/docs/assets/FigureS1/S1E.png" target="_blank">8c2f7c9</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-30
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/710259816a5471e4ec442a7a27b8732d9dd67e8d/docs/assets/FigureS1/S1E.png" target="_blank">7102598</a>
@@ -1866,13 +1975,94 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. S1E.</strong> For each GP, the number of active genes
+<p><strong>Fig. S1E.</strong> The same GP9 loading, split into the
+individual samples that make up the two datasets from (D). IGT13 and
+IGT14 are two runs of the same two hashed mice (mouse0021, male, HT1;
+mouse0022, female, HT9), giving four samples; GP9 is elevated in all
+four (sample means 0.544-0.606) rather than in a single aberrant mouse
+or a single run. The dashed line marks the mean over the other 33
+spleen-standard datasets (0.057).</p>
+</div>
+</div>
+<div id="figs1f" class="section level2">
+<h2>(F) Active-gene vs. active-cell proportion per GP</h2>
+<pre class="r"><code># ============================================================
+# S1F: active-gene vs active-cell scatter per GP, using the SAME hard-threshold
+# definitions as Figure 2 (per-GP-normalized): number of active genes = count of
+# genes with |score| &gt; 0.25 of the GP&#39;s max; proportion of active cells = fraction
+# of cells with loading &gt; 0.1 of the GP&#39;s max. Non-thymocyte cells, matching
+# Figure 2. (Replaces the earlier EBMF-sparsity-prior version. Was S1E until
+# 2026-07-30, when the new S1C-S1E pushed it back one letter; content unchanged.)
+# ============================================================
+non_thymo_s1f &lt;- seurat_meta_filtered$cellID[seurat_meta_filtered$annotation_level1 != &quot;thymocyte&quot;]
+L_s1f &lt;- L_pm_filtered[non_thymo_s1f, ]
+L_norm_s1f &lt;- L_s1f / matrix(apply(L_s1f, 2, max), nrow = nrow(L_s1f), ncol = ncol(L_s1f), byrow = TRUE)
+prop_cells &lt;- colSums(L_norm_s1f &gt; 0.1) / nrow(L_norm_s1f)   # proportion of active cells per GP
+
+F_s1f &lt;- readRDS(paste0(data_path, &quot;F_pm_filtered.rds&quot;))
+F_norm_s1f &lt;- F_s1f / matrix(apply(F_s1f, 2, function(x) max(abs(x))), nrow = nrow(F_s1f), ncol = ncol(F_s1f), byrow = TRUE)
+n_genes_act &lt;- colSums(abs(F_norm_s1f) &gt; 0.25)               # number of active genes per GP
+
+scatter_df_s1f &lt;- data.frame(n_genes = n_genes_act, prop_cells = prop_cells)
+pct_breaks &lt;- c(0.0001, 0.001, 0.01, 0.05, 0.1, 0.3, 0.5, 1)
+p_S1F &lt;- ggplot(scatter_df_s1f, aes(x = n_genes, y = prop_cells)) +
+  geom_point(size = 2, alpha = 0.7, color = &quot;steelblue&quot;) +
+  scale_x_log10(labels = scales::label_comma()) +
+  scale_y_log10(breaks = pct_breaks, labels = function(x) paste0(x * 100, &quot;%&quot;)) +
+  annotation_logticks(sides = &quot;bl&quot;) +
+  labs(
+    x = &quot;Number of active genes per GP (log scale)&quot;,
+    y = &quot;Proportion of active cells per GP (log scale)&quot;,
+    title = &quot;Active genes vs. active-cell proportion per GP&quot;
+  ) +
+  theme_minimal(base_size = 13)
+ggsave(paste0(figure_path, &quot;S1F.pdf&quot;), plot = p_S1F, width = 6, height = 5, dpi = 300)</code></pre>
+<p><img src="assets/FigureS1/S1F.png" width="60%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-S1F">
+Past versions of S1F.png
+</button>
+</p>
+<div id="fig-S1F" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/8c2f7c9d4f0d29223b6414596c9fc71f0a3cdc5a/docs/assets/FigureS1/S1F.png" target="_blank">8c2f7c9</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="figcaption">
+<p><strong>Fig. S1F.</strong> For each GP, the number of active genes
 (x-axis) versus the fraction of active cells (y-axis), using the same
 thresholds as Figure 2: a gene is active in a GP if its
 per-GP-normalized score exceeds 0.25 in absolute value, and a cell is
 active if its per-GP-normalized loading exceeds 0.1; computed over
 non-thymocyte cells. Both axes on log scale; each dot is one of the 200
-GPs.</p>
+GPs. (Was panel E before 2026-07-30; content unchanged.)</p>
 </div>
 <br>
 <p>
