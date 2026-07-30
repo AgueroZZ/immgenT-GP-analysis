@@ -56,51 +56,79 @@ knitr::include_graphics("assets/FigureS1/S1B.png")
 **Fig. S1B.** Distribution of GP reproducibility across datasets. Using the same per-IGT cosine matching, the curves show the number of GPs reproduced in at least that many datasets, for cosine-similarity thresholds ranging from 0.2 to 0.8 (both axes log-scaled).
 :::
 
-## (C) Between-IGT variability {#figs1c}
+## (C) Variance explained by dataset vs. by cell type {#figs1c}
 
-```{r figs1c-setup, code=code_for("../script/FigureS1.R", "Load data for S1C/S1D"), eval=FALSE}
+```{r figs1c-setup, code=code_for("../script/FigureS1.R", "Load data for S1C/S1D/S1E"), eval=FALSE}
 ```
 
 ```{r figs1c-code, code=code_for("../script/FigureS1.R", "S1C"), eval=FALSE}
 ```
 
-```{r figs1c-img, echo=FALSE, out.width="49%"}
+```{r figs1c-img, echo=FALSE, out.width="60%"}
 knitr::include_graphics("assets/FigureS1/S1C.png")
 ```
 
 ::: {.figcaption}
 **Fig. S1C.** Batch-effect evaluation using the spleen standards spiked into each
-dataset (IGT): variance versus mean GP loading across datasets, considering only
-spleen-standard cells, in the **18 datasets** contributing at least 500 such cells
--- so that no per-IGT mean rests on a handful of cells. Each GP's mean loading is
-computed within every one of those 18 IGTs; each point is a GP, plotting the mean
-across IGTs of these per-IGT mean loadings (x-axis) against their variance across
-IGTs (y-axis). The ten GPs with the highest between-dataset variance are labeled,
-and are the ten shown in (D).
+dataset (IGT). For each GP, the proportion of loading variance explained by
+dataset (x-axis) is plotted against the proportion explained by cell type
+(`annotation_level2`, y-axis), both computed over the same 47,253
+spleen-standard cells (35 datasets, 102 cell types) as the one-way ANOVA
+$\eta^2 = \mathrm{SS_{between}}/\mathrm{SS_{total}}$, where each group's
+contribution is weighted by its cell count. Each point is one of the 200 GPs;
+the twelve highest on each axis are labeled. The dashed line is $y = x$; the two
+dotted guides mark five times the null expectation $(G-1)/(N-1)$ of $\eta^2$
+under no group effect, which differs between axes because the two groupings have
+different numbers of groups. Most GPs sit near the origin, i.e. are explained by
+neither; the GPs that separate do so along one axis or the other, with only GP32
+close to $y = x$.
 :::
 
-## (D) Top-variance GP heatmap {#figs1d}
+## (D) GP9 loading across datasets {#figs1d}
 
 ```{r figs1d-code, code=code_for("../script/FigureS1.R", "S1D"), eval=FALSE}
 ```
 
-```{r figs1d-img, echo=FALSE, out.width="49%"}
+```{r figs1d-img, echo=FALSE, out.width="52%"}
 knitr::include_graphics("assets/FigureS1/S1D.png")
 ```
 
 ::: {.figcaption}
-**Fig. S1D.** Heatmap showing the mean loading of these same ten GPs across the same 18 datasets -- the same ten GPs labelled in (C), over the same IGTs, from the same matrix. Rows (GPs) are hierarchically clustered; color runs from white (low) to red (high mean loading).
+**Fig. S1D.** The extreme point on (C)'s x-axis, shown directly: the distribution
+of GP9 loading in spleen-standard cells of each dataset, for the 31 datasets
+contributing at least 100 such cells, ordered by median loading. GP9 is elevated
+in IGT13 and IGT14 (medians 0.60 and 0.56) and uniformly low in every other
+dataset (medians 0.02-0.12), which is what a
+dataset-specific -- rather than cell-type-specific -- program looks like.
 :::
 
-## (E) Active-gene vs. active-cell proportion per GP {#figs1e}
+## (E) GP9 loading per sample within IGT13/IGT14 {#figs1e}
 
 ```{r figs1e-code, code=code_for("../script/FigureS1.R", "S1E"), eval=FALSE}
 ```
 
-```{r figs1e-img, echo=FALSE, out.width="60%"}
+```{r figs1e-img, echo=FALSE, out.width="70%"}
 knitr::include_graphics("assets/FigureS1/S1E.png")
 ```
 
 ::: {.figcaption}
-**Fig. S1E.** For each GP, the number of active genes (x-axis) versus the fraction of active cells (y-axis), using the same thresholds as Figure 2: a gene is active in a GP if its per-GP-normalized score exceeds 0.25 in absolute value, and a cell is active if its per-GP-normalized loading exceeds 0.1; computed over non-thymocyte cells. Both axes on log scale; each dot is one of the 200 GPs.
+**Fig. S1E.** The same GP9 loading, split into the individual samples that make up
+the two datasets from (D). IGT13 and IGT14 are two runs of the same two
+hashed mice (mouse0021, male, HT1; mouse0022, female, HT9), giving four samples;
+GP9 is elevated in all four (sample means 0.544-0.606) rather than in a single
+aberrant mouse or a single run. The dashed line marks the mean over the other 33
+spleen-standard datasets (0.057).
+:::
+
+## (F) Active-gene vs. active-cell proportion per GP {#figs1f}
+
+```{r figs1f-code, code=code_for("../script/FigureS1.R", "S1F"), eval=FALSE}
+```
+
+```{r figs1f-img, echo=FALSE, out.width="60%"}
+knitr::include_graphics("assets/FigureS1/S1F.png")
+```
+
+::: {.figcaption}
+**Fig. S1F.** For each GP, the number of active genes (x-axis) versus the fraction of active cells (y-axis), using the same thresholds as Figure 2: a gene is active in a GP if its per-GP-normalized score exceeds 0.25 in absolute value, and a cell is active if its per-GP-normalized loading exceeds 0.1; computed over non-thymocyte cells. Both axes on log scale; each dot is one of the 200 GPs. (Was panel E before 2026-07-30; content unchanged.)
 :::

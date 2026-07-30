@@ -82,8 +82,6 @@ Figure S6/s6b	Figure 6/6j
 Figure S6/s6c	Figure 6/6k
 Figure S1/S1A	Figure S1/S1A
 Figure S1/S1B	Figure S1/S1B
-Figure S1/S1C	Figure S1/S1C
-Figure S1/S1D	Figure S1/S1D
 Figure S2/S2A	Figure S2/S2A
 Figure S2/S2B	Figure S2/S2B
 Figure S2/S2C	Figure S2/S2C
@@ -96,8 +94,13 @@ Figure S3/s3g	Figure S3/s3h
 EOF
 )
 # Published panels with no counterpart HERE any more: Figure 3/3e, the TF-GP
-# network dropped from Figure 4 on 2026-07-29.
-# Panels with no published counterpart: Figure 1/1C, Figure S1/S1E,
+# network dropped from Figure 4 on 2026-07-29, and the published Figure S1/S1C
+# (mean vs. variance of per-IGT mean loading) and S1D (top-variance heatmap),
+# both replaced on 2026-07-30 by a different analysis -- see the header of
+# script/FigureS1.R.
+# Panels with no published counterpart: Figure 1/1C, Figure S1/S1C, S1D, S1E and
+# S1F (S1C/S1D are the 2026-07-30 replacements above and are new analyses, not
+# reproductions; S1E is new; S1F is the former S1E, which never had one),
 # Figure S4/*, Figure 6/6i (GP77) and 6j (GP8), Figure S6/s6d-s6g (their GPs
 # were only ever drawn inside the retired s6-1/s6-2 gallery pages, not as
 # standalone panels), and Figure 7/7B (ours since 2026-07-28 -- it is the former
