@@ -229,8 +229,12 @@ moved letters and nothing else. The one panel whose content changed on purpose i
   0.25), so the bar heights differ from the published 1E/1F base-R histograms;
   the x axes are linear as they are there (they were log-scaled here until
   2026-07-29, when the collaborators asked for ordinary axes back -- which moved
-  both panels *closer* to the published pair, RMSE 0.239 -> 0.156 for 2B and
-  0.209 -> 0.164 for 2C). The captions state the current definitions.
+  both panels *closer* to the published pair, RMSE 0.239 -> 0.154 for 2B and
+  0.209 -> 0.160 for 2C). Both use 60 bins, raised from 40 in the same round:
+  worth it for 2C (~7 genes wide over a 1..421 range; much past 60 and single
+  GPs out of 200 start showing as their own bar), near-invisible for 2B, which
+  is dominated by its first bar at any binning because 152 of the 200 GPs are
+  active in under 2.5% of cells. The captions state the current definitions.
   `FigureS1.R`'s S1E uses the same definitions -- only the definitions: it keeps
   its log-log axes, which its caption states, since it spans several orders of
   magnitude on both axes.

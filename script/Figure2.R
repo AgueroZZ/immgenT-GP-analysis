@@ -62,7 +62,7 @@ L_pm_norm_col <- L_pm_filtered / matrix(apply(L_pm_filtered, 2, function(x) max(
 gp_active_cell_counts <- colSums((L_pm_norm_col) > 1e-1)
 gp_active_cell_prop <- gp_active_cell_counts / nrow(L_pm_norm_col)
 p_2B <- ggplot(data.frame(prop = gp_active_cell_prop), aes(x = prop)) +
-  geom_histogram(bins = 40, fill = "steelblue", color = "white") +
+  geom_histogram(bins = 60, fill = "steelblue", color = "white") +  # 60, matching 2C
   scale_x_continuous(labels = scales::label_percent()) +
   labs(x = "Proportion of highly active cells per GP", y = "Count",
        title = "Histogram of highly active cells per GP (proportion)") +
@@ -75,7 +75,9 @@ ggsave(filename = paste0(figure_path, "2B.pdf"), plot = p_2B, width = 6, height 
 F_pm_norm_col <- F_pm_filtered / matrix(apply(F_pm_filtered, 2, function(x) max(abs(x))), nrow = nrow(F_pm_filtered), ncol = ncol(F_pm_filtered), byrow = TRUE)
 gp_active_gene_counts <- colSums(abs(F_pm_norm_col) > 0.25)
 p_2C <- ggplot(data.frame(count = gp_active_gene_counts), aes(x = count)) +
-  geom_histogram(bins = 40, fill = "steelblue", color = "white") +
+  # 60 bins (~7 genes wide): 40 was coarse over the 1..421 range, and past ~60
+  # the bars start resolving single GPs out of 200.
+  geom_histogram(bins = 60, fill = "steelblue", color = "white") +
   scale_x_continuous(labels = scales::label_comma()) +
   labs(x = "Number of highly active genes per GP", y = "Count",
        title = "Histogram of highly active genes per GP") +
