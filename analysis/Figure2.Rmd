@@ -50,7 +50,7 @@ knitr::include_graphics("assets/Figure2/2B.png")
 ```
 
 ::: {.figcaption}
-**Fig. 2B.** Histogram showing the fraction of cells in which each GP was highly active (loading greater than 0.1 in each cell), across all 200 GPs (x-axis on log scale).
+**Fig. 2B.** Histogram showing the fraction of cells in which each GP was highly active (loading greater than 0.1 in each cell), across all 200 GPs.
 :::
 
 ## (C) Active-gene count per GP {#fig2c}
@@ -63,7 +63,7 @@ knitr::include_graphics("assets/Figure2/2C.png")
 ```
 
 ::: {.figcaption}
-**Fig. 2C.** Histogram showing the number of highly active genes per GP (genes with an absolute score greater than 0.25 in each GP, after per-GP scaling to max |score| = 1); x-axis on log scale.
+**Fig. 2C.** Histogram showing the number of highly active genes per GP (genes with an absolute score greater than 0.25 in each GP, after per-GP scaling to max |score| = 1).
 :::
 
 ## (D) Active-GP count by lineage {#fig2d}

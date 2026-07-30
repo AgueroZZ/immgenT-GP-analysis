@@ -63,9 +63,8 @@ gp_active_cell_counts <- colSums((L_pm_norm_col) > 1e-1)
 gp_active_cell_prop <- gp_active_cell_counts / nrow(L_pm_norm_col)
 p_2B <- ggplot(data.frame(prop = gp_active_cell_prop), aes(x = prop)) +
   geom_histogram(bins = 40, fill = "steelblue", color = "white") +
-  scale_x_log10(labels = scales::label_percent()) +
-  annotation_logticks(sides = "b") +
-  labs(x = "Proportion of highly active cells per GP (log scale)", y = "Count",
+  scale_x_continuous(labels = scales::label_percent()) +
+  labs(x = "Proportion of highly active cells per GP", y = "Count",
        title = "Histogram of highly active cells per GP (proportion)") +
   theme_minimal(base_size = 13)
 ggsave(filename = paste0(figure_path, "2B.pdf"), plot = p_2B, width = 6, height = 4, dpi = 300)
@@ -77,9 +76,8 @@ F_pm_norm_col <- F_pm_filtered / matrix(apply(F_pm_filtered, 2, function(x) max(
 gp_active_gene_counts <- colSums(abs(F_pm_norm_col) > 0.25)
 p_2C <- ggplot(data.frame(count = gp_active_gene_counts), aes(x = count)) +
   geom_histogram(bins = 40, fill = "steelblue", color = "white") +
-  scale_x_log10(labels = scales::label_comma()) +
-  annotation_logticks(sides = "b") +
-  labs(x = "Number of highly active genes per GP (log scale)", y = "Count",
+  scale_x_continuous(labels = scales::label_comma()) +
+  labs(x = "Number of highly active genes per GP", y = "Count",
        title = "Histogram of highly active genes per GP") +
   theme_minimal(base_size = 13)
 ggsave(filename = paste0(figure_path, "2C.pdf"), plot = p_2C, width = 6, height = 4, dpi = 300)

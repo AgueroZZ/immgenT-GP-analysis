@@ -226,9 +226,14 @@ moved letters and nothing else. The one panel whose content changed on purpose i
   labels and boxes marking the GPs highlighted in 1C.
 - **Figure 2, panels 2B/2C**: the "active cell / active gene" definitions were
   replaced with hard thresholds (normalized loading > 0.1; |normalized score| >
-  0.25) and the axes are now log-scaled, so these no longer resemble the
-  published 1E/1F linear base-R histograms. The captions state the current
-  definitions. `FigureS1.R`'s S1E uses the same definitions.
+  0.25), so the bar heights differ from the published 1E/1F base-R histograms;
+  the x axes are linear as they are there (they were log-scaled here until
+  2026-07-29, when the collaborators asked for ordinary axes back -- which moved
+  both panels *closer* to the published pair, RMSE 0.239 -> 0.156 for 2B and
+  0.209 -> 0.164 for 2C). The captions state the current definitions.
+  `FigureS1.R`'s S1E uses the same definitions -- only the definitions: it keeps
+  its log-log axes, which its caption states, since it spans several orders of
+  magnitude on both axes.
 - **Figure 3, panel 3M** is a genuine "top 30 up-regulated genes" panel: it
   ranks candidates by max(score) across GP3/GP29/GP22 (`rank_by = "pos"`),
   where the published 2M ranked by max|score| and so admitted 9 genes on a
