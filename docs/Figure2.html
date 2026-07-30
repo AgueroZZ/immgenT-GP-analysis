@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree070c9b060984a0541842090decb0d0847e1131cftargetblank070c9b0a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree5d71124efbdef721887bf2241d40465b45d97557targetblank5d71124a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/070c9b060984a0541842090decb0d0847e1131cf" target="_blank">070c9b0</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/5d71124efbdef721887bf2241d40465b45d97557" target="_blank">5d71124</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree070c9b060984a0541842090decb0d0847e1131cftargetblank070c9b0a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree5d71124efbdef721887bf2241d40465b45d97557targetblank5d71124a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/070c9b060984a0541842090decb0d0847e1131cf" target="_blank">070c9b0</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/5d71124efbdef721887bf2241d40465b45d97557" target="_blank">5d71124</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -630,6 +630,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/c69d5529e6d25fcd6610dd3c8fa8bb428533a05b/docs/Figure2.html" target="_blank">c69d552</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-29
+</td>
+<td>
+Build site: Fig. 2b/2c on linear axes
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1282,7 +1299,7 @@ L_pm_norm_col &lt;- L_pm_filtered / matrix(apply(L_pm_filtered, 2, function(x) m
 gp_active_cell_counts &lt;- colSums((L_pm_norm_col) &gt; 1e-1)
 gp_active_cell_prop &lt;- gp_active_cell_counts / nrow(L_pm_norm_col)
 p_2B &lt;- ggplot(data.frame(prop = gp_active_cell_prop), aes(x = prop)) +
-  geom_histogram(bins = 40, fill = &quot;steelblue&quot;, color = &quot;white&quot;) +
+  geom_histogram(bins = 60, fill = &quot;steelblue&quot;, color = &quot;white&quot;) +  # 60, matching 2C
   scale_x_continuous(labels = scales::label_percent()) +
   labs(x = &quot;Proportion of highly active cells per GP&quot;, y = &quot;Count&quot;,
        title = &quot;Histogram of highly active cells per GP (proportion)&quot;) +
@@ -1311,6 +1328,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/c69d5529e6d25fcd6610dd3c8fa8bb428533a05b/docs/assets/Figure2/2B.png" target="_blank">c69d552</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-29
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/710259816a5471e4ec442a7a27b8732d9dd67e8d/docs/assets/Figure2/2B.png" target="_blank">7102598</a>
@@ -1406,7 +1434,9 @@ across all 200 GPs.</p>
 F_pm_norm_col &lt;- F_pm_filtered / matrix(apply(F_pm_filtered, 2, function(x) max(abs(x))), nrow = nrow(F_pm_filtered), ncol = ncol(F_pm_filtered), byrow = TRUE)
 gp_active_gene_counts &lt;- colSums(abs(F_pm_norm_col) &gt; 0.25)
 p_2C &lt;- ggplot(data.frame(count = gp_active_gene_counts), aes(x = count)) +
-  geom_histogram(bins = 40, fill = &quot;steelblue&quot;, color = &quot;white&quot;) +
+  # 60 bins (~7 genes wide): 40 was coarse over the 1..421 range, and past ~60
+  # the bars start resolving single GPs out of 200.
+  geom_histogram(bins = 60, fill = &quot;steelblue&quot;, color = &quot;white&quot;) +
   scale_x_continuous(labels = scales::label_comma()) +
   labs(x = &quot;Number of highly active genes per GP&quot;, y = &quot;Count&quot;,
        title = &quot;Histogram of highly active genes per GP&quot;) +
@@ -1435,6 +1465,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/c69d5529e6d25fcd6610dd3c8fa8bb428533a05b/docs/assets/Figure2/2C.png" target="_blank">c69d552</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-29
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/710259816a5471e4ec442a7a27b8732d9dd67e8d/docs/assets/Figure2/2C.png" target="_blank">7102598</a>
