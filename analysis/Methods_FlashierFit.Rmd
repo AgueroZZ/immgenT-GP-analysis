@@ -4,9 +4,11 @@ output: workflowr::wflow_html
 ---
 
 This page documents the upstream matrix factorization step that produces the
-gene programs (GPs) analyzed throughout this site. The code is shown for
-reference; it was run on the UChicago RCC cluster and its outputs (the fitted
-`flashier` object) are the starting point for all downstream analyses.
+gene programs (GPs) analyzed throughout this site, and the cell filtering
+applied to its output. The code is shown for reference; the fit itself was run
+on the UChicago RCC cluster, and its filtered loading and factor matrices
+(`L_pm_filtered` / `F_pm_filtered`) are the starting point for all downstream
+analyses.
 
 ## Overview
 
@@ -115,5 +117,97 @@ fit = flash(shifted_log_counts,
 saveRDS(fit, file = sprintf("%s/fit.Rds", output_dir))
 ```
 
-The fitted object is saved as `fit.Rds` and used for all downstream GP
-analyses on this site.
+The fitted object is saved as `fit.Rds`. A condensed summary of it --
+`flashier_snmf_summary.rds`, holding the loading matrix `L_pm` (cells x GPs),
+the factor matrix `F_pm` (genes x GPs), the ELBO and the PVEs -- is what the
+next step reads.
+
+### 5. Cell filtering by total GP membership
+
+The loadings returned by `flash()` are on an arbitrary per-GP scale, and a
+small number of cells load heavily on a great many programs at once. One step
+handles both, and it produces the `L_pm_filtered` / `F_pm_filtered` matrices
+that every figure and table on this site actually uses.
+
+**Scaling.** Each column of $L$ is divided by its maximum,
+$\tilde L = L\,\mathrm{diag}(1/d)$ with $d_k = \max_i L_{ik}$, so that every GP's
+loading runs from 0 to 1 and cells are comparable across GPs. A cell's *total
+membership* is then its row sum $\sum_k \tilde L_{ik}$ -- roughly, how many
+fully-loaded programs' worth of signal it carries.
+
+**Filtering.** Cells whose total membership exceeds 10 are dropped. Removing
+the most extreme cells lowers each column's maximum, which raises the remaining
+cells' rescaled loadings and pushes a few more over the threshold, so the
+rescale-then-drop step is iterated -- here for 12 passes, by which point it has
+converged.
+
+**Rescaling $F$.** The column maxima $d$ are then recomputed on the retained
+cells and absorbed into the factor matrix, $\tilde F = F\,\mathrm{diag}(d)$, so
+that $\tilde L \tilde F^{T} = L F^{T}$: the reconstructed expression is
+unchanged, only the split of scale between loadings and factors moves.
+
+Both helpers live in
+[`code/R/plot_utils.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/code/R/plot_utils.R):
+
+```r
+scale_cols <- function(A, b) t(t(A) * b)
+
+filter_cells_by_total_membership <- function(L, max_val = 10, numiter = 10) {
+  n <- nrow(L)
+  rows <- 1:n
+  for (iter in 1:numiter) {
+    x <- rowSums(L)
+    cat(sprintf("%d. Filtered out %d cells.\n", iter, sum(x > max_val)))
+    i <- which(x <= max_val)
+    L <- L[i, ]
+    rows <- rows[i]
+    d <- apply(L, 2, max)
+    L <- scale_cols(L, 1 / d)
+  }
+  return(rows)
+}
+```
+
+and the step itself is
+[`code/pipeline/01b_filter_cells.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/code/pipeline/01b_filter_cells.R):
+
+```r
+flashier_snmf_summary <- readRDS(paste0(data_path, "flashier_snmf_summary.rds"))
+seurat_meta <- readRDS(paste0(data_path, "igt1_96_withtotalvi20260206_clean_ADTonly.Rds"))@meta.data
+cells_flashier <- rownames(flashier_snmf_summary$L_pm)
+cells_seurat <- seurat_meta$cellID
+
+# Keep only cells that are also present in the processed Seurat object.
+L_pm <- flashier_snmf_summary$L_pm[cells_flashier %in% cells_seurat, ]
+F_pm <- flashier_snmf_summary$F_pm
+
+# Scale every GP to a maximum loading of 1, then iteratively drop cells whose
+# total membership across GPs exceeds 10.
+D <- diag(1 / apply(L_pm, 2, function(x) max(x)))
+L <- L_pm %*% D
+
+cells <- filter_cells_by_total_membership(L, numiter = 12)
+
+# Re-apply the column scaling on the retained cells ...
+L_pm_filtered <- L_pm[cells, ]
+d <- apply(L_pm_filtered, 2, max)
+L_pm_filtered <- scale_cols(L_pm_filtered, 1 / d)
+
+# ... and absorb the same factors into F, leaving L %*% t(F) unchanged.
+F_pm_filtered <- scale_cols(F_pm, d)
+
+saveRDS(L_pm_filtered, paste0(data_path, "L_pm_filtered.rds"))
+saveRDS(F_pm_filtered, paste0(data_path, "F_pm_filtered.rds"))
+```
+
+Applied to this fit, `flashier_snmf_summary.rds` holds 682,953 cells and 19,805
+genes over 200 GPs. Eighteen of its cells are absent from the current Seurat
+object -- the fit and the object are different data vintages -- so 682,935
+cells enter the filter. The twelve passes drop 69, 178, 157, 299, 232, 175,
+193, 140, 46, 22, 1 and finally 0 cells: 1,512 cells in total, 0.22% of the
+data. What remains is `L_pm_filtered` (681,423 cells x 200 GPs) and
+`F_pm_filtered` (19,805 genes x 200 GPs).
+
+These two matrices, together with the Seurat cell metadata subset to
+`rownames(L_pm_filtered)`, are the inputs loaded by `load_gp_data()`
+(`code/R/setup_data.R`) at the top of every figure script on this site.

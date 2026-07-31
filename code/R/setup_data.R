@@ -7,10 +7,11 @@
 # just calls load_gp_data() and gets a consistent set of objects back.
 #
 # L_pm_filtered.rds / F_pm_filtered.rds are flashier_snmf_summary.rds's
-# L_pm/F_pm after filter_cells_by_total_membership() (code/R/plot_utils.R)
-# -- but the script that ran that filter and saved these exact files isn't
-# preserved in this repo; see the "Data provenance" table in
-# code/README.md.
+# L_pm/F_pm after filter_cells_by_total_membership() (code/R/plot_utils.R).
+# That step is code/pipeline/01b_filter_cells.R, recovered from a
+# commented-out block in the original Figure_Overview.R and verified to
+# reproduce these exact files (see the "Data provenance" table in
+# code/README.md, and analysis/Methods_FlashierFit.Rmd section 5).
 #
 # NOTE: cell metadata is read from the Seurat object's @meta.data, not from
 # the cached data/seurat_meta.rds -- that cached file was found during this

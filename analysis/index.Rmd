@@ -63,6 +63,8 @@ pipeline and has no page here.
 ## Methods
 
 + [Fitting EBMF using flashier](Methods_FlashierFit.html)
+  (including how `L_pm_filtered` / `F_pm_filtered` are obtained by filtering
+  cells on total GP membership)
 + [Fitting CITE-seq protein programs with fixed scRNA loadings](Methods_FlashierFit_Citeseq.html)
 
 ## Reproducing these figures

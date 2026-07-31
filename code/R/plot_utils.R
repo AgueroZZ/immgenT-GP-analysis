@@ -7,8 +7,9 @@ scale_cols <- function(A, b) t(t(A) * b)
 
 # Iteratively drop cells whose total GP membership (rowSum of L) exceeds
 # max_val, renormalizing columns to max 1 after each pass. Used once
-# upstream (see code/pipeline/01_extract_data.R) to produce the
+# upstream (see code/pipeline/01b_filter_cells.R) to produce the
 # cached L_pm_filtered.rds / F_pm_filtered.rds that every figure script reads.
+# Written up in analysis/Methods_FlashierFit.Rmd, section 5.
 filter_cells_by_total_membership <- function(L, max_val = 10, numiter = 10) {
   n <- nrow(L)
   rows <- 1:n
