@@ -12,7 +12,7 @@
 <meta name="author" content="Ziang Zhang" />
 
 
-<title>Figure S6: CD69-associated GPs and further surface-protein gating strategies</title>
+<title>Extended Data Figure 6: CD69-associated GPs and further surface-protein gating strategies</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -353,8 +353,8 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Figure S6: CD69-associated GPs and further
-surface-protein gating strategies</h1>
+<h1 class="title toc-ignore">Extended Data Figure 6: CD69-associated GPs
+and further surface-protein gating strategies</h1>
 <h4 class="author">Ziang Zhang</h4>
 
 </div>
@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec9b020ff483a2f0f9d1994e0938705594e9244fdtargetblankc9b020fa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41targetblank66aa029a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c9b020ff483a2f0f9d1994e0938705594e9244fd" target="_blank">c9b020f</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41" target="_blank">66aa029</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec9b020ff483a2f0f9d1994e0938705594e9244fdtargetblankc9b020fa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41targetblank66aa029a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c9b020ff483a2f0f9d1994e0938705594e9244fd" target="_blank">c9b020f</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41" target="_blank">66aa029</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -630,6 +630,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41/analysis/FigureS6.Rmd" target="_blank">66aa029</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-30
+</td>
+<td>
+Name the Extended Data figures as published on the site
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/ac650a0acf95ac77b58c2a65d03ecf420a71dbe8/docs/FigureS6.html" target="_blank">ac650a0</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-30
+</td>
+<td>
+Build site: Figure S5 (ex-S6a) and Figure S6 as a-f
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1130,7 +1164,6 @@ Initial commit: immgenT-GP-analysis
 </div>
 </div>
 </div>
-<p>Published as <strong>Extended Data Figure 6</strong>.</p>
 <p>All panels are produced by <a
 href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS6.R"><code>script/FigureS6.R</code></a>,
 which shares its CITE-seq setup, gating logic and CD69 GP subset with <a
@@ -1149,10 +1182,10 @@ Figure 6, where they were the published 6j and 6k.
 <code>script/FigureS6.R</code> carries the full old-to-new table in its
 header.</p>
 <p><strong>Re-lettered again on 2026-07-30.</strong> The protein-program
-heatmap that was panel s6a (the published 6b) became a standalone
-figure, <a href="FigureS5.html">Figure S5</a>, so every panel after it
-dropped one letter: the s6b-s6g of 2026-07-28 are now
-<strong>s6a-s6f</strong>.</p>
+heatmap that was this figure’s first panel (the published 6b) became a
+standalone figure, <a href="FigureS5.html">Extended Data Figure 5</a>,
+so every panel after it dropped one letter: the b-g of 2026-07-28 are
+now <strong>a-f</strong>.</p>
 <div id="setup" class="section level2">
 <h2>Setup</h2>
 <pre class="r"><code>library(ggplot2)
@@ -1172,7 +1205,7 @@ source(&quot;code/R/citeseq_shared_setup.R&quot;)
 run_started_at &lt;- Sys.time()</code></pre>
 </div>
 <div id="figs6ab" class="section level2">
-<h2>(s6a, s6b) CD69-associated GPs across tissues and lineages</h2>
+<h2>(a, b) CD69-associated GPs across tissues and lineages</h2>
 <p>The ten GPs and their order are defined in
 <code>code/R/citeseq_shared_setup.R</code>, so that these two panels and
 <a href="Figure6.html#fig6d">Fig. 6d</a> – which live in different
@@ -1259,6 +1292,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/ac650a0acf95ac77b58c2a65d03ecf420a71dbe8/docs/assets/FigureS6/s6a.png" target="_blank">ac650a0</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-30
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/d538aa21ca31faac7d6daceb42bcef57800ff26c/docs/assets/FigureS6/s6a.png" target="_blank">d538aa2</a>
 </td>
 <td>
@@ -1297,6 +1341,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/ac650a0acf95ac77b58c2a65d03ecf420a71dbe8/docs/assets/FigureS6/s6b.png" target="_blank">ac650a0</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-30
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/d538aa21ca31faac7d6daceb42bcef57800ff26c/docs/assets/FigureS6/s6b.png" target="_blank">d538aa2</a>
 </td>
 <td>
@@ -1311,7 +1366,7 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. S6a, b.</strong> Mean activity of the ten
+<p><strong>Extended Data Fig. 6a, b.</strong> Mean activity of the ten
 CD69-associated GPs of <a href="Figure6.html#fig6d">Fig. 6d</a>, in the
 same order, <strong>(a) across tissues</strong>
 (<code>organ_simplified</code>) and <strong>(b) across lineages</strong>
@@ -1326,7 +1381,7 @@ drift apart.</p>
 </div>
 </div>
 <div id="figs6cf" class="section level2">
-<h2>(s6c-f) Further protein-gated vs. GP-loading populations</h2>
+<h2>(c-f) Further protein-gated vs. GP-loading populations</h2>
 <pre class="r"><code># ============================================================
 # s6c-s6f: protein-gate vs. GP-loading comparison for the 4 curated
 # supplementary GPs. Same helper, same inputs and same panel geometry as
@@ -1377,6 +1432,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/ac650a0acf95ac77b58c2a65d03ecf420a71dbe8/docs/assets/FigureS6/s6c.png" target="_blank">ac650a0</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-30
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/d538aa21ca31faac7d6daceb42bcef57800ff26c/docs/assets/FigureS6/s6c.png" target="_blank">d538aa2</a>
 </td>
 <td>
@@ -1413,6 +1479,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/ac650a0acf95ac77b58c2a65d03ecf420a71dbe8/docs/assets/FigureS6/s6d.png" target="_blank">ac650a0</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-30
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/d538aa21ca31faac7d6daceb42bcef57800ff26c/docs/assets/FigureS6/s6d.png" target="_blank">d538aa2</a>
@@ -1453,6 +1530,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/ac650a0acf95ac77b58c2a65d03ecf420a71dbe8/docs/assets/FigureS6/s6e.png" target="_blank">ac650a0</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-30
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/d538aa21ca31faac7d6daceb42bcef57800ff26c/docs/assets/FigureS6/s6e.png" target="_blank">d538aa2</a>
 </td>
 <td>
@@ -1491,6 +1579,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/ac650a0acf95ac77b58c2a65d03ecf420a71dbe8/docs/assets/FigureS6/s6f.png" target="_blank">ac650a0</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-30
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/d538aa21ca31faac7d6daceb42bcef57800ff26c/docs/assets/FigureS6/s6f.png" target="_blank">d538aa2</a>
 </td>
 <td>
@@ -1505,19 +1604,20 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. S6c-f.</strong> Examples of gating strategies used to
-identify GP-active cells, as in <a href="Figure6.html#fig6ej">Fig.
-6e-j</a>, for <strong>(c) GP29, (d) GP58, (e) GP22 and (f)
-GP68</strong>. For each GP, all-T MDE plots highlight cells passing a
-protein gate built from the GP’s curated marker signature (left;
-positive markers above threshold, negative markers at or below, with the
-gate size reported in the panel title as “Matched n”) and, on the right,
-an equally sized set of cells with the highest GP activity – exactly as
-many cells as the protein gate selected. Color indicates cell density
-(two-dimensional); all other cells are grey. Thymocytes, proliferating,
-and “miniverse” cells are excluded. Each panel is labeled with its GP
-and the markers the gate actually applied; every marker in these four
-signatures has a manually reviewed positivity threshold (<a
+<p><strong>Extended Data Fig. 6c-f.</strong> Examples of gating
+strategies used to identify GP-active cells, as in <a
+href="Figure6.html#fig6ej">Fig. 6e-j</a>, for <strong>(c) GP29, (d)
+GP58, (e) GP22 and (f) GP68</strong>. For each GP, all-T MDE plots
+highlight cells passing a protein gate built from the GP’s curated
+marker signature (left; positive markers above threshold, negative
+markers at or below, with the gate size reported in the panel title as
+“Matched n”) and, on the right, an equally sized set of cells with the
+highest GP activity – exactly as many cells as the protein gate
+selected. Color indicates cell density (two-dimensional); all other
+cells are grey. Thymocytes, proliferating, and “miniverse” cells are
+excluded. Each panel is labeled with its GP and the markers the gate
+actually applied; every marker in these four signatures has a manually
+reviewed positivity threshold (<a
 href="ExtendedDataTable7.html">Extended Data Table 7</a>), so none is
 silently dropped.</p>
 </div>

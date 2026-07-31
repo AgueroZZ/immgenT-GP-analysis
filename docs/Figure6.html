@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec9b020ff483a2f0f9d1994e0938705594e9244fdtargetblankc9b020fa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41targetblank66aa029a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c9b020ff483a2f0f9d1994e0938705594e9244fd" target="_blank">c9b020f</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41" target="_blank">66aa029</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec9b020ff483a2f0f9d1994e0938705594e9244fdtargetblankc9b020fa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41targetblank66aa029a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c9b020ff483a2f0f9d1994e0938705594e9244fd" target="_blank">c9b020f</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41" target="_blank">66aa029</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -630,6 +630,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41/analysis/Figure6.Rmd" target="_blank">66aa029</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-30
+</td>
+<td>
+Name the Extended Data figures as published on the site
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/ac650a0acf95ac77b58c2a65d03ecf420a71dbe8/docs/Figure6.html" target="_blank">ac650a0</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-30
+</td>
+<td>
+Build site: Figure S5 (ex-S6a) and Figure S6 as a-f
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1149,11 +1183,11 @@ Initial commit: immgenT-GP-analysis
 </div>
 <p>All panels except (a) are produced by <a
 href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure6.R"><code>script/Figure6.R</code></a>,
-which shares its CITE-seq setup with <a href="FigureS5.html">Figure
-S5</a> and <a href="FigureS6.html">Figure S6</a> via
-<code>code/R/citeseq_shared_setup.R</code>. The code below is shown for
-reference (not re-executed on this page, since this script takes about a
-minute to run); the images are its pre-rendered output.</p>
+which shares its CITE-seq setup with <a href="FigureS5.html">Extended
+Data Figure 5</a> and <a href="FigureS6.html">Extended Data Figure 6</a>
+via <code>code/R/citeseq_shared_setup.R</code>. The code below is shown
+for reference (not re-executed on this page, since this script takes
+about a minute to run); the images are its pre-rendered output.</p>
 <p><strong>Panel order changed on 2026-07-28.</strong> The figure was
 reordered and three panels moved out into the Extended Data figures, so
 the letters here no longer match the published figure: the KLRG1 and
@@ -1161,8 +1195,8 @@ CD69 panels moved to the front (published g, h, i are now b, c, d), the
 four gating panels moved back (published c-f are now e-h), and two new
 gating panels were added, (i) GP77 and (j) GP8. The published
 protein-program heatmap 6b is now its own figure, <a
-href="FigureS5.html">Fig. S5</a>, and the published 6j/6k are now <a
-href="FigureS6.html#figs6ab">Fig. S6a, b</a>.
+href="FigureS5.html">Extended Data Fig. 5</a>, and the published 6j/6k
+are now <a href="FigureS6.html#figs6ab">Extended Data Fig. 6a, b</a>.
 <code>script/Figure6.R</code> carries the full old-to-new table in its
 header.</p>
 <div id="setup" class="section level2">
@@ -1507,8 +1541,8 @@ lineage-biased GPs.</p>
 <h2>(d) Genes up- and down-regulated across the CD69-associated GPs</h2>
 <p>The ten GPs, and the correlation-based order they are drawn in, are
 defined once in <code>code/R/citeseq_shared_setup.R</code>, because <a
-href="FigureS6.html#figs6ab">Fig. S6a, b</a> show the same GPs in the
-same order from a different script:</p>
+href="FigureS6.html#figs6ab">Extended Data Fig. 6a, b</a> show the same
+GPs in the same order from a different script:</p>
 <pre class="r"><code># The CD69-associated GP subset, shared by Figure 6d (the up/down gene heatmap)
 # and Figure S6a/S6b (the same GPs&#39; mean activity per tissue and per lineage).
 # Those three panels are in two different figures and so in two different
@@ -1702,8 +1736,7 @@ expression, with the left strip indicating that correlation
 and top five negatively scoring genes, then restricted to those reaching
 |score| &gt;= 0.5 in at least one of the ten (green-white-purple). Mean
 activity of the same ten GPs across tissues and lineages is shown in <a
-href="FigureS6.html#figs6ab">Fig. S6a, b</a> (published as Extended Data
-Figure 6a, b).</p>
+href="FigureS6.html#figs6ab">Extended Data Fig. 6a, b</a>.</p>
 <p>The ten GPs are a <strong>hand-picked</strong> set drawn from among
 the GPs most strongly correlated – positively or negatively – with CD69,
 not a computed top-10: eight are positively correlated (ranks 1, 3, 4,
@@ -2379,8 +2412,7 @@ the highest GP activity – exactly as many cells as the protein gate
 selected. Color indicates cell density (two-dimensional); all other
 cells are grey. Thymocytes, proliferating, and “miniverse” cells are
 excluded. Four further GPs are gated the same way in <a
-href="FigureS6.html#figs6cf">Fig. S6c-f</a> (published as Extended Data
-Figure 6c-f).</p>
+href="FigureS6.html#figs6cf">Extended Data Fig. 6c-f</a>.</p>
 </div>
 <br>
 <p>
