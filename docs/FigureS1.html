@@ -384,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-30
+<strong>Last updated:</strong> 2026-07-31
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41targetblank66aa029a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree2e75e8eea30922676ee55b7aed2241d486be22cdtargetblank2e75e8ea">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41" target="_blank">66aa029</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/2e75e8eea30922676ee55b7aed2241d486be22cd" target="_blank">2e75e8e</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41targetblank66aa029a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree2e75e8eea30922676ee55b7aed2241d486be22cdtargetblank2e75e8ea"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41" target="_blank">66aa029</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/2e75e8eea30922676ee55b7aed2241d486be22cd" target="_blank">2e75e8e</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -581,6 +581,7 @@ Ignored files:
     Ignored:    figures/final-selected/Figure S4/.DS_Store
     Ignored:    figures/templates_20260729/
     Ignored:    log/
+    Ignored:    output/.DS_Store
     Ignored:    output/Figure2/
     Ignored:    output/Figure7b/7b_cell_metadata.csv.gz
     Ignored:    plan/
@@ -630,6 +631,41 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/2e75e8eea30922676ee55b7aed2241d486be22cd/analysis/FigureS1.Rmd" target="_blank">2e75e8e</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-31
+</td>
+<td>
+Figure S1e: show all sixteen samples of IGT13/IGT14, not just the spleen
+four
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/cbcec52833df99ead8ac0dfa372bacbcf33f18e9/docs/FigureS1.html" target="_blank">cbcec52</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-30
+</td>
+<td>
+Build site: Extended Data Figure naming
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1224,8 +1260,10 @@ itself is produced (a much heavier, cluster-scale computation).</p>
 #        standard-spleen cells.
 #   S1D  GP9 loading across IGTs (standard-spleen cells) -- the shape of the
 #        most extreme x-axis point in S1C.
-#   S1E  GP9 loading across the four individual samples inside IGT13/IGT14,
-#        showing the effect is not one aberrant mouse.
+#   S1E  GP9 loading across all sixteen individual samples inside IGT13/IGT14
+#        (2 runs x 2 mice x 4 tissues), showing the effect is not one aberrant
+#        mouse, one tissue, or an artifact of the spleen standard. This is the
+#        one panel here not restricted to the spleen standards.
 #   S1F  Scatter of the NUMBER of active genes (x) vs. proportion of active
 #        cells (y) per GP, using the same hard-threshold definitions as Figure 2
 #        (|normalized score| &gt; 0.25 for genes; normalized loading &gt; 0.1 for
@@ -1886,42 +1924,59 @@ than cell-type-specific – program looks like.</p>
 </div>
 </div>
 <div id="figs1e" class="section level2">
-<h2>(E) GP9 loading per sample within IGT13/IGT14</h2>
+<h2>(E) GP9 loading in every sample of IGT13 and IGT14</h2>
 <pre class="r"><code># ============================================================
-# S1E: GP9 loading across the individual samples inside IGT13/IGT14
+# S1E: GP9 loading across every individual sample inside IGT13/IGT14
 # ============================================================
-# The two IGTs that carry GP9 are two 10x runs of the SAME two mice
-# (mouse0021, male; mouse0022, female), hashed as HT1/HT9 -- so
-# `sample_code` splits them into four samples, and the panel shows the effect is
-# present in every one of the four rather than in a single aberrant mouse. The
-# reference line is the mean over all other standard-spleen IGTs.
+# Unlike S1C/S1D this panel is NOT restricted to the spleen standards: IGT13 and
+# IGT14 each pool eight hashed samples, two mice (mouse0021 male, mouse0022
+# female) x four tissues (spleen plus inguinal / axillary / mesenteric LN), so
+# `spleen_standard` would show only 4 of the 16. Drawing all 16 is what makes the
+# point: GP9 is elevated in every sample of both runs and in every tissue, so the
+# effect belongs to the run and not to one aberrant mouse, one tissue, or the
+# spiked-in spleen standard. The reference line is GP9&#39;s mean over all cells
+# outside these two IGTs.
 igt_focus &lt;- c(&quot;IGT13&quot;, &quot;IGT14&quot;)
-in_focus &lt;- igt_vec %in% igt_focus
+in_focus &lt;- seurat_meta_filtered$IGT %in% igt_focus
+focus_cells &lt;- rownames(seurat_meta_filtered)[in_focus]
+tissue_levels &lt;- c(&quot;spleen&quot;, &quot;LNinguinal&quot;, &quot;LNaxillary&quot;, &quot;LNmesenteric&quot;)
 box_sample &lt;- data.frame(
-  igt = igt_vec[in_focus],
-  sample_code = as.character(seurat_meta_filtered_spleen[spleen_cells[in_focus], &quot;sample_code&quot;]),
-  ht = as.character(seurat_meta_filtered_spleen[spleen_cells[in_focus], &quot;HT&quot;]),
-  sample_name = as.character(seurat_meta_filtered_spleen[spleen_cells[in_focus], &quot;sample_name&quot;]),
-  loading = L_spleen[in_focus, gp_focus]
+  igt = as.character(seurat_meta_filtered[focus_cells, &quot;IGT&quot;]),
+  sample_code = as.character(seurat_meta_filtered[focus_cells, &quot;sample_code&quot;]),
+  ht = as.character(seurat_meta_filtered[focus_cells, &quot;HT&quot;]),
+  sex = as.character(seurat_meta_filtered[focus_cells, &quot;sex&quot;]),
+  loading = L_pm_filtered[focus_cells, gp_focus]
 ) %&gt;%
-  mutate(mouse = sub(&quot;^.*_(mouse\\d+)$&quot;, &quot;\\1&quot;, sample_code),
-         lab = paste0(igt, &quot; &quot;, ht, &quot;  (&quot;, sample_name, &quot;, &quot;, mouse, &quot;)&quot;))
-elsewhere_mean &lt;- mean(L_spleen[!in_focus, gp_focus])
+  mutate(
+    # I13H1_spleen_allT_mouse0021 -&gt; tissue &quot;spleen&quot;, mouse &quot;mouse0021&quot;
+    tissue = factor(sub(&quot;^I\\d+H\\d+_([^_]+)_.*$&quot;, &quot;\\1&quot;, sample_code), levels = tissue_levels),
+    mouse = sub(&quot;^.*_(mouse\\d+)$&quot;, &quot;\\1&quot;, sample_code),
+    lab = paste0(tissue, &quot;  &quot;, mouse, &quot; (&quot;, substr(sex, 1, 1), &quot;, &quot;, ht, &quot;)&quot;)
+  )
+# rows: tissue in anatomical order, and within a tissue the male mouse first
+lab_order &lt;- box_sample %&gt;%
+  distinct(lab, tissue, mouse) %&gt;%
+  arrange(desc(as.integer(tissue)), desc(mouse)) %&gt;%
+  pull(lab)
+box_sample$lab &lt;- factor(box_sample$lab, levels = lab_order)
+elsewhere_mean &lt;- mean(L_pm_filtered[!in_focus, gp_focus])
 
-p_S1E &lt;- ggplot(box_sample, aes(x = loading, y = lab, fill = igt)) +
+p_S1E &lt;- ggplot(box_sample, aes(x = loading, y = lab, fill = tissue)) +
   geom_vline(xintercept = elsewhere_mean, linetype = 2, colour = &quot;firebrick&quot;) +
   geom_boxplot(outlier.size = 0.3, outlier.alpha = 0.25, linewidth = 0.35) +
-  scale_fill_manual(values = c(IGT13 = &quot;#cfe0ee&quot;, IGT14 = &quot;#eee2cf&quot;), name = NULL) +
+  facet_wrap(~ igt) +
+  scale_fill_manual(values = c(spleen = &quot;#cfe0ee&quot;, LNinguinal = &quot;#e8e8d8&quot;,
+                               LNaxillary = &quot;#ded8e8&quot;, LNmesenteric = &quot;#eee2cf&quot;)) +
   cowplot::theme_cowplot(font_size = 11) +
   labs(
-    title = paste0(gp_label(gp_focus), &quot; loading per sample within IGT13/IGT14&quot;),
-    subtitle = sprintf(&quot;two mice x two runs; dashed = mean over the other %d spleen IGTs (%.3f)&quot;,
-                       length(setdiff(unique(igt_vec), igt_focus)), elsewhere_mean),
+    title = paste0(gp_label(gp_focus), &quot; loading in every sample of IGT13 and IGT14&quot;),
+    subtitle = sprintf(&quot;8 hashed samples per run = 2 mice x 4 tissues; dashed = mean over all cells outside these two IGTs (%.3f)&quot;,
+                       elsewhere_mean),
     x = paste0(gp_label(gp_focus), &quot; loading&quot;), y = NULL
   ) +
-  theme(legend.position = &quot;none&quot;)
-ggsave(paste0(figure_path, &quot;S1E.pdf&quot;), plot = p_S1E, width = 7.5, height = 3.2, dpi = 300)</code></pre>
-<p><img src="assets/FigureS1/S1E.png" width="70%" style="display: block; margin: auto;" /></p>
+  theme(legend.position = &quot;none&quot;, strip.background = element_rect(fill = &quot;grey92&quot;))
+ggsave(paste0(figure_path, &quot;S1E.pdf&quot;), plot = p_S1E, width = 9, height = 4, dpi = 300)</code></pre>
+<p><img src="assets/FigureS1/S1E.png" width="90%" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-S1E">
 Past versions of S1E.png
@@ -1944,6 +1999,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/2e75e8eea30922676ee55b7aed2241d486be22cd/docs/assets/FigureS1/S1E.png" target="_blank">2e75e8e</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-31
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/8c2f7c9d4f0d29223b6414596c9fc71f0a3cdc5a/docs/assets/FigureS1/S1E.png" target="_blank">8c2f7c9</a>
@@ -2027,12 +2093,17 @@ Ziang Zhang
 </div>
 <div class="figcaption">
 <p><strong>Extended Data Fig. 1E.</strong> The same GP9 loading, split
-into the individual samples that make up the two datasets from (D).
-IGT13 and IGT14 are two runs of the same two hashed mice (mouse0021,
-male, HT1; mouse0022, female, HT9), giving four samples; GP9 is elevated
-in all four (sample means 0.544-0.606) rather than in a single aberrant
-mouse or a single run. The dashed line marks the mean over the other 33
-spleen-standard datasets (0.057).</p>
+into the individual hashed samples that make up the two datasets from
+(D). Unlike the other panels of this figure, this one is
+<strong>not</strong> restricted to the spleen standards: IGT13 and IGT14
+each pool <strong>eight</strong> samples – the same two mice (mouse0021,
+male; mouse0022, female) across four tissues (spleen and inguinal,
+axillary and mesenteric lymph node) – of which the spleen standard is
+only one per mouse. GP9 is elevated in all sixteen samples (sample means
+0.544-0.619), so the effect belongs to the run rather than to one
+aberrant mouse, one tissue, or the spiked-in spleen standard itself. The
+dashed line marks GP9’s mean over all cells outside these two datasets
+(0.061).</p>
 </div>
 </div>
 <div id="figs1f" class="section level2">
