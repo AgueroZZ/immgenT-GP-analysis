@@ -11,8 +11,10 @@
 #        standard-spleen cells.
 #   S1D  GP9 loading across IGTs (standard-spleen cells) -- the shape of the
 #        most extreme x-axis point in S1C.
-#   S1E  GP9 loading across the four individual samples inside IGT13/IGT14,
-#        showing the effect is not one aberrant mouse.
+#   S1E  GP9 loading across all sixteen individual samples inside IGT13/IGT14
+#        (2 runs x 2 mice x 4 tissues), showing the effect is not one aberrant
+#        mouse, one tissue, or an artifact of the spleen standard. This is the
+#        one panel here not restricted to the spleen standards.
 #   S1F  Scatter of the NUMBER of active genes (x) vs. proportion of active
 #        cells (y) per GP, using the same hard-threshold definitions as Figure 2
 #        (|normalized score| > 0.25 for genes; normalized loading > 0.1 for
@@ -203,39 +205,56 @@ p_S1D <- ggplot(box_igt, aes(x = loading, y = igt)) +
 ggsave(paste0(figure_path, "S1D.pdf"), plot = p_S1D, width = 5.5, height = 6, dpi = 300)
 
 # ============================================================
-# S1E: GP9 loading across the individual samples inside IGT13/IGT14
+# S1E: GP9 loading across every individual sample inside IGT13/IGT14
 # ============================================================
-# The two IGTs that carry GP9 are two 10x runs of the SAME two mice
-# (mouse0021, male; mouse0022, female), hashed as HT1/HT9 -- so
-# `sample_code` splits them into four samples, and the panel shows the effect is
-# present in every one of the four rather than in a single aberrant mouse. The
-# reference line is the mean over all other standard-spleen IGTs.
+# Unlike S1C/S1D this panel is NOT restricted to the spleen standards: IGT13 and
+# IGT14 each pool eight hashed samples, two mice (mouse0021 male, mouse0022
+# female) x four tissues (spleen plus inguinal / axillary / mesenteric LN), so
+# `spleen_standard` would show only 4 of the 16. Drawing all 16 is what makes the
+# point: GP9 is elevated in every sample of both runs and in every tissue, so the
+# effect belongs to the run and not to one aberrant mouse, one tissue, or the
+# spiked-in spleen standard. The reference line is GP9's mean over all cells
+# outside these two IGTs.
 igt_focus <- c("IGT13", "IGT14")
-in_focus <- igt_vec %in% igt_focus
+in_focus <- seurat_meta_filtered$IGT %in% igt_focus
+focus_cells <- rownames(seurat_meta_filtered)[in_focus]
+tissue_levels <- c("spleen", "LNinguinal", "LNaxillary", "LNmesenteric")
 box_sample <- data.frame(
-  igt = igt_vec[in_focus],
-  sample_code = as.character(seurat_meta_filtered_spleen[spleen_cells[in_focus], "sample_code"]),
-  ht = as.character(seurat_meta_filtered_spleen[spleen_cells[in_focus], "HT"]),
-  sample_name = as.character(seurat_meta_filtered_spleen[spleen_cells[in_focus], "sample_name"]),
-  loading = L_spleen[in_focus, gp_focus]
+  igt = as.character(seurat_meta_filtered[focus_cells, "IGT"]),
+  sample_code = as.character(seurat_meta_filtered[focus_cells, "sample_code"]),
+  ht = as.character(seurat_meta_filtered[focus_cells, "HT"]),
+  sex = as.character(seurat_meta_filtered[focus_cells, "sex"]),
+  loading = L_pm_filtered[focus_cells, gp_focus]
 ) %>%
-  mutate(mouse = sub("^.*_(mouse\\d+)$", "\\1", sample_code),
-         lab = paste0(igt, " ", ht, "  (", sample_name, ", ", mouse, ")"))
-elsewhere_mean <- mean(L_spleen[!in_focus, gp_focus])
+  mutate(
+    # I13H1_spleen_allT_mouse0021 -> tissue "spleen", mouse "mouse0021"
+    tissue = factor(sub("^I\\d+H\\d+_([^_]+)_.*$", "\\1", sample_code), levels = tissue_levels),
+    mouse = sub("^.*_(mouse\\d+)$", "\\1", sample_code),
+    lab = paste0(tissue, "  ", mouse, " (", substr(sex, 1, 1), ", ", ht, ")")
+  )
+# rows: tissue in anatomical order, and within a tissue the male mouse first
+lab_order <- box_sample %>%
+  distinct(lab, tissue, mouse) %>%
+  arrange(desc(as.integer(tissue)), desc(mouse)) %>%
+  pull(lab)
+box_sample$lab <- factor(box_sample$lab, levels = lab_order)
+elsewhere_mean <- mean(L_pm_filtered[!in_focus, gp_focus])
 
-p_S1E <- ggplot(box_sample, aes(x = loading, y = lab, fill = igt)) +
+p_S1E <- ggplot(box_sample, aes(x = loading, y = lab, fill = tissue)) +
   geom_vline(xintercept = elsewhere_mean, linetype = 2, colour = "firebrick") +
   geom_boxplot(outlier.size = 0.3, outlier.alpha = 0.25, linewidth = 0.35) +
-  scale_fill_manual(values = c(IGT13 = "#cfe0ee", IGT14 = "#eee2cf"), name = NULL) +
+  facet_wrap(~ igt) +
+  scale_fill_manual(values = c(spleen = "#cfe0ee", LNinguinal = "#e8e8d8",
+                               LNaxillary = "#ded8e8", LNmesenteric = "#eee2cf")) +
   cowplot::theme_cowplot(font_size = 11) +
   labs(
-    title = paste0(gp_label(gp_focus), " loading per sample within IGT13/IGT14"),
-    subtitle = sprintf("two mice x two runs; dashed = mean over the other %d spleen IGTs (%.3f)",
-                       length(setdiff(unique(igt_vec), igt_focus)), elsewhere_mean),
+    title = paste0(gp_label(gp_focus), " loading in every sample of IGT13 and IGT14"),
+    subtitle = sprintf("8 hashed samples per run = 2 mice x 4 tissues; dashed = mean over all cells outside these two IGTs (%.3f)",
+                       elsewhere_mean),
     x = paste0(gp_label(gp_focus), " loading"), y = NULL
   ) +
-  theme(legend.position = "none")
-ggsave(paste0(figure_path, "S1E.pdf"), plot = p_S1E, width = 7.5, height = 3.2, dpi = 300)
+  theme(legend.position = "none", strip.background = element_rect(fill = "grey92"))
+ggsave(paste0(figure_path, "S1E.pdf"), plot = p_S1E, width = 9, height = 4, dpi = 300)
 
 # ============================================================
 # S1F: active-gene vs active-cell scatter per GP, using the SAME hard-threshold

@@ -100,22 +100,26 @@ dataset (medians 0.02-0.12), which is what a
 dataset-specific -- rather than cell-type-specific -- program looks like.
 :::
 
-## (E) GP9 loading per sample within IGT13/IGT14 {#figs1e}
+## (E) GP9 loading in every sample of IGT13 and IGT14 {#figs1e}
 
 ```{r figs1e-code, code=code_for("../script/FigureS1.R", "S1E"), eval=FALSE}
 ```
 
-```{r figs1e-img, echo=FALSE, out.width="70%"}
+```{r figs1e-img, echo=FALSE, out.width="90%"}
 knitr::include_graphics("assets/FigureS1/S1E.png")
 ```
 
 ::: {.figcaption}
-**Extended Data Fig. 1E.** The same GP9 loading, split into the individual samples that make up
-the two datasets from (D). IGT13 and IGT14 are two runs of the same two
-hashed mice (mouse0021, male, HT1; mouse0022, female, HT9), giving four samples;
-GP9 is elevated in all four (sample means 0.544-0.606) rather than in a single
-aberrant mouse or a single run. The dashed line marks the mean over the other 33
-spleen-standard datasets (0.057).
+**Extended Data Fig. 1E.** The same GP9 loading, split into the individual hashed
+samples that make up the two datasets from (D). Unlike the other panels of this
+figure, this one is **not** restricted to the spleen standards: IGT13 and IGT14
+each pool **eight** samples -- the same two mice (mouse0021, male; mouse0022,
+female) across four tissues (spleen and inguinal, axillary and mesenteric lymph
+node) -- of which the spleen standard is only one per mouse. GP9 is elevated in all
+sixteen samples (sample means 0.544-0.619), so the effect belongs to the run
+rather than to one aberrant mouse, one tissue, or the spiked-in spleen standard
+itself. The dashed line marks GP9's mean over all cells outside these two
+datasets (0.061).
 :::
 
 ## (F) Active-gene vs. active-cell proportion per GP {#figs1f}
