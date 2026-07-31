@@ -384,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-28
+<strong>Last updated:</strong> 2026-07-30
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree8d73953c2b3155783f945af721fa4fd3f194df8etargetblank8d73953a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec9b020ff483a2f0f9d1994e0938705594e9244fdtargetblankc9b020fa">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/8d73953c2b3155783f945af721fa4fd3f194df8e" target="_blank">8d73953</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c9b020ff483a2f0f9d1994e0938705594e9244fd" target="_blank">c9b020f</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree8d73953c2b3155783f945af721fa4fd3f194df8etargetblank8d73953a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec9b020ff483a2f0f9d1994e0938705594e9244fdtargetblankc9b020fa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/8d73953c2b3155783f945af721fa4fd3f194df8e" target="_blank">8d73953</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c9b020ff483a2f0f9d1994e0938705594e9244fd" target="_blank">c9b020f</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -577,12 +577,13 @@ Ignored files:
     Ignored:    figures/final-selected/.DS_Store
     Ignored:    figures/final-selected/Figure 1/.DS_Store
     Ignored:    figures/final-selected/Figure 2/.DS_Store
+    Ignored:    figures/final-selected/Figure 4/.DS_Store
     Ignored:    figures/final-selected/Figure S4/.DS_Store
+    Ignored:    figures/templates_20260729/
     Ignored:    log/
     Ignored:    output/Figure2/
     Ignored:    output/Figure7b/7b_cell_metadata.csv.gz
     Ignored:    plan/
-    Ignored:    reorder/
     Ignored:    tables/
     Ignored:    tmp/
 
@@ -629,6 +630,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/c9b020ff483a2f0f9d1994e0938705594e9244fd/analysis/Figure6.Rmd" target="_blank">c9b020f</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-30
+</td>
+<td>
+Split Figure S6’s protein-program heatmap out as Figure S5
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/732ac8d2c35cb35d447a06a429202d4cdda86348/docs/Figure6.html" target="_blank">732ac8d</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-29
+</td>
+<td>
+Build site: caption alignment with captions_20260729_final.docx
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1114,20 +1149,20 @@ Initial commit: immgenT-GP-analysis
 </div>
 <p>All panels except (a) are produced by <a
 href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure6.R"><code>script/Figure6.R</code></a>,
-which shares its CITE-seq setup with <a href="FigureS6.html">Figure
-S6</a> via <code>code/R/citeseq_shared_setup.R</code>. The code below is
-shown for reference (not re-executed on this page, since this script
-takes about a minute to run); the images are its pre-rendered
-output.</p>
+which shares its CITE-seq setup with <a href="FigureS5.html">Figure
+S5</a> and <a href="FigureS6.html">Figure S6</a> via
+<code>code/R/citeseq_shared_setup.R</code>. The code below is shown for
+reference (not re-executed on this page, since this script takes about a
+minute to run); the images are its pre-rendered output.</p>
 <p><strong>Panel order changed on 2026-07-28.</strong> The figure was
-reordered and two panels moved out to <a href="FigureS6.html">Figure
-S6</a>, so the letters here no longer match the published figure: the
-KLRG1 and CD69 panels moved to the front (published g, h, i are now b,
-c, d), the four gating panels moved back (published c-f are now e-h),
-and two new gating panels were added, (i) GP77 and (j) GP8. The
-published protein-program heatmap 6b is now <a
-href="FigureS6.html#figs6a">Fig. S6a</a>, and the published 6j/6k are
-now <a href="FigureS6.html#figs6bc">Fig. S6b, c</a>.
+reordered and three panels moved out into the Extended Data figures, so
+the letters here no longer match the published figure: the KLRG1 and
+CD69 panels moved to the front (published g, h, i are now b, c, d), the
+four gating panels moved back (published c-f are now e-h), and two new
+gating panels were added, (i) GP77 and (j) GP8. The published
+protein-program heatmap 6b is now its own figure, <a
+href="FigureS5.html">Fig. S5</a>, and the published 6j/6k are now <a
+href="FigureS6.html#figs6ab">Fig. S6a, b</a>.
 <code>script/Figure6.R</code> carries the full old-to-new table in its
 header.</p>
 <div id="setup" class="section level2">
@@ -1147,7 +1182,7 @@ source(&quot;code/R/gated_protein_helpers.R&quot;)
 <p>Panels (b) onward additionally load the shared CITE-seq cell/protein
 setup:</p>
 <pre class="r"><code># ============================================================
-# Load data (shared with FigureS6.R)
+# Load data (shared with FigureS5.R and FigureS6.R)
 # ============================================================
 source(&quot;code/R/citeseq_shared_setup.R&quot;)</code></pre>
 </div>
@@ -1472,10 +1507,10 @@ lineage-biased GPs.</p>
 <h2>(d) Genes up- and down-regulated across the CD69-associated GPs</h2>
 <p>The ten GPs, and the correlation-based order they are drawn in, are
 defined once in <code>code/R/citeseq_shared_setup.R</code>, because <a
-href="FigureS6.html#figs6bc">Fig. S6b, c</a> show the same GPs in the
+href="FigureS6.html#figs6ab">Fig. S6a, b</a> show the same GPs in the
 same order from a different script:</p>
 <pre class="r"><code># The CD69-associated GP subset, shared by Figure 6d (the up/down gene heatmap)
-# and Figure S6b/S6c (the same GPs&#39; mean activity per tissue and per lineage).
+# and Figure S6a/S6b (the same GPs&#39; mean activity per tissue and per lineage).
 # Those three panels are in two different figures and so in two different
 # scripts, but they must show the same GPs on the same axis order -- hence one
 # definition here rather than a copy in each script.
@@ -1489,7 +1524,7 @@ same order from a different script:</p>
 # Thresholds_Selected_Proteins.csv and well_aligned_gps -- don&#39;t &quot;fix&quot; it into
 # a computed ranking, and keep the captions&#39; &quot;from among the most associated&quot;
 # wording in sync (analysis/Figure6.Rmd Fig. 6d, analysis/FigureS6.Rmd
-# Fig. S6b, c). script/verify_cd69_gp_ranking.R enforces all of this.
+# Fig. S6a, b). script/verify_cd69_gp_ranking.R enforces all of this.
 cd69_top_gps_subset &lt;- c(&quot;GP35&quot;, &quot;GP6&quot;, &quot;GP170&quot;, &quot;GP26&quot;, &quot;GP58&quot;, &quot;GP171&quot;, &quot;GP63&quot;, &quot;GP62&quot;, &quot;GP3&quot;, &quot;GP29&quot;)
 shared_cells_cd69 &lt;- intersect(rownames(L_pm_filtered), rownames(protein_mat_normalized_lognorm))
 cd69_expr_vec &lt;- protein_mat_normalized_lognorm[shared_cells_cd69, &quot;CD69&quot;]
@@ -1499,7 +1534,7 @@ cd69_top_gps_sorted &lt;- names(sort(cd69_corr, decreasing = FALSE))</code></pre
 <pre class="r"><code># ============================================================
 # 6d: up/down genes across the 10 curated CD69-associated GPs
 # (cd69_top_gps_subset / cd69_corr / cd69_top_gps_sorted come from
-# citeseq_shared_setup.R, which Figure S6&#39;s s6b/s6c panels share)
+# citeseq_shared_setup.R, which Figure S6&#39;s s6a/s6b panels share)
 # ============================================================
 D_scale6 &lt;- diag(1 / apply(F_pm_filtered, 2, function(x) max(abs(x), na.rm = TRUE)))
 F_pm_filtered_scaled &lt;- F_pm_filtered %*% D_scale6
@@ -1667,8 +1702,8 @@ expression, with the left strip indicating that correlation
 and top five negatively scoring genes, then restricted to those reaching
 |score| &gt;= 0.5 in at least one of the ten (green-white-purple). Mean
 activity of the same ten GPs across tissues and lineages is shown in <a
-href="FigureS6.html#figs6bc">Fig. S6b, c</a> (published as Extended Data
-Figure 6b, c).</p>
+href="FigureS6.html#figs6ab">Fig. S6a, b</a> (published as Extended Data
+Figure 6a, b).</p>
 <p>The ten GPs are a <strong>hand-picked</strong> set drawn from among
 the GPs most strongly correlated – positively or negatively – with CD69,
 not a computed top-10: eight are positively correlated (ranks 1, 3, 4,
@@ -2344,8 +2379,8 @@ the highest GP activity – exactly as many cells as the protein gate
 selected. Color indicates cell density (two-dimensional); all other
 cells are grey. Thymocytes, proliferating, and “miniverse” cells are
 excluded. Four further GPs are gated the same way in <a
-href="FigureS6.html#figs6dg">Fig. S6d-g</a> (published as Extended Data
-Figure 6d-g).</p>
+href="FigureS6.html#figs6cf">Fig. S6c-f</a> (published as Extended Data
+Figure 6c-f).</p>
 </div>
 <br>
 <p>
