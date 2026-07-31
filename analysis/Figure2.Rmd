@@ -91,7 +91,7 @@ knitr::include_graphics("assets/Figure2/2E.png")
 ::: {.figcaption}
 **Fig. 2E.** Box plot showing the number of highly active GPs per cell in
 activated versus resting T cells. Unlike the other activated-vs-resting panels
-in this paper (Figure 4, Figure S3), this one is **not** restricted to CD4 and
+in this paper (Figure 4, Extended Data Figure 3), this one is **not** restricted to CD4 and
 CD8: every lineage with an `annotation_level2_group` of `"activated"` or
 `"resting"` is included, Treg among them -- which is what the caption's
 "T cells" refers to.

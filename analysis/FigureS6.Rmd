@@ -1,5 +1,5 @@
 ---
-title: "Figure S6: CD69-associated GPs and further surface-protein gating strategies"
+title: "Extended Data Figure 6: CD69-associated GPs and further surface-protein gating strategies"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -9,8 +9,6 @@ editor_options:
 ```{r doc-code, include=FALSE}
 source("../code/R/doc_code.R")
 ```
-
-Published as **Extended Data Figure 6**.
 
 All panels are produced by
 [`script/FigureS6.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS6.R),
@@ -28,17 +26,17 @@ remaining 17 are no longer published. Panels (a) and (b) moved here from Figure 
 where they were the published 6j and 6k. `script/FigureS6.R` carries the full
 old-to-new table in its header.
 
-**Re-lettered again on 2026-07-30.** The protein-program heatmap that was panel
-s6a (the published 6b) became a standalone figure,
-[Figure S5](FigureS5.html), so every panel after it dropped one letter: the
-s6b-s6g of 2026-07-28 are now **s6a-s6f**.
+**Re-lettered again on 2026-07-30.** The protein-program heatmap that was this
+figure's first panel (the published 6b) became a standalone figure,
+[Extended Data Figure 5](FigureS5.html), so every panel after it dropped one
+letter: the b-g of 2026-07-28 are now **a-f**.
 
 ## Setup
 
 ```{r figs6-setup, code=code_for("../script/FigureS6.R", "doc:setup"), eval=FALSE}
 ```
 
-## (s6a, s6b) CD69-associated GPs across tissues and lineages {#figs6ab}
+## (a, b) CD69-associated GPs across tissues and lineages {#figs6ab}
 
 The ten GPs and their order are defined in `code/R/citeseq_shared_setup.R`, so
 that these two panels and [Fig. 6d](Figure6.html#fig6d) -- which live in
@@ -56,7 +54,7 @@ knitr::include_graphics(c("assets/FigureS6/s6a.png", "assets/FigureS6/s6b.png"))
 ```
 
 ::: {.figcaption}
-**Fig. S6a, b.** Mean activity of the ten CD69-associated GPs of
+**Extended Data Fig. 6a, b.** Mean activity of the ten CD69-associated GPs of
 [Fig. 6d](Figure6.html#fig6d), in the same order, **(a) across tissues**
 (`organ_simplified`) and **(b) across lineages** (`annotation_level1`). That
 order is the Spearman correlation between GP activity and CD69 protein
@@ -67,7 +65,7 @@ top-10; `script/verify_cd69_gp_ranking.R` recomputes the correlation over all 20
 GPs and fails if this wording and the code drift apart.
 :::
 
-## (s6c-f) Further protein-gated vs. GP-loading populations {#figs6cf}
+## (c-f) Further protein-gated vs. GP-loading populations {#figs6cf}
 
 ```{r figs6cf-code, code=code_for("../script/FigureS6.R", "s6c"), eval=FALSE}
 ```
@@ -80,7 +78,7 @@ knitr::include_graphics(c(
 ```
 
 ::: {.figcaption}
-**Fig. S6c-f.** Examples of gating strategies used to identify GP-active cells, as
+**Extended Data Fig. 6c-f.** Examples of gating strategies used to identify GP-active cells, as
 in [Fig. 6e-j](Figure6.html#fig6ej), for **(c) GP29, (d) GP58, (e) GP22 and
 (f) GP68**. For each GP, all-T MDE plots highlight cells passing a protein gate
 built from the GP's curated marker signature (left; positive markers above

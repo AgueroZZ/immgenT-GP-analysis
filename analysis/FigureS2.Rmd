@@ -1,5 +1,5 @@
 ---
-title: "Figure S2: Tz- and CD8-specific GPs (GP30 and GP58, respectively)"
+title: "Extended Data Figure 2: Tz- and CD8-specific GPs (GP30 and GP58, respectively)"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -9,8 +9,6 @@ editor_options:
 ```{r doc-code, include=FALSE}
 source("../code/R/doc_code.R")
 ```
-
-Published as **Extended Data Figure 2**.
 
 All panels are produced by
 [`script/FigureS2.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS2.R),
@@ -33,7 +31,7 @@ knitr::include_graphics("assets/FigureS2/S2A.png")
 ```
 
 ::: {.figcaption}
-**Fig. S2A.** Boxplots of GP30 loading across Tz subsets -- iNKT, MAIT, and other Tz (Tz cells that are neither iNKT nor MAIT) -- and all other, non-Tz T cells; thymocytes are excluded. Boxes show the median and interquartile range, whiskers extend to 1.5x the interquartile range, and points mark values beyond the whiskers.
+**Extended Data Fig. 2A.** Boxplots of GP30 loading across Tz subsets -- iNKT, MAIT, and other Tz (Tz cells that are neither iNKT nor MAIT) -- and all other, non-Tz T cells; thymocytes are excluded. Boxes show the median and interquartile range, whiskers extend to 1.5x the interquartile range, and points mark values beyond the whiskers.
 :::
 
 ## (B) GP58 loading, resting/activated CD8 {#figs2b}
@@ -46,7 +44,7 @@ knitr::include_graphics("assets/FigureS2/S2B.png")
 ```
 
 ::: {.figcaption}
-**Fig. S2B.** Boxplots of GP58 loading in resting CD8, activated CD8 (split by activation annotation), and the other six T-cell lineages pooled as "Other T cells" (CD4, Treg, gdT, CD8aa, Tz, and DN; thymocytes and DP cells are excluded); boxes and outlier points as in (A).
+**Extended Data Fig. 2B.** Boxplots of GP58 loading in resting CD8, activated CD8 (split by activation annotation), and the other six T-cell lineages pooled as "Other T cells" (CD4, Treg, gdT, CD8aa, Tz, and DN; thymocytes and DP cells are excluded); boxes and outlier points as in (A).
 :::
 
 ## (C) CD8A/CD8B protein expression {#figs2c}
@@ -59,5 +57,5 @@ knitr::include_graphics("assets/FigureS2/S2C.png")
 ```
 
 ::: {.figcaption}
-**Fig. S2C.** Box plots of CD8A and CD8B protein expression (CITE-seq; log-normalized ADT counts) in resting and activated CD8+ T cells, restricted to CD8 cells with CITE-seq protein measurements; boxes and outlier points as in (A).
+**Extended Data Fig. 2C.** Box plots of CD8A and CD8B protein expression (CITE-seq; log-normalized ADT counts) in resting and activated CD8+ T cells, restricted to CD8 cells with CITE-seq protein measurements; boxes and outlier points as in (A).
 :::

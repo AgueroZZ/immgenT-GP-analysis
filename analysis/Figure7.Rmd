@@ -17,9 +17,11 @@ This page covers **panel 7b only**, which is ours.
 **This panel was Extended Data Figure 5 until 2026-07-28.** It was published as
 two half-panels (`S5a`, `S5b`) plus a detached colorbar; it is now a single
 assembled panel and has moved into the main figure as 7b, replacing the earlier
-7B (a cell-level EBMF-vs-RQVI correlation heatmap from the collaborator's
-pipeline). Extended Data Figure 5 no longer exists; the remaining Extended Data
-figures keep their numbers.
+7b (a cell-level EBMF-vs-RQVI correlation heatmap from the collaborator's
+pipeline). The Extended Data Figure 5 slot it left stood empty until 2026-07-30,
+when the protein-program heatmap moved into it
+([Extended Data Figure 5](FigureS5.html)); the other Extended Data figures kept
+their numbers throughout.
 
 Figure 7b asks whether the fine-grained cluster-level patterns captured by the
 200 EBMF GPs are recovered by an independent factorization. It compares each EBMF

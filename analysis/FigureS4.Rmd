@@ -1,5 +1,5 @@
 ---
-title: "Figure S4: Healthy non-thymocyte GP mean-loading heatmaps"
+title: "Extended Data Figure 4: Healthy non-thymocyte GP mean-loading heatmaps"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -10,9 +10,7 @@ editor_options:
 source("../code/R/doc_code.R")
 ```
 
-Published as **Extended Data Figure 4**.
-
-Figure S4 is produced by
+Extended Data Figure 4 is produced by
 [`script/FigureS4.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS4.R).
 Both panels show the final full row-centered matrices, with all 200 GPs and all
 observed groups. The analysis uses healthy non-thymocyte cells
@@ -33,7 +31,7 @@ knitr::include_graphics("assets/FigureS4/S4a_centered_mean_loading.png")
 ```
 
 ::: {.figcaption}
-**Fig. S4a.** Row-centered mean GP activity across the 18
+**Extended Data Fig. 4a.** Row-centered mean GP activity across the 18
 `organ_simplified` tissues for all 200 GPs. Each GP is assigned to the tissue
 with its largest raw mean activity; tissues are ordered by their number of
 assigned GPs, and GPs are grouped by assigned tissue -- within each block,
@@ -48,7 +46,7 @@ knitr::include_graphics("assets/FigureS4/S4b_centered_mean_loading.png")
 ```
 
 ::: {.figcaption}
-**Fig. S4b.** Row-centered mean GP activity across the 107
+**Extended Data Fig. 4b.** Row-centered mean GP activity across the 107
 `annotation_level2` clusters for all 200 GPs. Columns follow the lineage order of
 [Figure 3](Figure3.html) -- the same level1 sequence as the Figure 1D heatmap
 (`CD8`, `CD4`, `Treg`, `gdT`, `CD8aa`, `Tz`, `DN`, then `DP`) -- and are

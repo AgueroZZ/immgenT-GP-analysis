@@ -12,8 +12,8 @@ source("../code/R/doc_code.R")
 
 All panels except (a) are produced by
 [`script/Figure6.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure6.R),
-which shares its CITE-seq setup with [Figure S5](FigureS5.html) and
-[Figure S6](FigureS6.html) via
+which shares its CITE-seq setup with [Extended Data Figure 5](FigureS5.html) and
+[Extended Data Figure 6](FigureS6.html) via
 `code/R/citeseq_shared_setup.R`. The code below is shown for
 reference (not re-executed on this page, since this script takes about a
 minute to run); the images are its pre-rendered output.
@@ -23,8 +23,8 @@ moved out into the Extended Data figures, so the letters here no longer match th
 published figure: the KLRG1 and CD69 panels moved to the front (published g, h,
 i are now b, c, d), the four gating panels moved back (published c-f are now
 e-h), and two new gating panels were added, (i) GP77 and (j) GP8. The published
-protein-program heatmap 6b is now its own figure, [Fig. S5](FigureS5.html), and
-the published 6j/6k are now [Fig. S6a, b](FigureS6.html#figs6ab).
+protein-program heatmap 6b is now its own figure, [Extended Data Fig. 5](FigureS5.html), and
+the published 6j/6k are now [Extended Data Fig. 6a, b](FigureS6.html#figs6ab).
 `script/Figure6.R` carries the full old-to-new table in its header.
 
 ## Setup
@@ -67,7 +67,7 @@ knitr::include_graphics(c("assets/Figure6/6b.png", "assets/Figure6/6c.png"))
 
 The ten GPs, and the correlation-based order they are drawn in, are defined once
 in `code/R/citeseq_shared_setup.R`, because
-[Fig. S6a, b](FigureS6.html#figs6ab) show the same GPs in the same order from a
+[Extended Data Fig. 6a, b](FigureS6.html#figs6ab) show the same GPs in the same order from a
 different script:
 
 ```{r fig6d-gps, code=code_for("../code/R/citeseq_shared_setup.R", "doc:cd69"), eval=FALSE}
@@ -89,7 +89,7 @@ CD69 expression, with the left strip indicating that correlation
 five negatively scoring genes, then restricted to those reaching |score| >= 0.5
 in at least one of the ten (green-white-purple). Mean activity of the same ten
 GPs across tissues and lineages is shown in
-[Fig. S6a, b](FigureS6.html#figs6ab) (published as Extended Data Figure 6a, b).
+[Extended Data Fig. 6a, b](FigureS6.html#figs6ab).
 
 The ten GPs are a **hand-picked** set drawn from among the GPs most strongly
 correlated -- positively or negatively -- with CD69, not a computed top-10:
@@ -122,6 +122,5 @@ panel title as "Matched n"; right, an equally sized set of cells with the
 highest GP activity -- exactly as many cells as the protein gate selected. Color
 indicates cell density (two-dimensional); all other cells are grey. Thymocytes,
 proliferating, and "miniverse" cells are excluded. Four further GPs are gated the
-same way in [Fig. S6c-f](FigureS6.html#figs6cf) (published as Extended Data
-Figure 6c-f).
+same way in [Extended Data Fig. 6c-f](FigureS6.html#figs6cf).
 :::

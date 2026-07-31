@@ -12,7 +12,7 @@ source("../code/R/doc_code.R")
 
 All panels are produced by
 [`script/Figure4.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure4.R),
-which shares its curated GP set with [Figure S3](FigureS3.html) via
+which shares its curated GP set with [Extended Data Figure 3](FigureS3.html) via
 `code/R/activation_shared_setup.R`. The code below is shown for
 reference (not re-executed on this page); the images are its pre-rendered
 output.
@@ -21,7 +21,7 @@ output.
 curated activation GPs is no longer part of the figure, and the two heatmaps that
 followed it each moved up a letter: the published 3f and 3g are now (4c) and
 (4d). The figure is a-d. A TF-GP network for the lineage-defining TFs Gata3,
-Rorc and Tbx21 is still shown as [Fig. S3g](FigureS3.html#figs3g).
+Rorc and Tbx21 is still shown as [Extended Data Fig. 3g](FigureS3.html#figs3g).
 
 ## Setup
 

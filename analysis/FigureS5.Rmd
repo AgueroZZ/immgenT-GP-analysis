@@ -1,5 +1,5 @@
 ---
-title: "Figure S5: Protein programs across GPs"
+title: "Extended Data Figure 5: Protein programs across GPs"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -10,21 +10,20 @@ editor_options:
 source("../code/R/doc_code.R")
 ```
 
-Published as **Extended Data Figure 5**.
-
 This single-panel figure is produced by
 [`script/FigureS5.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS5.R),
 which shares its CITE-seq setup and protein filters with
-[Figure 6](Figure6.html) and [Figure S6](FigureS6.html) via
+[Figure 6](Figure6.html) and [Extended Data Figure 6](FigureS6.html) via
 `code/R/citeseq_shared_setup.R`. The code below is shown for reference (not
 re-executed on this page, since the shared setup takes about a minute to load);
 the image is its pre-rendered output.
 
-**This figure was split out of Figure S6 on 2026-07-30.** It was that figure's
-panel s6a, and before 2026-07-28 the published Figure 6b. It now stands alone in
-the Extended Data Figure 5 slot that main [Figure 7b](Figure7.html) vacated, and
-[Figure S6](FigureS6.html)'s remaining panels each dropped one letter (its
-s6b-s6g are now s6a-s6f).
+**This figure was split out of Extended Data Figure 6 on 2026-07-30.** It was
+that figure's first panel, and before 2026-07-28 the published Figure 6b. It now
+stands alone in the Extended Data Figure 5 slot that main
+[Figure 7b](Figure7.html) vacated, and
+[Extended Data Figure 6](FigureS6.html)'s remaining panels each dropped one
+letter (its b-g are now a-f).
 
 ## Setup
 
@@ -41,7 +40,7 @@ knitr::include_graphics("assets/FigureS5/s5.png")
 ```
 
 ::: {.figcaption}
-**Fig. S5.** Heatmap of scaled protein scores for each GP (the re-estimated
+**Extended Data Fig. 5.** Heatmap of scaled protein scores for each GP (the re-estimated
 protein matrix **U**), with the protein scores in each GP scaled so its maximum
 |score| = 1. We focused on the **47 proteins** that performed best in the immgenT
 CITE-seq dataset (isotype and low-quality proteins removed).

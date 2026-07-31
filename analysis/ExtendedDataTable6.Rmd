@@ -37,7 +37,7 @@ DT::datatable(
 
 ::: {.figcaption}
 **Extended Data Table 6.** The final processed CITE-seq protein factor matrix used
-by [Figure S5](FigureS5.html), as a plain table: one row per GP, one column per protein,
+by [Extended Data Figure 5](FigureS5.html), as a plain table: one row per GP, one column per protein,
 holding the protein's factor score in that GP. Built from the projected protein
 EBMF fit, restricted to the selected "good" proteins (isotype / THY1.1 / excluded
 proteins removed) and scaled so each GP column has maximum absolute score 1.

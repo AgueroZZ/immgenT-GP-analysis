@@ -1,5 +1,5 @@
 ---
-title: "Figure S1: Reproducibility across IGTs and batch-effect evaluation"
+title: "Extended Data Figure 1: Reproducibility across IGTs and batch-effect evaluation"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -9,8 +9,6 @@ editor_options:
 ```{r doc-code, include=FALSE}
 source("../code/R/doc_code.R")
 ```
-
-Published as **Extended Data Figure 1**.
 
 All panels are produced by
 [`script/FigureS1.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS1.R).
@@ -40,7 +38,7 @@ knitr::include_graphics("assets/FigureS1/S1A.png")
 ```
 
 ::: {.figcaption}
-**Fig. S1A.** Cumulative number of GPs, out of the 200 identified in the full immgenT solution, reproduced in at least one dataset (IGT). For each dataset an EBMF factorization was computed and its factors were matched to the 200 immgenT GPs by Hungarian assignment using the cosine similarity of gene-score vectors (restricted to shared genes, with columns scaled); a GP was considered reproduced in a dataset when this cosine similarity exceeded the threshold indicated for each curve. Adding IGTs one at a time in index order, the curves show the cumulative count for cosine-similarity thresholds of 0.2-0.8.
+**Extended Data Fig. 1A.** Cumulative number of GPs, out of the 200 identified in the full immgenT solution, reproduced in at least one dataset (IGT). For each dataset an EBMF factorization was computed and its factors were matched to the 200 immgenT GPs by Hungarian assignment using the cosine similarity of gene-score vectors (restricted to shared genes, with columns scaled); a GP was considered reproduced in a dataset when this cosine similarity exceeded the threshold indicated for each curve. Adding IGTs one at a time in index order, the curves show the cumulative count for cosine-similarity thresholds of 0.2-0.8.
 :::
 
 ## (B) GPs validated by at least X IGTs {#figs1b}
@@ -53,7 +51,7 @@ knitr::include_graphics("assets/FigureS1/S1B.png")
 ```
 
 ::: {.figcaption}
-**Fig. S1B.** Distribution of GP reproducibility across datasets. Using the same per-IGT cosine matching, the curves show the number of GPs reproduced in at least that many datasets, for cosine-similarity thresholds ranging from 0.2 to 0.8 (both axes log-scaled).
+**Extended Data Fig. 1B.** Distribution of GP reproducibility across datasets. Using the same per-IGT cosine matching, the curves show the number of GPs reproduced in at least that many datasets, for cosine-similarity thresholds ranging from 0.2 to 0.8 (both axes log-scaled).
 :::
 
 ## (C) Variance explained by dataset vs. by cell type {#figs1c}
@@ -69,7 +67,7 @@ knitr::include_graphics("assets/FigureS1/S1C.png")
 ```
 
 ::: {.figcaption}
-**Fig. S1C.** Batch-effect evaluation using the spleen standards spiked into each
+**Extended Data Fig. 1C.** Batch-effect evaluation using the spleen standards spiked into each
 dataset (IGT). For each GP, the proportion of loading variance explained by
 dataset (x-axis) is plotted against the proportion explained by cell type
 (`annotation_level2`, y-axis), both computed over the same 47,253
@@ -94,7 +92,7 @@ knitr::include_graphics("assets/FigureS1/S1D.png")
 ```
 
 ::: {.figcaption}
-**Fig. S1D.** The extreme point on (C)'s x-axis, shown directly: the distribution
+**Extended Data Fig. 1D.** The extreme point on (C)'s x-axis, shown directly: the distribution
 of GP9 loading in spleen-standard cells of each dataset, for the 31 datasets
 contributing at least 100 such cells, ordered by median loading. GP9 is elevated
 in IGT13 and IGT14 (medians 0.60 and 0.56) and uniformly low in every other
@@ -112,7 +110,7 @@ knitr::include_graphics("assets/FigureS1/S1E.png")
 ```
 
 ::: {.figcaption}
-**Fig. S1E.** The same GP9 loading, split into the individual samples that make up
+**Extended Data Fig. 1E.** The same GP9 loading, split into the individual samples that make up
 the two datasets from (D). IGT13 and IGT14 are two runs of the same two
 hashed mice (mouse0021, male, HT1; mouse0022, female, HT9), giving four samples;
 GP9 is elevated in all four (sample means 0.544-0.606) rather than in a single
@@ -130,5 +128,5 @@ knitr::include_graphics("assets/FigureS1/S1F.png")
 ```
 
 ::: {.figcaption}
-**Fig. S1F.** For each GP, the number of active genes (x-axis) versus the fraction of active cells (y-axis), using the same thresholds as Figure 2: a gene is active in a GP if its per-GP-normalized score exceeds 0.25 in absolute value, and a cell is active if its per-GP-normalized loading exceeds 0.1; computed over non-thymocyte cells. Both axes on log scale; each dot is one of the 200 GPs. (Was panel E before 2026-07-30; content unchanged.)
+**Extended Data Fig. 1F.** For each GP, the number of active genes (x-axis) versus the fraction of active cells (y-axis), using the same thresholds as Figure 2: a gene is active in a GP if its per-GP-normalized score exceeds 0.25 in absolute value, and a cell is active if its per-GP-normalized loading exceeds 0.1; computed over non-thymocyte cells. Both axes on log scale; each dot is one of the 200 GPs. (Was panel E before 2026-07-30; content unchanged.)
 :::
