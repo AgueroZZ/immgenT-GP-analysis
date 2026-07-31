@@ -114,15 +114,19 @@ panel is not produced in this repository).
 
 Each table is written as one CSV into `figures/final-selected/` by its script and
 previewed on a matching `analysis/ExtendedDataTable*.Rmd` page. Together these
-replace the retired Table S1/S2/S3, all now regenerated from code. Table 8 is
-the exception: it ships in two layouts from two scripts, a tidy long table
-(the default, `ExtendedDataTable8.html`) and a per-GP-column wide table
+replace the retired Table S1/S2/S3, all now regenerated from code. Tables 1 and
+8 are the exceptions: each ships in two layouts. Table 1's two CSVs come from
+one script and are tabbed on a single page (`ExtendedDataTable1.html`), the
+published top-5-per-direction version and a longer internal top-15 one. Table 8
+comes from two scripts on two pages, a tidy long table (the default,
+`ExtendedDataTable8.html`) and a per-GP-column wide table
 (`ExtendedDataTable8_wide.html`) that needs a merged-header .xlsx instead of a
-flat CSV -- see the row below.
+flat CSV -- see the rows below.
 
 | Extended Data table | Script | Primary original source(s) |
 |---|---|---|
-| 1 Summary of GP characteristics and annotations | `ExtendedDataTable1_GP_summary.R` | `Supplement_Table1.R` (reworked: healthy non-thymocyte AUC, protein signatures added) |
+| 1 Summary of GP characteristics and annotations (top 5, published) | `ExtendedDataTable1_GP_summary.R` | `Supplement_Table1.R` (reworked: healthy non-thymocyte AUC, protein signatures added) + the manual `Annotation` column from `curation/GP_manual_annotations.csv` |
+| 1 Same table, longer internal version (top 15) | same script, second output (`..._top15.csv`) | same data, 15 instead of 5 features per signature direction |
 | 2 GP AUC lineage | `ExtendedDataTable2_GP_AUC_lineage.R` | `runAUC.R` (healthy AUC, via `02_compute_auc.R`) |
 | 3 GP AUC tissue | `ExtendedDataTable3_GP_AUC_tissue.R` | `runAUC.R` (healthy AUC, via `02_compute_auc.R`) |
 | 4 GP AUC cluster | `ExtendedDataTable4_GP_AUC_cluster.R` | `runAUC.R` (healthy AUC, via `02_compute_auc.R`) |

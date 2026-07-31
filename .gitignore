@@ -46,6 +46,11 @@ captions/
 # arrangement), kept locally. Same reason as captions/ and reorder/.
 figures/templates_*/
 
+# Scratch handoff drop-box (e.g. a collaborator's spreadsheet being ported into
+# the pipeline). Same reason as captions/ and reorder/: an untracked directory
+# leaks into the workflowr status report embedded in every built page.
+tmp/
+
 # Collaborator's original cluster-side flashier fitting code, kept locally as
 # the source for the Methods_FlashierFit page. The fit itself is distributed
 # as flashier_snmf.rds rather than as code -- see code/README.md.

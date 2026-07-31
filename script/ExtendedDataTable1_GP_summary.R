@@ -1,6 +1,10 @@
 # Extended Data Table 1: summary of GP characteristics and annotations.
 #
 # One row per GP (GP1..GP200) with:
+#   - Annotation: the manual, human-written description of the GP, read from the
+#     curated curation/GP_manual_annotations.csv (blank where a GP has not been
+#     annotated yet). That CSV is the single source of truth -- it replaces the
+#     `annotation` column of the retired hand-maintained Table S1.xlsx.
 #   - Lineage / Cluster / Tissue: the categories each GP *positively* predicts
 #     well -- one-vs-rest AUC > 0.8 AND the optimal decision threshold at or
 #     above the GP's median loading, so high loading (not low) drives the
@@ -9,10 +13,16 @@
 #     non-thymocyte AUC family (*_no_thymocytes_healthy, same population as
 #     Figure 2/Figure 4); the median loading is likewise computed on the healthy
 #     non-thymocyte cells so the threshold comparison is on the same population.
-#   - Signature genes / proteins: the top 5 up- and top 5 down-regulated genes
-#     and proteins by factor score, among those with |score| > 0.1 on the
+#   - Signature genes / proteins: the top up- and top down-regulated genes and
+#     proteins by factor score, among those with |score| > 0.1 on the
 #     max|.|=1-per-GP-scaled gene (F_pm_filtered) and protein (Figure 6's
 #     Protein_F_pm) factor matrices.
+#
+# Two versions are written, identical except for how many features each
+# signature column lists (same cutoff, same ranking -- the top 5 lists are
+# exactly the first 5 entries of the top 15 lists):
+#   - ExtendedDataTable1_GP_summary.csv        top 5  per direction (published)
+#   - ExtendedDataTable1_GP_summary_top15.csv  top 15 per direction (internal)
 #
 # Reworks the retired Table S1 (script/TableS1.R): drops its Condition column,
 # switches the annotations from the non-thymocyte healthy+diseased AUC to the
@@ -20,6 +30,7 @@
 # signature cutoff from 0.25 to 0.1.
 
 data_path <- "data/"
+curation_path <- "curation/"
 output_path <- "figures/final-selected/"
 
 # ---- Protein factor matrix (Figure 6's Protein_F_pm: filtered + max|.|=1 per
@@ -100,7 +111,16 @@ lineage_cats <- get_passing_categories(level_1_AUC_list, gps, L_healthy_nonthy)
 cluster_cats <- get_passing_categories(level_2_AUC_list, gps, L_healthy_nonthy)
 tissue_cats  <- get_passing_categories(organ_AUC_list, gps, L_healthy_nonthy)
 
-# ---- Top 5 up / down signature genes and proteins (|score| > 0.1) ----
+# ---- Manual annotations (curated input; blank where not yet annotated) ----
+# Keyed by the GP*n* output labels, not the internal K-names. Insisting on an
+# exact GP1..GP200 match means a renamed or dropped row fails loudly here
+# instead of silently blanking an annotation in the published table.
+manual_ann <- read.csv(paste0(curation_path, "GP_manual_annotations.csv"),
+                       stringsAsFactors = FALSE, colClasses = "character")
+stopifnot(identical(manual_ann$GP, gp_labels))
+annotation <- trimws(manual_ann$Annotation)
+
+# ---- Top n up / down signature genes and proteins (|score| > 0.1) ----
 top_signatures <- function(score_mat, gps, cutoff = 0.1, n = 5) {
   pos <- lapply(gps, function(gp) {
     vals <- score_mat[, gp]
@@ -117,27 +137,36 @@ top_signatures <- function(score_mat, gps, cutoff = 0.1, n = 5) {
   list(pos = unlist(pos), neg = unlist(neg))
 }
 
-gene_sig <- top_signatures(F_pm_filtered, gps)
-prot_sig <- top_signatures(Protein_F_pm, gps)
+build_table <- function(n) {
+  gene_sig <- top_signatures(F_pm_filtered, gps, n = n)
+  prot_sig <- top_signatures(Protein_F_pm, gps, n = n)
+  supp_table <- data.frame(
+    GP = gp_labels,
+    Annotation = annotation,
+    Lineage = unlist(lineage_cats),
+    Cluster = unlist(cluster_cats),
+    Tissue = unlist(tissue_cats),
+    Signature_Genes_Pos = gene_sig$pos,
+    Signature_Genes_Neg = gene_sig$neg,
+    Signature_Proteins_Pos = prot_sig$pos,
+    Signature_Proteins_Neg = prot_sig$neg,
+    stringsAsFactors = FALSE
+  )
+  colnames(supp_table) <- c(
+    "GP", "Annotation", "Lineage", "Cluster", "Tissue",
+    "Top Genes +", "Top Genes -", "Top Proteins +", "Top Proteins -"
+  )
+  supp_table
+}
 
-supp_table <- data.frame(
-  GP = gp_labels,
-  Lineage = unlist(lineage_cats),
-  Cluster = unlist(cluster_cats),
-  Tissue = unlist(tissue_cats),
-  Signature_Genes_Pos = gene_sig$pos,
-  Signature_Genes_Neg = gene_sig$neg,
-  Signature_Proteins_Pos = prot_sig$pos,
-  Signature_Proteins_Neg = prot_sig$neg,
-  stringsAsFactors = FALSE
+versions <- list(
+  "ExtendedDataTable1_GP_summary.csv"       = 5,
+  "ExtendedDataTable1_GP_summary_top15.csv" = 15
 )
-colnames(supp_table) <- c(
-  "GP", "Lineage", "Cluster", "Tissue",
-  "Top Genes +", "Top Genes -", "Top Proteins +", "Top Proteins -"
-)
-
-write.csv(
-  supp_table,
-  file = paste0(output_path, "ExtendedDataTable1_GP_summary.csv"),
-  row.names = FALSE
-)
+for (fname in names(versions)) {
+  write.csv(
+    build_table(versions[[fname]]),
+    file = paste0(output_path, fname),
+    row.names = FALSE
+  )
+}
