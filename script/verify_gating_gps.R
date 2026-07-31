@@ -2,7 +2,7 @@
 #
 #   Rscript script/verify_gating_gps.R      # exits non-zero on any mismatch
 #
-# Figure 6e-6j and Figure S6d-S6g are ten protein-gate vs. GP-loading panels,
+# Figure 6e-6j and Figure S6c-S6f are ten protein-gate vs. GP-loading panels,
 # drawn by two different scripts from one curated pool (well_aligned_gps). Four
 # things are asserted in prose -- in the two captions, in Extended Data Table 7's
 # caption, and in code/R/citeseq_shared_setup.R's comment -- and nothing in the
@@ -62,7 +62,7 @@ check(!anyDuplicated(gps), "a GP is lettered twice within one figure")
 
 cat("\n=== 3. every declared letter has a panel PDF, and there are no orphans ===\n")
 for (spec in list(list(map = fig6, dir = "figures/final-selected/Figure 6/", pat = "^6[e-z]\\.pdf$"),
-                  list(map = figs6, dir = "figures/final-selected/Figure S6/", pat = "^s6[d-z]\\.pdf$"))) {
+                  list(map = figs6, dir = "figures/final-selected/Figure S6/", pat = "^s6[c-z]\\.pdf$"))) {
   want <- paste0(spec$map, ".pdf")
   missing <- want[!file.exists(file.path(spec$dir, want))]
   on_disk <- list.files(spec$dir, pattern = spec$pat)

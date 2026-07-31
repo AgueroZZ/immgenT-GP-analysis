@@ -30,10 +30,13 @@ DENSITY=${DENSITY:-110}
 # GP22 = L, where the published 2J/2K/2L were GP22/GP29/GP3. So 3J's
 # counterpart is 2L and 3L's is 2J -- comparing them letter-to-letter would
 # compare different GPs and look like a huge regression. It also matters for
-# Figures 6 / S3 / S6 after the 2026-07-28 re-lettering: Figure 6 was reordered
-# (its KLRG1 and CD69 panels moved to the front, the protein-program heatmap and
-# the two CD69 mean-activity heatmaps moved into Figure S6), and Figure S3's
-# panels each dropped one letter when its s3a/s3b were merged into a single s3a.
+# Figures 6 / S3 / S5 / S6 after the 2026-07-28 re-lettering: Figure 6 was
+# reordered (its KLRG1 and CD69 panels moved to the front, the protein-program
+# heatmap and the two CD69 mean-activity heatmaps moved into Figure S6), and
+# Figure S3's panels each dropped one letter when its s3a/s3b were merged into a
+# single s3a. Then on 2026-07-30 the protein-program heatmap became its own
+# figure, Figure S5, and Figure S6's remaining panels each dropped a letter
+# (its s6b-s6g are now s6a-s6f).
 # And for Figure 4 after 2026-07-29: its TF-GP network was dropped, so the two
 # heatmaps that followed moved up a letter and the published 3e is now unpaired.
 MAP=$(
@@ -77,9 +80,9 @@ Figure 6/6e	Figure 6/6c
 Figure 6/6f	Figure 6/6d
 Figure 6/6g	Figure 6/6e
 Figure 6/6h	Figure 6/6f
-Figure S6/s6a	Figure 6/6b
-Figure S6/s6b	Figure 6/6j
-Figure S6/s6c	Figure 6/6k
+Figure S5/s5	Figure 6/6b
+Figure S6/s6a	Figure 6/6j
+Figure S6/s6b	Figure 6/6k
 Figure S1/S1A	Figure S1/S1A
 Figure S1/S1B	Figure S1/S1B
 Figure S2/S2A	Figure S2/S2A
@@ -101,7 +104,7 @@ EOF
 # Panels with no published counterpart: Figure 1/1C, Figure S1/S1C, S1D, S1E and
 # S1F (S1C/S1D are the 2026-07-30 replacements above and are new analyses, not
 # reproductions; S1E is new; S1F is the former S1E, which never had one),
-# Figure S4/*, Figure 6/6i (GP77) and 6j (GP8), Figure S6/s6d-s6g (their GPs
+# Figure S4/*, Figure 6/6i (GP77) and 6j (GP8), Figure S6/s6c-s6f (their GPs
 # were only ever drawn inside the retired s6-1/s6-2 gallery pages, not as
 # standalone panels), and Figure 7/7B (ours since 2026-07-28 -- it is the former
 # Extended Data Figure 5, assembled into one panel, and it replaced a different

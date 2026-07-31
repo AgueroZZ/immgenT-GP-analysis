@@ -9,11 +9,11 @@
 #   the curated list  ->  cd69_top_gps_subset   (code/R/citeseq_shared_setup.R)
 #                     ->  the ranks quoted in the comment beside it
 #                     ->  Fig. 6d's caption     (analysis/Figure6.Rmd)
-#                     ->  Fig. S6b, c's caption (analysis/FigureS6.Rmd)
+#                     ->  Fig. S6a, b's caption (analysis/FigureS6.Rmd)
 #
 # The list lives in the shared setup rather than in a figure script because the
 # panels that use it are split across two figures: Fig. 6d draws these GPs'
-# genes, Fig. S6b/S6c draw the same GPs' mean activity, on the same axis order.
+# genes, Fig. S6a/S6b draw the same GPs' mean activity, on the same axis order.
 # (Before 2026-07-28 all three were Fig. 6i/6j/6k in one script.)
 #
 # This script recomputes the Spearman correlation between CD69 protein
@@ -49,7 +49,7 @@ for (f in c("script/Figure6.R", "script/FigureS6.R")) {
         sprintf("%s re-assigns cd69_top_gps_subset -- it must come from %s only", f, setup_file))
 }
 
-# Same cells and same CD69 vector as Figure 6d / Figure S6b-c, over all GPs.
+# Same cells and same CD69 vector as Figure 6d / Figure S6a-b, over all GPs.
 shared_cells_cd69 <- intersect(rownames(L_pm_filtered), rownames(protein_mat_normalized_lognorm))
 cd69_expr_vec <- as.numeric(protein_mat_normalized_lognorm[shared_cells_cd69, "CD69"])
 L_all <- as.matrix(L_pm_filtered[shared_cells_cd69, , drop = FALSE])
@@ -120,7 +120,7 @@ check(grepl(paste0("skipping ", paste(setdiff(true_top10_abs, published), collap
 
 cat("\n=== 6. the old overclaiming wording is gone ===\n")
 # Both captions describe the subset now: Fig. 6d (the gene heatmap) and
-# Fig. S6b, c (the same GPs per tissue and per lineage).
+# Fig. S6a, b (the same GPs per tissue and per lineage).
 for (f in c("analysis/Figure6.Rmd", "analysis/FigureS6.Rmd", setup_file,
             "script/Figure6.R", "script/FigureS6.R")) {
   hits <- grep("(ten|10) GPs most associated", readLines(f, warn = FALSE), value = TRUE)
@@ -147,5 +147,5 @@ if (length(failures)) {
   cat("MISMATCH:\n", paste0("  - ", failures, collapse = "\n"), "\n", sep = "")
   quit(status = 1)
 }
-cat("PASS: the Fig. 6d / S6b-c subset is 10 curated GPs from among the most CD69-correlated,\n")
+cat("PASS: the Fig. 6d / S6a-b subset is 10 curated GPs from among the most CD69-correlated,\n")
 cat("      it is not a true top-10, and both captions and the comment say so.\n")

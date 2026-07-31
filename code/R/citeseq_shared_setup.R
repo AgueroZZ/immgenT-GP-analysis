@@ -1,9 +1,10 @@
-# Shared setup for the Figure 6 / Figure S6 scripts (CITE-seq protein
-# projection). Both figure scripts subset to CITE-seq-measured cells, build
+# Shared setup for the Figure 6 / Figure S5 / Figure S6 scripts (CITE-seq protein
+# projection). All three figure scripts subset to CITE-seq-measured cells, build
 # the same curated marker table (df_markers2), the same cell exclusions
 # (thymocyte/proliferating/miniverse), and the same protein quality filter
-# (select_proteins) -- factored here so both source it once instead of
-# repeating ~50 lines of setup each.
+# (select_proteins) -- factored here so each sources it once instead of
+# repeating ~50 lines of setup each. (Figure S5 uses only the protein filters;
+# it is the protein-program heatmap that was Figure S6's s6a until 2026-07-30.)
 #
 # Requires data_path to already be set. Defines/overwrites: L_pm_filtered,
 # F_pm_filtered, seurat_meta_filtered, protein_mat_normalized_lognorm,
@@ -78,7 +79,7 @@ miniverse_cells <- seurat_meta_filtered %>% dplyr::filter(annotation_level2_grou
 # GPs judged well-aligned between protein gating and GP loading (manually
 # curated; see data/CITEseq_alignment_scores_manual.csv). The gating panels that
 # ship are a curated subset of this list: Figure 6e-6j (GP171, GP12, GP80, GP23,
-# GP77, GP8) and Figure S6d-S6g (GP29, GP58, GP22, GP68). The remaining 17 were
+# GP77, GP8) and Figure S6c-S6f (GP29, GP58, GP22, GP68). The remaining 17 were
 # shown as a two-page gallery until 2026-07-28 and are no longer published;
 # script/verify_gating_gps.R checks the ten shipped GPs against this list.
 well_aligned_gps <- c(
@@ -100,7 +101,7 @@ enlarge_gps <- c("GP8", "GP30", "GP170", "GP107")
 
 # --- doc:cd69 ---
 # The CD69-associated GP subset, shared by Figure 6d (the up/down gene heatmap)
-# and Figure S6b/S6c (the same GPs' mean activity per tissue and per lineage).
+# and Figure S6a/S6b (the same GPs' mean activity per tissue and per lineage).
 # Those three panels are in two different figures and so in two different
 # scripts, but they must show the same GPs on the same axis order -- hence one
 # definition here rather than a copy in each script.
@@ -114,7 +115,7 @@ enlarge_gps <- c("GP8", "GP30", "GP170", "GP107")
 # Thresholds_Selected_Proteins.csv and well_aligned_gps -- don't "fix" it into
 # a computed ranking, and keep the captions' "from among the most associated"
 # wording in sync (analysis/Figure6.Rmd Fig. 6d, analysis/FigureS6.Rmd
-# Fig. S6b, c). script/verify_cd69_gp_ranking.R enforces all of this.
+# Fig. S6a, b). script/verify_cd69_gp_ranking.R enforces all of this.
 cd69_top_gps_subset <- c("GP35", "GP6", "GP170", "GP26", "GP58", "GP171", "GP63", "GP62", "GP3", "GP29")
 shared_cells_cd69 <- intersect(rownames(L_pm_filtered), rownames(protein_mat_normalized_lognorm))
 cd69_expr_vec <- protein_mat_normalized_lognorm[shared_cells_cd69, "CD69"]

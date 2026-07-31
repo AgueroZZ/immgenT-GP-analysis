@@ -178,4 +178,5 @@ for (i in seq_len(nrow(checkpoint_schedule))) {
 The final compact output,
 `protein_flash_selected_summary_lognorm_backfit200.rds`, contains `L_pm`,
 `F_pm`, `pve`, `elbo`, and `residuals_sd`. This is the protein-program matrix
-used by Figure 6, Figure S6, and the protein-related Extended Data tables.
+used by Figure 6, Figure S5, Figure S6, and the protein-related Extended Data
+tables.

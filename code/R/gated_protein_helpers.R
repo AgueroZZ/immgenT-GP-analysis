@@ -1,6 +1,6 @@
 # Protein-gate vs. GP-loading comparison on an MDE embedding. Ported
 # from gated_protein_loading_plot.R; shared by script/Figure6.R
-# (panels 6e-6j, the 6 main-figure GPs) and FigureS6.R (panels s6d-s6g, 4 more).
+# (panels 6e-6j, the 6 main-figure GPs) and FigureS6.R (panels s6c-s6f, 4 more).
 
 gp_label <- function(x) sub("^K", "GP", x)
 

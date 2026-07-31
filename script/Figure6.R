@@ -25,8 +25,9 @@
 #   6h   6f     gating, GP23
 #   6i   --     gating, GP77   (new panel)
 #   6j   --     gating, GP8    (new panel, promoted from the retired S6 gallery)
-#   --   6b     protein-program heatmap  -> moved to Figure S6, panel s6a
-#   --   6j,6k  CD69 GPs per tissue/lineage -> moved to Figure S6, s6b/s6c
+#   --   6b     protein-program heatmap  -> moved out; since 2026-07-30 it is
+#                 its own figure, Figure S5 (script/FigureS5.R)
+#   --   6j,6k  CD69 GPs per tissue/lineage -> moved to Figure S6, s6a/s6b
 #
 # Source: ported from Figure_CITEseq.R (panels b, c, d) and
 # gated_protein_loading_plot.R (panels e-j, using
@@ -62,7 +63,7 @@ source("code/R/gated_protein_helpers.R")
 # 6a: hand-drawn schematic -- not code-generated, no output here.
 
 # ============================================================
-# Load data (shared with FigureS6.R)
+# Load data (shared with FigureS5.R and FigureS6.R)
 # ============================================================
 source("code/R/citeseq_shared_setup.R")
 
@@ -136,7 +137,7 @@ ggsave(paste0(figure_path, "6c.pdf"), p_6c, width = 7, height = 6)
 # ============================================================
 # 6d: up/down genes across the 10 curated CD69-associated GPs
 # (cd69_top_gps_subset / cd69_corr / cd69_top_gps_sorted come from
-# citeseq_shared_setup.R, which Figure S6's s6b/s6c panels share)
+# citeseq_shared_setup.R, which Figure S6's s6a/s6b panels share)
 # ============================================================
 D_scale6 <- diag(1 / apply(F_pm_filtered, 2, function(x) max(abs(x), na.rm = TRUE)))
 F_pm_filtered_scaled <- F_pm_filtered %*% D_scale6

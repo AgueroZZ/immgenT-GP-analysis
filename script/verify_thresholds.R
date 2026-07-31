@@ -66,7 +66,7 @@ cat(sprintf("markers in play: %d | silently skipped: %s\n", length(markers), pas
 # Not a failure -- these 5 were deliberately dropped from the curated CSV. Kept
 # visible because the GP marker signatures still name them (Extended Data
 # Table 7's caption lists them). None of them appears in the 10 GP signatures
-# that Figure 6e-6j / S6d-S6g actually gate on -- script/verify_gating_gps.R
+# that Figure 6e-6j / S6c-S6f actually gate on -- script/verify_gating_gps.R
 # checks that, so the panel subtitles cannot be hiding a dropped marker.
 
 cat("\n=== 5. Figure 6b/6c KLRG1 cutoff (Figure6.R, the 6b/6c block) ===\n")

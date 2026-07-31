@@ -1,0 +1,55 @@
+---
+title: "Figure S5: Protein programs across GPs"
+author: "Ziang Zhang"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r doc-code, include=FALSE}
+source("../code/R/doc_code.R")
+```
+
+Published as **Extended Data Figure 5**.
+
+This single-panel figure is produced by
+[`script/FigureS5.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS5.R),
+which shares its CITE-seq setup and protein filters with
+[Figure 6](Figure6.html) and [Figure S6](FigureS6.html) via
+`code/R/citeseq_shared_setup.R`. The code below is shown for reference (not
+re-executed on this page, since the shared setup takes about a minute to load);
+the image is its pre-rendered output.
+
+**This figure was split out of Figure S6 on 2026-07-30.** It was that figure's
+panel s6a, and before 2026-07-28 the published Figure 6b. It now stands alone in
+the Extended Data Figure 5 slot that main [Figure 7b](Figure7.html) vacated, and
+[Figure S6](FigureS6.html)'s remaining panels each dropped one letter (its
+s6b-s6g are now s6a-s6f).
+
+## Setup
+
+```{r figs5-setup, code=code_for("../script/FigureS5.R", "doc:setup"), eval=FALSE}
+```
+
+## Protein-program heatmap {#figs5}
+
+```{r figs5-code, code=code_for("../script/FigureS5.R", "s5"), eval=FALSE}
+```
+
+```{r figs5-img, echo=FALSE, out.width="100%"}
+knitr::include_graphics("assets/FigureS5/s5.png")
+```
+
+::: {.figcaption}
+**Fig. S5.** Heatmap of scaled protein scores for each GP (the re-estimated
+protein matrix **U**), with the protein scores in each GP scaled so its maximum
+|score| = 1. We focused on the **47 proteins** that performed best in the immgenT
+CITE-seq dataset (isotype and low-quality proteins removed).
+**Seventeen GPs lacked meaningful protein correlates** -- every protein score is
+exactly zero -- and were omitted. Four putative contamination programs (GP40,
+GP50, GP55 and GP188) were also removed, leaving **179 GPs**
+(200 - 17 - 4 = 179); 47 proteins (rows) x 179 GPs (columns). Entries with an
+absolute score below 0.5 are shown in white, with color running from blue (-1)
+through white to red (+1). GP columns are ordered from the most to the fewest visible proteins. Protein rows are ordered by the position of their rightmost visible GP, placing proteins that extend into the sparse right side first and exposing a triangular support boundary; visible count and a rarity-weighted support score break ties. This triangular-first row order is not monotone in per-protein sparsity. GP labels are vertical and sized to the available heatmap-cell width; protein labels are sized to the available row height. The same matrix is published as a table in
+[Extended Data Table 6](ExtendedDataTable6.html).
+:::
