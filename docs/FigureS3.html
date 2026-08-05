@@ -384,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-30
+<strong>Last updated:</strong> 2026-08-05
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41targetblank66aa029a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree5651d0e08a38784f6e2194a6dfe3d4b474337d5etargetblank5651d0ea">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41" target="_blank">66aa029</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/5651d0e08a38784f6e2194a6dfe3d4b474337d5e" target="_blank">5651d0e</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41targetblank66aa029a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree5651d0e08a38784f6e2194a6dfe3d4b474337d5etargetblank5651d0ea"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41" target="_blank">66aa029</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/5651d0e08a38784f6e2194a6dfe3d4b474337d5e" target="_blank">5651d0e</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -578,9 +578,11 @@ Ignored files:
     Ignored:    figures/final-selected/Figure 1/.DS_Store
     Ignored:    figures/final-selected/Figure 2/.DS_Store
     Ignored:    figures/final-selected/Figure 4/.DS_Store
+    Ignored:    figures/final-selected/Figure S1/.DS_Store
     Ignored:    figures/final-selected/Figure S4/.DS_Store
     Ignored:    figures/templates_20260729/
     Ignored:    log/
+    Ignored:    output/.DS_Store
     Ignored:    output/Figure2/
     Ignored:    output/Figure7b/7b_cell_metadata.csv.gz
     Ignored:    plan/
@@ -630,6 +632,41 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/5651d0e08a38784f6e2194a6dfe3d4b474337d5e/analysis/FigureS3.Rmd" target="_blank">5651d0e</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-08-05
+</td>
+<td>
+Extended Data tables: reorder to six, rebuild Table 1, drop internal
+notes
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/cbcec52833df99ead8ac0dfa372bacbcf33f18e9/docs/FigureS3.html" target="_blank">cbcec52</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-30
+</td>
+<td>
+Build site: Extended Data Figure naming
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1104,25 +1141,16 @@ shown for reference (not re-executed on this page); the images are its
 pre-rendered output.</p>
 <p>Panel (a) is <strong>not produced in this repository</strong> – see
 below.</p>
-<p><strong>Lettering note.</strong> The gate definition in (a) used to
-be split into two panels, a (the MDEs) and b (the protein plot); they
-are one panel, so every panel after it is now one letter lower than in
-the published figure – (b) here is the published (c), and (g) is the
-published (h).</p>
 <div id="setup" class="section level2">
 <h2>Setup</h2>
 <pre class="r"><code># Figure S3. Characterizing activation GPs.
 #
-# Panels produced (see figures/Previous/bits/Figure S3/FigureS3_caption.md
-# for the full caption text; captioned A-F there, and published as s3c-s3h
-# before the 2026-07-28 re-lettering below -- this script uses the current
-# lettering):
+# Panels produced:
 #
 # s3a is the definition of resting vs activated CD4/CD8 cells (the
 # lineage-specific MDEs plus the adjacent CD62L-vs-CD44 protein plot, one
 # panel). It is NOT produced here -- no code in this repository draws it; see
-# analysis/FigureS3.Rmd. Its two halves used to be lettered s3a and s3b, which
-# is why every panel below is one letter lower than the published figure.
+# analysis/FigureS3.Rmd.
 #
 #   s3b  Fraction of activated CD4/CD8 cells per organ with GP26 &gt; 0.1, sorted.
 #   s3c  GSEA dot plot relating the activation GPs to curated gene sets.
@@ -1132,14 +1160,12 @@ published (h).</p>
 #        vs all other conditions.
 #   s3g  Bipartite TF-GP network for Gata3, Rorc, Tbx21.
 #
-# Source: ported from Figure_Activation.R (see Figure4.R for the main
-# Figure 4 panels from the same file). Shared curated-GP setup lives in
-# code/R/activation_shared_setup.R.
+# The curated GP set and activated/resting cell groupings are shared with
+# Figure 4 via code/R/activation_shared_setup.R.
 #
 # Panel s3b is computed on activated CD4/CD8 cells only (annotation_level1 in
 # {CD4, CD8} and annotation_level2_group == &quot;activated&quot;): the per-organ fraction
-# with GP26 loading &gt; 0.1. This exactly reproduces the collaborator&#39;s panel
-# (all 22 organ rates match to the decimal); see the s3b block below.
+# with GP26 loading &gt; 0.1.
 #
 # Required inputs (data/) -- see code/README.md&#39;s &quot;Data provenance&quot; table
 # for the full picture:

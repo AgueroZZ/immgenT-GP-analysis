@@ -384,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-30
+<strong>Last updated:</strong> 2026-08-05
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41targetblank66aa029a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree5651d0e08a38784f6e2194a6dfe3d4b474337d5etargetblank5651d0ea">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41" target="_blank">66aa029</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/5651d0e08a38784f6e2194a6dfe3d4b474337d5e" target="_blank">5651d0e</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41targetblank66aa029a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree5651d0e08a38784f6e2194a6dfe3d4b474337d5etargetblank5651d0ea"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41" target="_blank">66aa029</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/5651d0e08a38784f6e2194a6dfe3d4b474337d5e" target="_blank">5651d0e</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -578,9 +578,11 @@ Ignored files:
     Ignored:    figures/final-selected/Figure 1/.DS_Store
     Ignored:    figures/final-selected/Figure 2/.DS_Store
     Ignored:    figures/final-selected/Figure 4/.DS_Store
+    Ignored:    figures/final-selected/Figure S1/.DS_Store
     Ignored:    figures/final-selected/Figure S4/.DS_Store
     Ignored:    figures/templates_20260729/
     Ignored:    log/
+    Ignored:    output/.DS_Store
     Ignored:    output/Figure2/
     Ignored:    output/Figure7b/7b_cell_metadata.csv.gz
     Ignored:    plan/
@@ -630,6 +632,41 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/5651d0e08a38784f6e2194a6dfe3d4b474337d5e/analysis/Figure4.Rmd" target="_blank">5651d0e</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-08-05
+</td>
+<td>
+Extended Data tables: reorder to six, rebuild Table 1, drop internal
+notes
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/cbcec52833df99ead8ac0dfa372bacbcf33f18e9/docs/Figure4.html" target="_blank">cbcec52</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-30
+</td>
+<td>
+Build site: Extended Data Figure naming
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1171,22 +1208,12 @@ which shares its curated GP set with <a href="FigureS3.html">Extended
 Data Figure 3</a> via <code>code/R/activation_shared_setup.R</code>. The
 code below is shown for reference (not re-executed on this page); the
 images are its pre-rendered output.</p>
-<p><strong>A panel was dropped on 2026-07-29.</strong> The bipartite
-TF-GP network for the 25 curated activation GPs is no longer part of the
-figure, and the two heatmaps that followed it each moved up a letter:
-the published 3f and 3g are now (4c) and (4d). The figure is a-d. A
-TF-GP network for the lineage-defining TFs Gata3, Rorc and Tbx21 is
-still shown as <a href="FigureS3.html#figs3g">Extended Data Fig.
-3g</a>.</p>
 <div id="setup" class="section level2">
 <h2>Setup</h2>
 <p>Data loading, shared across all panels below.</p>
 <pre class="r"><code># Figure 4. GPs associated with T-cell activation.
 #
-# Panels produced. NOTE the renumbering: this figure&#39;s published counterpart is
-# figures/Previous/bits/Figure *3*, panels 3c-3g (the old 3a/3b moved to
-# Figure S3). Full caption text:
-# ../immgen-t-factors/figures/Figure_Activation/Figure3_caption.md.
+# Panels produced:
 #   4a  Standardized mean difference (d) in GP loading, activated vs resting,
 #       CD4 (x) vs CD8 (y); curated GPs colored by semantic group and labeled.
 #   4b  GP-gene signature network: each curated GP linked to its top 5
@@ -1196,17 +1223,8 @@ still shown as <a href="FigureS3.html#figs3g">Extended Data Fig.
 #   4d  Heatmap of mean GP loading per Level-2 sub-lineage, across the 7
 #       T-cell lineages.
 #
-# Re-lettered 2026-07-29: the bipartite TF-GP network for the curated activation
-# GPs was dropped from the figure, and the two heatmaps after it each moved up a
-# letter. So against figures/Previous/bits/Figure 3: 4a = 3c, 4b = 3d,
-# 4c = 3f, 4d = 3g, and the published 3e has no counterpart here any more. The
-# dropped panel was this script&#39;s only caller of code/R/tf_network.R -- Figure S3
-# panel s3g draws its own TF-GP network inline, so that helper is now unused.
-#
-# Source: ported from Figure_Activation.R, which also produced the
-# Figure S3 panels (see FigureS3.R) from the same curated GP set and cell
-# groupings -- that shared setup now lives in
-# code/R/activation_shared_setup.R, sourced by both scripts.
+# The curated GP set and activated/resting cell groupings are shared with
+# Figure S3 via code/R/activation_shared_setup.R.
 #
 # Required inputs (data/) -- see code/README.md&#39;s &quot;Data provenance&quot; table
 # for the full picture:

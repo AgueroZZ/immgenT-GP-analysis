@@ -384,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-30
+<strong>Last updated:</strong> 2026-08-05
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41targetblank66aa029a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree5651d0e08a38784f6e2194a6dfe3d4b474337d5etargetblank5651d0ea">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41" target="_blank">66aa029</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/5651d0e08a38784f6e2194a6dfe3d4b474337d5e" target="_blank">5651d0e</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41targetblank66aa029a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree5651d0e08a38784f6e2194a6dfe3d4b474337d5etargetblank5651d0ea"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41" target="_blank">66aa029</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/5651d0e08a38784f6e2194a6dfe3d4b474337d5e" target="_blank">5651d0e</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -578,9 +578,11 @@ Ignored files:
     Ignored:    figures/final-selected/Figure 1/.DS_Store
     Ignored:    figures/final-selected/Figure 2/.DS_Store
     Ignored:    figures/final-selected/Figure 4/.DS_Store
+    Ignored:    figures/final-selected/Figure S1/.DS_Store
     Ignored:    figures/final-selected/Figure S4/.DS_Store
     Ignored:    figures/templates_20260729/
     Ignored:    log/
+    Ignored:    output/.DS_Store
     Ignored:    output/Figure2/
     Ignored:    output/Figure7b/7b_cell_metadata.csv.gz
     Ignored:    plan/
@@ -630,6 +632,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/cbcec52833df99ead8ac0dfa372bacbcf33f18e9/docs/Figure5.html" target="_blank">cbcec52</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-30
+</td>
+<td>
+Build site: Extended Data Figure naming
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1037,27 +1056,15 @@ the images are its pre-rendered output.</p>
 <p>Data loading, shared across all panels below.</p>
 <pre class="r"><code># Figure 5. GPs and tissue.
 #
-# Panels produced. NOTE the renumbering: this figure&#39;s published counterpart is
-# figures/Previous/bits/Figure *4* (4a-4e), not &quot;Figure 5&quot; -- there is no
-# Figure 5 directory there. Full caption text:
-# ../immgen-t-factors/figures/Figure_Organ/Figure_Organ_caption.md.
+# Panels produced:
 #   5a  Max AUC (organ) vs max AUC (level-1 lineage) scatter, per GP.
 #   5b  GP37+ rate by lineage, mammary gland vs. the same lineage elsewhere.
 #   5c  Marker genes of the 7 organ-specific GPs: per-GP gene-score heatmap.
-#       The published panel (4c) paired this heatmap with an across-organ
-#       expression dotplot on its left; the dotplot half was dropped on
-#       purpose, so 5c is half the width of 4c by design (see the caption in
-#       analysis/Figure5.Rmd, which describes the heatmap only).
 #   5d  As 5a, but organ AUC vs Level-2 (fine-grained sub-lineage/cluster)
 #       AUC, with the 7 organ-specific GPs (red) and a contrasting
 #       cluster-specific set (blue) highlighted.
 #   5e  Alluvial diagram: organ of origin -&gt; GP -&gt; Level-2 cell type, for
 #       GP+ cells of the 7 organ-specific GPs.
-#
-# Source: ported from Figure_Organ.R, which mixed these 5 panels with
-# other exploratory analyses (extra AUC scatter variants, per-organ ROC
-# curves, a broken/undefined-object &quot;gp_decomposition.pdf&quot; panel) that are
-# dropped here since they don&#39;t correspond to a final figure panel.
 #
 # Required inputs (data/) -- see code/README.md&#39;s &quot;Data provenance&quot; table
 # for the full picture:

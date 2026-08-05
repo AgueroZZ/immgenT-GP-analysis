@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree4d526e2c6ed1f45f4058fb8de95967e419b04164targetblank4d526e2a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree5651d0e08a38784f6e2194a6dfe3d4b474337d5etargetblank5651d0ea">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/4d526e2c6ed1f45f4058fb8de95967e419b04164" target="_blank">4d526e2</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/5651d0e08a38784f6e2194a6dfe3d4b474337d5e" target="_blank">5651d0e</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree4d526e2c6ed1f45f4058fb8de95967e419b04164targetblank4d526e2a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree5651d0e08a38784f6e2194a6dfe3d4b474337d5etargetblank5651d0ea"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/4d526e2c6ed1f45f4058fb8de95967e419b04164" target="_blank">4d526e2</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/5651d0e08a38784f6e2194a6dfe3d4b474337d5e" target="_blank">5651d0e</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -554,7 +554,6 @@ Ignored files:
     Ignored:    analysis/.DS_Store
     Ignored:    analysis/.Rhistory
     Ignored:    analysis/assets/.DS_Store
-    Ignored:    analysis/site_libs/
     Ignored:    captions/
     Ignored:    code/.DS_Store
     Ignored:    code/other/topic_flashier_20250212.R
@@ -633,6 +632,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/18f28a612a491b85634988ca4fd35d6c08306131/docs/FigureS1.html" target="_blank">18f28a6</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-08-05
+</td>
+<td>
+Build site: Figure S1e GP1-only, no size or colour encoding
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1319,8 +1335,7 @@ itself is produced (a much heavier, cluster-scale computation).</p>
 <h2>Setup</h2>
 <pre class="r"><code># Figure S1. GP reproducibility across IGTs.
 #
-# Panels produced (see figures/Previous/bits/Figure S1/FigureS1_caption.md
-# for the full caption text):
+# Panels produced:
 #   S1A  Cumulative number of GPs validated (cosine &gt;= threshold, thresholds
 #        0.2-0.8) as IGTs are added one at a time, in IGT index order.
 #   S1B  Number of GPs validated by at least X IGTs, vs X (log-log), for the
@@ -1333,31 +1348,11 @@ itself is produced (a much heavier, cluster-scale computation).</p>
 #   S1E  Per-IGT mean nCount_RNA (x) vs per-IGT mean GP1 loading (y), over the
 #        standard-spleen cells -- a GP whose loading tracks sequencing depth,
 #        as opposed to S1D&#39;s run-confined GP9.
-#
-#        S1E replaced, on 2026-08-04, a panel showing GP9 loading across all
-#        sixteen individual samples inside IGT13/IGT14 (2 runs x 2 mice x
-#        4 tissues), which argued that GP9&#39;s effect was not one aberrant mouse
-#        or tissue. That argument is no longer made anywhere in the figure.
 #   S1F  Scatter of the NUMBER of active genes (x) vs. proportion of active
 #        cells (y) per GP, using the same hard-threshold definitions as Figure 2
 #        (|normalized score| &gt; 0.25 for genes; normalized loading &gt; 0.1 for
 #        cells), over non-thymocyte cells -- not the EBMF sparsity prior. One
 #        dot per GP.
-#
-#        S1C-S1E replaced, on 2026-07-30, the previous S1C (mean vs. variance of
-#        per-IGT mean loading) and S1D (heatmap of the ten highest-variance GPs),
-#        both of which were computed on the 18 IGTs with &gt;= 500 standard-spleen
-#        cells. The old panels quantified between-IGT spread on an unnormalized
-#        scale, which cannot be compared against any other grouping: the
-#        variance of per-group mean loadings is dominated by the GP&#39;s own
-#        loading scale, so an IGT axis and a cell-type axis come out nearly
-#        identical (Spearman 0.93) whatever the underlying structure. Dividing
-#        by the total variance (eta^2) removes that and makes the two
-#        directly comparable, which is what S1C now shows. The old S1E keeps
-#        its content and becomes S1F.
-#
-# Source: S1A/S1B ported from Figure_Saturation.R; S1C-S1E written for this
-# figure (the retired S1C/S1D came from Figure_batch.R panels a/b).
 #
 # S1A/S1B reuse the per-IGT cosine-matching score matrix
 # (data/igt_specific_cosine_scores.csv) rather than recomputing it here --

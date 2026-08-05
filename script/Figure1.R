@@ -90,8 +90,7 @@ ggsave(filename = paste0(figure_path, "1A.pdf"), plot = p_1A, width = 5, height 
 # 1B: hand-finished Illustrator schematic -- not code-generated, no output here.
 
 # --- doc:setup2 ---
-# Drop thymocytes from all downstream cell-level visualizations (matches
-# Figure_Overview.R).
+# Drop thymocytes from all downstream cell-level visualizations.
 non_thymo_cells <- seurat_meta_filtered$cellID[seurat_meta_filtered$annotation_level1 != "thymocyte"]
 L_pm_filtered <- L_pm_filtered[non_thymo_cells, ]
 seurat_meta_filtered <- seurat_meta_filtered[non_thymo_cells, ]

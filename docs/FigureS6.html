@@ -384,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-30
+<strong>Last updated:</strong> 2026-08-05
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41targetblank66aa029a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree5651d0e08a38784f6e2194a6dfe3d4b474337d5etargetblank5651d0ea">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41" target="_blank">66aa029</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/5651d0e08a38784f6e2194a6dfe3d4b474337d5e" target="_blank">5651d0e</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41targetblank66aa029a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree5651d0e08a38784f6e2194a6dfe3d4b474337d5etargetblank5651d0ea"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/66aa029a3c0fecf3ceabb7d1741c8e2d2414ef41" target="_blank">66aa029</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/5651d0e08a38784f6e2194a6dfe3d4b474337d5e" target="_blank">5651d0e</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -578,9 +578,11 @@ Ignored files:
     Ignored:    figures/final-selected/Figure 1/.DS_Store
     Ignored:    figures/final-selected/Figure 2/.DS_Store
     Ignored:    figures/final-selected/Figure 4/.DS_Store
+    Ignored:    figures/final-selected/Figure S1/.DS_Store
     Ignored:    figures/final-selected/Figure S4/.DS_Store
     Ignored:    figures/templates_20260729/
     Ignored:    log/
+    Ignored:    output/.DS_Store
     Ignored:    output/Figure2/
     Ignored:    output/Figure7b/7b_cell_metadata.csv.gz
     Ignored:    plan/
@@ -630,6 +632,41 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/5651d0e08a38784f6e2194a6dfe3d4b474337d5e/analysis/FigureS6.Rmd" target="_blank">5651d0e</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-08-05
+</td>
+<td>
+Extended Data tables: reorder to six, rebuild Table 1, drop internal
+notes
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/cbcec52833df99ead8ac0dfa372bacbcf33f18e9/docs/FigureS6.html" target="_blank">cbcec52</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-07-30
+</td>
+<td>
+Build site: Extended Data Figure naming
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1172,20 +1209,6 @@ href="Figure6.html">Figure 6</a> via
 <code>code/R/gated_protein_helpers.R</code>. The code below is shown for
 reference (not re-executed on this page, since this script takes about a
 minute to run); the images are its pre-rendered output.</p>
-<p><strong>This figure was reworked on 2026-07-28.</strong> It used to
-be a two-page gallery (<code>s6-1</code>, <code>s6-2</code>) of all 23
-well-aligned GPs that Figure 6 did not show. The gallery is retired;
-four of its GPs are kept here as panels (c)-(f), two were promoted into
-the main figure (<a href="Figure6.html#fig6ej">Fig. 6i, j</a>), and the
-remaining 17 are no longer published. Panels (a) and (b) moved here from
-Figure 6, where they were the published 6j and 6k.
-<code>script/FigureS6.R</code> carries the full old-to-new table in its
-header.</p>
-<p><strong>Re-lettered again on 2026-07-30.</strong> The protein-program
-heatmap that was this figure’s first panel (the published 6b) became a
-standalone figure, <a href="FigureS5.html">Extended Data Figure 5</a>,
-so every panel after it dropped one letter: the b-g of 2026-07-28 are
-now <strong>a-f</strong>.</p>
 <div id="setup" class="section level2">
 <h2>Setup</h2>
 <pre class="r"><code>library(ggplot2)
@@ -1617,9 +1640,7 @@ selected. Color indicates cell density (two-dimensional); all other
 cells are grey. Thymocytes, proliferating, and “miniverse” cells are
 excluded. Each panel is labeled with its GP and the markers the gate
 actually applied; every marker in these four signatures has a manually
-reviewed positivity threshold (<a
-href="ExtendedDataTable7.html">Extended Data Table 7</a>), so none is
-silently dropped.</p>
+reviewed positivity threshold, so none is silently dropped.</p>
 </div>
 <br>
 <p>

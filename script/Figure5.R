@@ -205,7 +205,7 @@ level_2_cat_mean <- t(sapply(rownames(level_2_AUC), function(cat) {
 level_2_AUC_positive <- sweep(level_2_cat_mean, 2, overall_mean, "-") > 0
 
 # 5d/5e reuse `organ_AUC_max_name`, but recomputed against the Level-2
-# category-count filter to match the original script's exact numbers.
+# category-count filter.
 organ_AUC_masked_l2 <- organ_AUC
 organ_AUC_positive_l2 <- sweep(
   t(sapply(rownames(organ_AUC), function(cat) {
@@ -219,11 +219,14 @@ organ_AUC_max <- apply(organ_AUC_masked_l2, 2, max, na.rm = TRUE)
 organ_AUC_max_name <- apply(organ_AUC_masked_l2, 2, function(x) rownames(organ_AUC_masked_l2)[which.max(x)])
 
 # 5d needs its OWN max-AUC table -- it must not reuse 5a's `df`, whose
-# Max_AUC_Level1 column holds the Level-1 maxima. The original Figure_Organ.R
-# rebuilds `max_AUC_df`/`df` at this point from `table_level_2_AUC` (storing
-# the Level-2 maxima in a column it still calls `Max_AUC_Level1` -- a
-# misleading name we drop here in favour of `Max_AUC_Level2`). Reusing 5a's
-# `df` silently plots Level-1 AUC on this panel's "Max AUC (Level-2)" axis.
+# Max_AUC_Level1 column holds the Level-1 maxima. Reusing 5a's `df` silently
+# plots Level-1 AUC on this panel's "Max AUC (Level-2)" axis.
+# --- internal ---
+# The original Figure_Organ.R rebuilds `max_AUC_df`/`df` at this point from
+# `table_level_2_AUC`, storing the Level-2 maxima in a column it still calls
+# `Max_AUC_Level1` -- a misleading name we drop here in favour of
+# `Max_AUC_Level2`.
+# --- end internal ---
 level_2_AUC_masked <- level_2_AUC
 level_2_AUC_masked[!level_2_AUC_positive] <- NA
 level_2_AUC_max <- apply(level_2_AUC_masked, 2, max, na.rm = TRUE)
