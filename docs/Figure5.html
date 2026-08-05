@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree5651d0e08a38784f6e2194a6dfe3d4b474337d5etargetblank5651d0ea">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeeeca07b83e493cec3ed89218631a6f7b5c7fb16etargetblankeeca07ba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/5651d0e08a38784f6e2194a6dfe3d4b474337d5e" target="_blank">5651d0e</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/eeca07b83e493cec3ed89218631a6f7b5c7fb16e" target="_blank">eeca07b</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree5651d0e08a38784f6e2194a6dfe3d4b474337d5etargetblank5651d0ea"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeeeca07b83e493cec3ed89218631a6f7b5c7fb16etargetblankeeca07ba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/5651d0e08a38784f6e2194a6dfe3d4b474337d5e" target="_blank">5651d0e</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/eeca07b83e493cec3ed89218631a6f7b5c7fb16e" target="_blank">eeca07b</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -632,6 +632,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/eeca07b83e493cec3ed89218631a6f7b5c7fb16e/docs/Figure5.html" target="_blank">eeca07b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-08-05
+</td>
+<td>
+Keep pre-refactor provenance in panel comments off the published pages
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1694,7 +1711,7 @@ level_2_cat_mean &lt;- t(sapply(rownames(level_2_AUC), function(cat) {
 level_2_AUC_positive &lt;- sweep(level_2_cat_mean, 2, overall_mean, &quot;-&quot;) &gt; 0
 
 # 5d/5e reuse `organ_AUC_max_name`, but recomputed against the Level-2
-# category-count filter to match the original script&#39;s exact numbers.
+# category-count filter.
 organ_AUC_masked_l2 &lt;- organ_AUC
 organ_AUC_positive_l2 &lt;- sweep(
   t(sapply(rownames(organ_AUC), function(cat) {
@@ -1708,11 +1725,8 @@ organ_AUC_max &lt;- apply(organ_AUC_masked_l2, 2, max, na.rm = TRUE)
 organ_AUC_max_name &lt;- apply(organ_AUC_masked_l2, 2, function(x) rownames(organ_AUC_masked_l2)[which.max(x)])
 
 # 5d needs its OWN max-AUC table -- it must not reuse 5a&#39;s `df`, whose
-# Max_AUC_Level1 column holds the Level-1 maxima. The original Figure_Organ.R
-# rebuilds `max_AUC_df`/`df` at this point from `table_level_2_AUC` (storing
-# the Level-2 maxima in a column it still calls `Max_AUC_Level1` -- a
-# misleading name we drop here in favour of `Max_AUC_Level2`). Reusing 5a&#39;s
-# `df` silently plots Level-1 AUC on this panel&#39;s &quot;Max AUC (Level-2)&quot; axis.
+# Max_AUC_Level1 column holds the Level-1 maxima. Reusing 5a&#39;s `df` silently
+# plots Level-1 AUC on this panel&#39;s &quot;Max AUC (Level-2)&quot; axis.
 level_2_AUC_masked &lt;- level_2_AUC
 level_2_AUC_masked[!level_2_AUC_positive] &lt;- NA
 level_2_AUC_max &lt;- apply(level_2_AUC_masked, 2, max, na.rm = TRUE)
