@@ -17,12 +17,6 @@ which shares its curated GP set with [Extended Data Figure 3](FigureS3.html) via
 reference (not re-executed on this page); the images are its pre-rendered
 output.
 
-**A panel was dropped on 2026-07-29.** The bipartite TF-GP network for the 25
-curated activation GPs is no longer part of the figure, and the two heatmaps that
-followed it each moved up a letter: the published 3f and 3g are now (4c) and
-(4d). The figure is a-d. A TF-GP network for the lineage-defining TFs Gata3,
-Rorc and Tbx21 is still shown as [Extended Data Fig. 3g](FigureS3.html#figs3g).
-
 ## Setup
 
 Data loading, shared across all panels below.

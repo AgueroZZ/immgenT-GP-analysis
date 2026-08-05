@@ -4,9 +4,9 @@
 #
 # Figure 6e-6j and Figure S6c-S6f are ten protein-gate vs. GP-loading panels,
 # drawn by two different scripts from one curated pool (well_aligned_gps). Four
-# things are asserted in prose -- in the two captions, in Extended Data Table 7's
-# caption, and in code/R/citeseq_shared_setup.R's comment -- and nothing in the
-# build checks any of them:
+# things are asserted in prose -- in the two captions and in
+# code/R/citeseq_shared_setup.R's comment -- and nothing in the build checks
+# any of them:
 #
 #   1. the ten GPs come from the curated well_aligned_gps pool,
 #   2. the two figures show disjoint GPs (no GP is published twice),

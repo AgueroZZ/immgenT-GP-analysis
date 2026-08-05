@@ -1,8 +1,11 @@
 # Figure 3. GPs and lineages.
 #
-# Panels produced. NOTE the renumbering: this figure's published counterpart is
+# --- internal ---
+# NOTE the renumbering: this figure's published counterpart is
 # figures/Previous/bits/Figure *2* (2A-2M), letter for letter. Full caption
 # text: figures/Previous/bits/Figure 2/Figure2_caption.md.
+# --- end internal ---
+# Panels produced:
 #   3A  Swarm plot of per-GP AUC (predicting major lineage), up-regulated
 #       GPs only, with GP3/22/29 force-highlighted.
 #   3B  Structure plot of 6 lineage-defining GPs across major lineages.
@@ -12,6 +15,7 @@
 #   3J,3K,3L  GP loading on the gdT/CD8aa/DN MDE, for GP3, GP29, GP22.
 #   3M  Heatmap of the top-30 up-regulated gene scores for GP3, GP29, GP22.
 #
+# --- internal ---
 # Source: ported from Figure_Lineage.R, which also produced the
 # Figure S2 panels (see FigureS2.R) from the same L_pm_filtered/MDE setup.
 #
@@ -26,6 +30,7 @@
 # Shiny app (see code/R/volcano_helpers.R and code/R/cross_gp_helpers.R
 # headers for the full provenance notes).
 #
+# --- end internal ---
 # Required inputs (data/) -- see code/README.md's "Data provenance" table
 # for the full picture:
 #   igt1_96_..._ADTonly.Rds                  [primary input Seurat object]

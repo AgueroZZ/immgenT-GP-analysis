@@ -6,8 +6,8 @@
 # 2. Consistency check against the hand-curated override thresholds in
 #    Thresholds_Selected_Proteins.csv. That file is a curated INPUT, not an
 #    output of this step -- see below. Its Threshold_manual column is what
-#    R/citeseq_shared_setup.R gates on, and therefore what Figure 6,
-#    Figure S6, and Extended Data Table 7 use.
+#    R/citeseq_shared_setup.R gates on, and therefore what Figure 6 and
+#    Figure S6 use.
 #
 # The per-protein diagnostic histogram/scatter PNG galleries from the
 # original scripts (one file per protein, purely for visual QC) are dropped

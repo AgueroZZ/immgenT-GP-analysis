@@ -1,15 +1,18 @@
 # Figure S3. Characterizing activation GPs.
 #
-# Panels produced (see figures/Previous/bits/Figure S3/FigureS3_caption.md
-# for the full caption text; captioned A-F there, and published as s3c-s3h
-# before the 2026-07-28 re-lettering below -- this script uses the current
-# lettering):
+# --- internal ---
+# See figures/Previous/bits/Figure S3/FigureS3_caption.md for the full caption
+# text; captioned A-F there, and published as s3c-s3h before the 2026-07-28
+# re-lettering -- this script uses the current lettering. s3a's two halves used
+# to be lettered s3a and s3b, which is why every panel below is one letter lower
+# than the published figure.
+# --- end internal ---
+# Panels produced:
 #
 # s3a is the definition of resting vs activated CD4/CD8 cells (the
 # lineage-specific MDEs plus the adjacent CD62L-vs-CD44 protein plot, one
 # panel). It is NOT produced here -- no code in this repository draws it; see
-# analysis/FigureS3.Rmd. Its two halves used to be lettered s3a and s3b, which
-# is why every panel below is one letter lower than the published figure.
+# analysis/FigureS3.Rmd.
 #
 #   s3b  Fraction of activated CD4/CD8 cells per organ with GP26 > 0.1, sorted.
 #   s3c  GSEA dot plot relating the activation GPs to curated gene sets.
@@ -19,14 +22,16 @@
 #        vs all other conditions.
 #   s3g  Bipartite TF-GP network for Gata3, Rorc, Tbx21.
 #
+# --- internal ---
 # Source: ported from Figure_Activation.R (see Figure4.R for the main
-# Figure 4 panels from the same file). Shared curated-GP setup lives in
-# code/R/activation_shared_setup.R.
+# Figure 4 panels from the same file).
+# --- end internal ---
+# The curated GP set and activated/resting cell groupings are shared with
+# Figure 4 via code/R/activation_shared_setup.R.
 #
 # Panel s3b is computed on activated CD4/CD8 cells only (annotation_level1 in
 # {CD4, CD8} and annotation_level2_group == "activated"): the per-organ fraction
-# with GP26 loading > 0.1. This exactly reproduces the collaborator's panel
-# (all 22 organ rates match to the decimal); see the s3b block below.
+# with GP26 loading > 0.1.
 #
 # Required inputs (data/) -- see code/README.md's "Data provenance" table
 # for the full picture:

@@ -114,27 +114,24 @@ panel is not produced in this repository).
 
 Each table is written as one CSV into `figures/final-selected/` by its script and
 previewed on a matching `analysis/ExtendedDataTable*.Rmd` page. Together these
-replace the retired Table S1/S2/S3, all now regenerated from code. Tables 1 and
-8 are the exceptions: each ships in two layouts. Table 1's two CSVs come from
-one script and are tabbed on a single page (`ExtendedDataTable1.html`), the
-published top-5-per-direction version and a longer internal top-15 one. Table 8
-comes from two scripts on two pages, a tidy long table (the default,
-`ExtendedDataTable8.html`) and a per-GP-column wide table
-(`ExtendedDataTable8_wide.html`) that needs a merged-header .xlsx instead of a
-flat CSV -- see the rows below.
+replace the retired Table S1/S2/S3, all now regenerated from code.
 
 | Extended Data table | Script | Primary original source(s) |
 |---|---|---|
-| 1 Summary of GP characteristics and annotations (top 5, published) | `ExtendedDataTable1_GP_summary.R` | `Supplement_Table1.R` (reworked: healthy non-thymocyte AUC, protein signatures added) + the manual `Annotation` column from `curation/GP_manual_annotations.csv` |
-| 1 Same table, longer internal version (top 15) | same script, second output (`..._top15.csv`) | same data, 15 instead of 5 features per signature direction |
-| 2 GP AUC lineage | `ExtendedDataTable2_GP_AUC_lineage.R` | `runAUC.R` (healthy AUC, via `02_compute_auc.R`) |
-| 3 GP AUC tissue | `ExtendedDataTable3_GP_AUC_tissue.R` | `runAUC.R` (healthy AUC, via `02_compute_auc.R`) |
-| 4 GP AUC cluster | `ExtendedDataTable4_GP_AUC_cluster.R` | `runAUC.R` (healthy AUC, via `02_compute_auc.R`) |
-| 5 GP during activation | `ExtendedDataTable5_GP_during_activation.R` | `Figure_Activation.R` (`GP_activation_summary`) |
-| 6 Protein factor matrix | `ExtendedDataTable6_protein_factor_matrix.R` | `Figure_CITEseq.R` (`Protein_F_pm`) |
-| 7 Manual protein positivity thresholds | `ExtendedDataTable7_protein_thresholds.R` | `protein_thresholding_manual.R` (`Threshold_manual`, via `03_protein_thresholds.R`) |
-| 8 Comprehensive gene signature matrix (long, default) | `ExtendedDataTable8_gene_signature_matrix_long.R` | new (full list behind Table 1's Top Genes +/-, capped at 100 per direction) |
-| 8 Comprehensive gene signature matrix (wide) | `ExtendedDataTable8_gene_signature_matrix_wide.R` | same data as the long version, per-GP-column .xlsx layout |
+| 1 Summary of GP characteristics and comments | `ExtendedDataTable1_GP_summary.R` | `Supplement_Table1.R` (reworked: top-15 gene signatures, active-cell/active-gene counts from Figure 2b/2c) + the manual `Comments` column from `curation/GP_manual_annotations.csv` |
+| 2 Gene signature per GP | `ExtendedDataTable2_gene_signature_matrix.R` | new (full list behind Table 1's Top Genes +/-, capped at 100 per direction) |
+| 3 GP AUC by lineage | `ExtendedDataTable3_GP_AUC_lineage.R` | `runAUC.R` (healthy AUC, via `02_compute_auc.R`) |
+| 4 GP activity during activation | `ExtendedDataTable4_GP_during_activation.R` | `Figure_Activation.R` (`GP_activation_summary`) |
+| 5 GP AUC by tissue | `ExtendedDataTable5_GP_AUC_tissue.R` | `runAUC.R` (healthy AUC, via `02_compute_auc.R`) |
+| 6 GP AUC by cluster | `ExtendedDataTable6_GP_AUC_cluster.R` | `runAUC.R` (healthy AUC, via `02_compute_auc.R`) |
+
+Retired on 2026-08-05, with the tables above renumbered into the gap: the
+protein factor matrix (was Table 6), the manual protein positivity thresholds
+(was Table 7), the per-GP-column wide layout of the gene signature matrix (was
+Table 8 wide), and Table 1's top-5-per-direction variant -- the surviving Table 1
+is the longer top-15 one, which also lost its Annotation / Lineage / Cluster /
+Tissue / protein-signature columns and gained `Comments`, `Prop. active cells`
+and `N active genes`.
 
 ## Verification status
 
@@ -184,8 +181,9 @@ other -- nothing in the build enforces it. `verify_thresholds.R` does this for
 the protein positivity thresholds: it sources the real
 `code/R/citeseq_shared_setup.R` (not a copy of its logic), takes the
 `threshold_df` that `Figure6.R:170` and `FigureS6.R:55` actually gate on, and
-diffs it against the values Extended Data Table 7 publishes -- protein set,
-every value, and whether each published threshold is even reachable through
+diffs it against the curated `data/Thresholds_Selected_Proteins.csv` read
+straight off disk -- protein set, every value, and whether each curated
+threshold is even reachable through
 `select_proteins` and the ADT matrix. It also reports the reverse gap: markers
 that are gated on but have no threshold and so are silently skipped. Exits
 non-zero on any mismatch; both the pass and fail paths are tested.

@@ -1,27 +1,34 @@
 # Figure 5. GPs and tissue.
 #
-# Panels produced. NOTE the renumbering: this figure's published counterpart is
+# --- internal ---
+# NOTE the renumbering: this figure's published counterpart is
 # figures/Previous/bits/Figure *4* (4a-4e), not "Figure 5" -- there is no
 # Figure 5 directory there. Full caption text:
 # ../immgen-t-factors/figures/Figure_Organ/Figure_Organ_caption.md.
+# --- end internal ---
+# Panels produced:
 #   5a  Max AUC (organ) vs max AUC (level-1 lineage) scatter, per GP.
 #   5b  GP37+ rate by lineage, mammary gland vs. the same lineage elsewhere.
 #   5c  Marker genes of the 7 organ-specific GPs: per-GP gene-score heatmap.
+# --- internal ---
 #       The published panel (4c) paired this heatmap with an across-organ
 #       expression dotplot on its left; the dotplot half was dropped on
 #       purpose, so 5c is half the width of 4c by design (see the caption in
 #       analysis/Figure5.Rmd, which describes the heatmap only).
+# --- end internal ---
 #   5d  As 5a, but organ AUC vs Level-2 (fine-grained sub-lineage/cluster)
 #       AUC, with the 7 organ-specific GPs (red) and a contrasting
 #       cluster-specific set (blue) highlighted.
 #   5e  Alluvial diagram: organ of origin -> GP -> Level-2 cell type, for
 #       GP+ cells of the 7 organ-specific GPs.
 #
+# --- internal ---
 # Source: ported from Figure_Organ.R, which mixed these 5 panels with
 # other exploratory analyses (extra AUC scatter variants, per-organ ROC
 # curves, a broken/undefined-object "gp_decomposition.pdf" panel) that are
 # dropped here since they don't correspond to a final figure panel.
 #
+# --- end internal ---
 # Required inputs (data/) -- see code/README.md's "Data provenance" table
 # for the full picture:
 #   L_pm_filtered.rds, F_pm_filtered.rds     [code/pipeline/01b_filter_cells.R]

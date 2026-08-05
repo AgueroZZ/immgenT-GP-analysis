@@ -1,5 +1,5 @@
 ---
-title: "Extended Data Table 4: GP AUC by cluster"
+title: "Extended Data Table 4: GP activity during activation"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -7,22 +7,21 @@ editor_options:
 ---
 
 Produced by
-[`script/ExtendedDataTable4_GP_AUC_cluster.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/ExtendedDataTable4_GP_AUC_cluster.R):
+[`script/ExtendedDataTable4_GP_during_activation.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/ExtendedDataTable4_GP_during_activation.R):
 
-```{r edt4-code, code=readLines("../script/ExtendedDataTable4_GP_AUC_cluster.R"), eval=FALSE}
+```{r edt4-code, code=readLines("../script/ExtendedDataTable4_GP_during_activation.R"), eval=FALSE}
 ```
 
 ## Table {#edt4}
 
-All 200 rows and every cluster column (107 sub-lineage clusters) are browsable
-below: sort by clicking a column header, type a GP name into the search box
-under the **GP** column, or use a per-cluster box to filter by AUC range.
-Scroll horizontally to see all cluster columns. Download the raw CSV at
-[`figures/final-selected/ExtendedDataTable4_GP_AUC_cluster.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/final-selected/ExtendedDataTable4_GP_AUC_cluster.csv).
+All 200 rows are browsable below: sort by clicking a column header, type a GP
+name into the search box under the **GP** column, or use a per-column box to
+filter by value range. Download the raw CSV at
+[`figures/final-selected/ExtendedDataTable4_GP_during_activation.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/final-selected/ExtendedDataTable4_GP_during_activation.csv).
 
 ```{r edt4-preview, echo=FALSE, message=FALSE}
 suppressPackageStartupMessages(library(DT))
-tab <- read.csv("../figures/final-selected/ExtendedDataTable4_GP_AUC_cluster.csv", check.names = FALSE)
+tab <- read.csv("../figures/final-selected/ExtendedDataTable4_GP_during_activation.csv", check.names = FALSE)
 DT::datatable(
   tab,
   rownames = FALSE,
@@ -32,11 +31,13 @@ DT::datatable(
     lengthMenu = list(c(10, 25, 50, 100, -1), c("10", "25", "50", "100", "All")),
     scrollX = TRUE
   )
-) |> DT::formatRound(columns = colnames(tab)[-1], digits = 3)
+) |> DT::formatRound(columns = colnames(tab)[-1], digits = 4)
 ```
 
 ::: {.figcaption}
-**Extended Data Table 4.** One row per GP, one column per sub-lineage cluster
-(annotation_level2). Each value is the one-vs-rest AUC for predicting membership
-in that cluster from the GP's loading, computed on healthy non-thymocyte cells.
+**Extended Data Table 4.** One row per GP describing how its loading changes with
+T-cell activation, computed separately in CD4 and CD8: `mean_change_loadings`
+(activated minus resting mean loading), `d` (standardized mean difference =
+change / pooled loading SD, the statistic plotted in Figure 4a), and
+`Ratio_CD8_CD4` (ratio of the CD8 to CD4 mean loading change).
 :::

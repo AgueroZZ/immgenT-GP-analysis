@@ -29,12 +29,8 @@ that panel alone.
 
 ## Extended Data figures
 
-Extended Data Figures **1-7**. The pages' URLs keep the older `FigureS*` form so
-existing links stay valid, but every figure is named the way it is published. The
-Extended Data Figure 5 slot was briefly empty -- what was published there became
-main [Figure 7b](Figure7.html) on 2026-07-28 -- and was refilled on 2026-07-30 by
-the protein-program heatmap, which until then was Extended Data Figure 6's first
-panel.
+Extended Data Figures **1-7**. Each page's URL keeps the `FigureS*` form, but
+every figure is named the way it is published.
 
 + [Extended Data Figure 1: Reproducibility across IGTs and batch-effect evaluation](FigureS1.html)
 + [Extended Data Figure 2: Tz- and CD8-specific GPs (GP30 and GP58)](FigureS2.html)
@@ -49,16 +45,12 @@ pipeline and has no page here.
 
 ## Extended Data tables
 
-+ [Extended Data Table 1: summary of GP characteristics and annotations](ExtendedDataTable1.html)
-  (main + longer internal version, tabbed on the page)
-+ [Extended Data Table 2: GP AUC by lineage](ExtendedDataTable2.html)
-+ [Extended Data Table 3: GP AUC by tissue](ExtendedDataTable3.html)
-+ [Extended Data Table 4: GP AUC by cluster](ExtendedDataTable4.html)
-+ [Extended Data Table 5: GP activity during activation](ExtendedDataTable5.html)
-+ [Extended Data Table 6: protein factor matrix](ExtendedDataTable6.html)
-+ [Extended Data Table 7: protein gating (manual protein positivity thresholds)](ExtendedDataTable7.html)
-+ [Extended Data Table 8: comprehensive gene signature matrix](ExtendedDataTable8.html)
-  ([wide format](ExtendedDataTable8_wide.html))
++ [Extended Data Table 1: summary of GP characteristics and comments](ExtendedDataTable1.html)
++ [Extended Data Table 2: gene signature per GP](ExtendedDataTable2.html)
++ [Extended Data Table 3: GP AUC by lineage](ExtendedDataTable3.html)
++ [Extended Data Table 4: GP activity during activation](ExtendedDataTable4.html)
++ [Extended Data Table 5: GP AUC by tissue](ExtendedDataTable5.html)
++ [Extended Data Table 6: GP AUC by cluster](ExtendedDataTable6.html)
 
 ## Methods
 

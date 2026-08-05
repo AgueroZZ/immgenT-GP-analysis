@@ -1,5 +1,5 @@
 ---
-title: "Extended Data Table 3: GP AUC by tissue"
+title: "Extended Data Table 3: GP AUC by lineage"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -7,22 +7,21 @@ editor_options:
 ---
 
 Produced by
-[`script/ExtendedDataTable3_GP_AUC_tissue.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/ExtendedDataTable3_GP_AUC_tissue.R):
+[`script/ExtendedDataTable3_GP_AUC_lineage.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/ExtendedDataTable3_GP_AUC_lineage.R):
 
-```{r edt3-code, code=readLines("../script/ExtendedDataTable3_GP_AUC_tissue.R"), eval=FALSE}
+```{r edt3-code, code=readLines("../script/ExtendedDataTable3_GP_AUC_lineage.R"), eval=FALSE}
 ```
 
 ## Table {#edt3}
 
-All 200 rows and every tissue column are browsable below: sort by clicking a
-column header, type a GP name into the search box under the **GP** column, or
-use a per-tissue box to filter by AUC range. Scroll horizontally to see all
-tissue columns. Download the raw CSV at
-[`figures/final-selected/ExtendedDataTable3_GP_AUC_tissue.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/final-selected/ExtendedDataTable3_GP_AUC_tissue.csv).
+All 200 rows are browsable below: sort by clicking a column header, type a GP
+name into the search box under the **GP** column, or use a per-lineage box to
+filter by AUC range. Download the raw CSV at
+[`figures/final-selected/ExtendedDataTable3_GP_AUC_lineage.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/final-selected/ExtendedDataTable3_GP_AUC_lineage.csv).
 
 ```{r edt3-preview, echo=FALSE, message=FALSE}
 suppressPackageStartupMessages(library(DT))
-tab <- read.csv("../figures/final-selected/ExtendedDataTable3_GP_AUC_tissue.csv", check.names = FALSE)
+tab <- read.csv("../figures/final-selected/ExtendedDataTable3_GP_AUC_lineage.csv", check.names = FALSE)
 DT::datatable(
   tab,
   rownames = FALSE,
@@ -36,7 +35,7 @@ DT::datatable(
 ```
 
 ::: {.figcaption}
-**Extended Data Table 3.** One row per GP, one column per tissue
-(organ_simplified). Each value is the one-vs-rest AUC for predicting membership
-in that tissue from the GP's loading, computed on healthy non-thymocyte cells.
+**Extended Data Table 3.** One row per GP, one column per major lineage
+(annotation_level1). Each value is the one-vs-rest AUC for predicting membership
+in that lineage from the GP's loading, computed on healthy non-thymocyte cells.
 :::

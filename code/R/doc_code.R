@@ -32,12 +32,46 @@
 # failed build than a page quietly showing the wrong code. Disambiguate by
 # making the prefix longer: "4d prep" and "4d:" pick out the two blocks that
 # a bare "4d" would match.
+#
+# Anything between
+#
+#   # --- internal ---
+#   ...
+#   # --- end internal ---
+#
+# is stripped from the returned code. The published pages are read by people
+# outside the project, so provenance notes that only make sense internally --
+# how a panel was re-lettered, which pre-refactor script it came from, what an
+# earlier version of the figure showed -- live between these markers: kept in
+# the source for us, kept off the page. The markers are deliberately not
+# `doc:`-prefixed, so they do not register as anchors and can sit inside a
+# block (including the file header) without splitting it.
 
 # Lines like "# ==========" or "# ----------" that open/close a banner.
 .doc_is_rule <- function(x) grepl("^#\\s*[=-]{5,}\\s*$", x)
 
 # Lines like "# --- doc:3f ---".
 .doc_is_subanchor <- function(x) grepl("^#\\s*-{2,}\\s*doc:\\S+\\s*-{2,}\\s*$", x)
+
+# Lines like "# --- internal ---" / "# --- end internal ---".
+.doc_is_internal_open <- function(x) grepl("^#\\s*-{2,}\\s*internal\\s*-{2,}\\s*$", x)
+.doc_is_internal_close <- function(x) grepl("^#\\s*-{2,}\\s*end internal\\s*-{2,}\\s*$", x)
+
+# Drop every "# --- internal --- ... # --- end internal ---" run, markers
+# included. An unclosed marker drops the rest of the block, which is the safe
+# direction to fail: too little on the page, never too much.
+.doc_drop_internal <- function(x) {
+  open <- .doc_is_internal_open(x)
+  close <- .doc_is_internal_close(x)
+  if (!any(open)) {
+    if (any(close)) {
+      stop("code_for(): '# --- end internal ---' with no opening marker.", call. = FALSE)
+    }
+    return(x)
+  }
+  inside <- cumsum(open) > cumsum(close)
+  x[!(inside | close)]
+}
 
 .doc_subanchor_id <- function(x) sub("^#\\s*-+\\s*(doc:\\S+)\\s*-+\\s*$", "\\1", x)
 
@@ -80,6 +114,7 @@
 
 .doc_trim <- function(x) {
   x <- x[!.doc_is_subanchor(x)]
+  x <- .doc_drop_internal(x)
   keep <- which(nzchar(trimws(x)))
   if (!length(keep)) character(0) else x[min(keep):max(keep)]
 }

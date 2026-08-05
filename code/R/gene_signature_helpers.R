@@ -7,9 +7,8 @@
 # is appended right after its (capped) gene rows -- e.g. row 101 after 100
 # up-regulated genes -- noting how many more were left out, so the truncation
 # is visible directly in the data instead of a side channel (header
-# text/extra column); set it FALSE to silently cap with no such row. Used by
-# Extended Data Table 8's long (annotate_truncation = FALSE) and wide
-# (annotate_truncation = TRUE, the default) exports.
+# text/extra column); set it FALSE to silently cap with no such row. Extended
+# Data Table 2 exports with annotate_truncation = FALSE.
 build_gp_gene_signature_blocks <- function(score_mat, cutoff = 0.1, cap = 100, annotate_truncation = TRUE) {
   build_direction <- function(vals, all_genes, direction_label) {
     shown <- head(all_genes, cap)

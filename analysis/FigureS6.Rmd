@@ -18,19 +18,6 @@ which shares its CITE-seq setup, gating logic and CD69 GP subset with
 reference (not re-executed on this page, since this script takes about a minute
 to run); the images are its pre-rendered output.
 
-**This figure was reworked on 2026-07-28.** It used to be a two-page gallery
-(`s6-1`, `s6-2`) of all 23 well-aligned GPs that Figure 6 did not show. The
-gallery is retired; four of its GPs are kept here as panels (c)-(f), two were
-promoted into the main figure ([Fig. 6i, j](Figure6.html#fig6ej)), and the
-remaining 17 are no longer published. Panels (a) and (b) moved here from Figure 6,
-where they were the published 6j and 6k. `script/FigureS6.R` carries the full
-old-to-new table in its header.
-
-**Re-lettered again on 2026-07-30.** The protein-program heatmap that was this
-figure's first panel (the published 6b) became a standalone figure,
-[Extended Data Figure 5](FigureS5.html), so every panel after it dropped one
-letter: the b-g of 2026-07-28 are now **a-f**.
-
 ## Setup
 
 ```{r figs6-setup, code=code_for("../script/FigureS6.R", "doc:setup"), eval=FALSE}
@@ -88,6 +75,6 @@ highest GP activity -- exactly as many cells as the protein gate selected. Color
 indicates cell density (two-dimensional); all other cells are grey. Thymocytes,
 proliferating, and "miniverse" cells are excluded. Each panel is labeled with its
 GP and the markers the gate actually applied; every marker in these four
-signatures has a manually reviewed positivity threshold
-([Extended Data Table 7](ExtendedDataTable7.html)), so none is silently dropped.
+signatures has a manually reviewed positivity threshold, so none is silently
+dropped.
 :::

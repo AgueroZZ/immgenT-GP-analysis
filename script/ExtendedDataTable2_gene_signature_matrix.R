@@ -1,15 +1,11 @@
-# Extended Data Table 8 (long format): comprehensive gene signature matrix.
+# Extended Data Table 2: gene signature per GP.
 #
-# The same signature genes as the wide-format version
-# (script/ExtendedDataTable8_gene_signature_matrix_wide.R), reshaped as a tidy
-# long table: one row per gene, with gene_symbol, signature_name (GP +
-# direction, underscore-joined, e.g. "GP1_up"), and score. Every gene has
-# |score| > 0.1 on the same max|.|=1-per-GP-scaled gene factor matrix Table 1
-# uses, ranked by |score| within direction and silently capped at the top 100
-# up- and top 100 down-regulated genes per GP (no truncation-count row here,
-# unlike the wide version -- see
-# code/R/gene_signature_helpers.R::build_gp_gene_signature_blocks()'s
-# `annotate_truncation` argument).
+# The comprehensive signature gene list behind Extended Data Table 1's Top
+# Genes +/- columns, as a tidy long table: one row per gene, with gene_symbol,
+# signature_name (GP + direction, underscore-joined, e.g. "GP1_up"), and score.
+# Every gene has |score| > 0.1 on the same max|.|=1-per-GP-scaled gene factor
+# matrix Table 1 uses, ranked by |score| within direction and capped at the top
+# 100 up- and top 100 down-regulated genes per GP.
 #
 # Required inputs (data/) -- see code/README.md's "Data provenance" table.
 
@@ -42,6 +38,6 @@ rownames(long_table) <- NULL
 
 write.csv(
   long_table,
-  file = paste0(output_path, "ExtendedDataTable8_gene_signature_matrix_long.csv"),
+  file = paste0(output_path, "ExtendedDataTable2_gene_signature_matrix.csv"),
   row.names = FALSE
 )

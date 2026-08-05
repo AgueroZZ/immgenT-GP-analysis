@@ -49,6 +49,5 @@ exactly zero -- and were omitted. Four putative contamination programs (GP40,
 GP50, GP55 and GP188) were also removed, leaving **179 GPs**
 (200 - 17 - 4 = 179); 47 proteins (rows) x 179 GPs (columns). Entries with an
 absolute score below 0.5 are shown in white, with color running from blue (-1)
-through white to red (+1). GP columns are ordered from the most to the fewest visible proteins. Protein rows are ordered by the position of their rightmost visible GP, placing proteins that extend into the sparse right side first and exposing a triangular support boundary; visible count and a rarity-weighted support score break ties. This triangular-first row order is not monotone in per-protein sparsity. GP labels are vertical and sized to the available heatmap-cell width; protein labels are sized to the available row height. The same matrix is published as a table in
-[Extended Data Table 6](ExtendedDataTable6.html).
+through white to red (+1). GP columns are ordered from the most to the fewest visible proteins. Protein rows are ordered by the position of their rightmost visible GP, placing proteins that extend into the sparse right side first and exposing a triangular support boundary; visible count and a rarity-weighted support score break ties. This triangular-first row order is not monotone in per-protein sparsity. GP labels are vertical and sized to the available heatmap-cell width; protein labels are sized to the available row height.
 :::

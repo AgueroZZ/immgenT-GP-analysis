@@ -1,9 +1,12 @@
 # Figure 4. GPs associated with T-cell activation.
 #
-# Panels produced. NOTE the renumbering: this figure's published counterpart is
+# --- internal ---
+# NOTE the renumbering: this figure's published counterpart is
 # figures/Previous/bits/Figure *3*, panels 3c-3g (the old 3a/3b moved to
 # Figure S3). Full caption text:
 # ../immgen-t-factors/figures/Figure_Activation/Figure3_caption.md.
+# --- end internal ---
+# Panels produced:
 #   4a  Standardized mean difference (d) in GP loading, activated vs resting,
 #       CD4 (x) vs CD8 (y); curated GPs colored by semantic group and labeled.
 #   4b  GP-gene signature network: each curated GP linked to its top 5
@@ -13,6 +16,7 @@
 #   4d  Heatmap of mean GP loading per Level-2 sub-lineage, across the 7
 #       T-cell lineages.
 #
+# --- internal ---
 # Re-lettered 2026-07-29: the bipartite TF-GP network for the curated activation
 # GPs was dropped from the figure, and the two heatmaps after it each moved up a
 # letter. So against figures/Previous/bits/Figure 3: 4a = 3c, 4b = 3d,
@@ -24,6 +28,10 @@
 # Figure S3 panels (see FigureS3.R) from the same curated GP set and cell
 # groupings -- that shared setup now lives in
 # code/R/activation_shared_setup.R, sourced by both scripts.
+#
+# --- end internal ---
+# The curated GP set and activated/resting cell groupings are shared with
+# Figure S3 via code/R/activation_shared_setup.R.
 #
 # Required inputs (data/) -- see code/README.md's "Data provenance" table
 # for the full picture:

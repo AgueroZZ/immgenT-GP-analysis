@@ -19,11 +19,6 @@ output.
 
 Panel (a) is **not produced in this repository** -- see below.
 
-**Lettering note.** The gate definition in (a) used to be split into two panels,
-a (the MDEs) and b (the protein plot); they are one panel, so every panel after it
-is now one letter lower than in the published figure -- (b) here is the published
-(c), and (g) is the published (h).
-
 ## Setup
 
 ```{r figs3-setup, code=code_for("../script/FigureS3.R", c("^", "Load data")), eval=FALSE}

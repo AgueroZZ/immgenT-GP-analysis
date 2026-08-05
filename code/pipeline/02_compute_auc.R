@@ -9,8 +9,8 @@
 #   organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds
 #     -- non-thymocyte, HEALTHY-ONLY cells (condition_broad == "healthy").
 #     Feeds Figure2.R (2A), Figure4.R (organ mapping in healthy tissue), and
-#     the Extended Data GP-AUC tables (lineage / tissue / cluster) plus the
-#     Extended Data GP-summary annotations (script/ExtendedDataTable1-4_*.R).
+#     the Extended Data GP-AUC tables (lineage / tissue / cluster;
+#     script/ExtendedDataTable{3,5,6}_*.R).
 #
 #   level_{1,2}_AUC_list_figure_no_thymocytes.rds
 #   organ_simplified_AUC_list_figure_no_thymocytes.rds

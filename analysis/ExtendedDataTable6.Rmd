@@ -1,5 +1,5 @@
 ---
-title: "Extended Data Table 6: protein factor matrix"
+title: "Extended Data Table 6: GP AUC by cluster"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -7,22 +7,22 @@ editor_options:
 ---
 
 Produced by
-[`script/ExtendedDataTable6_protein_factor_matrix.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/ExtendedDataTable6_protein_factor_matrix.R):
+[`script/ExtendedDataTable6_GP_AUC_cluster.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/ExtendedDataTable6_GP_AUC_cluster.R):
 
-```{r edt6-code, code=readLines("../script/ExtendedDataTable6_protein_factor_matrix.R"), eval=FALSE}
+```{r edt6-code, code=readLines("../script/ExtendedDataTable6_GP_AUC_cluster.R"), eval=FALSE}
 ```
 
 ## Table {#edt6}
 
-All 200 rows and every protein column are browsable below: sort by clicking a
-column header, type a GP name into the search box under the **GP** column, or
-use a per-protein box to filter by score range. Scroll horizontally to see all
-protein columns. Download the raw CSV at
-[`figures/final-selected/ExtendedDataTable6_protein_factor_matrix.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/final-selected/ExtendedDataTable6_protein_factor_matrix.csv).
+All 200 rows and every cluster column (107 sub-lineage clusters) are browsable
+below: sort by clicking a column header, type a GP name into the search box
+under the **GP** column, or use a per-cluster box to filter by AUC range.
+Scroll horizontally to see all cluster columns. Download the raw CSV at
+[`figures/final-selected/ExtendedDataTable6_GP_AUC_cluster.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/final-selected/ExtendedDataTable6_GP_AUC_cluster.csv).
 
 ```{r edt6-preview, echo=FALSE, message=FALSE}
 suppressPackageStartupMessages(library(DT))
-tab <- read.csv("../figures/final-selected/ExtendedDataTable6_protein_factor_matrix.csv", check.names = FALSE)
+tab <- read.csv("../figures/final-selected/ExtendedDataTable6_GP_AUC_cluster.csv", check.names = FALSE)
 DT::datatable(
   tab,
   rownames = FALSE,
@@ -36,9 +36,7 @@ DT::datatable(
 ```
 
 ::: {.figcaption}
-**Extended Data Table 6.** The final processed CITE-seq protein factor matrix used
-by [Extended Data Figure 5](FigureS5.html), as a plain table: one row per GP, one column per protein,
-holding the protein's factor score in that GP. Built from the projected protein
-EBMF fit, restricted to the selected "good" proteins (isotype / THY1.1 / excluded
-proteins removed) and scaled so each GP column has maximum absolute score 1.
+**Extended Data Table 6.** One row per GP, one column per sub-lineage cluster
+(annotation_level2). Each value is the one-vs-rest AUC for predicting membership
+in that cluster from the GP's loading, computed on healthy non-thymocyte cells.
 :::

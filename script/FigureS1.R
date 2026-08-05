@@ -1,7 +1,10 @@
 # Figure S1. GP reproducibility across IGTs.
 #
-# Panels produced (see figures/Previous/bits/Figure S1/FigureS1_caption.md
-# for the full caption text):
+# --- internal ---
+# See figures/Previous/bits/Figure S1/FigureS1_caption.md for the full caption
+# text.
+# --- end internal ---
+# Panels produced:
 #   S1A  Cumulative number of GPs validated (cosine >= threshold, thresholds
 #        0.2-0.8) as IGTs are added one at a time, in IGT index order.
 #   S1B  Number of GPs validated by at least X IGTs, vs X (log-log), for the
@@ -14,16 +17,19 @@
 #   S1E  Per-IGT mean nCount_RNA (x) vs per-IGT mean GP1 loading (y), over the
 #        standard-spleen cells -- a GP whose loading tracks sequencing depth,
 #        as opposed to S1D's run-confined GP9.
+# --- internal ---
 #
 #        S1E replaced, on 2026-08-04, a panel showing GP9 loading across all
 #        sixteen individual samples inside IGT13/IGT14 (2 runs x 2 mice x
 #        4 tissues), which argued that GP9's effect was not one aberrant mouse
 #        or tissue. That argument is no longer made anywhere in the figure.
+# --- end internal ---
 #   S1F  Scatter of the NUMBER of active genes (x) vs. proportion of active
 #        cells (y) per GP, using the same hard-threshold definitions as Figure 2
 #        (|normalized score| > 0.25 for genes; normalized loading > 0.1 for
 #        cells), over non-thymocyte cells -- not the EBMF sparsity prior. One
 #        dot per GP.
+# --- internal ---
 #
 #        S1C-S1E replaced, on 2026-07-30, the previous S1C (mean vs. variance of
 #        per-IGT mean loading) and S1D (heatmap of the ten highest-variance GPs),
@@ -39,6 +45,8 @@
 #
 # Source: S1A/S1B ported from Figure_Saturation.R; S1C-S1E written for this
 # figure (the retired S1C/S1D came from Figure_batch.R panels a/b).
+#
+# --- end internal ---
 #
 # S1A/S1B reuse the per-IGT cosine-matching score matrix
 # (data/igt_specific_cosine_scores.csv) rather than recomputing it here --

@@ -1,7 +1,10 @@
 # Figure S2. GP30 and GP58 loadings across T-cell subsets.
 #
-# Panels produced (see figures/Previous/bits/Figure S2/FigureS2_caption.md
-# for the full caption text):
+# --- internal ---
+# See figures/Previous/bits/Figure S2/FigureS2_caption.md for the full caption
+# text.
+# --- end internal ---
+# Panels produced:
 #   S2A  Boxplots of GP30 loading across Tz subsets (iNKT, MAIT, other Tz)
 #        vs all other, non-Tz T cells.
 #   S2B  Boxplots of GP58 loading: resting CD8, activated CD8, vs the other
@@ -9,9 +12,11 @@
 #   S2C  Boxplots of CD8A/CD8B log-normalized CITE-seq protein expression in
 #        CD8 cells, resting vs activated.
 #
+# --- internal ---
 # Source: ported from Figure_Lineage.R (see Figure3.R for the main
 # Figure 3 panels from the same file).
 #
+# --- end internal ---
 # Required inputs (data/) -- see code/README.md's "Data provenance" table
 # for the full picture:
 #   igt1_96_..._ADTonly.Rds                  [primary input Seurat object]
@@ -24,8 +29,7 @@ library(ggrastr)
 library(tidyr)
 library(Matrix) # protein_mat_normalized_lognorm is a dgCMatrix; rownames()
                 # dispatch on it is unreliable unless Matrix is attached
-                # (not just loaded as a namespace), which silently intersected
-                # to zero cells during this refactor -- keep this library() call.
+                # (not just loaded as a namespace) -- keep this library() call.
 
 data_path <- "data/"
 figure_path <- "figures/final-selected/Figure S2/"

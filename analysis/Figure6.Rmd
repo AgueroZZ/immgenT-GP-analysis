@@ -18,15 +18,6 @@ which shares its CITE-seq setup with [Extended Data Figure 5](FigureS5.html) and
 reference (not re-executed on this page, since this script takes about a
 minute to run); the images are its pre-rendered output.
 
-**Panel order changed on 2026-07-28.** The figure was reordered and three panels
-moved out into the Extended Data figures, so the letters here no longer match the
-published figure: the KLRG1 and CD69 panels moved to the front (published g, h,
-i are now b, c, d), the four gating panels moved back (published c-f are now
-e-h), and two new gating panels were added, (i) GP77 and (j) GP8. The published
-protein-program heatmap 6b is now its own figure, [Extended Data Fig. 5](FigureS5.html), and
-the published 6j/6k are now [Extended Data Fig. 6a, b](FigureS6.html#figs6ab).
-`script/Figure6.R` carries the full old-to-new table in its header.
-
 ## Setup
 
 ```{r fig6-setup, code=code_for("../script/Figure6.R", "doc:setup"), eval=FALSE}

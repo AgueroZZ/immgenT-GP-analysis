@@ -35,7 +35,7 @@
 # The shared setup loads more than this one panel needs (it also builds the
 # gating inputs Figure 6 / Figure S6 use); it is sourced as-is rather than
 # trimmed so the protein filters here cannot drift from the ones those figures
-# and Extended Data Table 6 apply.
+# apply.
 
 # --- doc:setup ---
 library(dplyr)
@@ -55,8 +55,7 @@ run_started_at <- Sys.time()
 # s5: sparse protein-program heatmap, contamination GPs removed
 # ============================================================
 # The normalized protein matrix is derived here rather than in
-# citeseq_shared_setup.R because this is its only consumer among the figures
-# (Extended Data Table 6 rebuilds it the same way for its own export).
+# citeseq_shared_setup.R because this is its only consumer among the figures.
 Protein_F_pm <- Protein_F_pm_raw[!rownames(Protein_F_pm_raw) %in% isotype_proteins, ]
 Protein_F_pm <- Protein_F_pm[rownames(Protein_F_pm) %in% good_proteins, ]
 Protein_F_pm <- Protein_F_pm[!rownames(Protein_F_pm) %in% exclude_proteins, ]
