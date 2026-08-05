@@ -384,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-08-04
+<strong>Last updated:</strong> 2026-08-05
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedf450056dca83fce559b6f1f380b26e930c0cca7targetblankdf45005a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree4d526e2c6ed1f45f4058fb8de95967e419b04164targetblank4d526e2a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/df450056dca83fce559b6f1f380b26e930c0cca7" target="_blank">df45005</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/4d526e2c6ed1f45f4058fb8de95967e419b04164" target="_blank">4d526e2</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedf450056dca83fce559b6f1f380b26e930c0cca7targetblankdf45005a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree4d526e2c6ed1f45f4058fb8de95967e419b04164targetblank4d526e2a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/df450056dca83fce559b6f1f380b26e930c0cca7" target="_blank">df45005</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/4d526e2c6ed1f45f4058fb8de95967e419b04164" target="_blank">4d526e2</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -554,6 +554,7 @@ Ignored files:
     Ignored:    analysis/.DS_Store
     Ignored:    analysis/.Rhistory
     Ignored:    analysis/assets/.DS_Store
+    Ignored:    analysis/site_libs/
     Ignored:    captions/
     Ignored:    code/.DS_Store
     Ignored:    code/other/topic_flashier_20250212.R
@@ -632,6 +633,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/4d526e2c6ed1f45f4058fb8de95967e419b04164/analysis/FigureS1.Rmd" target="_blank">4d526e2</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-08-05
+</td>
+<td>
+Figure S1e: GP1 only, and stop encoding dataset size
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/218a0ff4730b91600a616fc212a3f4822d32b661/docs/FigureS1.html" target="_blank">218a0ff</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-08-04
+</td>
+<td>
+Build site: Figure S1e per-dataset depth vs GP1/GP171 loading
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1295,9 +1330,9 @@ itself is produced (a much heavier, cluster-scale computation).</p>
 #        standard-spleen cells.
 #   S1D  GP9 loading across IGTs (standard-spleen cells) -- the shape of the
 #        most extreme x-axis point in S1C.
-#   S1E  Per-IGT mean nCount_RNA (x) vs per-IGT mean loading (y) for GP1 and
-#        GP171, over the standard-spleen cells -- the two GPs whose loading
-#        tracks sequencing depth, as opposed to S1D&#39;s run-confined GP9.
+#   S1E  Per-IGT mean nCount_RNA (x) vs per-IGT mean GP1 loading (y), over the
+#        standard-spleen cells -- a GP whose loading tracks sequencing depth,
+#        as opposed to S1D&#39;s run-confined GP9.
 #
 #        S1E replaced, on 2026-08-04, a panel showing GP9 loading across all
 #        sixteen individual samples inside IGT13/IGT14 (2 runs x 2 mice x
@@ -1963,88 +1998,60 @@ than cell-type-specific – program looks like.</p>
 </div>
 </div>
 <div id="figs1e" class="section level2">
-<h2>(E) Per-dataset sequencing depth vs GP1 and GP171 loading</h2>
+<h2>(E) Per-dataset sequencing depth vs GP1 loading</h2>
 <pre class="r"><code># ============================================================
-# S1E: per-IGT mean sequencing depth vs per-IGT mean loading, GP1 and GP171
+# S1E: per-IGT mean sequencing depth vs per-IGT mean GP1 loading
 # ============================================================
 # The other kind of between-dataset structure: not a program confined to one run
-# (S1D), but two GPs whose loading tracks how deeply the dataset was sequenced.
-# GP1 and GP171 are the two most nCount_RNA-correlated GPs of the 200 at every
-# level of aggregation -- per cell (Spearman rho +0.78 and +0.62 over the
-# standard-spleen cells), per IGT (this panel), and per sample (+0.81, +0.84).
-# GP1&#39;s correlation is stronger against nFeature_RNA (+0.89) than against
-# nCount_RNA and is unchanged by conditioning on annotation_level2 (+0.78), and
-# its top genes are housekeeping, so it reads as a detection-rate axis that the
-# library-size normalization upstream of the fit does not remove.
+# (S1D), but a GP whose loading tracks how deeply the dataset was sequenced. GP1
+# is the most nCount_RNA-correlated GP of the 200 at every level of aggregation
+# -- per cell (Spearman rho +0.78 over the standard-spleen cells), per IGT (this
+# panel), and per sample (+0.81). It correlates more strongly with nFeature_RNA
+# (+0.89) than with nCount_RNA and is unchanged by conditioning on
+# annotation_level2 (+0.78), and its top genes are housekeeping, so it reads as
+# a detection-rate axis that the library-size normalization upstream of the fit
+# does not remove. GP171 is second on the same ranking; only GP1 is drawn here.
 #
-# On the point count: the dataset has 80 IGTs but only 35 contributed any
-# standard-spleen cell, so 35 is the whole available set here, not a threshold.
-# Four of those 35 are tiny (IGT21 n = 2, IGT54 n = 9, IGT61 n = 13, IGT50
-# n = 62) and their per-IGT mean is close to noise, so the solid fit uses the 31
-# IGTs with &gt;= 100 cells -- the same cutoff as S1D -- and the dotted line is the
-# all-35 fit, drawn only to show the conclusion does not turn on that choice.
-# Point area is deliberately NOT mapped to cell count: the panel is about where
-# an IGT sits on the two axes, and sizing by n makes the big IGTs read as the
-# more important ones, which is not the claim.
-depth_gps &lt;- c(&quot;K1&quot;, &quot;K171&quot;)
+# Every one of the 35 IGTs is drawn identically -- same size, same colour, one
+# fit over all of them. Dataset size is deliberately not encoded: the panel is
+# about where a dataset sits on the two axes, and mapping n to area or colour
+# makes the big IGTs read as the more important ones, which is not the claim.
+# (35 is not a threshold either: the dataset has 80 IGTs, and the other 45
+# contributed no standard-spleen cell at all.)
+depth_gp &lt;- &quot;K1&quot;
 depth_vec &lt;- seurat_meta_filtered_spleen[spleen_cells, &quot;nCount_RNA&quot;]
 
-igt_depth &lt;- data.frame(IGT = igt_vec, nCount = depth_vec) %&gt;%
+depth_df &lt;- data.frame(IGT = igt_vec, nCount = depth_vec,
+                       loading = L_spleen[, depth_gp]) %&gt;%
   group_by(IGT) %&gt;%
-  summarise(n_cells = n(), mean_nCount = mean(nCount), .groups = &quot;drop&quot;)
-igt_mean_load &lt;- (rowsum(L_spleen[, depth_gps, drop = FALSE], igt_vec) /
-                    as.numeric(table(igt_vec)))[igt_depth$IGT, , drop = FALSE]
-
-depth_df &lt;- lapply(depth_gps, function(g) {
-  data.frame(igt_depth, GP = gp_label(g), mean_loading = igt_mean_load[, g],
-             row.names = NULL)
-}) %&gt;%
-  bind_rows() %&gt;%
-  mutate(GP = factor(GP, levels = gp_label(depth_gps)), big = n_cells &gt;= 100)
-
-n_igt_depth &lt;- nrow(igt_depth)
-n_small_depth &lt;- sum(!igt_depth$n_cells &gt;= 100)
-depth_ann &lt;- depth_df %&gt;%
-  group_by(GP) %&gt;%
-  summarise(lab = sprintf(&quot;rho = %+.2f  (n &gt;= 100)\nrho = %+.2f  (all %d)&quot;,
-                          cor(mean_nCount[big], mean_loading[big], method = &quot;spearman&quot;),
-                          cor(mean_nCount, mean_loading, method = &quot;spearman&quot;),
-                          n_igt_depth),
-            .groups = &quot;drop&quot;)
+  summarise(n_cells = n(), mean_nCount = mean(nCount),
+            mean_loading = mean(loading), .groups = &quot;drop&quot;)
+n_igt_depth &lt;- nrow(depth_df)
+rho_depth &lt;- cor(depth_df$mean_nCount, depth_df$mean_loading, method = &quot;spearman&quot;)
 
 p_S1E &lt;- ggplot(depth_df, aes(x = mean_nCount, y = mean_loading)) +
-  geom_smooth(aes(linetype = &quot;all 35&quot;), method = &quot;lm&quot;, formula = y ~ x, se = FALSE,
-              colour = &quot;grey55&quot;, linewidth = 0.5) +
-  geom_smooth(data = filter(depth_df, big), aes(linetype = &quot;31 with n &gt;= 100&quot;),
-              method = &quot;lm&quot;, formula = y ~ x, se = FALSE, colour = &quot;grey25&quot;,
-              linewidth = 0.8) +
-  geom_point(aes(colour = big), size = 2.2, alpha = 0.85) +
-  ggrepel::geom_text_repel(aes(label = sub(&quot;^IGT&quot;, &quot;&quot;, IGT)), size = 2.4, seed = 42,
-                           max.overlaps = Inf, segment.color = &quot;grey70&quot;,
+  geom_smooth(method = &quot;lm&quot;, formula = y ~ x, se = FALSE, colour = &quot;grey55&quot;,
+              linewidth = 0.6) +
+  geom_point(size = 1.9, alpha = 0.85, colour = &quot;steelblue&quot;) +
+  ggrepel::geom_text_repel(aes(label = sub(&quot;^IGT&quot;, &quot;&quot;, IGT)), size = 2.5, seed = 42,
+                           max.overlaps = Inf, segment.color = &quot;grey60&quot;,
                            min.segment.length = 0.2) +
-  geom_text(data = depth_ann, aes(x = Inf, y = -Inf, label = lab), hjust = 1.03,
-            vjust = -0.3, size = 2.8, inherit.aes = FALSE) +
-  facet_wrap(~ GP, nrow = 1, scales = &quot;free_y&quot;) +
-  scale_colour_manual(values = c(`TRUE` = &quot;purple4&quot;, `FALSE` = &quot;grey60&quot;),
-                      labels = c(`TRUE` = &quot;n &gt;= 100&quot;, `FALSE` = &quot;n &lt; 100&quot;), name = NULL) +
-  scale_linetype_manual(values = c(`31 with n &gt;= 100` = 1, `all 35` = 3),
-                        breaks = c(&quot;31 with n &gt;= 100&quot;, &quot;all 35&quot;), name = &quot;OLS fit on&quot;) +
-  guides(colour = guide_legend(order = 1),
-         linetype = guide_legend(order = 2,
-                                 override.aes = list(colour = c(&quot;grey25&quot;, &quot;grey55&quot;)))) +
+  annotate(&quot;text&quot;, x = Inf, y = -Inf, hjust = 1.05, vjust = -0.8, size = 3.4,
+           label = sprintf(&quot;Spearman rho = %+.2f&quot;, rho_depth)) +
   expand_limits(y = 0) +
   cowplot::theme_cowplot(font_size = 11) +
   labs(
-    title = &quot;Per-dataset mean sequencing depth vs mean loading&quot;,
-    subtitle = sprintf(paste(&quot;one point per IGT, label = IGT number; %d of the 80 IGTs have&quot;,
-                             &quot;standard-spleen cells,\nand the %d of those with &lt; 100 cells are&quot;,
-                             &quot;grey and excluded from the solid fit only.&quot;),
-                       n_igt_depth, n_small_depth),
-    x = &quot;mean nCount_RNA per IGT&quot;, y = &quot;mean GP loading per IGT&quot;
-  ) +
-  theme(strip.background = element_rect(fill = &quot;grey92&quot;))
-ggsave(paste0(figure_path, &quot;S1E.pdf&quot;), plot = p_S1E, width = 9.5, height = 4.6, dpi = 300)</code></pre>
-<p><img src="assets/FigureS1/S1E.png" width="90%" style="display: block; margin: auto;" /></p>
+    title = paste0(&quot;Per-dataset sequencing depth vs &quot;, gp_label(depth_gp), &quot; loading&quot;),
+    subtitle = sprintf(&quot;one point per IGT, label = IGT number; all %d IGTs contributing standard-spleen cells; grey = OLS fit&quot;,
+                       n_igt_depth),
+    x = &quot;mean nCount_RNA per IGT&quot;,
+    y = paste0(&quot;mean &quot;, gp_label(depth_gp), &quot; loading per IGT&quot;)
+  )
+# y is anchored at 0 so the reader can see that the between-dataset spread
+# (0.24-0.41) is a large fraction of GP1&#39;s normalized [0, 1] loading scale, not a
+# zoomed-in wiggle; the height is trimmed so that band does not dominate.
+ggsave(paste0(figure_path, &quot;S1E.pdf&quot;), plot = p_S1E, width = 6.5, height = 4.2, dpi = 300)</code></pre>
+<p><img src="assets/FigureS1/S1E.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-S1E">
 Past versions of S1E.png
@@ -2067,6 +2074,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/4d526e2c6ed1f45f4058fb8de95967e419b04164/docs/assets/FigureS1/S1E.png" target="_blank">4d526e2</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-08-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/df450056dca83fce559b6f1f380b26e930c0cca7/docs/assets/FigureS1/S1E.png" target="_blank">df45005</a>
@@ -2173,20 +2191,16 @@ Ziang Zhang
 <div class="figcaption">
 <p><strong>Extended Data Fig. 1E.</strong> A second kind of
 between-dataset structure: not a program confined to one run, as in (D),
-but two GPs whose loading tracks how deeply the dataset was sequenced.
-Mean <code>nCount_RNA</code> per dataset (x-axis) against mean loading
-per dataset (y-axis) over the same spleen-standard cells used in (C) and
-(D), for GP1 and GP171 – the two most depth-correlated GPs of the 200.
-Each point is one IGT and all points are drawn at the same size; 35 of
-the 80 IGTs contribute spleen-standard cells at all, and the four
-contributing fewer than 100 (IGT21, n = 2; IGT54, n = 9; IGT61, n = 13;
-IGT50, n = 62) are shown in grey. The solid line is an OLS fit over the
-31 datasets with at least 100 cells, the same cutoff as (D); the dotted
-line is the fit over all 35, and the two are almost indistinguishable.
-Spearman correlation across datasets is +0.77 for GP1 and +0.82 for
-GP171 over the 31 (+0.71 and +0.76 over all 35). The same ordering holds
-per cell (rho +0.78 and +0.62, ranks 1 and 2 of 200) and per sample
-(+0.81 and +0.84). GP1 correlates more strongly with
+but a GP whose loading tracks how deeply the dataset was sequenced. Mean
+<code>nCount_RNA</code> per dataset (x-axis) against mean GP1 loading
+per dataset (y-axis), over the same spleen-standard cells used in (C)
+and (D). Each point is one of the 35 datasets that contribute
+spleen-standard cells (of 80 in total; the remaining 45 contribute
+none), drawn at the same size and colour regardless of how many cells it
+contributed; grey is an OLS fit. Spearman correlation across datasets is
++0.71. GP1 is the most depth-correlated of the 200 GPs at every level of
+aggregation: per cell (rho +0.78, rank 1 of 200), per dataset (this
+panel) and per sample (+0.81). It correlates more strongly with
 <code>nFeature_RNA</code> (+0.89) than with <code>nCount_RNA</code>, is
 unchanged by conditioning on cell type (+0.78 within
 <code>annotation_level2</code>), and is dominated by housekeeping genes,
