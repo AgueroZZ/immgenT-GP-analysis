@@ -100,35 +100,32 @@ dataset (medians 0.02-0.12), which is what a
 dataset-specific -- rather than cell-type-specific -- program looks like.
 :::
 
-## (E) Per-dataset sequencing depth vs GP1 and GP171 loading {#figs1e}
+## (E) Per-dataset sequencing depth vs GP1 loading {#figs1e}
 
 ```{r figs1e-code, code=code_for("../script/FigureS1.R", "S1E"), eval=FALSE}
 ```
 
-```{r figs1e-img, echo=FALSE, out.width="90%"}
+```{r figs1e-img, echo=FALSE, out.width="70%"}
 knitr::include_graphics("assets/FigureS1/S1E.png")
 ```
 
 ::: {.figcaption}
 **Extended Data Fig. 1E.** A second kind of between-dataset structure: not a
-program confined to one run, as in (D), but two GPs whose loading tracks how
-deeply the dataset was sequenced. Mean `nCount_RNA` per dataset (x-axis) against
-mean loading per dataset (y-axis) over the same spleen-standard cells used in
-(C) and (D), for GP1 and GP171 -- the two most depth-correlated GPs of the 200.
-Each point is one IGT and all points are drawn at the same size; 35 of the 80
-IGTs contribute spleen-standard cells at all, and the four contributing fewer
-than 100 (IGT21, n = 2; IGT54, n = 9; IGT61, n = 13; IGT50, n = 62) are shown in
-grey. The solid line is an OLS fit over the 31 datasets with at least 100 cells,
-the same cutoff as (D); the dotted line is the fit over all 35, and the two are
-almost indistinguishable. Spearman correlation across datasets is +0.77 for GP1
-and +0.82 for GP171 over the 31 (+0.71 and +0.76 over all 35). The same ordering
-holds per cell (rho +0.78 and +0.62, ranks 1 and 2 of 200) and per sample (+0.81
-and +0.84). GP1 correlates more strongly with `nFeature_RNA` (+0.89) than with
-`nCount_RNA`, is unchanged by conditioning on cell type (+0.78 within
-`annotation_level2`), and is dominated by housekeeping genes, so it reads as a
-detection-rate axis that the library-size normalization applied before the
-factorization does not remove. (Replaced, on 2026-08-04, a panel showing GP9
-loading across the sixteen individual samples of IGT13/IGT14.)
+program confined to one run, as in (D), but a GP whose loading tracks how deeply
+the dataset was sequenced. Mean `nCount_RNA` per dataset (x-axis) against mean
+GP1 loading per dataset (y-axis), over the same spleen-standard cells used in
+(C) and (D). Each point is one of the 35 datasets that contribute spleen-standard
+cells (of 80 in total; the remaining 45 contribute none), drawn at the same size
+and colour regardless of how many cells it contributed; grey is an OLS fit.
+Spearman correlation across datasets is +0.71. GP1 is the most
+depth-correlated of the 200 GPs at every level of aggregation: per cell
+(rho +0.78, rank 1 of 200), per dataset (this panel) and per sample (+0.81). It
+correlates more strongly with `nFeature_RNA` (+0.89) than with `nCount_RNA`, is
+unchanged by conditioning on cell type (+0.78 within `annotation_level2`), and is
+dominated by housekeeping genes, so it reads as a detection-rate axis that the
+library-size normalization applied before the factorization does not remove.
+(Replaced, on 2026-08-04, a panel showing GP9 loading across the sixteen
+individual samples of IGT13/IGT14.)
 :::
 
 ## (F) Active-gene vs. active-cell proportion per GP {#figs1f}

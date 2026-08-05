@@ -11,9 +11,9 @@
 #        standard-spleen cells.
 #   S1D  GP9 loading across IGTs (standard-spleen cells) -- the shape of the
 #        most extreme x-axis point in S1C.
-#   S1E  Per-IGT mean nCount_RNA (x) vs per-IGT mean loading (y) for GP1 and
-#        GP171, over the standard-spleen cells -- the two GPs whose loading
-#        tracks sequencing depth, as opposed to S1D's run-confined GP9.
+#   S1E  Per-IGT mean nCount_RNA (x) vs per-IGT mean GP1 loading (y), over the
+#        standard-spleen cells -- a GP whose loading tracks sequencing depth,
+#        as opposed to S1D's run-confined GP9.
 #
 #        S1E replaced, on 2026-08-04, a panel showing GP9 loading across all
 #        sixteen individual samples inside IGT13/IGT14 (2 runs x 2 mice x
@@ -209,85 +209,57 @@ p_S1D <- ggplot(box_igt, aes(x = loading, y = igt)) +
 ggsave(paste0(figure_path, "S1D.pdf"), plot = p_S1D, width = 5.5, height = 6, dpi = 300)
 
 # ============================================================
-# S1E: per-IGT mean sequencing depth vs per-IGT mean loading, GP1 and GP171
+# S1E: per-IGT mean sequencing depth vs per-IGT mean GP1 loading
 # ============================================================
 # The other kind of between-dataset structure: not a program confined to one run
-# (S1D), but two GPs whose loading tracks how deeply the dataset was sequenced.
-# GP1 and GP171 are the two most nCount_RNA-correlated GPs of the 200 at every
-# level of aggregation -- per cell (Spearman rho +0.78 and +0.62 over the
-# standard-spleen cells), per IGT (this panel), and per sample (+0.81, +0.84).
-# GP1's correlation is stronger against nFeature_RNA (+0.89) than against
-# nCount_RNA and is unchanged by conditioning on annotation_level2 (+0.78), and
-# its top genes are housekeeping, so it reads as a detection-rate axis that the
-# library-size normalization upstream of the fit does not remove.
+# (S1D), but a GP whose loading tracks how deeply the dataset was sequenced. GP1
+# is the most nCount_RNA-correlated GP of the 200 at every level of aggregation
+# -- per cell (Spearman rho +0.78 over the standard-spleen cells), per IGT (this
+# panel), and per sample (+0.81). It correlates more strongly with nFeature_RNA
+# (+0.89) than with nCount_RNA and is unchanged by conditioning on
+# annotation_level2 (+0.78), and its top genes are housekeeping, so it reads as
+# a detection-rate axis that the library-size normalization upstream of the fit
+# does not remove. GP171 is second on the same ranking; only GP1 is drawn here.
 #
-# On the point count: the dataset has 80 IGTs but only 35 contributed any
-# standard-spleen cell, so 35 is the whole available set here, not a threshold.
-# Four of those 35 are tiny (IGT21 n = 2, IGT54 n = 9, IGT61 n = 13, IGT50
-# n = 62) and their per-IGT mean is close to noise, so the solid fit uses the 31
-# IGTs with >= 100 cells -- the same cutoff as S1D -- and the dotted line is the
-# all-35 fit, drawn only to show the conclusion does not turn on that choice.
-# Point area is deliberately NOT mapped to cell count: the panel is about where
-# an IGT sits on the two axes, and sizing by n makes the big IGTs read as the
-# more important ones, which is not the claim.
-depth_gps <- c("K1", "K171")
+# Every one of the 35 IGTs is drawn identically -- same size, same colour, one
+# fit over all of them. Dataset size is deliberately not encoded: the panel is
+# about where a dataset sits on the two axes, and mapping n to area or colour
+# makes the big IGTs read as the more important ones, which is not the claim.
+# (35 is not a threshold either: the dataset has 80 IGTs, and the other 45
+# contributed no standard-spleen cell at all.)
+depth_gp <- "K1"
 depth_vec <- seurat_meta_filtered_spleen[spleen_cells, "nCount_RNA"]
 
-igt_depth <- data.frame(IGT = igt_vec, nCount = depth_vec) %>%
+depth_df <- data.frame(IGT = igt_vec, nCount = depth_vec,
+                       loading = L_spleen[, depth_gp]) %>%
   group_by(IGT) %>%
-  summarise(n_cells = n(), mean_nCount = mean(nCount), .groups = "drop")
-igt_mean_load <- (rowsum(L_spleen[, depth_gps, drop = FALSE], igt_vec) /
-                    as.numeric(table(igt_vec)))[igt_depth$IGT, , drop = FALSE]
-
-depth_df <- lapply(depth_gps, function(g) {
-  data.frame(igt_depth, GP = gp_label(g), mean_loading = igt_mean_load[, g],
-             row.names = NULL)
-}) %>%
-  bind_rows() %>%
-  mutate(GP = factor(GP, levels = gp_label(depth_gps)), big = n_cells >= 100)
-
-n_igt_depth <- nrow(igt_depth)
-n_small_depth <- sum(!igt_depth$n_cells >= 100)
-depth_ann <- depth_df %>%
-  group_by(GP) %>%
-  summarise(lab = sprintf("rho = %+.2f  (n >= 100)\nrho = %+.2f  (all %d)",
-                          cor(mean_nCount[big], mean_loading[big], method = "spearman"),
-                          cor(mean_nCount, mean_loading, method = "spearman"),
-                          n_igt_depth),
-            .groups = "drop")
+  summarise(n_cells = n(), mean_nCount = mean(nCount),
+            mean_loading = mean(loading), .groups = "drop")
+n_igt_depth <- nrow(depth_df)
+rho_depth <- cor(depth_df$mean_nCount, depth_df$mean_loading, method = "spearman")
 
 p_S1E <- ggplot(depth_df, aes(x = mean_nCount, y = mean_loading)) +
-  geom_smooth(aes(linetype = "all 35"), method = "lm", formula = y ~ x, se = FALSE,
-              colour = "grey55", linewidth = 0.5) +
-  geom_smooth(data = filter(depth_df, big), aes(linetype = "31 with n >= 100"),
-              method = "lm", formula = y ~ x, se = FALSE, colour = "grey25",
-              linewidth = 0.8) +
-  geom_point(aes(colour = big), size = 2.2, alpha = 0.85) +
-  ggrepel::geom_text_repel(aes(label = sub("^IGT", "", IGT)), size = 2.4, seed = 42,
-                           max.overlaps = Inf, segment.color = "grey70",
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, colour = "grey55",
+              linewidth = 0.6) +
+  geom_point(size = 1.9, alpha = 0.85, colour = "steelblue") +
+  ggrepel::geom_text_repel(aes(label = sub("^IGT", "", IGT)), size = 2.5, seed = 42,
+                           max.overlaps = Inf, segment.color = "grey60",
                            min.segment.length = 0.2) +
-  geom_text(data = depth_ann, aes(x = Inf, y = -Inf, label = lab), hjust = 1.03,
-            vjust = -0.3, size = 2.8, inherit.aes = FALSE) +
-  facet_wrap(~ GP, nrow = 1, scales = "free_y") +
-  scale_colour_manual(values = c(`TRUE` = "purple4", `FALSE` = "grey60"),
-                      labels = c(`TRUE` = "n >= 100", `FALSE` = "n < 100"), name = NULL) +
-  scale_linetype_manual(values = c(`31 with n >= 100` = 1, `all 35` = 3),
-                        breaks = c("31 with n >= 100", "all 35"), name = "OLS fit on") +
-  guides(colour = guide_legend(order = 1),
-         linetype = guide_legend(order = 2,
-                                 override.aes = list(colour = c("grey25", "grey55")))) +
+  annotate("text", x = Inf, y = -Inf, hjust = 1.05, vjust = -0.8, size = 3.4,
+           label = sprintf("Spearman rho = %+.2f", rho_depth)) +
   expand_limits(y = 0) +
   cowplot::theme_cowplot(font_size = 11) +
   labs(
-    title = "Per-dataset mean sequencing depth vs mean loading",
-    subtitle = sprintf(paste("one point per IGT, label = IGT number; %d of the 80 IGTs have",
-                             "standard-spleen cells,\nand the %d of those with < 100 cells are",
-                             "grey and excluded from the solid fit only."),
-                       n_igt_depth, n_small_depth),
-    x = "mean nCount_RNA per IGT", y = "mean GP loading per IGT"
-  ) +
-  theme(strip.background = element_rect(fill = "grey92"))
-ggsave(paste0(figure_path, "S1E.pdf"), plot = p_S1E, width = 9.5, height = 4.6, dpi = 300)
+    title = paste0("Per-dataset sequencing depth vs ", gp_label(depth_gp), " loading"),
+    subtitle = sprintf("one point per IGT, label = IGT number; all %d IGTs contributing standard-spleen cells; grey = OLS fit",
+                       n_igt_depth),
+    x = "mean nCount_RNA per IGT",
+    y = paste0("mean ", gp_label(depth_gp), " loading per IGT")
+  )
+# y is anchored at 0 so the reader can see that the between-dataset spread
+# (0.24-0.41) is a large fraction of GP1's normalized [0, 1] loading scale, not a
+# zoomed-in wiggle; the height is trimmed so that band does not dominate.
+ggsave(paste0(figure_path, "S1E.pdf"), plot = p_S1E, width = 6.5, height = 4.2, dpi = 300)
 
 # ============================================================
 # S1F: active-gene vs active-cell scatter per GP, using the SAME hard-threshold
