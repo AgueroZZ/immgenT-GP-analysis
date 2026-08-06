@@ -13,6 +13,7 @@ data_path <- "data/"
 output_path <- "figures/final-selected/"
 
 source("code/R/gene_signature_helpers.R")
+source("code/R/table_xlsx.R")
 
 F_pm_filtered <- readRDS(paste0(data_path, "F_pm_filtered.rds"))
 # Normalize so each GP column has max|score| = 1 (same normalization Extended
@@ -36,8 +37,8 @@ long_table <- do.call(rbind, Map(function(gp, block) {
 }, gp_labels, gp_blocks))
 rownames(long_table) <- NULL
 
-write.csv(
+write_table_xlsx(
   long_table,
-  file = paste0(output_path, "ExtendedDataTable2_gene_signature_matrix.csv"),
-  row.names = FALSE
+  file = paste0(output_path, "ExtendedDataTable2_gene_signature_matrix.xlsx"),
+  sheet = "Gene signatures"
 )

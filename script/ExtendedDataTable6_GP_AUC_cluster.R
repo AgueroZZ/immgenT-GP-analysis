@@ -14,13 +14,14 @@ data_path <- "data/"
 output_path <- "figures/final-selected/"
 
 source("code/R/roc_auc.R")
+source("code/R/table_xlsx.R")
 
 level_2_AUC_list <- readRDS(paste0(data_path, "level_2_AUC_list_figure_no_thymocytes_healthy.rds"))
 
 gp_auc_cluster <- auc_list_to_gp_table(level_2_AUC_list)
 
-write.csv(
+write_table_xlsx(
   gp_auc_cluster,
-  file = paste0(output_path, "ExtendedDataTable6_GP_AUC_cluster.csv"),
-  row.names = FALSE
+  file = paste0(output_path, "ExtendedDataTable6_GP_AUC_cluster.xlsx"),
+  sheet = "AUC by cluster"
 )

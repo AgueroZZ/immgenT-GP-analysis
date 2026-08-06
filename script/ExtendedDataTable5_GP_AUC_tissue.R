@@ -14,13 +14,14 @@ data_path <- "data/"
 output_path <- "figures/final-selected/"
 
 source("code/R/roc_auc.R")
+source("code/R/table_xlsx.R")
 
 organ_simplified_AUC_list <- readRDS(paste0(data_path, "organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds"))
 
 gp_auc_tissue <- auc_list_to_gp_table(organ_simplified_AUC_list)
 
-write.csv(
+write_table_xlsx(
   gp_auc_tissue,
-  file = paste0(output_path, "ExtendedDataTable5_GP_AUC_tissue.csv"),
-  row.names = FALSE
+  file = paste0(output_path, "ExtendedDataTable5_GP_AUC_tissue.xlsx"),
+  sheet = "AUC by tissue"
 )

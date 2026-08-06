@@ -14,13 +14,14 @@ data_path <- "data/"
 output_path <- "figures/final-selected/"
 
 source("code/R/roc_auc.R")
+source("code/R/table_xlsx.R")
 
 level_1_AUC_list <- readRDS(paste0(data_path, "level_1_AUC_list_figure_no_thymocytes_healthy.rds"))
 
 gp_auc_lineage <- auc_list_to_gp_table(level_1_AUC_list)
 
-write.csv(
+write_table_xlsx(
   gp_auc_lineage,
-  file = paste0(output_path, "ExtendedDataTable3_GP_AUC_lineage.csv"),
-  row.names = FALSE
+  file = paste0(output_path, "ExtendedDataTable3_GP_AUC_lineage.xlsx"),
+  sheet = "AUC by lineage"
 )

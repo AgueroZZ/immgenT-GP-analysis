@@ -17,12 +17,13 @@ Produced by
 One row per signature gene: sort by clicking a column header, or use the
 search boxes under each header to filter (e.g. type `GP1_up` into the
 **signature_name** box, or a gene symbol into **gene_symbol**). Download the
-raw CSV at
-[`figures/final-selected/ExtendedDataTable2_gene_signature_matrix.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/final-selected/ExtendedDataTable2_gene_signature_matrix.csv).
+workbook at
+[`figures/final-selected/ExtendedDataTable2_gene_signature_matrix.xlsx`](https://github.com/AgueroZZ/immgenT-GP-analysis/raw/main/figures/final-selected/ExtendedDataTable2_gene_signature_matrix.xlsx).
 
 ```{r edt2-preview, echo=FALSE, message=FALSE}
 suppressPackageStartupMessages(library(DT))
-tab <- read.csv("../figures/final-selected/ExtendedDataTable2_gene_signature_matrix.csv", stringsAsFactors = FALSE)
+source("../code/R/table_xlsx.R")
+tab <- read_table_xlsx("../figures/final-selected/ExtendedDataTable2_gene_signature_matrix.xlsx")
 DT::datatable(
   tab,
   rownames = FALSE,

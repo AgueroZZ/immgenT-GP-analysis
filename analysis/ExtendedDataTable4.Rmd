@@ -16,12 +16,13 @@ Produced by
 
 All 200 rows are browsable below: sort by clicking a column header, type a GP
 name into the search box under the **GP** column, or use a per-column box to
-filter by value range. Download the raw CSV at
-[`figures/final-selected/ExtendedDataTable4_GP_during_activation.csv`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/figures/final-selected/ExtendedDataTable4_GP_during_activation.csv).
+filter by value range. Download the workbook at
+[`figures/final-selected/ExtendedDataTable4_GP_during_activation.xlsx`](https://github.com/AgueroZZ/immgenT-GP-analysis/raw/main/figures/final-selected/ExtendedDataTable4_GP_during_activation.xlsx).
 
 ```{r edt4-preview, echo=FALSE, message=FALSE}
 suppressPackageStartupMessages(library(DT))
-tab <- read.csv("../figures/final-selected/ExtendedDataTable4_GP_during_activation.csv", check.names = FALSE)
+source("../code/R/table_xlsx.R")
+tab <- read_table_xlsx("../figures/final-selected/ExtendedDataTable4_GP_during_activation.xlsx")
 DT::datatable(
   tab,
   rownames = FALSE,

@@ -16,7 +16,9 @@
 #     histograms. Note this is a stricter cutoff than the 0.1 used for the
 #     signature-gene columns above.
 #
-# Writes figures/final-selected/ExtendedDataTable1_GP_summary.csv.
+# Writes figures/final-selected/ExtendedDataTable1_GP_summary.xlsx (a workbook
+# rather than a .csv so the Comments column's Greek characters survive being
+# opened in Excel -- see code/R/table_xlsx.R).
 #
 # The full signature gene list behind the Top Genes columns (up to 100 per
 # direction) is Extended Data Table 2.
@@ -24,6 +26,8 @@
 data_path <- "data/"
 curation_path <- "curation/"
 output_path <- "figures/final-selected/"
+
+source("code/R/table_xlsx.R")
 
 # ---- Loadings and gene factor matrix ----
 # L_pm_filtered's columns are the flashier fit's "K1".."K200"; F_pm_filtered's
@@ -87,6 +91,6 @@ supp_table <- data.frame(
   check.names = FALSE
 )
 
-write.csv(supp_table,
-          file = paste0(output_path, "ExtendedDataTable1_GP_summary.csv"),
-          row.names = FALSE)
+write_table_xlsx(supp_table,
+                 file = paste0(output_path, "ExtendedDataTable1_GP_summary.xlsx"),
+                 sheet = "GP summary")

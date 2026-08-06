@@ -7,10 +7,8 @@ One R script per published figure, plus one per Extended Data table. Each script
   under the *current* figure numbering, which for Figures 1-5 is NOT the
   numbering `figures/Previous/bits/` still uses -- see "Which published panel
   is the ground truth" below before diffing anything (the
-  `ExtendedDataTable*.R` scripts instead write a single CSV into
-  `figures/final-selected/` -- except Table 8, which writes an .xlsx, since its
-  per-GP meta-column grouping needs a merged header row a flat CSV can't
-  express),
+  `ExtendedDataTable*.R` scripts instead each write a single .xlsx workbook
+  into `figures/final-selected/`, via `code/R/table_xlsx.R`),
 - sources shared plotting/data-loading helpers from `code/R/`
   rather than redefining them.
 
@@ -112,9 +110,13 @@ panel is not produced in this repository).
 
 ## Extended Data table -> script map
 
-Each table is written as one CSV into `figures/final-selected/` by its script and
-previewed on a matching `analysis/ExtendedDataTable*.Rmd` page. Together these
-replace the retired Table S1/S2/S3, all now regenerated from code.
+Each table is written as one .xlsx workbook into `figures/final-selected/` by its
+script -- through `write_table_xlsx()` in `code/R/table_xlsx.R`, so all six share
+one header/width format -- and previewed on a matching
+`analysis/ExtendedDataTable*.Rmd` page, which reads that same workbook back with
+`read_table_xlsx()`. A workbook rather than a .csv because Table 1's `Comments`
+carry Greek characters that Excel garbles when it opens a BOM-less UTF-8 .csv.
+Together these replace the retired Table S1/S2/S3, all now regenerated from code.
 
 | Extended Data table | Script | Primary original source(s) |
 |---|---|---|

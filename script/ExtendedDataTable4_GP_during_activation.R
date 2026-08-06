@@ -14,6 +14,7 @@ output_path <- "figures/final-selected/"
 
 source("code/R/plot_utils.R") # scale_cols(), used by activation_shared_setup.R
 source("code/R/setup_data.R")
+source("code/R/table_xlsx.R")
 
 gp_data <- load_gp_data(data_path = data_path)
 L_pm_filtered <- gp_data$L_pm_filtered
@@ -32,8 +33,8 @@ GP_activation_summary <- diff_factors_merged %>%
     Ratio_CD8_CD4
   )
 
-write.csv(
+write_table_xlsx(
   GP_activation_summary,
-  file = paste0(output_path, "ExtendedDataTable4_GP_during_activation.csv"),
-  row.names = FALSE
+  file = paste0(output_path, "ExtendedDataTable4_GP_during_activation.xlsx"),
+  sheet = "GP during activation"
 )
