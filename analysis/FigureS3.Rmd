@@ -17,7 +17,7 @@ which shares its curated GP set with [Figure 4](Figure4.html) via
 reference (not re-executed on this page); the images are its pre-rendered
 output.
 
-Panel (a) is **not produced in this repository** -- see below.
+Panel (a) is not generated from code -- see below.
 
 ## Setup
 
