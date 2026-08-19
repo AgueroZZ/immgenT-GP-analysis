@@ -23,9 +23,11 @@ produced it, the figure itself, and a short caption explaining what it shows.
 + [Figure 7b: Cluster-level activity of EBMF GPs and their matched RQVI GPs](Figure7.html)
 
 Figure 7 (RQVI validates EBMF-derived gene programs with a non-linear deep
-learning framework) is otherwise produced by our collaborator's RQVI pipeline,
-not by this repository; only its panel **b** is ours, and the page above covers
-that panel alone.
+learning framework) brings the EBMF programs documented here together with RQVI,
+a non-linear deep-learning factorization of the same cells. Panel **b**, the
+cluster-level comparison of the two factorizations, is documented on the page
+above; the RQVI panels are documented in the companion repository for the RQVI
+framework.
 
 ## Extended Data figures
 
@@ -40,8 +42,8 @@ every figure is named the way it is published.
 + [Extended Data Figure 6: CD69-associated GPs and further surface-protein gating strategies](FigureS6.html)
 
 Extended Data Figure 7 (RQVI scalability and representative matches to
-lineage-associated EBMF GPs) is likewise produced by the collaborator's RQVI
-pipeline and has no page here.
+lineage-associated EBMF GPs) is documented in the same companion repository for
+the RQVI framework.
 
 ## Extended Data tables
 

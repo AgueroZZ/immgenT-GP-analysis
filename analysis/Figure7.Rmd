@@ -6,22 +6,10 @@ editor_options:
   chunk_output_type: console
 ---
 
-Figure 7 (RQVI validates EBMF-derived gene programs with a non-linear deep
-learning framework) is otherwise produced by our collaborator's RQVI pipeline,
-not by this repository: panels **7a and 7c-7g have no code here** (7a is a Figma
-schematic, 7c/7d/7f are Matplotlib output whose source is not in this repo, and
-7e/7g trace to RQVI validation code that was scoped out -- see
-[`script/README.md`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/README.md)).
-This page covers **panel 7b only**, which is ours.
-
-**This panel was Extended Data Figure 5 until 2026-07-28.** It was published as
-two half-panels (`S5a`, `S5b`) plus a detached colorbar; it is now a single
-assembled panel and has moved into the main figure as 7b, replacing the earlier
-7b (a cell-level EBMF-vs-RQVI correlation heatmap from the collaborator's
-pipeline). The Extended Data Figure 5 slot it left stood empty until 2026-07-30,
-when the protein-program heatmap moved into it
-([Extended Data Figure 5](FigureS5.html)); the other Extended Data figures kept
-their numbers throughout.
+This page documents **Figure 7b**. The other panels of Figure 7 (RQVI validates
+EBMF-derived gene programs with a non-linear deep learning framework) are
+produced by the RQVI framework and are documented in the companion repository for
+RQVI.
 
 Figure 7b asks whether the fine-grained cluster-level patterns captured by the
 200 EBMF GPs are recovered by an independent factorization. It compares each EBMF
