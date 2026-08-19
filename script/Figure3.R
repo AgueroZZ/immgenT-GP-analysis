@@ -340,9 +340,11 @@ ggsave(
 # ============================================================
 # Panel lettering is GP3 = J, GP29 = K, GP22 = L, matching the GP3/GP29/GP22
 # column order of 3M so the figure reads left-to-right in one order throughout.
+# --- internal ---
 # The published 2J/2K/2L were GP22/GP29/GP3, i.e. J and L are deliberately
 # swapped relative to them (see script/README.md). Do not let this fall back to
 # whatever order the GPs happen to be listed in.
+# --- end internal ---
 gp_letter <- c("GP3" = "3J", "GP29" = "3K", "GP22" = "3L")
 for (gp_name in names(gp_letter)) {
   gp_num <- as.numeric(sub("^GP", "", gp_name))
@@ -364,17 +366,31 @@ for (gp_name in names(gp_letter)) {
 
 # ============================================================
 # 3M: cross-GP heatmap, top-30 UP-REGULATED gene weights for GP3, GP29, GP22
-# (immgen-signature app's mod_cross_gp.R heatmap mode; see
-# code/R/cross_gp_helpers.R)
+# (heatmap built by code/R/cross_gp_helpers.R)
 #
-# Three deliberate departures from the published 2M, so 3M is not a
-# reproduction of it (see script/README.md):
-#   - rank_by = "pos": top 30 by max(score), i.e. genuinely up-regulated,
-#     instead of the app's max|score| (see the note at the call below)
-#   - column order GP3, GP29, GP22 (the app-faithful order is GP3, GP22, GP29)
+# Three choices define the panel:
+#   - rank_by = "pos": top 30 by max(score), i.e. genuinely up-regulated
+#     (see the note at the call below)
+#   - column order GP3, GP29, GP22
 #   - Fcer1g/Ccl5/Cd7/Ctsw pinned to the top 4 rows via `pin_top`
-# The last two were settled first, against the app-faithful version; the
-# ranking change came out of experiments/fig3m_updown_ranking/.
+# --- internal ---
+# All three are deliberate departures from the published 2M, so 3M is not a
+# reproduction of it (see script/README.md): the immgen-signature app's
+# mod_cross_gp.R ranks by max|score|, and its faithful column order is GP3,
+# GP22, GP29. The order and the pinned rows were settled first, against the
+# app-faithful version; the ranking change came out of
+# experiments/fig3m_updown_ranking/.
+#
+# Ranking on max|score| admitted 9 genes on the strength of a large NEGATIVE
+# score, each let through the "positive somewhere" gate by a token +0.01..+0.12
+# elsewhere (CT010467.1 -0.91 in GP22, Cmss1, Tmsb4x, Ms4a4b, Cd52, Mir6236,
+# Ppia, Malat1, Ly6e -- the blue block at the bottom of the published panel).
+# max(score) replaces them with the next 9 genuinely up-regulated genes: Anxa2,
+# Prkch, Itm2b, Klra1, Cd3e, Nr4a2, Klre1, Chn2, Klrk1 -- which brings GP22's
+# NK-receptor set (Klra1/Klre1/Klrk1, alongside the Klra7/Klrd1 already here)
+# into the figure. See experiments/fig3m_updown_ranking/ for the side-by-side
+# that decided it.
+# --- end internal ---
 # ============================================================
 F_pm_filtered_3m <- readRDS(paste0(data_path, "F_pm_filtered.rds"))
 colnames(F_pm_filtered_3m) <- paste0("GP", seq_len(ncol(F_pm_filtered_3m)))
@@ -388,18 +404,10 @@ p_3M <- plot_cross_gp_heatmap(
   mat_3m, gps_3m,
   # rank_by = "pos" makes this a genuine "top 30 up-regulated genes" panel:
   # candidates are the genes positive in at least one of the three GPs
-  # (direction = "pos"), ranked by max(score) across them.
-  #
-  # This is a deliberate change from the published 2M, which used the app's
-  # rank-by-max|score| and so admitted 9 genes on the strength of a large
-  # NEGATIVE score, each let through the "positive somewhere" gate by a token
-  # +0.01..+0.12 elsewhere (CT010467.1 -0.91 in GP22, Cmss1, Tmsb4x, Ms4a4b,
-  # Cd52, Mir6236, Ppia, Malat1, Ly6e -- the blue block at the bottom of the
-  # published panel). Ranking on max(score) replaces them with the next 9
-  # genuinely up-regulated genes: Anxa2, Prkch, Itm2b, Klra1, Cd3e, Nr4a2,
-  # Klre1, Chn2, Klrk1 -- which brings GP22's NK-receptor set (Klra1/Klre1/
-  # Klrk1, alongside the Klra7/Klrd1 already here) into the figure.
-  # See experiments/fig3m_updown_ranking/ for the side-by-side that decided it.
+  # (direction = "pos"), ranked by max(score) across them. Ranking by
+  # max|score| instead would admit genes on the strength of a large negative
+  # score, let through the "positive somewhere" gate by a token positive
+  # weight elsewhere.
   feat_label = "Gene", n_genes = 30, direction = "pos", rank_by = "pos",
   threshold = 0.05, colorscheme = "bwr", cluster_r = TRUE, cluster_c = FALSE,
   pin_top = c("Fcer1g", "Ccl5", "Cd7", "Ctsw")

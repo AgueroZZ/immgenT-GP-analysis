@@ -26,10 +26,8 @@ Panel (a) is **not produced in this repository** -- see below.
 
 ## (a) Definition of resting and activated CD4/CD8 cells {#figs3a}
 
-This panel is **missing from this site**: no code in `script/FigureS3.R`
-produces it, and there is no `s3a` asset under `analysis/assets/FigureS3/`,
-`figures/final-selected/Figure S3/`, or `figures/Previous/bits/`. The published
-caption describes it as follows.
+This panel shows the CITE-seq gating used to define resting and activated
+cells; it is not generated from code, so only its caption is given here.
 
 ::: {.figcaption}
 **Extended Data Fig. 3a.** Definition of resting and activated CD4+ and CD8+ T cells.

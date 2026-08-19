@@ -18,13 +18,6 @@ which shares its CITE-seq setup and protein filters with
 re-executed on this page, since the shared setup takes about a minute to load);
 the image is its pre-rendered output.
 
-**This figure was split out of Extended Data Figure 6 on 2026-07-30.** It was
-that figure's first panel, and before 2026-07-28 the published Figure 6b. It now
-stands alone in the Extended Data Figure 5 slot that main
-[Figure 7b](Figure7.html) vacated, and
-[Extended Data Figure 6](FigureS6.html)'s remaining panels each dropped one
-letter (its b-g are now a-f).
-
 ## Setup
 
 ```{r figs5-setup, code=code_for("../script/FigureS5.R", "doc:setup"), eval=FALSE}

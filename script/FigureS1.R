@@ -274,8 +274,11 @@ ggsave(paste0(figure_path, "S1E.pdf"), plot = p_S1E, width = 6.5, height = 4.2, 
 # definitions as Figure 2 (per-GP-normalized): number of active genes = count of
 # genes with |score| > 0.25 of the GP's max; proportion of active cells = fraction
 # of cells with loading > 0.1 of the GP's max. Non-thymocyte cells, matching
-# Figure 2. (Replaces the earlier EBMF-sparsity-prior version. Was S1E until
-# 2026-07-30, when the new S1C-S1E pushed it back one letter; content unchanged.)
+# Figure 2.
+# --- internal ---
+# Replaces the earlier EBMF-sparsity-prior version. Was S1E until 2026-07-30,
+# when the new S1C-S1E pushed it back one letter; content unchanged.
+# --- end internal ---
 # ============================================================
 non_thymo_s1f <- seurat_meta_filtered$cellID[seurat_meta_filtered$annotation_level1 != "thymocyte"]
 L_s1f <- L_pm_filtered[non_thymo_s1f, ]

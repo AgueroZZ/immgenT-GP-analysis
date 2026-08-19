@@ -124,8 +124,6 @@ correlates more strongly with `nFeature_RNA` (+0.89) than with `nCount_RNA`, is
 unchanged by conditioning on cell type (+0.78 within `annotation_level2`), and is
 dominated by housekeeping genes, so it reads as a detection-rate axis that the
 library-size normalization applied before the factorization does not remove.
-(Replaced, on 2026-08-04, a panel showing GP9 loading across the sixteen
-individual samples of IGT13/IGT14.)
 :::
 
 ## (F) Active-gene vs. active-cell proportion per GP {#figs1f}
@@ -138,5 +136,5 @@ knitr::include_graphics("assets/FigureS1/S1F.png")
 ```
 
 ::: {.figcaption}
-**Extended Data Fig. 1F.** For each GP, the number of active genes (x-axis) versus the fraction of active cells (y-axis), using the same thresholds as Figure 2: a gene is active in a GP if its per-GP-normalized score exceeds 0.25 in absolute value, and a cell is active if its per-GP-normalized loading exceeds 0.1; computed over non-thymocyte cells. Both axes on log scale; each dot is one of the 200 GPs. (Was panel E before 2026-07-30; content unchanged.)
+**Extended Data Fig. 1F.** For each GP, the number of active genes (x-axis) versus the fraction of active cells (y-axis), using the same thresholds as Figure 2: a gene is active in a GP if its per-GP-normalized score exceeds 0.25 in absolute value, and a cell is active if its per-GP-normalized loading exceeds 0.1; computed over non-thymocyte cells. Both axes on log scale; each dot is one of the 200 GPs.
 :::

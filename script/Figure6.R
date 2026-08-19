@@ -170,9 +170,7 @@ plot_factor_heatmap <- function(F_matrix, gp_vector, n_top = 5, min_abs_loading 
   ggplot(plot_df, aes(x = .data[[x_aes]], y = .data[[y_aes]], fill = Loading)) +
     geom_tile() +
     scale_fill_gradient2(low = low_color, mid = mid_color, high = high_color, midpoint = 0, limits = c(-limit, limit), name = "Loading") +
-    # Axis titles are the faceting variables themselves ("Gene" / "GP"), as in
-    # the published 6i -- an earlier version dropped them along with the title's
-    # "- top genes per GP" suffix.
+    # Axis titles are the faceting variables themselves ("Gene" / "GP").
     labs(title = title, x = x_aes, y = y_aes) +
     theme_minimal(base_size = font_size) +
     theme(axis.text.x = element_text(angle = if (transpose) 90 else 45, hjust = 1, size = font_size), axis.text.y = element_text(size = font_size), panel.grid = element_blank(), plot.title = element_text(face = "bold"))
