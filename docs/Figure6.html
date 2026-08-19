@@ -384,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-08-05
+<strong>Last updated:</strong> 2026-08-19
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree5651d0e08a38784f6e2194a6dfe3d4b474337d5etargetblank5651d0ea">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeadc2327d0b1fb5a49594c4cad88c0880dea5ffc4targetblankadc2327a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/5651d0e08a38784f6e2194a6dfe3d4b474337d5e" target="_blank">5651d0e</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/adc2327d0b1fb5a49594c4cad88c0880dea5ffc4" target="_blank">adc2327</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree5651d0e08a38784f6e2194a6dfe3d4b474337d5etargetblank5651d0ea"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeadc2327d0b1fb5a49594c4cad88c0880dea5ffc4targetblankadc2327a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/5651d0e08a38784f6e2194a6dfe3d4b474337d5e" target="_blank">5651d0e</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/adc2327d0b1fb5a49594c4cad88c0880dea5ffc4" target="_blank">adc2327</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -632,6 +632,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/adc2327d0b1fb5a49594c4cad88c0880dea5ffc4/analysis/Figure6.Rmd" target="_blank">adc2327</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-08-19
+</td>
+<td>
+Site prose: finish taking internal notes off the pages
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/eeca07b83e493cec3ed89218631a6f7b5c7fb16e/docs/Figure6.html" target="_blank">eeca07b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-08-05
+</td>
+<td>
+Keep pre-refactor provenance in panel comments off the published pages
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1248,10 +1282,7 @@ source(&quot;code/R/citeseq_shared_setup.R&quot;)</code></pre>
 </div>
 <div id="fig6a" class="section level2">
 <h2>(a) Protein-signature schematic</h2>
-<p>This panel is a hand-drawn schematic, not generated from R – there is
-no code or pre-rendered image to show here. See
-<code>figures/Previous/bits/Figure 6/6a.pdf</code> for the published
-panel.</p>
+<p>This panel is a hand-drawn schematic, not generated from code.</p>
 <div class="figcaption">
 <p><strong>Fig. 6a.</strong> Schematic illustrating how protein
 signatures were defined for each GP. Holding the cell-loading matrix
@@ -1627,9 +1658,7 @@ plot_factor_heatmap &lt;- function(F_matrix, gp_vector, n_top = 5, min_abs_loadi
   ggplot(plot_df, aes(x = .data[[x_aes]], y = .data[[y_aes]], fill = Loading)) +
     geom_tile() +
     scale_fill_gradient2(low = low_color, mid = mid_color, high = high_color, midpoint = 0, limits = c(-limit, limit), name = &quot;Loading&quot;) +
-    # Axis titles are the faceting variables themselves (&quot;Gene&quot; / &quot;GP&quot;), as in
-    # the published 6i -- an earlier version dropped them along with the title&#39;s
-    # &quot;- top genes per GP&quot; suffix.
+    # Axis titles are the faceting variables themselves (&quot;Gene&quot; / &quot;GP&quot;).
     labs(title = title, x = x_aes, y = y_aes) +
     theme_minimal(base_size = font_size) +
     theme(axis.text.x = element_text(angle = if (transpose) 90 else 45, hjust = 1, size = font_size), axis.text.y = element_text(size = font_size), panel.grid = element_blank(), plot.title = element_text(face = &quot;bold&quot;))

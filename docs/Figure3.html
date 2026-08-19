@@ -383,7 +383,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-08-05
+<strong>Last updated:</strong> 2026-08-19
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -515,15 +515,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeeeca07b83e493cec3ed89218631a6f7b5c7fb16etargetblankeeca07ba">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeadc2327d0b1fb5a49594c4cad88c0880dea5ffc4targetblankadc2327a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/eeca07b83e493cec3ed89218631a6f7b5c7fb16e" target="_blank">eeca07b</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/adc2327d0b1fb5a49594c4cad88c0880dea5ffc4" target="_blank">adc2327</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeeeca07b83e493cec3ed89218631a6f7b5c7fb16etargetblankeeca07ba"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreeadc2327d0b1fb5a49594c4cad88c0880dea5ffc4targetblankadc2327a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -533,7 +533,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/eeca07b83e493cec3ed89218631a6f7b5c7fb16e" target="_blank">eeca07b</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/adc2327d0b1fb5a49594c4cad88c0880dea5ffc4" target="_blank">adc2327</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -631,6 +631,24 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/074dca12a2ad60dd407f91e519068771bd019c72/docs/Figure3.html" target="_blank">074dca1</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-08-05
+</td>
+<td>
+Build site: Extended Data tables reordered to six, internal notes off
+the pages
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -2504,9 +2522,6 @@ and DN in blue.</p>
 # ============================================================
 # Panel lettering is GP3 = J, GP29 = K, GP22 = L, matching the GP3/GP29/GP22
 # column order of 3M so the figure reads left-to-right in one order throughout.
-# The published 2J/2K/2L were GP22/GP29/GP3, i.e. J and L are deliberately
-# swapped relative to them (see script/README.md). Do not let this fall back to
-# whatever order the GPs happen to be listed in.
 gp_letter &lt;- c(&quot;GP3&quot; = &quot;3J&quot;, &quot;GP29&quot; = &quot;3K&quot;, &quot;GP22&quot; = &quot;3L&quot;)
 for (gp_name in names(gp_letter)) {
   gp_num &lt;- as.numeric(sub(&quot;^GP&quot;, &quot;&quot;, gp_name))
@@ -2803,17 +2818,13 @@ of (M).</p>
 <h2>(M) Top-30 gene score heatmap for GP3/GP29/GP22</h2>
 <pre class="r"><code># ============================================================
 # 3M: cross-GP heatmap, top-30 UP-REGULATED gene weights for GP3, GP29, GP22
-# (immgen-signature app&#39;s mod_cross_gp.R heatmap mode; see
-# code/R/cross_gp_helpers.R)
+# (heatmap built by code/R/cross_gp_helpers.R)
 #
-# Three deliberate departures from the published 2M, so 3M is not a
-# reproduction of it (see script/README.md):
-#   - rank_by = &quot;pos&quot;: top 30 by max(score), i.e. genuinely up-regulated,
-#     instead of the app&#39;s max|score| (see the note at the call below)
-#   - column order GP3, GP29, GP22 (the app-faithful order is GP3, GP22, GP29)
+# Three choices define the panel:
+#   - rank_by = &quot;pos&quot;: top 30 by max(score), i.e. genuinely up-regulated
+#     (see the note at the call below)
+#   - column order GP3, GP29, GP22
 #   - Fcer1g/Ccl5/Cd7/Ctsw pinned to the top 4 rows via `pin_top`
-# The last two were settled first, against the app-faithful version; the
-# ranking change came out of experiments/fig3m_updown_ranking/.
 # ============================================================
 F_pm_filtered_3m &lt;- readRDS(paste0(data_path, &quot;F_pm_filtered.rds&quot;))
 colnames(F_pm_filtered_3m) &lt;- paste0(&quot;GP&quot;, seq_len(ncol(F_pm_filtered_3m)))
@@ -2827,18 +2838,10 @@ p_3M &lt;- plot_cross_gp_heatmap(
   mat_3m, gps_3m,
   # rank_by = &quot;pos&quot; makes this a genuine &quot;top 30 up-regulated genes&quot; panel:
   # candidates are the genes positive in at least one of the three GPs
-  # (direction = &quot;pos&quot;), ranked by max(score) across them.
-  #
-  # This is a deliberate change from the published 2M, which used the app&#39;s
-  # rank-by-max|score| and so admitted 9 genes on the strength of a large
-  # NEGATIVE score, each let through the &quot;positive somewhere&quot; gate by a token
-  # +0.01..+0.12 elsewhere (CT010467.1 -0.91 in GP22, Cmss1, Tmsb4x, Ms4a4b,
-  # Cd52, Mir6236, Ppia, Malat1, Ly6e -- the blue block at the bottom of the
-  # published panel). Ranking on max(score) replaces them with the next 9
-  # genuinely up-regulated genes: Anxa2, Prkch, Itm2b, Klra1, Cd3e, Nr4a2,
-  # Klre1, Chn2, Klrk1 -- which brings GP22&#39;s NK-receptor set (Klra1/Klre1/
-  # Klrk1, alongside the Klra7/Klrd1 already here) into the figure.
-  # See experiments/fig3m_updown_ranking/ for the side-by-side that decided it.
+  # (direction = &quot;pos&quot;), ranked by max(score) across them. Ranking by
+  # max|score| instead would admit genes on the strength of a large negative
+  # score, let through the &quot;positive somewhere&quot; gate by a token positive
+  # weight elsewhere.
   feat_label = &quot;Gene&quot;, n_genes = 30, direction = &quot;pos&quot;, rank_by = &quot;pos&quot;,
   threshold = 0.05, colorscheme = &quot;bwr&quot;, cluster_r = TRUE, cluster_c = FALSE,
   pin_top = c(&quot;Fcer1g&quot;, &quot;Ccl5&quot;, &quot;Cd7&quot;, &quot;Ctsw&quot;)
