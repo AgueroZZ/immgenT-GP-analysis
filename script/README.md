@@ -31,6 +31,7 @@ Run any script from the repo root, e.g. `Rscript script/Figure4.R`.
 | S4 | `FigureS4.R` | new (no published counterpart) |
 | S5 | `FigureS5.R` | `Figure_CITEseq.R` (its panel a) |
 | S6 | `FigureS6.R` | `Figure_CITEseq.R` + `gated_protein_loading_plot.R` |
+| S8 | `FigureS8.R` | new (no published counterpart) |
 
 The rest of Figure 7, and all of S7, are **out of scope** (see below). The S5
 slot was emptied on 2026-07-28, when what was published there became main
@@ -103,7 +104,7 @@ wrong almost everywhere:
 | 7A, 7C-7G | Figure 7/**7A, 7C-7G** (straight copies, out of scope) |
 | 7B | *(ours since 2026-07-28 -- the former Extended Data Figure 5, assembled; it replaced a different published 7B, which is therefore NOT its counterpart)* |
 | S1A-S1D, S2* | same letters |
-| S1E, S4* | *(new panels)* |
+| S1E, S4*, S8* | *(new panels)* |
 
 There is no `Previous/bits/Figure 5/` at all, and no Figure S3 s3a/s3b (that
 panel is not produced in this repository).
@@ -224,11 +225,43 @@ Table 7's caption both state that no panel subtitle omits a marker.
 Rscript script/verify_gating_gps.R
 ```
 
+`verify_structure_plot_gps.R` covers Figure S8, whose *content* is a selection:
+each panel shows the GPs that reach AUC > 0.9 for at least one cluster of its
+lineage, and those same AUCs are published as Extended Data Table 6. It reads the
+panel map, threshold and display filters from `code/R/structure_plot_panels.R`
+(the file the figure uses), re-derives every panel's GP set from the published
+workbook, and diffs it against the record `FigureS8.R` writes into
+`output/FigureS8/` -- GP sets, each GP's maximum AUC in its lineage, the
+one-color-per-GP palette, the clusters drawn and those omitted for being under
+100 cells, the panel PDFs on disk, and the per-panel GP counts quoted in the
+caption. This is what keeps the caption's "16, 22, 11, 44, 9, 10 and 17 GPs;
+69 distinct" from drifting away from the panels or from Table 6. The three inputs
+can be redirected (`--record-dir=`, `--table=`, `--page=`), which is how the
+failing path is exercised.
+
+```
+Rscript script/verify_structure_plot_gps.R
+```
+
 **Current state.** Every script was re-run and every panel pixel-compared
 against its published counterpart. All panels reproduce the published figure
 except where listed below. Nothing is left unexplained. `verify_thresholds.R`
 passes: all 42 published thresholds are identical to the gated ones.
-`verify_cd69_gp_ranking.R` and `verify_gating_gps.R` pass.
+`verify_cd69_gp_ranking.R`, `verify_gating_gps.R` and
+`verify_structure_plot_gps.R` pass.
+
+**Figure S8** is a new figure, so `verify_panels.sh` has no published pair for
+any of its seven panels. Two checks stand in. `verify_structure_plot_gps.R`
+(above) re-derives every panel's GP set from Extended Data Table 6. And the
+panels were re-rendered once with the palette pool widened to all 72 AUC-passing
+GPs -- the pool used by the per-lineage rendering in
+`experiments/giant_structure_plot_by_lineage/` that this figure reproduces -- and
+pixel-compared against it: all seven **identical** (RMSE 0). So the published
+panels differ from that rendering only in color, by the palette decision the
+script's header records; the cells, clusters, GP sets and geometry are unchanged.
+Note that an ink-mask comparison across the two *different* palettes is not a
+substitute: bar tops are antialiased against white, so a lighter fill drops edge
+pixels from the mask and reads as a layout change that is not there.
 
 After the 2026-07-28 re-lettering, every panel that only changed letter was
 additionally pixel-compared against its own pre-move file and came out

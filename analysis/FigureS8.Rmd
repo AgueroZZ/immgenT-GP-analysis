@@ -1,0 +1,90 @@
+---
+title: "Extended Data Figure 8: Cluster-level GP membership within each T cell lineage"
+author: "Ziang Zhang"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r doc-code, include=FALSE}
+source("../code/R/doc_code.R")
+```
+
+All seven panels are produced by
+[`script/FigureS8.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS8.R).
+They are the per-cluster, all-GP counterpart of
+[Fig. 3B](Figure3.html#fig3b), which shows six hand-picked lineage-defining GPs
+grouped by lineage: here every GP that marks a sub-lineage cluster is shown, and
+cells are grouped by cluster within each lineage. The GPs are selected from the
+cluster AUCs published as
+[Extended Data Table 6](ExtendedDataTable6.html), and
+[`script/verify_structure_plot_gps.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/verify_structure_plot_gps.R)
+re-derives every panel's GP set from that published table, failing if it
+disagrees with the panels or with the caption below. The code is shown for
+reference (not re-executed on this page, since it loads the full cell-by-GP
+loading matrix); the images are its pre-rendered output.
+
+## Setup
+
+```{r figs8-setup, code=code_for("../script/FigureS8.R", "doc:setup"), eval=FALSE}
+```
+
+## Panel definitions and GP selection {#figs8-panels}
+
+The panel map, the AUC threshold and the display filters live in
+`code/R/structure_plot_panels.R`, which the verification script reads as well,
+so the figure and the check cannot disagree about what is shown:
+
+```{r figs8-panels-code, code=code_for("../code/R/structure_plot_panels.R", "doc:panels"), eval=FALSE}
+```
+
+```{r figs8-selection-code, code=code_for("../script/FigureS8.R", "GP selection"), eval=FALSE}
+```
+
+## (a-g) Cluster-level GP membership by lineage {#figs8}
+
+```{r figs8-code, code=code_for("../script/FigureS8.R", "s8a-s8g"), eval=FALSE}
+```
+
+```{r figs8-img, echo=FALSE, out.width="100%"}
+knitr::include_graphics(c(
+  "assets/FigureS8/s8a.png", "assets/FigureS8/s8b.png",
+  "assets/FigureS8/s8c.png", "assets/FigureS8/s8d.png",
+  "assets/FigureS8/s8e.png", "assets/FigureS8/s8f.png",
+  "assets/FigureS8/s8g.png"
+))
+```
+
+::: {.figcaption}
+**Extended Data Fig. 8a-g.** Structure plots of single-cell GP activity
+(membership / GP loading) in healthy non-thymocyte cells, one panel per T cell
+lineage, with cells grouped by sub-lineage cluster (`annotation_level2`):
+**(a) CD8, 16 GPs; (b) CD4, 22 GPs; (c) Treg, 11 GPs; (d) gdT, 44 GPs;
+(e) CD8aa, 9 GPs; (f) Tz, 10 GPs; (g) DN, 17 GPs** -- 69 distinct GPs across the
+seven panels. A GP is shown in a panel when its one-vs-rest AUC for predicting
+membership in at least one cluster of that lineage, from the GP's loading,
+exceeds 0.9 (**AUC > 0.9**); those are the values of
+[Extended Data Table 6](ExtendedDataTable6.html), computed on the same healthy
+non-thymocyte cells. Selection uses all of a lineage's clusters, including any
+too small to draw. Each vertical bar is one cell, partitioned among the GPs
+shown; bar height is that cell's total membership over those GPs and is not
+normalized, so it exceeds 1 where a cell loads on several of them. One color is
+assigned to each of the 69 GPs and held fixed across panels, so a GP marking
+clusters in two lineages reads the same in both. Within a cluster, cells are
+ordered by a one-dimensional t-SNE of their memberships. Clusters with fewer
+than 100 cells are not drawn, larger clusters are subsampled to at most 2,000
+cells, and at most 10,000 cells are drawn per panel -- bar widths therefore
+reflect the cells drawn rather than cluster size. Thymocytes and DP cells are
+excluded, as in [Fig. 3](Figure3.html).
+:::
+
+## Record of what the panels drew {#figs8-record}
+
+The GP sets, the palette, and the clusters each panel drew or omitted are written
+out alongside the panels, which is what
+[`script/verify_structure_plot_gps.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/verify_structure_plot_gps.R)
+compares against [Extended Data Table 6](ExtendedDataTable6.html) and against
+the caption above:
+
+```{r figs8-record-code, code=code_for("../script/FigureS8.R", "What each panel drew"), eval=FALSE}
+```

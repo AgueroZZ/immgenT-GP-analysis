@@ -104,9 +104,10 @@ EOF
 # Panels with no published counterpart: Figure 1/1C, Figure S1/S1C, S1D, S1E and
 # S1F (S1C/S1D are the 2026-07-30 replacements above and are new analyses, not
 # reproductions; S1E is new; S1F is the former S1E, which never had one),
-# Figure S4/*, Figure 6/6i (GP77) and 6j (GP8), Figure S6/s6c-s6f (their GPs
-# were only ever drawn inside the retired s6-1/s6-2 gallery pages, not as
-# standalone panels), and Figure 7/7B (ours since 2026-07-28 -- it is the former
+# Figure S4/*, Figure S8/* (a new figure), Figure 6/6i (GP77) and 6j (GP8),
+# Figure S6/s6c-s6f (their GPs were only ever drawn inside the retired
+# s6-1/s6-2 gallery pages, not as standalone panels), and Figure 7/7B (ours
+# since 2026-07-28 -- it is the former
 # Extended Data Figure 5, assembled into one panel, and it replaced a different
 # collaborator panel, so the published 7B is NOT its counterpart).
 # The rest of Figure 7 and all of S7 are out of scope (straight copies).

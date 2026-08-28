@@ -31,7 +31,7 @@ framework.
 
 ## Extended Data figures
 
-Extended Data Figures **1-7**. Each page's URL keeps the `FigureS*` form, but
+Extended Data Figures **1-8**. Each page's URL keeps the `FigureS*` form, but
 every figure is named the way it is published.
 
 + [Extended Data Figure 1: Reproducibility across IGTs and batch-effect evaluation](FigureS1.html)
@@ -44,6 +44,8 @@ every figure is named the way it is published.
 Extended Data Figure 7 (RQVI scalability and representative matches to
 lineage-associated EBMF GPs) is documented in the same companion repository for
 the RQVI framework.
+
++ [Extended Data Figure 8: Cluster-level GP membership within each T cell lineage](FigureS8.html)
 
 ## Extended Data tables
 
