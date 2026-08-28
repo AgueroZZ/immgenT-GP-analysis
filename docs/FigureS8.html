@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Ziang Zhang" />
+
+
+<title>Extended Data Figure 8: Cluster-level GP membership within each T cell lineage</title>
+
+<script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="custom.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">immgenT-GP-analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Overview</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/AgueroZZ/immgenT-GP-analysis">source</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Extended Data Figure 8: Cluster-level GP
+membership within each T cell lineage</h1>
+<h4 class="author">Ziang Zhang</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2026-08-27
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong>
+<code>immgenT-GP-analysis/analysis/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.2). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed1code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(1)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed1code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(1)</code> was run prior to running the
+code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree659ff002c4928c60abd48827cee28b27eb1a4d8btargetblank659ff00a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/659ff002c4928c60abd48827cee28b27eb1a4d8b" target="_blank">659ff00</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree659ff002c4928c60abd48827cee28b27eb1a4d8btargetblank659ff00a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/659ff002c4928c60abd48827cee28b27eb1a4d8b" target="_blank">659ff00</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .claude/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis/.Rhistory
+    Ignored:    analysis/assets/.DS_Store
+    Ignored:    captions/
+    Ignored:    code/.DS_Store
+    Ignored:    code/other/topic_flashier_20250212.R
+    Ignored:    code/other/topic_wrapper_20250215_alldata_backfit.sh
+    Ignored:    data
+    Ignored:    experiments/
+    Ignored:    figures/.DS_Store
+    Ignored:    figures/Previous/.DS_Store
+    Ignored:    figures/Previous/bits/.DS_Store
+    Ignored:    figures/Previous/bits/Figure 1/.DS_Store
+    Ignored:    figures/Previous/bits/Figure 2/.DS_Store
+    Ignored:    figures/Previous/bits/Figure 3/.DS_Store
+    Ignored:    figures/Previous/bits/Figure 4/.DS_Store
+    Ignored:    figures/Previous/bits/Figure 6/.DS_Store
+    Ignored:    figures/Previous/bits/Figure 7/.DS_Store
+    Ignored:    figures/Previous/bits/Figure S1/.DS_Store
+    Ignored:    figures/Previous/bits/Figure S2/.DS_Store
+    Ignored:    figures/Previous/bits/Figure S3/.DS_Store
+    Ignored:    figures/Previous/bits/Figure S6/.DS_Store
+    Ignored:    figures/Previous/bits/Figure S7/.DS_Store
+    Ignored:    figures/final-selected/.DS_Store
+    Ignored:    figures/final-selected/Figure 1/.DS_Store
+    Ignored:    figures/final-selected/Figure 2/.DS_Store
+    Ignored:    figures/final-selected/Figure 4/.DS_Store
+    Ignored:    figures/final-selected/Figure S1/.DS_Store
+    Ignored:    figures/final-selected/Figure S4/.DS_Store
+    Ignored:    figures/templates_20260729/
+    Ignored:    log/
+    Ignored:    output/.DS_Store
+    Ignored:    output/Figure2/
+    Ignored:    output/Figure7b/7b_cell_metadata.csv.gz
+    Ignored:    plan/
+    Ignored:    tables/
+    Ignored:    tmp/
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/FigureS8.Rmd</code>) and HTML
+(<code>docs/FigureS8.html</code>) files. If you’ve configured a remote
+Git repository (see <code>?wflow_git_remote</code>), click on the
+hyperlinks in the table below to view the files as they were in that
+past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/659ff002c4928c60abd48827cee28b27eb1a4d8b/analysis/FigureS8.Rmd" target="_blank">659ff00</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-08-27
+</td>
+<td>
+Extended Data Figure 8: per-lineage cluster structure plots
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<p>All seven panels are produced by <a
+href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS8.R"><code>script/FigureS8.R</code></a>.
+They are the per-cluster, all-GP counterpart of <a
+href="Figure3.html#fig3b">Fig. 3B</a>, which shows six hand-picked
+lineage-defining GPs grouped by lineage: here every GP that marks a
+sub-lineage cluster is shown, and cells are grouped by cluster within
+each lineage. The GPs are selected from the cluster AUCs published as <a
+href="ExtendedDataTable6.html">Extended Data Table 6</a>, and <a
+href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/verify_structure_plot_gps.R"><code>script/verify_structure_plot_gps.R</code></a>
+re-derives every panel’s GP set from that published table, failing if it
+disagrees with the panels or with the caption below. The code is shown
+for reference (not re-executed on this page, since it loads the full
+cell-by-GP loading matrix); the images are its pre-rendered output.</p>
+<div id="setup" class="section level2">
+<h2>Setup</h2>
+<pre class="r"><code>library(ggplot2)
+library(ggrastr)
+library(cowplot)
+library(fastTopics) # structure_plot()
+
+if (!file.exists(&quot;code/R/structure_plot_panels.R&quot;)) {
+  stop(&quot;Run this script from the immgenT-GP-analysis repository root.&quot;)
+}
+source(&quot;code/R/structure_plot_panels.R&quot;)
+
+data_path &lt;- &quot;data/&quot;
+figure_path &lt;- &quot;figures/final-selected/Figure S8/&quot;
+record_path &lt;- &quot;output/FigureS8/&quot;
+dir.create(figure_path, recursive = TRUE, showWarnings = FALSE)
+dir.create(record_path, recursive = TRUE, showWarnings = FALSE)
+
+# A figure script here was once seen to exit 0 with a complete log and write
+# nothing at all (see script/README.md, &quot;A re-run can silently not write&quot;), so
+# record when this run started and assert at the end that the panels are newer.
+run_started_at &lt;- Sys.time()</code></pre>
+</div>
+<div id="figs8-panels" class="section level2">
+<h2>Panel definitions and GP selection</h2>
+<p>The panel map, the AUC threshold and the display filters live in
+<code>code/R/structure_plot_panels.R</code>, which the verification
+script reads as well, so the figure and the check cannot disagree about
+what is shown:</p>
+<pre class="r"><code># Panel letter per lineage, in panel order -- the level-1 lineage order of
+# Figure 1D and Figure 3, with thymocytes and DP cells excluded as they are
+# there. Both consumers iterate over the names of this map, so a lineage cannot
+# be drawn, or checked, under another lineage&#39;s letter.
+structure_plot_panels &lt;- c(
+  &quot;CD8&quot; = &quot;s8a&quot;,
+  &quot;CD4&quot; = &quot;s8b&quot;,
+  &quot;Treg&quot; = &quot;s8c&quot;,
+  &quot;gdT&quot; = &quot;s8d&quot;,
+  &quot;CD8aa&quot; = &quot;s8e&quot;,
+  &quot;Tz&quot; = &quot;s8f&quot;,
+  &quot;DN&quot; = &quot;s8g&quot;
+)
+
+# A GP is shown in a lineage&#39;s panel when its one-vs-rest AUC for predicting
+# membership in at least one of that lineage&#39;s annotation_level2 clusters
+# exceeds this threshold. Those AUCs are the values published as Extended Data
+# Table 6 -- script/ExtendedDataTable6_GP_AUC_cluster.R reads the same file --
+# which is what makes the two checkable against each other.
+structure_plot_auc_threshold &lt;- 0.9
+
+# Display filters. These apply to the plotted cells only, never to the
+# AUC-based GP selection above, which always uses every cluster of the lineage.
+structure_plot_min_cluster_cells &lt;- 100      # smaller clusters are not drawn
+structure_plot_max_cells_per_cluster &lt;- 2000 # larger clusters are subsampled</code></pre>
+<pre class="r"><code># ============================================================
+# GP selection and the shared palette
+# ============================================================
+# Which lineage each cluster belongs to, from the metadata.
+cluster_lineage &lt;- cluster_lineage_map(level2_all, level1_all)
+
+# verify_structure_plot_gps.R has only the published table to work from, so it
+# maps clusters to lineages by their name prefix (CD8.A -&gt; CD8) instead. Check
+# that shortcut here, where the metadata-derived map is available, so the check
+# cannot be re-deriving a different grouping than the figure drew.
+auc_clusters &lt;- rownames(auc_level2)
+prefix_lineage &lt;- sub(&quot;[.].*$&quot;, &quot;&quot;, auc_clusters)
+if (!identical(unname(cluster_lineage[auc_clusters]), prefix_lineage)) {
+  disagree &lt;- auc_clusters[unname(cluster_lineage[auc_clusters]) != prefix_lineage]
+  stop(sprintf(
+    &quot;cluster name prefixes disagree with annotation_level1 for: %s&quot;,
+    paste(disagree, collapse = &quot;, &quot;)
+  ))
+}
+
+# One GP set per panel, and one color per GP over their union -- so a GP that
+# marks clusters in two lineages keeps its color in both panels.
+panel_gps &lt;- gps_above_auc_by_lineage(auc_level2, cluster_lineage)
+gp_colors &lt;- structure_plot_gp_colors(unlist(panel_gps, use.names = FALSE))
+
+message(sprintf(
+  &quot;%d GPs over %d panels (AUC &gt; %.1f): %s&quot;,
+  length(gp_colors), length(panel_gps), structure_plot_auc_threshold,
+  paste(sprintf(&quot;%s %d&quot;, names(panel_gps), lengths(panel_gps)), collapse = &quot;, &quot;)
+))</code></pre>
+</div>
+<div id="figs8" class="section level2">
+<h2>(a-g) Cluster-level GP membership by lineage</h2>
+<pre class="r"><code># ============================================================
+# s8a-s8g: per-lineage structure plots
+# ============================================================
+# The loop iterates over the names of the panel map, so a lineage cannot be
+# drawn under another lineage&#39;s letter.
+cluster_records &lt;- list()
+gp_records &lt;- list()
+
+for (lineage in names(structure_plot_panels)) {
+  panel &lt;- structure_plot_panels[[lineage]]
+  gps_lineage &lt;- panel_gps[[lineage]]
+
+  lineage_cells &lt;- healthy_non_thymocyte[level1_all[healthy_non_thymocyte] == lineage]
+  cluster_size &lt;- table(droplevels(factor(level2_all[lineage_cells])))
+  small_clusters &lt;- names(cluster_size)[cluster_size &lt; structure_plot_min_cluster_cells]
+  lineage_cells &lt;- lineage_cells[!level2_all[lineage_cells] %in% small_clusters]
+
+  # Cap each cluster&#39;s width so one large cluster cannot crowd out the rest.
+  set.seed(1234)
+  keep &lt;- unlist(lapply(
+    split(seq_along(lineage_cells), level2_all[lineage_cells]),
+    function(idx) {
+      if (length(idx) &gt; structure_plot_max_cells_per_cluster) {
+        sample(idx, structure_plot_max_cells_per_cluster)
+      } else {
+        idx
+      }
+    }
+  ))
+  lineage_cells &lt;- lineage_cells[keep]
+
+  fit_lineage &lt;- L_pm_filtered[lineage_cells, gps_lineage, drop = FALSE]
+  grouping_lineage &lt;- factor(level2_all[lineage_cells])
+
+  # structure_plot() renames the colors it is given positionally, by the columns
+  # of the matrix, so a palette in any other order would mislabel every bar.
+  colors_lineage &lt;- gp_colors[gps_lineage]
+  if (!identical(names(colors_lineage), colnames(fit_lineage))) {
+    stop(sprintf(&quot;panel %s: palette order does not match its GP columns.&quot;, panel))
+  }
+
+  set.seed(1234)
+  p &lt;- structure_plot(
+    fit_lineage,
+    topics = gps_lineage,
+    gap = 40,
+    n = 10000,
+    colors = colors_lineage,
+    grouping = grouping_lineage,
+    ggplot_call = rasterized_structure_plot_call
+  ) +
+    labs(
+      y = &quot;membership&quot;,
+      color = &quot;&quot;,
+      fill = &quot;&quot;,
+      title = sprintf(
+        &quot;%s (%d GPs, AUC &gt; %.1f)&quot;,
+        lineage,
+        length(gps_lineage),
+        structure_plot_auc_threshold
+      )
+    ) +
+    guides(
+      fill = guide_legend(ncol = 2),
+      color = guide_legend(ncol = 2)
+    ) +
+    theme(
+      plot.title = element_text(size = 11, face = &quot;bold&quot;),
+      axis.text.x = element_text(size = 6, angle = 45, hjust = 1),
+      axis.text.y = element_text(size = 9),
+      axis.title = element_text(size = 10, face = &quot;bold&quot;),
+      legend.position = &quot;right&quot;,
+      legend.key.size = unit(0.25, &quot;cm&quot;),
+      legend.text = element_text(size = 5),
+      legend.spacing.y = unit(0.02, &quot;cm&quot;)
+    )
+
+  ggsave(
+    filename = paste0(figure_path, panel, &quot;.pdf&quot;),
+    plot = p,
+    width = 11,
+    height = 4,
+    dpi = 300,
+    limitsize = FALSE
+  )
+
+  # What this panel used, for the alignment check. Every cluster of the lineage
+  # is listed, drawn or not: the GP selection above uses all of them.
+  lineage_clusters &lt;- sort(auc_clusters[prefix_lineage == lineage])
+  drawn_size &lt;- table(droplevels(factor(level2_all[lineage_cells])))
+  cluster_records[[lineage]] &lt;- data.frame(
+    panel = panel,
+    lineage = lineage,
+    cluster = lineage_clusters,
+    n_cells_healthy = as.integer(cluster_size[lineage_clusters]),
+    n_cells_drawn = as.integer(ifelse(
+      lineage_clusters %in% names(drawn_size),
+      drawn_size[lineage_clusters],
+      0L
+    )),
+    stringsAsFactors = FALSE
+  )
+  gp_records[[lineage]] &lt;- data.frame(
+    panel = panel,
+    lineage = lineage,
+    gp = gps_lineage,
+    color = unname(gp_colors[gps_lineage]),
+    max_auc_in_lineage = unname(apply(
+      auc_level2[lineage_clusters, gps_lineage, drop = FALSE], 2,
+      max, na.rm = TRUE
+    )),
+    stringsAsFactors = FALSE
+  )
+}</code></pre>
+<p><img src="assets/FigureS8/s8a.png" width="100%" style="display: block; margin: auto;" /><img src="assets/FigureS8/s8b.png" width="100%" style="display: block; margin: auto;" /><img src="assets/FigureS8/s8c.png" width="100%" style="display: block; margin: auto;" /><img src="assets/FigureS8/s8d.png" width="100%" style="display: block; margin: auto;" /><img src="assets/FigureS8/s8e.png" width="100%" style="display: block; margin: auto;" /><img src="assets/FigureS8/s8f.png" width="100%" style="display: block; margin: auto;" /><img src="assets/FigureS8/s8g.png" width="100%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Extended Data Fig. 8a-g.</strong> Structure plots of
+single-cell GP activity (membership / GP loading) in healthy
+non-thymocyte cells, one panel per T cell lineage, with cells grouped by
+sub-lineage cluster (<code>annotation_level2</code>): <strong>(a) CD8,
+16 GPs; (b) CD4, 22 GPs; (c) Treg, 11 GPs; (d) gdT, 44 GPs; (e) CD8aa, 9
+GPs; (f) Tz, 10 GPs; (g) DN, 17 GPs</strong> – 69 distinct GPs across
+the seven panels. A GP is shown in a panel when its one-vs-rest AUC for
+predicting membership in at least one cluster of that lineage, from the
+GP’s loading, exceeds 0.9 (<strong>AUC &gt; 0.9</strong>); those are the
+values of <a href="ExtendedDataTable6.html">Extended Data Table 6</a>,
+computed on the same healthy non-thymocyte cells. Selection uses all of
+a lineage’s clusters, including any too small to draw. Each vertical bar
+is one cell, partitioned among the GPs shown; bar height is that cell’s
+total membership over those GPs and is not normalized, so it exceeds 1
+where a cell loads on several of them. One color is assigned to each of
+the 69 GPs and held fixed across panels, so a GP marking clusters in two
+lineages reads the same in both. Within a cluster, cells are ordered by
+a one-dimensional t-SNE of their memberships. Clusters with fewer than
+100 cells are not drawn, larger clusters are subsampled to at most 2,000
+cells, and at most 10,000 cells are drawn per panel – bar widths
+therefore reflect the cells drawn rather than cluster size. Thymocytes
+and DP cells are excluded, as in <a href="Figure3.html">Fig. 3</a>.</p>
+</div>
+</div>
+<div id="figs8-record" class="section level2">
+<h2>Record of what the panels drew</h2>
+<p>The GP sets, the palette, and the clusters each panel drew or omitted
+are written out alongside the panels, which is what <a
+href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/verify_structure_plot_gps.R"><code>script/verify_structure_plot_gps.R</code></a>
+compares against <a href="ExtendedDataTable6.html">Extended Data Table
+6</a> and against the caption above:</p>
+<pre class="r"><code># ============================================================
+# What each panel drew, for the alignment check
+# ============================================================
+# script/verify_structure_plot_gps.R reads these two files, so that it can
+# re-derive the panels&#39; GP sets from the published Extended Data Table 6 without
+# reloading the 1 GB loading matrix, and check the clusters drawn and omitted
+# against the display filters above.
+cluster_record &lt;- do.call(rbind, cluster_records)
+cluster_record$n_cells_healthy[is.na(cluster_record$n_cells_healthy)] &lt;- 0L
+write.csv(
+  cluster_record,
+  paste0(record_path, &quot;s8_panel_clusters.csv&quot;),
+  row.names = FALSE
+)
+write.csv(
+  do.call(rbind, gp_records),
+  paste0(record_path, &quot;s8_panel_gps.csv&quot;),
+  row.names = FALSE
+)</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.5.1 (2025-06-13)
+Platform: aarch64-apple-darwin20
+Running under: macOS Sequoia 15.6.1
+
+Matrix products: default
+BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_CA/en_CA/en_CA/C/en_CA/en_CA
+
+time zone: America/Chicago
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+ [1] vctrs_0.7.3     cli_3.6.6       knitr_1.50      rlang_1.2.0    
+ [5] xfun_0.55       stringi_1.8.9   otel_0.2.0      promises_1.5.0 
+ [9] jsonlite_2.0.0  workflowr_1.7.2 glue_1.8.1      rprojroot_2.1.1
+[13] git2r_0.36.2    htmltools_0.5.9 httpuv_1.6.16   sass_0.4.10    
+[17] rmarkdown_2.30  evaluate_1.0.5  jquerylib_0.1.4 tibble_3.3.0   
+[21] fastmap_1.2.0   yaml_2.3.12     lifecycle_1.0.5 whisker_0.4.1  
+[25] stringr_1.6.0   compiler_4.5.1  fs_1.6.6        Rcpp_1.1.1-1.1 
+[29] pkgconfig_2.0.3 later_1.4.4     digest_0.6.39   R6_2.6.1       
+[33] pillar_1.11.1   magrittr_2.0.5  bslib_0.9.0     tools_4.5.1    
+[37] cachem_1.1.0   </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
