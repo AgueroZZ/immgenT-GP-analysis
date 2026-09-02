@@ -26,13 +26,10 @@ Figure 7 (RQVI validates EBMF-derived gene programs with a non-linear deep
 learning framework) brings the EBMF programs documented here together with RQVI,
 a non-linear deep-learning factorization of the same cells. Panel **b**, the
 cluster-level comparison of the two factorizations, is documented on the page
-above; the RQVI panels are documented in the companion repository for the RQVI
-framework.
+above; the RQVI panels are documented in the
+[companion repository for the RQVI framework](https://github.com/TianzeCompbio/RQVI_GP_figures/tree/main).
 
 ## Extended Data figures
-
-Extended Data Figures **1-8**. Each page's URL keeps the `FigureS*` form, but
-every figure is named the way it is published.
 
 + [Extended Data Figure 1: Reproducibility across IGTs and batch-effect evaluation](FigureS1.html)
 + [Extended Data Figure 2: Tz- and CD8-specific GPs (GP30 and GP58)](FigureS2.html)
@@ -43,8 +40,8 @@ every figure is named the way it is published.
 + [Extended Data Figure 7: CD69-associated GPs and further surface-protein gating strategies](FigureS7.html)
 
 Extended Data Figure 8 (RQVI scalability and representative matches to
-lineage-associated EBMF GPs) is documented in the same companion repository for
-the RQVI framework.
+lineage-associated EBMF GPs) is documented in the same
+[companion repository for the RQVI framework](https://github.com/TianzeCompbio/RQVI_GP_figures/tree/main).
 
 ## Extended Data tables
 
