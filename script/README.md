@@ -29,14 +29,14 @@ Run any script from the repo root, e.g. `Rscript script/Figure4.R`.
 | S2 | `FigureS2.R` | `Figure_Lineage.R` |
 | S3 | `FigureS3.R` | `Figure_Activation.R` |
 | S4 | `FigureS4.R` | new (no published counterpart) |
-| S5 | `FigureS5.R` | `Figure_CITEseq.R` (its panel a) |
-| S6 | `FigureS6.R` | `Figure_CITEseq.R` + `gated_protein_loading_plot.R` |
-| S8 | `FigureS8.R` | new (no published counterpart) |
+| S5 | `FigureS5.R` | new (no published counterpart) |
+| S6 | `FigureS6.R` | `Figure_CITEseq.R` (its panel a) |
+| S7 | `FigureS7.R` | `Figure_CITEseq.R` + `gated_protein_loading_plot.R` |
 
-The rest of Figure 7, and all of S7, are **out of scope** (see below). The S5
-slot was emptied on 2026-07-28, when what was published there became main
-Figure 7b, and refilled on 2026-07-30 by the protein-program heatmap that had
-been Figure S6's first panel.
+The rest of Figure 7, and all of the **published** Figure S7 -- the RQVI figure,
+published as Extended Data Figure 7 and renumbered to **8** here on 2026-08-27 --
+are **out of scope** (see below). Extended Data is currently **1-8**: 1-7 are
+documented here, 8 in the companion RQVI repository.
 
 ## The 2026-07-28 / 07-29 re-lettering
 
@@ -46,12 +46,15 @@ old-to-new table; in brief:
 - **Figure 6** was reordered to a-j: the KLRG1 pair and the CD69 gene heatmap
   moved to the front (published g, h, i -> b, c, d), the four gating panels moved
   back (published c-f -> e-h), and two gating panels were added, (i) GP77 and
-  (j) GP8. The published 6b, 6j and 6k moved out to Figure S6.
-- **Figure S6** stopped being a two-page gallery of 23 GPs. It became seven
-  panels: s6a-s6c were the published 6b/6j/6k, and s6d-s6g four of the
-  gallery's GPs (GP29, GP58, GP22, GP68) as standalone panels. Two more gallery
-  GPs were promoted into Figure 6; the remaining 17 are no longer published.
-  **Re-lettered again on 2026-07-30** (below): it is now six panels, s6a-s6f.
+  (j) GP8. The published 6b, 6j and 6k moved out to the CITE-seq Extended Data
+  figure (then S6; now split across S6 and S7).
+- **The CITE-seq Extended Data figure** stopped being a two-page gallery of 23
+  GPs. It became seven panels: a-c were the published 6b/6j/6k, and d-g four of
+  the gallery's GPs (GP29, GP58, GP22, GP68) as standalone panels. Two more
+  gallery GPs were promoted into Figure 6; the remaining 17 are no longer
+  published. Its first panel then became a figure of its own on 2026-07-30, and
+  both were renumbered on 2026-08-27 (below): the heatmap is now **S6/s6** and
+  the six remaining panels **S7/s7a-s7f**.
 - **Figure S3**'s s3a and s3b were merged into one s3a (they were always one
   panel), so every panel after them dropped a letter: published s3c-s3h are now
   s3b-s3g.
@@ -64,23 +67,44 @@ old-to-new table; in brief:
 - **Extended Data Figure 5** became main **Figure 7b**, assembled from its two
   half-panels into one PDF, replacing a different collaborator panel.
 
-## The 2026-07-30 S5/S6 split
+## The 2026-07-30 CITE-seq split
 
-Figure S6's first panel -- the protein-program heatmap, published as Figure 6b --
-became a standalone figure, `FigureS5.R` -> `figures/final-selected/Figure S5/s5.pdf`,
-taking the Extended Data Figure 5 slot that Figure 7b had vacated. Figure S6's
-remaining panels each dropped one letter: its s6b-s6g are now **s6a-s6f** (the
-two CD69 mean-activity heatmaps are a, b; the four gating panels c-f). Only
-letters and file paths moved; no panel was re-rendered, so every PDF and site PNG
-is the same file under a new name.
+The CD69/gating figure's first panel -- the protein-program heatmap, published as
+Figure 6b -- became a standalone figure, taking the Extended Data Figure 5 slot
+that Figure 7b had vacated. The remaining panels each dropped one letter (the two
+CD69 mean-activity heatmaps became a, b; the four gating panels c-f). Only letters
+and file paths moved; no panel was re-rendered, so every PDF and site PNG is the
+same file under a new name.
+
+## The 2026-08-27 Extended Data renumbering
+
+The per-lineage cluster structure plots were added as **Extended Data Figure 5**,
+and the figures at 5-7 each moved back one:
+
+| now | was | what |
+|---|---|---|
+| **S5** `FigureS5.R` -> `Figure S5/s5.pdf` | *(new)* | seven per-lineage structure plots, stacked into one figure |
+| **S6** `FigureS6.R` -> `Figure S6/s6.pdf` | S5 `FigureS5.R`, `s5.pdf` | protein-program heatmap |
+| **S7** `FigureS7.R` -> `Figure S7/s7a-s7f.pdf` | S6 `FigureS6.R`, `s6a-s6f.pdf` | CD69 mean activity (a, b) + gating (c-f) |
+| **8** *(companion RQVI repository)* | 7 | RQVI scalability and representative matches |
+
+The two CITE-seq figures were renamed, not re-rendered: every PDF and site PNG is
+the same file under a new name (verified pixel-identical). Their scripts' internal
+panel letters, the pages' chunk labels and anchors, the three CITE-seq
+verification scripts and `verify_panels.sh`'s map all moved with them. Extended
+Data Figure 8 keeps its number only in the companion repository's own
+documentation -- see the caution in "Which published panel is the ground truth"
+below.
 
 ## Which published panel is the ground truth
 
 `figures/Previous/bits/` is the published panel set and still uses the OLD
 numbering. Figure 1 was split into Figures 1+2 and everything from the old
-Figure 2 onward shifted up by one, and Figures 6 / S3 / S6 were re-lettered on
-2026-07-28 and Figure 4 on 2026-07-29, so a same-letter filename comparison is
-wrong almost everywhere:
+Figure 2 onward shifted up by one; Figure 6, Figure S3 and the CD69/gating figure
+(now S7) were re-lettered on 2026-07-28, Figure 4 on 2026-07-29, and the Extended
+Data figures renumbered on 2026-08-27. A same-letter filename comparison is
+therefore wrong almost everywhere -- and for S5/S6/S7 a same-*number* comparison
+is wrong too:
 
 | ours | published (`figures/Previous/bits/`) |
 |---|---|
@@ -97,14 +121,19 @@ wrong almost everywhere:
 | 6d | Figure 6/**6i** (CD69 gene heatmap) |
 | 6e-6h | Figure 6/**6c-6f** (gating: GP171, GP12, GP80, GP23) |
 | 6i, 6j | *(new panels -- gating for GP77 and GP8)* |
-| S5/s5 | Figure 6/**6b** (protein-program heatmap; Figure S6's s6a until 2026-07-30) |
-| S6/s6a, s6b | Figure 6/**6j, 6k** (CD69 GPs by tissue / lineage) |
-| S6/s6c-s6f | *(new standalone panels; their GPs were only ever drawn inside the retired Figure S6/s6-1 and s6-2 gallery pages)* |
+| S6/s6 | Figure 6/**6b** (protein-program heatmap; ours was S5/s5 until 2026-08-27) |
+| S7/s7a, s7b | Figure 6/**6j, 6k** (CD69 GPs by tissue / lineage; ours was S6/s6a, s6b until 2026-08-27) |
+| S7/s7c-s7f | *(new standalone panels; their GPs were only ever drawn inside the retired two-page gallery, `Previous/bits/Figure S6/s6-1` and `s6-2`)* |
 | S3/s3b-s3g | Figure S3/**s3c-s3h** |
 | 7A, 7C-7G | Figure 7/**7A, 7C-7G** (straight copies, out of scope) |
-| 7B | *(ours since 2026-07-28 -- the former Extended Data Figure 5, assembled; it replaced a different published 7B, which is therefore NOT its counterpart)* |
+| 7B | *(ours since 2026-07-28 -- the Extended Data Figure 5 of the time, assembled; it replaced a different published 7B, which is therefore NOT its counterpart)* |
 | S1A-S1D, S2* | same letters |
-| S1E, S4*, S8* | *(new panels)* |
+| S1E, S4*, S5* | *(new panels)* |
+
+Two published directories have no counterpart here despite matching one of our
+names: `Previous/bits/Figure S6/` is the retired two-page gallery (`s6-1`,
+`s6-2`), not our S6/s6 heatmap, and `Previous/bits/Figure S7/` is the RQVI
+figure, which is our Extended Data Figure **8** and is out of scope.
 
 There is no `Previous/bits/Figure 5/` at all, and no Figure S3 s3a/s3b (that
 panel is not produced in this repository).
@@ -157,7 +186,8 @@ Note if you script this in zsh: the page selector must be written
 `"${pdf}[0]"`, since `"$pdf[0]"` is parsed as an array subscript and fails with
 a confusing "no decode delegate" error.
 
-**A re-run can silently not write.** `FigureS6.R` was seen to exit 0, with a
+**A re-run can silently not write.** The CD69/gating script (now `FigureS7.R`)
+was seen to exit 0, with a
 complete log, having regenerated nothing: `unlink()` removed the old
 `s6-1.pdf`/`s6-2.pdf` (confirmed gone by an external `stat`), the cairo device
 opened and closed without error, and the previous files then reappeared
@@ -169,11 +199,11 @@ write to the same directory in the same session is unaffected. Cause is outside
 R; treat it as an environment hazard, not a script bug.
 
 The two gallery pages that triggered it were retired on 2026-07-28, so no script
-here writes multi-megabyte `cairo_pdf()` output any more. `FigureS6.R` keeps a
+here writes multi-megabyte `cairo_pdf()` output any more. `FigureS7.R` keeps a
 cheaper form of the mitigation instead: it stamps `run_started_at` at the top and
 `stop()`s at the end if any of its six panels is missing, empty, or older than
-that stamp (`FigureS5.R`, split out of it, carries the same guard for its one
-panel). If a panel script ever appears to run cleanly without updating its
+that stamp (`FigureS6.R`, split out of it, and `FigureS5.R` carry the same guard
+for their single output). If a panel script ever appears to run cleanly without updating its
 output, check the output's **mtime** before trusting the run, and reach for
 either pattern (the stronger one -- render to `tempfile()`, `file.copy()` into
 place, compare sizes -- is in this file's git history at commit `5248bd6`).
@@ -183,7 +213,7 @@ value that a figure also computes with, the two have to be checked against each
 other -- nothing in the build enforces it. `verify_thresholds.R` does this for
 the protein positivity thresholds: it sources the real
 `code/R/citeseq_shared_setup.R` (not a copy of its logic), takes the
-`threshold_df` that `Figure6.R:170` and `FigureS6.R:55` actually gate on, and
+`threshold_df` that `Figure6.R:170` and `FigureS7.R:59` actually gate on, and
 diffs it against the curated `data/Thresholds_Selected_Proteins.csv` read
 straight off disk -- protein set, every value, and whether each curated
 threshold is even reachable through
@@ -197,7 +227,7 @@ Rscript script/verify_thresholds.R
 
 `verify_cd69_gp_ranking.R` does the same for a *claim* rather than a value: the
 CD69 GP subset (`cd69_top_gps_subset`, in `code/R/citeseq_shared_setup.R`) is
-hand-picked, so the two captions describing it (Fig. 6d and Fig. S6a, b) and the
+hand-picked, so the two captions describing it (Fig. 6d and Fig. S7a, b) and the
 correlation ranks quoted beside it are all unenforced. The script sources the real
 setup, recomputes the CD69 Spearman correlation over all 200 GPs on the figures'
 own cells, and checks that the curated 10 really are among the most strongly
@@ -212,29 +242,29 @@ Rscript script/verify_cd69_gp_ranking.R
 ```
 
 `verify_gating_gps.R` covers the ten protein-gating panels, which are split
-across two figures (6e-6j and s6c-s6f) and so across two scripts. It reads each
+across two figures (6e-6j and s7c-s7f) and so across two scripts. It reads each
 script's GP-to-letter map rather than retyping it, and checks that every gated GP
 comes from the curated `well_aligned_gps` pool, that the two figures show disjoint
 GPs, that every declared letter has a PDF on disk with no orphans left from an
 earlier lettering, and -- reproducing the gate's own logic -- that no marker in
 those ten signatures is silently skipped for want of an ADT column or a manual
-threshold. That last check is what lets Fig. S6c-f's caption and Extended Data
+threshold. That last check is what lets Fig. S7c-f's caption and Extended Data
 Table 7's caption both state that no panel subtitle omits a marker.
 
 ```
 Rscript script/verify_gating_gps.R
 ```
 
-`verify_structure_plot_gps.R` covers Figure S8, whose *content* is a selection:
-each panel shows the GPs that reach AUC > 0.9 for at least one cluster of its
-lineage, and those same AUCs are published as Extended Data Table 6. It reads the
-panel map, threshold and display filters from `code/R/structure_plot_panels.R`
-(the file the figure uses), re-derives every panel's GP set from the published
-workbook, and diffs it against the record `FigureS8.R` writes into
-`output/FigureS8/` -- GP sets, each GP's maximum AUC in its lineage, the
-one-color-per-GP palette, the clusters drawn and those omitted for being under
-100 cells, the panel PDFs on disk, and the per-panel GP counts quoted in the
-caption. This is what keeps the caption's "16, 22, 11, 44, 9, 10 and 17 GPs;
+`verify_structure_plot_gps.R` covers Figure S5, whose *content* is a selection:
+each of its seven rows shows the GPs that reach AUC > 0.9 for at least one
+cluster of its lineage, and those same AUCs are published as Extended Data
+Table 6. It reads the row map, threshold and display filters from
+`code/R/structure_plot_panels.R` (the file the figure uses), re-derives every
+row's GP set from the published workbook, and diffs it against the record
+`FigureS5.R` writes into `output/FigureS5/` -- GP sets, each GP's maximum AUC in
+its lineage, the one-color-per-GP palette, the clusters drawn and those omitted
+for being under 100 cells, the assembled figure on disk (and the absence of
+stale per-row PDFs), and the per-row GP counts quoted in the caption. This is what keeps the caption's "16, 22, 11, 44, 9, 10 and 17 GPs;
 69 distinct" from drifting away from the panels or from Table 6. The three inputs
 can be redirected (`--record-dir=`, `--table=`, `--page=`), which is how the
 failing path is exercised.
@@ -250,22 +280,22 @@ passes: all 42 published thresholds are identical to the gated ones.
 `verify_cd69_gp_ranking.R`, `verify_gating_gps.R` and
 `verify_structure_plot_gps.R` pass.
 
-**Figure S8** is a new figure, so `verify_panels.sh` has no published pair for
-any of its seven panels. Two checks stand in. `verify_structure_plot_gps.R`
-(above) re-derives every panel's GP set from Extended Data Table 6. And the
-panels were re-rendered once with the palette pool widened to all 72 AUC-passing
-GPs -- the pool used by the per-lineage rendering in
+**Figure S5** is a new figure, so `verify_panels.sh` has no published pair for
+it. Two checks stand in. `verify_structure_plot_gps.R` (above) re-derives every
+row's GP set from Extended Data Table 6. And the rows were rendered once as
+separate PDFs with the palette pool widened to all 72 AUC-passing GPs -- the pool
+used by the per-lineage rendering in
 `experiments/giant_structure_plot_by_lineage/` that this figure reproduces -- and
-pixel-compared against it: all seven **identical** (RMSE 0). So the published
-panels differ from that rendering only in color, by the palette decision the
-script's header records; the cells, clusters, GP sets and geometry are unchanged.
-Note that an ink-mask comparison across the two *different* palettes is not a
-substitute: bar tops are antialiased against white, so a lighter fill drops edge
-pixels from the mask and reads as a layout change that is not there.
+pixel-compared against it: all seven **identical** (RMSE 0). So the figure
+differs from that rendering only in color and in being assembled here rather than
+by hand; the cells, clusters, GP sets and row geometry are unchanged. Note that an
+ink-mask comparison across the two *different* palettes is not a substitute: bar
+tops are antialiased against white, so a lighter fill drops edge pixels from the
+mask and reads as a layout change that is not there.
 
 After the 2026-07-28 re-lettering, every panel that only changed letter was
 additionally pixel-compared against its own pre-move file and came out
-**identical** (Figure 6's b-h, Figure S6's a-c as they were then, Figure S3's
+**identical** (Figure 6's b-h, the CD69 figure's a-c as they were then, Figure S3's
 b-g, and Figure 7b
 against the previously assembled Extended Data Figure 5), so the re-lettering
 moved letters and nothing else. The one panel whose content changed on purpose is
@@ -304,7 +334,7 @@ moved letters and nothing else. The one panel whose content changed on purpose i
 - **Figure 5, panel 5c** drops the across-organ expression dotplot that formed
   the left half of the published 4c and ships the gene-score heatmap alone, at
   half the width. The caption describes the heatmap only.
-- **Figure S5** (the published Figure 6b, and Figure S6's s6a until 2026-07-30)
+- **Figure S6** (the published Figure 6b; our S5/s5 from 2026-07-30 to 2026-08-27)
   was reworked into the triangular-first protein-row ordering described in its
   caption; the published panel is a plain clustered heatmap with a different
   aspect ratio.
@@ -423,16 +453,16 @@ PNG from the PDF at 72 dpi would only make the preview coarser.
 
 ### Panels rasterized by `scattermore`
 
-The ten protein-gate vs. GP-loading panels (**6e-6j** and **s6c-s6f**) draw a
+The ten protein-gate vs. GP-loading panels (**6e-6j** and **s7c-s7f**) draw a
 rasterized density layer, so their PDFs differ from the published ones by 0.5-5%
 in size and ~0.04 RMSE with no visible difference. Their GP-to-letter assignment
 lives in one named vector per script (`fig6_gating` in `Figure6.R`,
-`figs6_gating` in `FigureS6.R`) and the loops iterate over its *names*, so a GP
+`figs7_gating` in `FigureS7.R`) and the loops iterate over its *names*, so a GP
 cannot be drawn under another GP's letter. Earlier versions kept the GP list and
 the letters in two separate vectors and assigned the letters positionally, which
 silently permuted three published panels -- do not reintroduce that shape.
 
-## Note on re-running FigureS6.R (and FigureS5.R)
+## Note on re-running FigureS7.R (and FigureS6.R)
 
 `cairo_pdf()` was found during verification to not reliably truncate an
 existing output file of a different size in place (a stale/partial file
@@ -440,17 +470,21 @@ from an earlier interrupted run could persist and get silently reused). That
 applied to the two gallery pages, which were retired on 2026-07-28; the current
 six panels are written by `ggsave()`, and the script's closing
 mtime/size assertion (see "A re-run can silently not write" above) turns any
-non-write into a hard error. `FigureS5.R`, split out of it on 2026-07-30, writes
+non-write into a hard error. `FigureS6.R`, split out of it on 2026-07-30, writes
 its one panel with `pdf()` and carries the same assertion. If you ever see a script's output that doesn't match
 expectations, deleting its output files before re-running is good practice in
 general.
 
-## Why most of Figure 7, and all of Figure S7, are excluded
+## Why most of Figure 7, and all of the published Figure S7, are excluded
+
+The figure discussed here is the **published** S7 -- the RQVI figure, which in
+the current numbering is Extended Data Figure **8**, not our Figure S7
+(CD69-associated GPs and gating, which *is* produced here by `FigureS7.R`).
 
 Confirmed via PDF `/Creator` metadata during this refactor:
 
 - Figure 7, panel A is a **Figma** schematic (not code-generated).
-- Figure 7, panels C/D/F and **all 11** Figure S7 panels are **Matplotlib**
+- Figure 7, panels C/D/F and **all 11** published Figure S7 panels are **Matplotlib**
   (Python) output — but no `.py` file exists anywhere in this repository.
 - Figure 7's R-generated panels 7E and 7G trace to `replicate_RQVI_cells.R` and
   related RQVI validation code, but that entire validation track was scoped out

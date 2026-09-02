@@ -1,34 +1,35 @@
 # Shared definitions for the per-lineage GP structure plots.
 #
-# Extended Data Figure 8 draws one structure plot per T cell lineage, over the
-# GPs that reach AUC > 0.9 for at least one of that lineage's sub-lineage
-# clusters. Two scripts need the same panel map, the same selection rule and
-# the same palette:
+# Extended Data Figure 5 is one stacked figure: seven rows, one structure plot
+# per T cell lineage, over the GPs that reach AUC > 0.9 for at least one of that
+# lineage's sub-lineage clusters. Two scripts need the same row map, the same
+# selection rule and the same palette:
 #
-#   script/FigureS8.R                    draws the seven panels and records
-#                                        what it drew
+#   script/FigureS5.R                    draws the seven rows, stacks them, and
+#                                        records what it drew
 #   script/verify_structure_plot_gps.R   re-derives the GP sets from the
 #                                        published Extended Data Table 6 and
 #                                        fails if they disagree with that
 #                                        record or with the page's caption
 #
 # Both read them from here rather than keeping a copy, so the figure and the
-# check cannot drift apart, and the caption's per-panel GP counts have exactly
+# check cannot drift apart, and the caption's per-row GP counts have exactly
 # one source.
 
 # --- doc:panels ---
-# Panel letter per lineage, in panel order -- the level-1 lineage order of
+# Row letter per lineage, in stacking order -- the level-1 lineage order of
 # Figure 1D and Figure 3, with thymocytes and DP cells excluded as they are
-# there. Both consumers iterate over the names of this map, so a lineage cannot
-# be drawn, or checked, under another lineage's letter.
+# there. The letters are the panel labels cowplot::plot_grid() draws on the
+# assembled figure. Both consumers iterate over the names of this map, so a
+# lineage cannot be drawn, or checked, under another lineage's letter.
 structure_plot_panels <- c(
-  "CD8" = "s8a",
-  "CD4" = "s8b",
-  "Treg" = "s8c",
-  "gdT" = "s8d",
-  "CD8aa" = "s8e",
-  "Tz" = "s8f",
-  "DN" = "s8g"
+  "CD8" = "a",
+  "CD4" = "b",
+  "Treg" = "c",
+  "gdT" = "d",
+  "CD8aa" = "e",
+  "Tz" = "f",
+  "DN" = "g"
 )
 
 # A GP is shown in a lineage's panel when its one-vs-rest AUC for predicting
@@ -42,6 +43,13 @@ structure_plot_auc_threshold <- 0.9
 # AUC-based GP selection above, which always uses every cluster of the lineage.
 structure_plot_min_cluster_cells <- 100      # smaller clusters are not drawn
 structure_plot_max_cells_per_cluster <- 2000 # larger clusters are subsampled
+
+# Assembled geometry: each row is drawn wide and short, and the seven are
+# stacked into one figure. A row carries up to 21 cluster blocks and their
+# labels, so it needs the width; the height then follows from keeping seven
+# rows on one page.
+structure_plot_width <- 16     # inches, the whole figure
+structure_plot_row_height <- 3 # inches per lineage row
 # --- doc:end-panels ---
 
 # annotation_level2 -> annotation_level1, one entry per cluster.
@@ -74,7 +82,7 @@ cluster_lineage_map <- function(level2, level1) {
 # `auc` is a clusters x GPs matrix (rows named by annotation_level2, columns by
 # GP), `cluster_lineage` the map above. Returns one character vector of GP
 # names per lineage, in the column order of `auc` -- ascending GP number, which
-# is the order the panels' legends use.
+# is the order the rows' legends use.
 gps_above_auc_by_lineage <- function(auc,
                                      cluster_lineage,
                                      lineages = names(structure_plot_panels),
@@ -107,13 +115,13 @@ gps_above_auc_by_lineage <- function(auc,
   stats::setNames(out, lineages)
 }
 
-# One color per GP, held fixed across panels.
+# One color per GP, held fixed across rows.
 #
-# Assigning per panel would give the same GP a different color in each lineage
-# it appears in; this takes the union up front so GP2, shown in both the CD8aa
-# and DN panels, reads as the same program in both.
+# Assigning per row would give the same GP a different color in each lineage it
+# appears in; this takes the union up front so GP2, shown in both the CD8aa and
+# DN rows, reads as the same program in both.
 #
-# With up to 44 GPs in one panel, no exported qualitative palette has enough
+# With up to 44 GPs in one row, no exported qualitative palette has enough
 # distinct colors: pals::glasbey() stops at 32 and pals::polychrome() at 36.
 # fastTopics's own 256-color glasbey -- the fallback its structure_plot() uses
 # for >= 22 topics -- is large enough but unexported, so it is fetched by name:

@@ -38,14 +38,13 @@ every figure is named the way it is published.
 + [Extended Data Figure 2: Tz- and CD8-specific GPs (GP30 and GP58)](FigureS2.html)
 + [Extended Data Figure 3: Characterizing activation-associated GPs](FigureS3.html)
 + [Extended Data Figure 4: Healthy non-thymocyte GP mean-loading heatmaps](FigureS4.html)
-+ [Extended Data Figure 5: Protein programs across GPs](FigureS5.html)
-+ [Extended Data Figure 6: CD69-associated GPs and further surface-protein gating strategies](FigureS6.html)
++ [Extended Data Figure 5: Cluster-level GP membership within each T cell lineage](FigureS5.html)
++ [Extended Data Figure 6: Protein programs across GPs](FigureS6.html)
++ [Extended Data Figure 7: CD69-associated GPs and further surface-protein gating strategies](FigureS7.html)
 
-Extended Data Figure 7 (RQVI scalability and representative matches to
+Extended Data Figure 8 (RQVI scalability and representative matches to
 lineage-associated EBMF GPs) is documented in the same companion repository for
 the RQVI framework.
-
-+ [Extended Data Figure 8: Cluster-level GP membership within each T cell lineage](FigureS8.html)
 
 ## Extended Data tables
 

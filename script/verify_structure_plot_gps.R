@@ -1,29 +1,29 @@
-# Verify Extended Data Figure 8's GP selection against the published cluster AUCs.
+# Verify Extended Data Figure 5's GP selection against the published cluster AUCs.
 #
 #   Rscript script/verify_structure_plot_gps.R    # exits non-zero on any mismatch
 #
-# The figure's content is a selection: each panel shows the GPs that reach
-# AUC > 0.9 for at least one cluster of its lineage. Those same AUCs are
-# published as Extended Data Table 6, and the per-panel GP counts are quoted in
+# The figure's content is a selection: each of its seven rows shows the GPs that
+# reach AUC > 0.9 for at least one cluster of its lineage. Those same AUCs are
+# published as Extended Data Table 6, and the per-row GP counts are quoted in
 # the caption -- three places that have to agree, and that nothing in the build
 # checks. This script checks that
 #
-#   1. the GP set each panel drew is exactly what thresholding the *published*
+#   1. the GP set each row drew is exactly what thresholding the *published*
 #      table gives, lineage by lineage, and the recorded per-GP maximum AUCs are
 #      the table's values;
-#   2. the palette is one color per GP, shared across panels, and holds none of
+#   2. the palette is one color per GP, shared across rows, and holds none of
 #      the GPs that pass only in the DP clusters this figure omits;
 #   3. the clusters drawn, and those left out for being too small, follow the
 #      figure's own display filters;
-#   4. every panel letter has a PDF on disk and no orphan is left from an
-#      earlier lettering; and
-#   5. the caption's per-panel GP counts and total still match what was drawn.
+#   4. the assembled figure is on disk, with no per-row PDF left over from an
+#      earlier layout or lettering; and
+#   5. the caption's per-row GP counts and total still match what was drawn.
 #
-# The panel map, the AUC threshold and the display filters are read from
+# The row map, the AUC threshold and the display filters are read from
 # code/R/structure_plot_panels.R -- the file the figure itself uses -- so this
 # is a re-derivation from the published numbers, not a second copy of the
 # figure's logic. What the figure drew is read from the record it writes into
-# output/FigureS8/ (so this check does not need the 1 GB loading matrix).
+# output/FigureS5/ (so this check does not need the 1 GB loading matrix).
 #
 # The three inputs can be pointed elsewhere, which is how the failing path gets
 # tested:
@@ -38,10 +38,10 @@ arg_value <- function(name, default) {
   if (length(hit) == 0) default else sub(paste0("^--", name, "="), "", hit)
 }
 
-record_dir <- arg_value("record-dir", "output/FigureS8/")
+record_dir <- arg_value("record-dir", "output/FigureS5/")
 table_file <- arg_value("table", "figures/final-selected/ExtendedDataTable6_GP_AUC_cluster.xlsx")
-page_file <- arg_value("page", "analysis/FigureS8.Rmd")
-panel_dir <- arg_value("panel-dir", "figures/final-selected/Figure S8/")
+page_file <- arg_value("page", "analysis/FigureS5.Rmd")
+panel_dir <- arg_value("panel-dir", "figures/final-selected/Figure S5/")
 
 failures <- character(0)
 check <- function(ok, msg) if (!isTRUE(ok)) failures <<- c(failures, msg)
@@ -49,8 +49,8 @@ check <- function(ok, msg) if (!isTRUE(ok)) failures <<- c(failures, msg)
 # ------------------------------------------------------------
 # Inputs
 # ------------------------------------------------------------
-gp_record <- utils::read.csv(file.path(record_dir, "s8_panel_gps.csv"), stringsAsFactors = FALSE)
-cluster_record <- utils::read.csv(file.path(record_dir, "s8_panel_clusters.csv"), stringsAsFactors = FALSE)
+gp_record <- utils::read.csv(file.path(record_dir, "s5_panel_gps.csv"), stringsAsFactors = FALSE)
+cluster_record <- utils::read.csv(file.path(record_dir, "s5_panel_clusters.csv"), stringsAsFactors = FALSE)
 
 # Extended Data Table 6 is one row per GP, one column per cluster; the figure
 # thresholds it the other way round.
@@ -65,9 +65,9 @@ lineage_published <- stats::setNames(
 lineages <- names(structure_plot_panels)
 gp_number <- function(gp) as.integer(sub("^GP", "", gp))
 
-cat(sprintf("record   : %s\ntable    : %s\npage     : %s\npanels   : %s\n\n",
+cat(sprintf("record   : %s\ntable    : %s\npage     : %s\nfigure   : %s\n\n",
             record_dir, table_file, page_file, panel_dir))
-cat(sprintf("=== 0. the figure's own definitions ===\nAUC > %.1f | panels: %s\n",
+cat(sprintf("=== 0. the figure's own definitions ===\nAUC > %.1f | rows: %s\n",
             structure_plot_auc_threshold,
             paste(sprintf("%s = %s", structure_plot_panels, lineages), collapse = ", ")))
 cat(sprintf("published table: %d clusters x %d GPs\n",
@@ -99,7 +99,7 @@ for (lineage in lineages) {
   check(identical(gp_number(drawn), sort(gp_number(drawn))),
         sprintf("%s: recorded GPs are not in ascending GP order, so the legend order is not the panel order", lineage))
   check(all(unique(gp_record$panel[gp_record$lineage == lineage]) == structure_plot_panels[[lineage]]),
-        sprintf("%s: recorded under panel letter(s) other than %s", lineage, structure_plot_panels[[lineage]]))
+        sprintf("%s: recorded under row letter(s) other than %s", lineage, structure_plot_panels[[lineage]]))
 }
 
 cat("\n--- recorded maximum AUC per GP against the table ---\n")
@@ -109,7 +109,7 @@ table_max <- vapply(seq_len(nrow(gp_record)), function(i) {
   max(auc_published[rows, gp_record$gp[i]], na.rm = TRUE)
 }, numeric(1))
 worst <- if (nrow(gp_record)) max(abs(recorded_max - table_max)) else 0
-cat(sprintf("largest |recorded - published| over %d panel-GP pairs: %.3g\n", nrow(gp_record), worst))
+cat(sprintf("largest |recorded - published| over %d row-GP pairs: %.3g\n", nrow(gp_record), worst))
 check(worst < 1e-9, sprintf("recorded maximum AUCs differ from the published table by up to %.3g", worst))
 check(all(table_max > structure_plot_auc_threshold),
       sprintf("%d drawn GP(s) do not exceed the threshold in their own lineage",
@@ -121,7 +121,7 @@ check(all(table_max > structure_plot_auc_threshold),
 cat("\n=== 2. one color per GP, and no DP-only GP ===\n")
 colors_per_gp <- tapply(gp_record$color, gp_record$gp, function(x) length(unique(x)))
 shared_gps <- table(gp_record$gp)
-cat(sprintf("%d distinct GPs | %d distinct colors | %d GPs appear in more than one panel\n",
+cat(sprintf("%d distinct GPs | %d distinct colors | %d GPs appear in more than one row\n",
             length(unique(gp_record$gp)), length(unique(gp_record$color)),
             sum(shared_gps > 1)))
 check(all(colors_per_gp == 1),
@@ -172,31 +172,32 @@ for (lineage in lineages) {
 # ------------------------------------------------------------
 # 4. panel PDFs
 # ------------------------------------------------------------
-cat("\n=== 4. every panel letter has a PDF, and there are no orphans ===\n")
-want_pdfs <- paste0(structure_plot_panels, ".pdf")
-on_disk <- list.files(panel_dir, pattern = "^s8[a-z]\\.pdf$")
+cat("\n=== 4. the assembled figure is on disk, with no per-row leftovers ===\n")
+want_pdfs <- "s5.pdf"
+on_disk <- list.files(panel_dir, pattern = "\\.pdf$")
 missing <- want_pdfs[!file.exists(file.path(panel_dir, want_pdfs))]
 empty <- want_pdfs[file.exists(file.path(panel_dir, want_pdfs)) &
                      file.size(file.path(panel_dir, want_pdfs)) == 0]
 orphan <- setdiff(on_disk, want_pdfs)
-cat(sprintf("declared %d | missing: %s | empty: %s | orphan: %s\n",
-            length(want_pdfs),
+cat(sprintf("expected %s | missing: %s | empty: %s | orphan: %s\n",
+            paste(want_pdfs, collapse = ","),
             if (length(missing)) paste(missing, collapse = ",") else "none",
             if (length(empty)) paste(empty, collapse = ",") else "none",
             if (length(orphan)) paste(orphan, collapse = ",") else "none"))
 check(length(missing) == 0, sprintf("no PDF for %s", paste(missing, collapse = ", ")))
 check(length(empty) == 0, sprintf("empty PDF: %s", paste(empty, collapse = ", ")))
 check(length(orphan) == 0,
-      sprintf("%s is not produced by any current panel -- stale lettering?", paste(orphan, collapse = ", ")))
+      sprintf("%s is in the figure directory but is not the assembled figure -- stale layout?",
+              paste(orphan, collapse = ", ")))
 
 # ------------------------------------------------------------
 # 5. the caption's numbers
 # ------------------------------------------------------------
-cat("\n=== 5. the caption's per-panel GP counts and total ===\n")
+cat("\n=== 5. the caption's per-row GP counts and total ===\n")
 page <- paste(readLines(page_file, warn = FALSE), collapse = " ")
 quoted <- regmatches(page, gregexpr("\\([a-g]\\) [A-Za-z0-9]+, [0-9]+ GPs", page))[[1]]
 parsed <- data.frame(
-  panel = paste0("s8", sub("^\\(([a-g])\\).*$", "\\1", quoted)),
+  panel = sub("^\\(([a-g])\\).*$", "\\1", quoted),
   lineage = sub("^\\([a-g]\\) ([A-Za-z0-9]+),.*$", "\\1", quoted),
   n_gps = as.integer(sub("^.*, ([0-9]+) GPs$", "\\1", quoted)),
   stringsAsFactors = FALSE
@@ -207,11 +208,11 @@ drawn_counts <- data.frame(
   n_gps = vapply(lineages, function(l) sum(gp_record$lineage == l), integer(1)),
   stringsAsFactors = FALSE
 )
-cat("caption:", if (nrow(parsed)) paste(quoted, collapse = "; ") else "(no per-panel counts found)", "\n")
-cat("drawn  :", paste(sprintf("(%s) %s, %d GPs", sub("^s8", "", drawn_counts$panel),
+cat("caption:", if (nrow(parsed)) paste(quoted, collapse = "; ") else "(no per-row counts found)", "\n")
+cat("drawn  :", paste(sprintf("(%s) %s, %d GPs", drawn_counts$panel,
                               drawn_counts$lineage, drawn_counts$n_gps), collapse = "; "), "\n")
 check(isTRUE(all.equal(parsed, drawn_counts, check.attributes = FALSE)),
-      "the caption's per-panel GP counts, lineages or panel order do not match what was drawn")
+      "the caption's per-row GP counts, lineages or row order do not match what was drawn")
 
 total_quoted <- regmatches(page, gregexpr("[0-9]+ distinct GPs", page))[[1]]
 total_drawn <- length(unique(gp_record$gp))

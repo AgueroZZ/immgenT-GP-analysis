@@ -1,5 +1,5 @@
 ---
-title: "Extended Data Figure 5: Protein programs across GPs"
+title: "Extended Data Figure 5: Cluster-level GP membership within each T cell lineage"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -10,12 +10,19 @@ editor_options:
 source("../code/R/doc_code.R")
 ```
 
-This single-panel figure is produced by
+This figure is one stacked panel -- seven wide rows, one per T cell lineage --
+produced by
 [`script/FigureS5.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS5.R),
-which shares its CITE-seq setup and protein filters with
-[Figure 6](Figure6.html) and [Extended Data Figure 6](FigureS6.html) via
-`code/R/citeseq_shared_setup.R`. The code below is shown for reference (not
-re-executed on this page, since the shared setup takes about a minute to load);
+which assembles the rows itself, so the figure on disk is always the one the
+script last drew. It is the per-cluster, all-GP counterpart of
+[Fig. 3B](Figure3.html#fig3b), which shows six hand-picked lineage-defining GPs
+grouped by lineage: here every GP that marks a sub-lineage cluster is shown, and
+cells are grouped by cluster within each lineage. The GPs are selected from the
+cluster AUCs published as [Extended Data Table 6](ExtendedDataTable6.html), and
+[`script/verify_structure_plot_gps.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/verify_structure_plot_gps.R)
+re-derives every row's GP set from that published table, failing if it disagrees
+with the figure or with the caption below. The code is shown for reference (not
+re-executed on this page, since it loads the full cell-by-GP loading matrix);
 the image is its pre-rendered output.
 
 ## Setup
@@ -23,9 +30,21 @@ the image is its pre-rendered output.
 ```{r figs5-setup, code=code_for("../script/FigureS5.R", "doc:setup"), eval=FALSE}
 ```
 
-## Protein-program heatmap {#figs5}
+## Row definitions and GP selection {#figs5-rows}
 
-```{r figs5-code, code=code_for("../script/FigureS5.R", "s5"), eval=FALSE}
+The row map, the AUC threshold, the display filters and the assembled geometry
+live in `code/R/structure_plot_panels.R`, which the verification script reads as
+well, so the figure and the check cannot disagree about what is shown:
+
+```{r figs5-rows-code, code=code_for("../code/R/structure_plot_panels.R", "doc:panels"), eval=FALSE}
+```
+
+```{r figs5-selection-code, code=code_for("../script/FigureS5.R", "GP selection"), eval=FALSE}
+```
+
+## (a-g) Cluster-level GP membership by lineage {#figs5}
+
+```{r figs5-code, code=code_for("../script/FigureS5.R", "s5:"), eval=FALSE}
 ```
 
 ```{r figs5-img, echo=FALSE, out.width="100%"}
@@ -33,14 +52,37 @@ knitr::include_graphics("assets/FigureS5/s5.png")
 ```
 
 ::: {.figcaption}
-**Extended Data Fig. 5.** Heatmap of scaled protein scores for each GP (the re-estimated
-protein matrix **U**), with the protein scores in each GP scaled so its maximum
-|score| = 1. We focused on the **47 proteins** that performed best in the immgenT
-CITE-seq dataset (isotype and low-quality proteins removed).
-**Seventeen GPs lacked meaningful protein correlates** -- every protein score is
-exactly zero -- and were omitted. Four putative contamination programs (GP40,
-GP50, GP55 and GP188) were also removed, leaving **179 GPs**
-(200 - 17 - 4 = 179); 47 proteins (rows) x 179 GPs (columns). Entries with an
-absolute score below 0.5 are shown in white, with color running from blue (-1)
-through white to red (+1). GP columns are ordered from the most to the fewest visible proteins. Protein rows are ordered by the position of their rightmost visible GP, placing proteins that extend into the sparse right side first and exposing a triangular support boundary; visible count and a rarity-weighted support score break ties. This triangular-first row order is not monotone in per-protein sparsity. GP labels are vertical and sized to the available heatmap-cell width; protein labels are sized to the available row height.
+**Extended Data Fig. 5a-g.** Structure plots of single-cell GP activity
+(membership / GP loading) in healthy non-thymocyte cells, one row per T cell
+lineage, with cells grouped by sub-lineage cluster (`annotation_level2`):
+**(a) CD8, 16 GPs; (b) CD4, 22 GPs; (c) Treg, 11 GPs; (d) gdT, 44 GPs;
+(e) CD8aa, 9 GPs; (f) Tz, 10 GPs; (g) DN, 17 GPs** -- 69 distinct GPs across the
+seven rows. A GP is shown in a row when its one-vs-rest AUC for predicting
+membership in at least one cluster of that lineage, from the GP's loading,
+exceeds 0.9 (**AUC > 0.9**); those are the values of
+[Extended Data Table 6](ExtendedDataTable6.html), computed on the same healthy
+non-thymocyte cells. Selection uses all of a lineage's clusters, including any
+too small to draw. Each vertical bar is one cell, partitioned among the GPs
+shown; bar height is that cell's total membership over those GPs and is not
+normalized, so it exceeds 1 where a cell loads on several of them. One color is
+assigned to each of the 69 GPs and held fixed across rows, so a GP marking
+clusters in two lineages reads the same in both; each row's legend lists its own
+GPs, in ascending GP order. Within a cluster, cells are ordered by a
+one-dimensional t-SNE of their memberships. Clusters with fewer than 100 cells
+are not drawn, larger clusters are subsampled to at most 2,000 cells, and at
+most 10,000 cells are drawn per row -- bar widths therefore reflect the cells
+drawn rather than cluster size. Rows share a common plot width so the cluster
+blocks line up down the figure. Thymocytes and DP cells are excluded, as in
+[Fig. 3](Figure3.html).
 :::
+
+## Record of what the rows drew {#figs5-record}
+
+The GP sets, the palette, and the clusters each row drew or omitted are written
+out alongside the figure, which is what
+[`script/verify_structure_plot_gps.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/verify_structure_plot_gps.R)
+compares against [Extended Data Table 6](ExtendedDataTable6.html) and against
+the caption above:
+
+```{r figs5-record-code, code=code_for("../script/FigureS5.R", "What each panel drew"), eval=FALSE}
+```
