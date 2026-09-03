@@ -384,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-09-02
+<strong>Last updated:</strong> 2026-09-03
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree1e5721a5a4676b7e7ee1bb5593a9488b8abcf7c1targetblank1e5721aa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree21018475ef9835cf143694c78e2b415ba2f4031atargetblank2101847a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/1e5721a5a4676b7e7ee1bb5593a9488b8abcf7c1" target="_blank">1e5721a</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/21018475ef9835cf143694c78e2b415ba2f4031a" target="_blank">2101847</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree1e5721a5a4676b7e7ee1bb5593a9488b8abcf7c1targetblank1e5721aa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree21018475ef9835cf143694c78e2b415ba2f4031atargetblank2101847a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/1e5721a5a4676b7e7ee1bb5593a9488b8abcf7c1" target="_blank">1e5721a</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/21018475ef9835cf143694c78e2b415ba2f4031a" target="_blank">2101847</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -632,6 +632,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/21018475ef9835cf143694c78e2b415ba2f4031a/analysis/FigureS5.Rmd" target="_blank">2101847</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-03
+</td>
+<td>
+Extended Data Figure 5: colour each lineage row on its own
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/19c977fcfe3349cb39a0935774ea6c4d8d671c64/docs/FigureS5.html" target="_blank">19c977f</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-02
+</td>
+<td>
+Build site: Extended Data 5-7 renumbered, Figure S5 page rebuilt
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1195,7 +1229,7 @@ structure_plot_max_cells_per_cluster &lt;- 2000 # larger clusters are subsampled
 structure_plot_width &lt;- 16     # inches, the whole figure
 structure_plot_row_height &lt;- 3 # inches per lineage row</code></pre>
 <pre class="r"><code># ============================================================
-# GP selection and the shared palette
+# GP selection
 # ============================================================
 # Which lineage each cluster belongs to, from the metadata.
 cluster_lineage &lt;- cluster_lineage_map(level2_all, level1_all)
@@ -1214,14 +1248,14 @@ if (!identical(unname(cluster_lineage[auc_clusters]), prefix_lineage)) {
   ))
 }
 
-# One GP set per panel, and one color per GP over their union -- so a GP that
-# marks clusters in two lineages keeps its color in both panels.
+# One GP set per row. Each row&#39;s palette is then assigned inside the loop
+# below, independently of the other rows -- see structure_plot_row_colors().
 panel_gps &lt;- gps_above_auc_by_lineage(auc_level2, cluster_lineage)
-gp_colors &lt;- structure_plot_gp_colors(unlist(panel_gps, use.names = FALSE))
 
 message(sprintf(
-  &quot;%d GPs over %d panels (AUC &gt; %.1f): %s&quot;,
-  length(gp_colors), length(panel_gps), structure_plot_auc_threshold,
+  &quot;%d GPs over %d rows (AUC &gt; %.1f): %s&quot;,
+  length(unique(unlist(panel_gps, use.names = FALSE))), length(panel_gps),
+  structure_plot_auc_threshold,
   paste(sprintf(&quot;%s %d&quot;, names(panel_gps), lengths(panel_gps)), collapse = &quot;, &quot;)
 ))</code></pre>
 </div>
@@ -1265,9 +1299,12 @@ for (lineage in names(structure_plot_panels)) {
   fit_lineage &lt;- L_pm_filtered[lineage_cells, gps_lineage, drop = FALSE]
   grouping_lineage &lt;- factor(level2_all[lineage_cells])
 
-  # structure_plot() renames the colors it is given positionally, by the columns
-  # of the matrix, so a palette in any other order would mislabel every bar.
-  colors_lineage &lt;- gp_colors[gps_lineage]
+  # This row&#39;s colors, assigned from the top of the palette without reference to
+  # any other row. structure_plot() renames the colors it is given positionally,
+  # by the columns of the matrix, so a palette in any other order would mislabel
+  # every bar; structure_plot_row_colors() returns them in ascending GP order,
+  # which is the column order here.
+  colors_lineage &lt;- structure_plot_row_colors(gps_lineage)
   if (!identical(names(colors_lineage), colnames(fit_lineage))) {
     stop(sprintf(&quot;panel %s: palette order does not match its GP columns.&quot;, panel))
   }
@@ -1330,7 +1367,7 @@ for (lineage in names(structure_plot_panels)) {
     panel = panel,
     lineage = lineage,
     gp = gps_lineage,
-    color = unname(gp_colors[gps_lineage]),
+    color = unname(colors_lineage),
     max_auc_in_lineage = unname(apply(
       auc_level2[lineage_clusters, gps_lineage, drop = FALSE], 2,
       max, na.rm = TRUE
@@ -1383,6 +1420,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/19c977fcfe3349cb39a0935774ea6c4d8d671c64/docs/assets/FigureS5/s5.png" target="_blank">19c977f</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-02
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/ac650a0acf95ac77b58c2a65d03ecf420a71dbe8/docs/assets/FigureS5/s5.png" target="_blank">ac650a0</a>
 </td>
 <td>
@@ -1411,16 +1459,19 @@ computed on the same healthy non-thymocyte cells. Selection uses all of
 a lineage’s clusters, including any too small to draw. Each vertical bar
 is one cell, partitioned among the GPs shown; bar height is that cell’s
 total membership over those GPs and is not normalized, so it exceeds 1
-where a cell loads on several of them. One color is assigned to each of
-the 69 GPs and held fixed across rows, so a GP marking clusters in two
-lineages reads the same in both; each row’s legend lists its own GPs, in
-ascending GP order. Within a cluster, cells are ordered by a
-one-dimensional t-SNE of their memberships. Clusters with fewer than 100
-cells are not drawn, larger clusters are subsampled to at most 2,000
-cells, and at most 10,000 cells are drawn per row – bar widths therefore
-reflect the cells drawn rather than cluster size. Rows share a common
-plot width so the cluster blocks line up down the figure. Thymocytes and
-DP cells are excluded, as in <a href="Figure3.html">Fig. 3</a>.</p>
+where a cell loads on several of them. Each row is colored
+independently, taking as many colors as it has GPs from the start of the
+glasbey palette in ascending GP order, which maximizes contrast between
+the GPs within a row; <strong>color is therefore not comparable between
+rows</strong> – the same color in two rows is two different GPs, and
+each row’s legend lists its own GPs. Within a cluster, cells are ordered
+by a one-dimensional t-SNE of their memberships. Clusters with fewer
+than 100 cells are not drawn, larger clusters are subsampled to at most
+2,000 cells, and at most 10,000 cells are drawn per row – bar widths
+therefore reflect the cells drawn rather than cluster size. Rows share a
+common plot width so the cluster blocks line up down the figure.
+Thymocytes and DP cells are excluded, as in <a href="Figure3.html">Fig.
+3</a>.</p>
 </div>
 </div>
 <div id="figs5-record" class="section level2">
