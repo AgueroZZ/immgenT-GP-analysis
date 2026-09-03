@@ -64,10 +64,11 @@ exceeds 0.9 (**AUC > 0.9**); those are the values of
 non-thymocyte cells. Selection uses all of a lineage's clusters, including any
 too small to draw. Each vertical bar is one cell, partitioned among the GPs
 shown; bar height is that cell's total membership over those GPs and is not
-normalized, so it exceeds 1 where a cell loads on several of them. One color is
-assigned to each of the 69 GPs and held fixed across rows, so a GP marking
-clusters in two lineages reads the same in both; each row's legend lists its own
-GPs, in ascending GP order. Within a cluster, cells are ordered by a
+normalized, so it exceeds 1 where a cell loads on several of them. Each row is
+colored independently, taking as many colors as it has GPs from the start of the
+glasbey palette in ascending GP order, which maximizes contrast between the GPs
+within a row; **color is therefore not comparable between rows** -- the same
+color in two rows is two different GPs, and each row's legend lists its own GPs. Within a cluster, cells are ordered by a
 one-dimensional t-SNE of their memberships. Clusters with fewer than 100 cells
 are not drawn, larger clusters are subsampled to at most 2,000 cells, and at
 most 10,000 cells are drawn per row -- bar widths therefore reflect the cells

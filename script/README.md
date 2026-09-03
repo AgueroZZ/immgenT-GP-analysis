@@ -262,7 +262,8 @@ Table 6. It reads the row map, threshold and display filters from
 `code/R/structure_plot_panels.R` (the file the figure uses), re-derives every
 row's GP set from the published workbook, and diffs it against the record
 `FigureS5.R` writes into `output/FigureS5/` -- GP sets, each GP's maximum AUC in
-its lineage, the one-color-per-GP palette, the clusters drawn and those omitted
+its lineage, each row's palette (against the real `structure_plot_row_colors()`, not a copy of its
+rule), the clusters drawn and those omitted
 for being under 100 cells, the assembled figure on disk (and the absence of
 stale per-row PDFs), and the per-row GP counts quoted in the caption. This is what keeps the caption's "16, 22, 11, 44, 9, 10 and 17 GPs;
 69 distinct" from drifting away from the panels or from Table 6. The three inputs
@@ -282,16 +283,21 @@ passes: all 42 published thresholds are identical to the gated ones.
 
 **Figure S5** is a new figure, so `verify_panels.sh` has no published pair for
 it. Two checks stand in. `verify_structure_plot_gps.R` (above) re-derives every
-row's GP set from Extended Data Table 6. And the rows were rendered once as
-separate PDFs with the palette pool widened to all 72 AUC-passing GPs -- the pool
-used by the per-lineage rendering in
-`experiments/giant_structure_plot_by_lineage/` that this figure reproduces -- and
-pixel-compared against it: all seven **identical** (RMSE 0). So the figure
-differs from that rendering only in color and in being assembled here rather than
-by hand; the cells, clusters, GP sets and row geometry are unchanged. Note that an
-ink-mask comparison across the two *different* palettes is not a substitute: bar
-tops are antialiased against white, so a lighter fill drops edge pixels from the
-mask and reads as a layout change that is not there.
+row's GP set from Extended Data Table 6, and every row's colours from
+`structure_plot_row_colors()`. And the assembled figure was pixel-compared
+against `experiments/structure_plot_recolor/s5_per_lineage_glasbey.pdf`, the
+recolouring trial the 2026-09-02 palette change adopted: **identical (RMSE 0)**.
+That trial in turn renders its control variant identical to the pre-change
+figure, so the whole chain back to the exploratory
+`experiments/giant_structure_plot_by_lineage/` rows is accounted for: cells,
+clusters, GP sets and row geometry have never changed, only colour and the move
+from seven hand-assembled PDFs to one assembled here.
+
+When comparing two renderings that differ in palette *on purpose*, do not reach
+for an ink/no-ink mask as the hue-independent substitute: bar tops are
+antialiased against white, so a lighter fill drops edge pixels from the mask and
+reads as bars moving by tens of pixels that did not move. Re-render one side with
+the other's palette instead, and diff that.
 
 After the 2026-07-28 re-lettering, every panel that only changed letter was
 additionally pixel-compared against its own pre-move file and came out

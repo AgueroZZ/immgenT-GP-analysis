@@ -19,11 +19,13 @@
 # and the "Giant structure plot" section of experiments/assess_structure_plot.R,
 # whose stacked layout (16 in wide, 3 in per row, plot_grid(align = "v")) this
 # figure follows. Two changes from the exploratory rows: DP is dropped (seven
-# rows, not eight), and the palette is assigned over the 69 GPs these seven rows
-# show rather than the 72 that pass in any lineage -- GP9, GP14 and GP48 pass
-# only in DP clusters. Both changes move every color, so the rows are not
-# pixel-comparable with those exploratory PDFs; the cells, clusters, GP sets and
-# geometry are unchanged (verified -- see script/README.md).
+# rows, not eight), and each row is coloured on its own rather than from one
+# GP -> colour map shared by all rows, which is what those PDFs and this figure
+# did until 2026-09-02 -- see the palette comment in
+# code/R/structure_plot_panels.R and the trials in
+# experiments/structure_plot_recolor/, whose per_lineage_glasbey variant this
+# figure now reproduces exactly (RMSE 0; script/README.md records the check).
+# The cells, clusters, GP sets and geometry have never changed.
 #
 # Took the Extended Data Figure 5 slot on 2026-08-27, when it moved there from
 # Figure S8: the protein-program heatmap that had been Figure S5 became Figure
@@ -90,7 +92,7 @@ healthy_non_thymocyte <- which(
 )
 
 # ============================================================
-# GP selection and the shared palette
+# GP selection
 # ============================================================
 # Which lineage each cluster belongs to, from the metadata.
 cluster_lineage <- cluster_lineage_map(level2_all, level1_all)
@@ -109,14 +111,14 @@ if (!identical(unname(cluster_lineage[auc_clusters]), prefix_lineage)) {
   ))
 }
 
-# One GP set per panel, and one color per GP over their union -- so a GP that
-# marks clusters in two lineages keeps its color in both panels.
+# One GP set per row. Each row's palette is then assigned inside the loop
+# below, independently of the other rows -- see structure_plot_row_colors().
 panel_gps <- gps_above_auc_by_lineage(auc_level2, cluster_lineage)
-gp_colors <- structure_plot_gp_colors(unlist(panel_gps, use.names = FALSE))
 
 message(sprintf(
-  "%d GPs over %d panels (AUC > %.1f): %s",
-  length(gp_colors), length(panel_gps), structure_plot_auc_threshold,
+  "%d GPs over %d rows (AUC > %.1f): %s",
+  length(unique(unlist(panel_gps, use.names = FALSE))), length(panel_gps),
+  structure_plot_auc_threshold,
   paste(sprintf("%s %d", names(panel_gps), lengths(panel_gps)), collapse = ", ")
 ))
 
@@ -158,9 +160,12 @@ for (lineage in names(structure_plot_panels)) {
   fit_lineage <- L_pm_filtered[lineage_cells, gps_lineage, drop = FALSE]
   grouping_lineage <- factor(level2_all[lineage_cells])
 
-  # structure_plot() renames the colors it is given positionally, by the columns
-  # of the matrix, so a palette in any other order would mislabel every bar.
-  colors_lineage <- gp_colors[gps_lineage]
+  # This row's colors, assigned from the top of the palette without reference to
+  # any other row. structure_plot() renames the colors it is given positionally,
+  # by the columns of the matrix, so a palette in any other order would mislabel
+  # every bar; structure_plot_row_colors() returns them in ascending GP order,
+  # which is the column order here.
+  colors_lineage <- structure_plot_row_colors(gps_lineage)
   if (!identical(names(colors_lineage), colnames(fit_lineage))) {
     stop(sprintf("panel %s: palette order does not match its GP columns.", panel))
   }
@@ -223,7 +228,7 @@ for (lineage in names(structure_plot_panels)) {
     panel = panel,
     lineage = lineage,
     gp = gps_lineage,
-    color = unname(gp_colors[gps_lineage]),
+    color = unname(colors_lineage),
     max_auc_in_lineage = unname(apply(
       auc_level2[lineage_clusters, gps_lineage, drop = FALSE], 2,
       max, na.rm = TRUE

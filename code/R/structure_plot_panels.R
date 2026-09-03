@@ -115,25 +115,34 @@ gps_above_auc_by_lineage <- function(auc,
   stats::setNames(out, lineages)
 }
 
-# One color per GP, held fixed across rows.
+# One colour per GP within a row, assigned independently of the other rows.
 #
-# Assigning per row would give the same GP a different color in each lineage it
-# appears in; this takes the union up front so GP2, shown in both the CD8aa and
-# DN rows, reads as the same program in both.
+# A row takes glasbey's first k colours, k being its GP count, in ascending GP
+# order (the order its legend lists them in). glasbey is built greedily, each
+# entry as far as possible from all the previous ones, so a prefix of it is the
+# most separable set of that size the palette can offer -- which is what these
+# rows need, with up to 44 GPs stacked in one bar and read by eye. No exported
+# qualitative palette is big enough on its own (pals::glasbey() stops at 32,
+# pals::polychrome() at 36), and fastTopics's own 256-colour glasbey -- the
+# fallback its structure_plot() uses past 22 topics -- is unexported, so it is
+# fetched by name: a future version that renames it fails here, loudly, instead
+# of silently recolouring the figure.
 #
-# With up to 44 GPs in one row, no exported qualitative palette has enough
-# distinct colors: pals::glasbey() stops at 32 and pals::polychrome() at 36.
-# fastTopics's own 256-color glasbey -- the fallback its structure_plot() uses
-# for >= 22 topics -- is large enough but unexported, so it is fetched by name:
-# a future version that renames it fails here, loudly, instead of silently
-# recoloring the figure. The assigned subset is then re-sorted by hue, and
-# assigned in ascending GP order, so neighboring legend entries step through the
-# hue wheel rather than jumping around it.
-structure_plot_gp_colors <- function(gps) {
+# Until 2026-09-02 this figure did the opposite, fixing one colour per GP over
+# the union of the rows so that a GP marking clusters in two lineages read the
+# same in both. That costs within-row contrast, because a row showing 9 of the
+# 69 GPs gets whichever 9 colours its GP numbers land on: in CIELAB, the
+# worst-confusable pair in the CD8aa row goes from dE76 25 to 67, and in the CD8
+# row from 26 to 46, once the row is coloured on its own
+# (experiments/structure_plot_recolor/ holds the trials and the full table).
+# Colouring per row has its own cost -- the same colour means different GPs in
+# different rows, and every row opens blue, red, green -- so the caption states
+# outright that colour is not comparable across rows.
+structure_plot_row_colors <- function(gps) {
   gps <- unique(as.character(gps))
   gp_number <- suppressWarnings(as.integer(sub("^GP", "", gps)))
   if (anyNA(gp_number)) {
-    stop("structure_plot_gp_colors(): every GP must be named GP<number>.")
+    stop("structure_plot_row_colors(): every GP must be named GP<number>.")
   }
   gps <- gps[order(gp_number)]
 
@@ -144,14 +153,12 @@ structure_plot_gp_colors <- function(gps) {
   palette <- glasbey()[-1] # entry 1 is white: unusable as a bar fill
   if (length(gps) > length(palette)) {
     stop(sprintf(
-      "structure_plot_gp_colors(): %d GPs but only %d palette colors.",
+      "structure_plot_row_colors(): %d GPs but only %d palette colors.",
       length(gps), length(palette)
     ))
   }
 
-  assigned <- palette[seq_along(gps)]
-  hue <- grDevices::rgb2hsv(grDevices::col2rgb(assigned))["h", ]
-  stats::setNames(assigned[order(hue)], gps)
+  stats::setNames(palette[seq_along(gps)], gps)
 }
 
 # structure_plot()'s ggplot_call, with the bars rasterized.

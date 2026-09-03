@@ -11,15 +11,17 @@
 #   1. the GP set each row drew is exactly what thresholding the *published*
 #      table gives, lineage by lineage, and the recorded per-GP maximum AUCs are
 #      the table's values;
-#   2. the palette is one color per GP, shared across rows, and holds none of
-#      the GPs that pass only in the DP clusters this figure omits;
+#   2. every row's palette is exactly what structure_plot_row_colors() gives for
+#      its GPs -- one color per GP within the row, glasbey's first k in
+#      ascending GP order -- and no row holds a GP that passes only in the DP
+#      clusters this figure omits;
 #   3. the clusters drawn, and those left out for being too small, follow the
 #      figure's own display filters;
 #   4. the assembled figure is on disk, with no per-row PDF left over from an
 #      earlier layout or lettering; and
 #   5. the caption's per-row GP counts and total still match what was drawn.
 #
-# The row map, the AUC threshold and the display filters are read from
+# The row map, the AUC threshold, the display filters and the palette rule are read from
 # code/R/structure_plot_panels.R -- the file the figure itself uses -- so this
 # is a re-derivation from the published numbers, not a second copy of the
 # figure's logic. What the figure drew is read from the record it writes into
@@ -118,17 +120,30 @@ check(all(table_max > structure_plot_auc_threshold),
 # ------------------------------------------------------------
 # 2. the palette, and the DP exclusion
 # ------------------------------------------------------------
-cat("\n=== 2. one color per GP, and no DP-only GP ===\n")
-colors_per_gp <- tapply(gp_record$color, gp_record$gp, function(x) length(unique(x)))
+# Rows are colored independently, so the invariant is per row: as many distinct
+# colors as GPs, and exactly the ones the real structure_plot_row_colors()
+# returns. Checking against the function rather than against a copy of its rule
+# means a palette change that has not been re-rendered fails here.
+cat("\n=== 2. each row's palette, and no DP-only GP ===\n")
+for (lineage in lineages) {
+  rec <- gp_record[gp_record$lineage == lineage, ]
+  want <- structure_plot_row_colors(rec$gp)
+  as_rule <- identical(names(want), rec$gp) && identical(unname(want), rec$color)
+  cat(sprintf("%-6s %2d GPs | %2d distinct colors | matches structure_plot_row_colors(): %s\n",
+              lineage, nrow(rec), length(unique(rec$color)), as_rule))
+  check(length(unique(rec$color)) == nrow(rec),
+        sprintf("%s: two GPs share a color within this row", lineage))
+  check(as_rule,
+        sprintf("%s: recorded colors are not the ones structure_plot_row_colors() assigns", lineage))
+}
+
+# Colour is deliberately NOT comparable across rows since 2026-09-02, so the
+# figure reuses colours between them. Reported rather than checked -- what has to
+# hold is that the caption keeps saying so, which check 5 covers.
 shared_gps <- table(gp_record$gp)
-cat(sprintf("%d distinct GPs | %d distinct colors | %d GPs appear in more than one row\n",
-            length(unique(gp_record$gp)), length(unique(gp_record$color)),
-            sum(shared_gps > 1)))
-check(all(colors_per_gp == 1),
-      sprintf("GP(s) drawn in two colors: %s",
-              paste(names(colors_per_gp)[colors_per_gp > 1], collapse = ", ")))
-check(length(unique(gp_record$color)) == length(unique(gp_record$gp)),
-      "two different GPs share a color")
+reused <- sum(table(gp_record$color) > 1)
+cat(sprintf("%d distinct GPs | %d GPs appear in more than one row | %d colors reused across rows\n",
+            length(unique(gp_record$gp)), sum(shared_gps > 1), reused))
 
 dp_clusters <- names(lineage_published)[lineage_published == "DP"]
 dp_only <- setdiff(
