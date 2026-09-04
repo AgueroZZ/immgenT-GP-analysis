@@ -51,6 +51,10 @@ figures/templates_*/
 # leaks into the workflowr status report embedded in every built page.
 tmp/
 
+# Our own working notes, including the generated data/ file inventory used to
+# assemble the Zenodo deposit. Same reason as captions/ and tmp/ above.
+internal/
+
 # Collaborator's original cluster-side flashier fitting code, kept locally as
 # the source for the Methods_FlashierFit page. The fit itself is distributed
 # as flashier_snmf.rds rather than as code -- see code/README.md.

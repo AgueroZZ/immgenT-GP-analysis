@@ -36,9 +36,10 @@ DT::datatable(
 ```
 
 ::: {.figcaption}
-**Extended Data Table 4.** One row per GP describing how its loading changes with
-T-cell activation, computed separately in CD4 and CD8: `mean_change_loadings`
-(activated minus resting mean loading), `d` (standardized mean difference =
-change / pooled loading SD, the statistic plotted in Figure 4a), and
-`Ratio_CD8_CD4` (ratio of the CD8 to CD4 mean loading change).
+**Extended Data Table 4.** Change in GP loading with T cell activation,
+computed in CD4 and CD8 cells separately: the mean loading in activated minus
+resting cells; d_CD4 and d_CD8, the corresponding standardized differences,
+each divided by the s.d. of the GP's loading across all activated and resting
+CD4 and CD8 cells; and Ratio_CD8_CD4, the ratio of the CD8 to the CD4 mean
+loading change.
 :::

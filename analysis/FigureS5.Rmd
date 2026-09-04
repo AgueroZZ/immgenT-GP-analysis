@@ -1,5 +1,5 @@
 ---
-title: "Extended Data Figure 5: Cluster-level GP membership within each T cell lineage"
+title: "Extended Data Figure 5: Composition of GP activity in T cell clusters"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -15,7 +15,7 @@ produced by
 [`script/FigureS5.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS5.R),
 which assembles the rows itself, so the figure on disk is always the one the
 script last drew. It is the per-cluster, all-GP counterpart of
-[Fig. 3B](Figure3.html#fig3b), which shows six hand-picked lineage-defining GPs
+[Fig. 3b](Figure3.html#fig3b), which shows six hand-picked lineage-defining GPs
 grouped by lineage: here every GP that marks a sub-lineage cluster is shown, and
 cells are grouped by cluster within each lineage. The GPs are selected from the
 cluster AUCs published as [Extended Data Table 6](ExtendedDataTable6.html), and
@@ -52,29 +52,10 @@ knitr::include_graphics("assets/FigureS5/s5.png")
 ```
 
 ::: {.figcaption}
-**Extended Data Fig. 5a-g.** Structure plots of single-cell GP activity
-(membership / GP loading) in healthy non-thymocyte cells, one row per T cell
-lineage, with cells grouped by sub-lineage cluster (`annotation_level2`):
-**(a) CD8, 16 GPs; (b) CD4, 22 GPs; (c) Treg, 11 GPs; (d) gdT, 44 GPs;
-(e) CD8aa, 9 GPs; (f) Tz, 10 GPs; (g) DN, 17 GPs** -- 69 distinct GPs across the
-seven rows. A GP is shown in a row when its one-vs-rest AUC for predicting
-membership in at least one cluster of that lineage, from the GP's loading,
-exceeds 0.9 (**AUC > 0.9**); those are the values of
-[Extended Data Table 6](ExtendedDataTable6.html), computed on the same healthy
-non-thymocyte cells. Selection uses all of a lineage's clusters, including any
-too small to draw. Each vertical bar is one cell, partitioned among the GPs
-shown; bar height is that cell's total membership over those GPs and is not
-normalized, so it exceeds 1 where a cell loads on several of them. Each row is
-colored independently, taking as many colors as it has GPs from the start of the
-glasbey palette in ascending GP order, which maximizes contrast between the GPs
-within a row; **color is therefore not comparable between rows** -- the same
-color in two rows is two different GPs, and each row's legend lists its own GPs. Within a cluster, cells are ordered by a
-one-dimensional t-SNE of their memberships. Clusters with fewer than 100 cells
-are not drawn, larger clusters are subsampled to at most 2,000 cells, and at
-most 10,000 cells are drawn per row -- bar widths therefore reflect the cells
-drawn rather than cluster size. Rows share a common plot width so the cluster
-blocks line up down the figure. Thymocytes and DP cells are excluded, as in
-[Fig. 3](Figure3.html).
+**Extended Data Fig. 5a-g.** Structure plots showing single-cell GP activity
+across major clusters of baseline non-thymocyte (a) CD8, (b) CD4, (c) Treg,
+(d) gdT, (e) CD8aa, (f) Tz, and (g) DN cells, focusing on GPs with
+cluster-specific AUC > 0.9.
 :::
 
 ## Record of what the rows drew {#figs5-record}

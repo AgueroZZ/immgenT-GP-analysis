@@ -56,14 +56,16 @@ old-to-new table; in brief:
   both were renumbered on 2026-08-27 (below): the heatmap is now **S6/s6** and
   the six remaining panels **S7/s7a-s7f**.
 - **Figure S3**'s s3a and s3b were merged into one s3a (they were always one
-  panel), so every panel after them dropped a letter: published s3c-s3h are now
-  s3b-s3g.
+  panel), so every panel after them dropped a letter: published s3c-s3g are now
+  s3b-s3f. Its bipartite TF-GP network (published s3h) was dropped as well, so
+  the figure is a-f.
 - **Figure 4** (2026-07-29) dropped its bipartite TF-GP network, the published
   3e, so the two heatmaps after it moved up a letter: published 3f, 3g are now
   4c, 4d and the figure is a-d. That panel was the only caller anywhere of
-  `code/R/tf_network.R`, which is therefore now unused -- Figure S3's s3g draws
-  its own TF-GP network inline. The helper is kept for provenance, and
-  `FigureS3.R`'s `source()` of it (which never called into it) was removed.
+  `code/R/tf_network.R`, which is therefore now unused. Figure S3 drew its own
+  TF-GP network inline until that panel was dropped too. The helper is kept for
+  provenance, and `FigureS3.R`'s `source()` of it (which never called into it)
+  was removed.
 - **Extended Data Figure 5** became main **Figure 7b**, assembled from its two
   half-panels into one PDF, replacing a different collaborator panel.
 
@@ -124,7 +126,7 @@ is wrong too:
 | S6/s6 | Figure 6/**6b** (protein-program heatmap; ours was S5/s5 until 2026-08-27) |
 | S7/s7a, s7b | Figure 6/**6j, 6k** (CD69 GPs by tissue / lineage; ours was S6/s6a, s6b until 2026-08-27) |
 | S7/s7c-s7f | *(new standalone panels; their GPs were only ever drawn inside the retired two-page gallery, `Previous/bits/Figure S6/s6-1` and `s6-2`)* |
-| S3/s3b-s3g | Figure S3/**s3c-s3h** |
+| S3/s3b-s3f | Figure S3/**s3c-s3g** (published s3h, the TF-GP network, was dropped) |
 | 7A, 7C-7G | Figure 7/**7A, 7C-7G** (straight copies, out of scope) |
 | 7B | *(ours since 2026-07-28 -- the Extended Data Figure 5 of the time, assembled; it replaced a different published 7B, which is therefore NOT its counterpart)* |
 | S1A-S1D, S2* | same letters |
@@ -441,8 +443,8 @@ bit-for-bit (modulo the PDF creation date):
 `figures/Previous/bits/` was produced before the repel seeds existed, so label
 *placement* (never label content or data) still differs slightly from the
 published panels in the label-heavy scatterplots (3A, 3D, 3F, 3H, 4a, 5a, 5d,
-6b, 6c, S1C). `4b`'s and `s3g`'s node placement likewise differs from the
-published layout because of `graphlayouts`/`igraph` version drift, not RNG.
+6b, 6c, S1C). `4b`'s node placement likewise differs from the published layout
+because of `graphlayouts`/`igraph` version drift, not RNG.
 
 ### Site PNGs
 

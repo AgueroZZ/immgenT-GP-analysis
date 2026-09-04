@@ -10,34 +10,34 @@ factorization (EBMF), and how they relate to cell lineage, tissue, activation
 state, transcription factors, and surface protein expression.
 
 Each page below covers one published figure: for every panel, the R code that
-produced it, the figure itself, and a short caption explaining what it shows.
+produced it, the figure itself, and the published caption.
 
 ## Main figures
 
-+ [Figure 1: Overview of the 200 gene programs in immgenT](Figure1.html)
-+ [Figure 2: Active genes and cells in gene programs](Figure2.html)
-+ [Figure 3: T cell lineage-related GPs](Figure3.html)
-+ [Figure 4: GPs associated with T cell activation](Figure4.html)
-+ [Figure 5: GP expression in tissues is driven by T cell composition](Figure5.html)
-+ [Figure 6: Surface proteins associated with GP activity](Figure6.html)
-+ [Figure 7b: Cluster-level activity of EBMF GPs and their matched RQVI GPs](Figure7.html)
++ [Figure 1: A gene-program architecture underlies T cell heterogeneity across the immgenT atlas](Figure1.html)
++ [Figure 2: Individual T cells deploy sparse combinations of gene programs that expand with activation](Figure2.html)
++ [Figure 3: T cell lineage identity is encoded by both lineage-restricted and shared gene programs](Figure3.html)
++ [Figure 4: Activated T cell states arise from shared and lineage-biased combinations of gene programs](Figure4.html)
++ [Figure 5: Tissue-associated gene programs reflect both tissue adaptation and T cell subset composition](Figure5.html)
++ [Figure 6: Surface-marker associations are context-dependent, but combinatorial gating resolves specific gene programs](Figure6.html)
++ [Figure 7b: A nonlinear deep-learning framework independently recovers the immgenT gene-program landscape](Figure7.html)
 
-Figure 7 (RQVI validates EBMF-derived gene programs with a non-linear deep
-learning framework) brings the EBMF programs documented here together with RQVI,
-a non-linear deep-learning factorization of the same cells. Panel **b**, the
-cluster-level comparison of the two factorizations, is documented on the page
-above; the RQVI panels are documented in the
+Figure 7 (A nonlinear deep-learning framework independently recovers the
+immgenT gene-program landscape) brings the EBMF programs documented here
+together with RQVI, a non-linear deep-learning factorization of the same cells.
+Panel **b**, the cluster-level comparison of the two factorizations, is
+documented on the page above; the RQVI panels are documented in the
 [companion repository for the RQVI framework](https://github.com/TianzeCompbio/RQVI_GP_figures/tree/main).
 
 ## Extended Data figures
 
-+ [Extended Data Figure 1: Reproducibility across IGTs and batch-effect evaluation](FigureS1.html)
-+ [Extended Data Figure 2: Tz- and CD8-specific GPs (GP30 and GP58)](FigureS2.html)
-+ [Extended Data Figure 3: Characterizing activation-associated GPs](FigureS3.html)
-+ [Extended Data Figure 4: Healthy non-thymocyte GP mean-loading heatmaps](FigureS4.html)
-+ [Extended Data Figure 5: Cluster-level GP membership within each T cell lineage](FigureS5.html)
++ [Extended Data Figure 1: GP reproducibility and batch-effect evaluation](FigureS1.html)
++ [Extended Data Figure 2: Tz- and CD8-specific GPs (GP30 and GP58, respectively)](FigureS2.html)
++ [Extended Data Figure 3: Activation-associated GPs](FigureS3.html)
++ [Extended Data Figure 4: GP activity across tissues and T cell clusters](FigureS4.html)
++ [Extended Data Figure 5: Composition of GP activity in T cell clusters](FigureS5.html)
 + [Extended Data Figure 6: Protein programs across GPs](FigureS6.html)
-+ [Extended Data Figure 7: CD69-associated GPs and further surface-protein gating strategies](FigureS7.html)
++ [Extended Data Figure 7: Surface proteins association with GP](FigureS7.html)
 
 Extended Data Figure 8 (RQVI scalability and representative matches to
 lineage-associated EBMF GPs) is documented in the same
@@ -45,12 +45,12 @@ lineage-associated EBMF GPs) is documented in the same
 
 ## Extended Data tables
 
-+ [Extended Data Table 1: summary of GP characteristics and comments](ExtendedDataTable1.html)
-+ [Extended Data Table 2: gene signature per GP](ExtendedDataTable2.html)
-+ [Extended Data Table 3: GP AUC by lineage](ExtendedDataTable3.html)
++ [Extended Data Table 1: GP characteristics and annotations](ExtendedDataTable1.html)
++ [Extended Data Table 2: Gene signature per GP](ExtendedDataTable2.html)
++ [Extended Data Table 3: GP association with lineages](ExtendedDataTable3.html)
 + [Extended Data Table 4: GP activity during activation](ExtendedDataTable4.html)
-+ [Extended Data Table 5: GP AUC by tissue](ExtendedDataTable5.html)
-+ [Extended Data Table 6: GP AUC by cluster](ExtendedDataTable6.html)
++ [Extended Data Table 5: GP association with tissues](ExtendedDataTable5.html)
++ [Extended Data Table 6: GP association with clusters](ExtendedDataTable6.html)
 
 ## Methods
 

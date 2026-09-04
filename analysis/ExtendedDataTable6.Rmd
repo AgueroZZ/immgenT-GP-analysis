@@ -1,5 +1,5 @@
 ---
-title: "Extended Data Table 6: GP AUC by cluster"
+title: "Extended Data Table 6: GP association with clusters"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -37,7 +37,6 @@ DT::datatable(
 ```
 
 ::: {.figcaption}
-**Extended Data Table 6.** One row per GP, one column per sub-lineage cluster
-(annotation_level2). Each value is the one-vs-rest AUC for predicting membership
-in that cluster from the GP's loading, computed on healthy non-thymocyte cells.
+**Extended Data Table 6.** AUC score separating cells of each cluster from all
+others using GP loadings (computed in cells at baseline).
 :::

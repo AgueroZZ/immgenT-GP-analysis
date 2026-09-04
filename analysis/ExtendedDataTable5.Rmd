@@ -1,5 +1,5 @@
 ---
-title: "Extended Data Table 5: GP AUC by tissue"
+title: "Extended Data Table 5: GP association with tissues"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -37,7 +37,6 @@ DT::datatable(
 ```
 
 ::: {.figcaption}
-**Extended Data Table 5.** One row per GP, one column per tissue
-(organ_simplified). Each value is the one-vs-rest AUC for predicting membership
-in that tissue from the GP's loading, computed on healthy non-thymocyte cells.
+**Extended Data Table 5.** AUC score separating cells of each tissue from all
+others using GP loadings (computed in tissues at baseline).
 :::

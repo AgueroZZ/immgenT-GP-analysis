@@ -208,35 +208,30 @@ check(length(orphan) == 0,
 # ------------------------------------------------------------
 # 5. the caption's numbers
 # ------------------------------------------------------------
-cat("\n=== 5. the caption's per-row GP counts and total ===\n")
+# The page carries the published caption verbatim, so it states the row letters
+# and the selection threshold but no per-row GP counts. Check what it does state:
+# that every row letter is paired with the lineage actually drawn under it.
+cat("\n=== 5. the caption's row letters and threshold ===\n")
 page <- paste(readLines(page_file, warn = FALSE), collapse = " ")
-quoted <- regmatches(page, gregexpr("\\([a-g]\\) [A-Za-z0-9]+, [0-9]+ GPs", page))[[1]]
+quoted <- regmatches(page, gregexpr("\\([a-g]\\) [A-Za-z0-9]+", page))[[1]]
 parsed <- data.frame(
   panel = sub("^\\(([a-g])\\).*$", "\\1", quoted),
-  lineage = sub("^\\([a-g]\\) ([A-Za-z0-9]+),.*$", "\\1", quoted),
-  n_gps = as.integer(sub("^.*, ([0-9]+) GPs$", "\\1", quoted)),
+  lineage = sub("^\\([a-g]\\) ([A-Za-z0-9]+)$", "\\1", quoted),
   stringsAsFactors = FALSE
 )
-drawn_counts <- data.frame(
+parsed <- parsed[!duplicated(parsed$panel), , drop = FALSE]
+rownames(parsed) <- NULL
+drawn_rows <- data.frame(
   panel = unname(structure_plot_panels),
   lineage = lineages,
-  n_gps = vapply(lineages, function(l) sum(gp_record$lineage == l), integer(1)),
   stringsAsFactors = FALSE
 )
-cat("caption:", if (nrow(parsed)) paste(quoted, collapse = "; ") else "(no per-row counts found)", "\n")
-cat("drawn  :", paste(sprintf("(%s) %s, %d GPs", drawn_counts$panel,
-                              drawn_counts$lineage, drawn_counts$n_gps), collapse = "; "), "\n")
-check(isTRUE(all.equal(parsed, drawn_counts, check.attributes = FALSE)),
-      "the caption's per-row GP counts, lineages or row order do not match what was drawn")
-
-total_quoted <- regmatches(page, gregexpr("[0-9]+ distinct GPs", page))[[1]]
-total_drawn <- length(unique(gp_record$gp))
-cat(sprintf("caption total: %s | drawn total: %d distinct GPs\n",
-            if (length(total_quoted)) paste(total_quoted, collapse = ", ") else "(none found)",
-            total_drawn))
-check(length(total_quoted) > 0 &&
-        all(as.integer(sub(" distinct GPs$", "", total_quoted)) == total_drawn),
-      sprintf("the caption does not state the %d distinct GPs actually drawn", total_drawn))
+cat("caption:", if (nrow(parsed)) paste(sprintf("(%s) %s", parsed$panel, parsed$lineage),
+                                        collapse = "; ") else "(no row letters found)", "\n")
+cat("drawn  :", paste(sprintf("(%s) %s", drawn_rows$panel, drawn_rows$lineage),
+                      collapse = "; "), "\n")
+check(isTRUE(all.equal(parsed, drawn_rows, check.attributes = FALSE)),
+      "the caption's row letters or lineage order do not match what was drawn")
 
 threshold_quoted <- sprintf("AUC > %.1f", structure_plot_auc_threshold)
 cat(sprintf("caption states \"%s\": %s\n", threshold_quoted, grepl(threshold_quoted, page, fixed = TRUE)))

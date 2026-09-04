@@ -197,9 +197,12 @@ ggsave(paste0(figure_path, "6d.pdf"), p_6d, width = 11, height = 5)
 # citeseq_shared_setup.R above)
 # ============================================================
 # Panel lettering is carried by this named vector and the loop iterates over its
-# names, so a GP can never be drawn under another GP's letter. (An earlier
-# version kept the GP list and the letters in two separate vectors and assigned
-# the letters positionally, which silently permuted three of the panels.)
+# names, so a GP can never be drawn under another GP's letter.
+# --- internal ---
+# An earlier version kept the GP list and the letters in two separate vectors
+# and assigned the letters positionally, which silently permuted three of the
+# panels -- do not reintroduce that shape.
+# --- end internal ---
 fig6_gating <- c("GP171" = "6e", "GP12" = "6f", "GP80" = "6g", "GP23" = "6h", "GP77" = "6i", "GP8" = "6j")
 for (gp in names(fig6_gating)) {
   k_name <- paste0("K", sub("^GP", "", gp))

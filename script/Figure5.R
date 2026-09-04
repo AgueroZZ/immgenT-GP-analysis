@@ -33,7 +33,6 @@
 # for the full picture:
 #   L_pm_filtered.rds, F_pm_filtered.rds     [code/pipeline/01b_filter_cells.R]
 #   igt1_96_..._ADTonly.Rds                  [primary input Seurat object]
-#   shifted_log_counts_subset.rds            [gap, no producer script here]
 #   level_1_AUC_list_figure_no_thymocytes_healthy.rds,
 #   level_2_AUC_list_figure_no_thymocytes_healthy.rds,
 #   organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds
@@ -66,8 +65,11 @@ level_2_AUC_list <- readRDS(paste0(
 organ_AUC_list <- readRDS(paste0(
   data_path, "organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds"
 ))
-# Read from the Seurat object directly, not the stale cached seurat_meta.rds
-# (see code/R/setup_data.R for why).
+# Metadata is read from the Seurat object directly.
+# --- internal ---
+# Not from the cached data/seurat_meta.rds, which is stale -- see
+# code/R/setup_data.R for why.
+# --- end internal ---
 seurat_meta <- readRDS(paste0(
   data_path, "igt1_96_withtotalvi20260206_clean_ADTonly.Rds"
 ))@meta.data
@@ -218,10 +220,12 @@ organ_AUC_masked_l2[!organ_AUC_positive_l2] <- NA
 organ_AUC_max <- apply(organ_AUC_masked_l2, 2, max, na.rm = TRUE)
 organ_AUC_max_name <- apply(organ_AUC_masked_l2, 2, function(x) rownames(organ_AUC_masked_l2)[which.max(x)])
 
-# 5d needs its OWN max-AUC table -- it must not reuse 5a's `df`, whose
-# Max_AUC_Level1 column holds the Level-1 maxima. Reusing 5a's `df` silently
-# plots Level-1 AUC on this panel's "Max AUC (Level-2)" axis.
+# 5d's own max-AUC table, over the Level-2 categories.
 # --- internal ---
+# It must not reuse 5a's `df`, whose Max_AUC_Level1 column holds the Level-1
+# maxima -- doing so silently plots Level-1 AUC on this panel's
+# "Max AUC (Level-2)" axis.
+#
 # The original Figure_Organ.R rebuilds `max_AUC_df`/`df` at this point from
 # `table_level_2_AUC`, storing the Level-2 maxima in a column it still calls
 # `Max_AUC_Level1` -- a misleading name we drop here in favour of

@@ -1,5 +1,5 @@
 ---
-title: "Extended Data Table 1: summary of GP characteristics and comments"
+title: "Extended Data Table 1: GP characteristics and annotations"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -37,16 +37,8 @@ DT::datatable(
 ```
 
 ::: {.figcaption}
-**Extended Data Table 1.** One row per GP. **Top Genes +/-** give the top 15
-up- and top 15 down-regulated genes by factor score, among those with
-|score| > 0.1 on the max|.|=1-per-GP-scaled gene factor matrix; GPs with fewer
-than 15 qualifying genes in a direction list all of them, and the full lists
-are [Extended Data Table 2](ExtendedDataTable2.html). **Comments** is a manual,
-human-written description of the GP, blank where a GP has no comment.
-**Prop. active cells** is the fraction of non-thymocyte cells whose loading
-exceeds 0.1 after scaling the GP's loading column by its maximum (the quantity
-histogrammed in Figure 2b), and **N active genes** is the number of genes with
-|score| > 0.25 on the max|.|=1-per-GP-scaled gene factor matrix (the quantity
-histogrammed in Figure 2c) -- a stricter cutoff than the 0.1 used for the
-signature-gene columns.
+**Extended Data Table 1.** Characteristics of the 200 GPs: the columns show
+the top 15 up- and down-regulated genes with |score| > 0.1, the proportion of
+highly active cells (scaled loading > 0.1), and the number of highly active
+genes (|score| > 0.25).
 :::

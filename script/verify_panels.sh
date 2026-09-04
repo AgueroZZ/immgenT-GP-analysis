@@ -42,6 +42,8 @@ DENSITY=${DENSITY:-110}
 # are NOT the counterparts of our Figure S6 / S7.
 # And for Figure 4 after 2026-07-29: its TF-GP network was dropped, so the two
 # heatmaps that followed moved up a letter and the published 3e is now unpaired.
+# Figure S3's own TF-GP network (s3g) was dropped too, so the published
+# Figure S3/s3h is now unpaired as well.
 MAP=$(
   cat <<'EOF'
 Figure 1/1A	Figure 1/1A
@@ -96,7 +98,6 @@ Figure S3/s3c	Figure S3/s3d
 Figure S3/s3d	Figure S3/s3e
 Figure S3/s3e	Figure S3/s3f
 Figure S3/s3f	Figure S3/s3g
-Figure S3/s3g	Figure S3/s3h
 EOF
 )
 # Published panels with no counterpart HERE any more: Figure 3/3e, the TF-GP

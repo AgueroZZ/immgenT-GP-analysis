@@ -1,5 +1,5 @@
 ---
-title: "Extended Data Table 2: gene signature per GP"
+title: "Extended Data Table 2: Gene signature per GP"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -37,12 +37,7 @@ DT::datatable(
 ```
 
 ::: {.figcaption}
-**Extended Data Table 2.** The signature gene list for every GP, as a tidy long
-table: one row per gene, with **signature_name** identifying the GP and
-direction it is a signature gene for (e.g. `GP1_up`) and **score** its factor
-loading. Every gene has |score| > 0.1 on the same max|.|=1-per-GP-scaled gene
-factor matrix [Extended Data Table 1](ExtendedDataTable1.html) uses, ranked by
-|score| within each GP-direction and capped at the top 100 up- and top 100
-down-regulated genes per GP. Table 1's **Top Genes +/-** columns are this
-table's top 15 per direction; this table is the full list.
+**Extended Data Table 2.** Signature genes of all 200 GPs, defined as genes
+with score > 0.1 (up) and < -0.1 (down) and capped at the 100 highest-scoring
+genes per GP and direction.
 :::

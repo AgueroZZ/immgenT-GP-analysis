@@ -1,5 +1,5 @@
 ---
-title: "Figure 4: GPs associated with T cell activation"
+title: "Figure 4: Activated T cell states arise from shared and lineage-biased combinations of gene programs"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -24,7 +24,7 @@ Data loading, shared across all panels below.
 ```{r fig4-setup, code=code_for("../script/Figure4.R", c("^", "Load data")), eval=FALSE}
 ```
 
-## (4a) Activation effect, CD4 vs. CD8 {#fig4a}
+## (a) Activation effect, CD4 vs. CD8 {#fig4a}
 
 ```{r fig4a-code, code=code_for("../script/Figure4.R", "4a"), eval=FALSE}
 ```
@@ -34,18 +34,14 @@ knitr::include_graphics("assets/Figure4/4a.png")
 ```
 
 ::: {.figcaption}
-**Fig. 4a.** Standardized mean difference (*d*) in GP activity between activated
-and resting cells in CD4+ T cells (x-axis) and CD8+ T cells (y-axis); for each
-GP, *d* is the activated-minus-resting difference in mean loading divided by that
-GP's loading SD pooled over all activated and resting CD4/CD8 cells. Points are
-colored according to whether they are highly up-regulated in both CD4+ and CD8+
-activation (dark red/brown), down-regulated in both (dark green), or
-preferentially regulated, in either direction, in CD4 (blue) or CD8 (orange).
-Remaining GPs are shown in black; the **25** activation-associated GPs discussed
-in the text are the curated set, and only those are labeled.
+**Fig. 4a.** Standardized mean difference in GP activity between activated and
+resting cells in CD4+ T cells (x-axis) and CD8+ T cells (y-axis). Points are
+colored according to whether they are highly upregulated in both CD4+ and CD8+
+activation (brown), downregulated in both (green), or preferentially
+upregulated in CD4 (blue) or CD8 (orange).
 :::
 
-## (4b) GP-gene signature network {#fig4b}
+## (b) GP-gene signature network {#fig4b}
 
 ```{r fig4b-code, code=code_for("../script/Figure4.R", "4b"), eval=FALSE}
 ```
@@ -55,10 +51,13 @@ knitr::include_graphics("assets/Figure4/4b.png")
 ```
 
 ::: {.figcaption}
-**Fig. 4b.** GP-gene network in which each of these 25 GPs is linked to its five most strongly regulated genes, based on per-GP-normalized GP gene scores; edges are colored by the sign of the gene score (red, up-regulated; blue, down-regulated). GP nodes are colored as in (4a).
+**Fig. 4b.** GP-gene network in which each GP is linked to its five most
+strongly regulated genes, based on GP gene scores. Edges are colored by the
+sign of the gene score (red for upregulated, blue for downregulated). GP nodes
+are colored as in (a).
 :::
 
-## (4c) Log2FC heatmap across conditions {#fig4c}
+## (c) Log2FC heatmap across conditions {#fig4c}
 
 ```{r fig4c-code, code=code_for("../script/Figure4.R", "4c"), eval=FALSE}
 ```
@@ -68,10 +67,13 @@ knitr::include_graphics("assets/Figure4/4c.png")
 ```
 
 ::: {.figcaption}
-**Fig. 4c.** Heatmap of log2 fold change in mean GP activity across experimental conditions for activated CD4+ and CD8+ T cells, computed relative to each GP's mean loading across all CD4+/CD8+ cells (resting and activated, all conditions) and capped at +-2, with a small pseudocount (1e-10) added to stabilize computation. Columns are conditions with >=50 activated CD4 and >=50 activated CD8 cells, grouped and annotated by broad condition category (including healthy controls), with color from purple (low) through black (no change) to gold (high). GPs are ordered and colored as in (4a).
+**Fig. 4c.** Heatmap of log2 fold change in mean GP activity across
+experimental conditions for activated CD4+ and CD8+ T cells, computed relative
+to each GP’s mean loading across all CD4+/CD8+ cells. Columns grouped and
+annotated by immune challenge category. GPs are ordered and colored as in (a).
 :::
 
-## (4d) Mean loading by sub-lineage {#fig4d}
+## (d) Mean loading by sub-lineage {#fig4d}
 
 ```{r fig4d-code, code=code_for("../script/Figure4.R", "4d"), eval=FALSE}
 ```
@@ -81,5 +83,6 @@ knitr::include_graphics("assets/Figure4/4d.png")
 ```
 
 ::: {.figcaption}
-**Fig. 4d.** Heatmap of mean GP activity per level 2 cluster (sub-lineage), with the top bar denoting parent lineage; thymocytes and DP cells are excluded, leaving the seven T-cell lineages (CD8, CD4, Treg, gdT, CD8aa, Tz, DN) and only sub-types with >=50 cells. Color runs from white (low) to red (high). GPs are ordered and colored as in (4a).
+**Fig. 4d.** Heatmap of mean GP activity per level 2 cluster, with the top bar
+denoting parent lineage. GP ordered and colored as in (a).
 :::

@@ -55,9 +55,11 @@ record_path <- "output/FigureS5/"
 dir.create(figure_path, recursive = TRUE, showWarnings = FALSE)
 dir.create(record_path, recursive = TRUE, showWarnings = FALSE)
 
+# Record when this run started, to assert at the end that the figure is newer.
+# --- internal ---
 # A figure script here was once seen to exit 0 with a complete log and write
-# nothing at all (see script/README.md, "A re-run can silently not write"), so
-# record when this run started and assert at the end that the figure is newer.
+# nothing at all -- see script/README.md, "A re-run can silently not write".
+# --- end internal ---
 run_started_at <- Sys.time()
 
 # ============================================================
@@ -97,10 +99,12 @@ healthy_non_thymocyte <- which(
 # Which lineage each cluster belongs to, from the metadata.
 cluster_lineage <- cluster_lineage_map(level2_all, level1_all)
 
+# --- internal ---
 # verify_structure_plot_gps.R has only the published table to work from, so it
 # maps clusters to lineages by their name prefix (CD8.A -> CD8) instead. Check
 # that shortcut here, where the metadata-derived map is available, so the check
 # cannot be re-deriving a different grouping than the figure drew.
+# --- end internal ---
 auc_clusters <- rownames(auc_level2)
 prefix_lineage <- sub("[.].*$", "", auc_clusters)
 if (!identical(unname(cluster_lineage[auc_clusters]), prefix_lineage)) {
@@ -127,9 +131,11 @@ message(sprintf(
 # ============================================================
 # The loop iterates over the names of the row map, so a lineage cannot be drawn
 # under another lineage's letter. Each row is kept as a ggplot and the rows are
-# assembled below, rather than saved one file per lineage: the figure is the
-# stack, and assembling it here means no hand layout step can fall behind a
-# re-run.
+# assembled below, rather than saved one file per lineage.
+# --- internal ---
+# The figure is the stack, and assembling it here means no hand layout step can
+# fall behind a re-run.
+# --- end internal ---
 lineage_plots <- list()
 cluster_records <- list()
 gp_records <- list()
@@ -161,10 +167,12 @@ for (lineage in names(structure_plot_panels)) {
   grouping_lineage <- factor(level2_all[lineage_cells])
 
   # This row's colors, assigned from the top of the palette without reference to
-  # any other row. structure_plot() renames the colors it is given positionally,
-  # by the columns of the matrix, so a palette in any other order would mislabel
-  # every bar; structure_plot_row_colors() returns them in ascending GP order,
-  # which is the column order here.
+  # any other row. structure_plot_row_colors() returns them in ascending GP
+  # order, which is the column order here.
+  # --- internal ---
+  # structure_plot() renames the colors it is given positionally, by the columns
+  # of the matrix, so a palette in any other order would mislabel every bar.
+  # --- end internal ---
   colors_lineage <- structure_plot_row_colors(gps_lineage)
   if (!identical(names(colors_lineage), colnames(fit_lineage))) {
     stop(sprintf("panel %s: palette order does not match its GP columns.", panel))
@@ -260,10 +268,12 @@ ggsave(
 # ============================================================
 # What each panel drew, for the alignment check
 # ============================================================
+# --- internal ---
 # script/verify_structure_plot_gps.R reads these two files, so that it can
 # re-derive the panels' GP sets from the published Extended Data Table 6 without
 # reloading the 1 GB loading matrix, and check the clusters drawn and omitted
 # against the display filters above.
+# --- end internal ---
 cluster_record <- do.call(rbind, cluster_records)
 cluster_record$n_cells_healthy[is.na(cluster_record$n_cells_healthy)] <- 0L
 write.csv(

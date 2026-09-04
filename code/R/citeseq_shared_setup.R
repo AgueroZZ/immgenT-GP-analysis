@@ -103,10 +103,9 @@ enlarge_gps <- c("GP8", "GP30", "GP170", "GP107")
 # --- doc:cd69 ---
 # The CD69-associated GP subset, shared by Figure 6d (the up/down gene heatmap)
 # and Figure S7a/S7b (the same GPs' mean activity per tissue and per lineage).
-# Those three panels are in two different figures and so in two different
-# scripts, but they must show the same GPs on the same axis order -- hence one
-# definition here rather than a copy in each script.
-#
+# Defined once here because those panels live in two different scripts and must
+# show the same GPs in the same axis order. Curated, not a computed top-10.
+# --- internal ---
 # Curated list -- NOT a top-10 computed from the correlations below. These 10
 # are drawn from among the most strongly CD69-correlated GPs, but are not the
 # top 10 under any single ranking: 8 are positively correlated (ranks 1, 3, 4,
@@ -114,9 +113,11 @@ enlarge_gps <- c("GP8", "GP30", "GP170", "GP107")
 # correlated GPs of all 200. By |rho| they sit at ranks 1, 2, 4, 5, 6, 8, 12,
 # 14, 17, 18, skipping GP1/GP47/GP100/GP25. Treat as a hand-picked input like
 # Thresholds_Selected_Proteins.csv and well_aligned_gps -- don't "fix" it into
-# a computed ranking, and keep the captions' "from among the most associated"
-# wording in sync (analysis/Figure6.Rmd Fig. 6d, analysis/FigureS7.Rmd
-# Fig. S7a, b). script/verify_cd69_gp_ranking.R enforces all of this.
+# a computed ranking. The pages carry the published captions verbatim, which
+# call these "ten GPs correlated with CD69 expression" and do not hedge, so
+# this comment is now the only place recording that the list is curated.
+# script/verify_cd69_gp_ranking.R enforces all of this.
+# --- end internal ---
 cd69_top_gps_subset <- c("GP35", "GP6", "GP170", "GP26", "GP58", "GP171", "GP63", "GP62", "GP3", "GP29")
 shared_cells_cd69 <- intersect(rownames(L_pm_filtered), rownames(protein_mat_normalized_lognorm))
 cd69_expr_vec <- protein_mat_normalized_lognorm[shared_cells_cd69, "CD69"]

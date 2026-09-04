@@ -42,10 +42,12 @@
 # is stripped from the returned code. The published pages are read by people
 # outside the project, so provenance notes that only make sense internally --
 # how a panel was re-lettered, which pre-refactor script it came from, what an
-# earlier version of the figure showed -- live between these markers: kept in
-# the source for us, kept off the page. The markers are deliberately not
-# `doc:`-prefixed, so they do not register as anchors and can sit inside a
-# block (including the file header) without splitting it.
+# earlier version of the figure showed, a warning aimed at whoever edits the
+# code next -- live between these markers: kept in the source for us, kept off
+# the page. The markers are deliberately not `doc:`-prefixed, so they do not
+# register as anchors and can sit inside a block (including the file header)
+# without splitting it. They may be indented, so a note between the arguments
+# of a multi-line call can be wrapped in place.
 
 # Lines like "# ==========" or "# ----------" that open/close a banner.
 .doc_is_rule <- function(x) grepl("^#\\s*[=-]{5,}\\s*$", x)
@@ -53,9 +55,11 @@
 # Lines like "# --- doc:3f ---".
 .doc_is_subanchor <- function(x) grepl("^#\\s*-{2,}\\s*doc:\\S+\\s*-{2,}\\s*$", x)
 
-# Lines like "# --- internal ---" / "# --- end internal ---".
-.doc_is_internal_open <- function(x) grepl("^#\\s*-{2,}\\s*internal\\s*-{2,}\\s*$", x)
-.doc_is_internal_close <- function(x) grepl("^#\\s*-{2,}\\s*end internal\\s*-{2,}\\s*$", x)
+# Lines like "# --- internal ---" / "# --- end internal ---". Leading whitespace
+# is allowed so the markers can also wrap a note sitting inside an indented
+# block, e.g. a comment between the arguments of a multi-line call.
+.doc_is_internal_open <- function(x) grepl("^\\s*#\\s*-{2,}\\s*internal\\s*-{2,}\\s*$", x)
+.doc_is_internal_close <- function(x) grepl("^\\s*#\\s*-{2,}\\s*end internal\\s*-{2,}\\s*$", x)
 
 # Drop every "# --- internal --- ... # --- end internal ---" run, markers
 # included. An unclosed marker drops the rest of the block, which is the safe

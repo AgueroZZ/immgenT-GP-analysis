@@ -1,5 +1,5 @@
 ---
-title: "Figure 5: GP expression in tissues is driven by T cell composition"
+title: "Figure 5: Tissue-associated gene programs reflect both tissue adaptation and T cell subset composition"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -32,7 +32,9 @@ knitr::include_graphics("assets/Figure5/5a.png")
 ```
 
 ::: {.figcaption}
-**Fig. 5a.** Per-GP maximum AUC for predicting organ of origin (x-axis) versus lineage (y-axis); each point is one GP and the dashed line marks equal performance. Categories with too few cells are dropped (lineage < 1,000 cells, organ < 100 cells). GPs reaching AUC > 0.9 on either axis are highlighted -- red below the diagonal (better at organ; organ-specific) labeled with their top organs, blue above the diagonal (better at lineage) labeled with their top lineages (up to three categories each, AUC > 0.85).
+**Fig. 5a.** Scatterplot showing each GP's prediction (AUC) of organ of origin
+(x-axis) versus lineage (y-axis). GPs reaching AUC > 0.9 on either axis are
+colored and labeled (organ-specific in red; lineage-specific in blue).
 :::
 
 ## (b) GP37+ rate in mammary gland vs. elsewhere {#fig5b}
@@ -45,7 +47,8 @@ knitr::include_graphics("assets/Figure5/5b.png")
 ```
 
 ::: {.figcaption}
-**Fig. 5b.** Proportion of GP37-active cells in each lineage in the mammary gland (solid bars) compared with the same lineage in all other organs (faded bars). A cell is GP37-active (GP37+) if its GP37 loading exceeds the organ-specific optimal threshold from the AUC analysis. Bars are colored by lineage and ordered by in-organ rate; lineages with fewer than 100 mammary-gland cells are omitted.
+**Fig. 5b.** Proportion of GP37-active cells in each lineage in the mammary
+gland compared with all other organs (faded color bar).
 :::
 
 ## (c) Marker genes of the 7 organ-specific GPs {#fig5c}
@@ -58,7 +61,9 @@ knitr::include_graphics("assets/Figure5/5c.png")
 ```
 
 ::: {.figcaption}
-**Fig. 5c.** Marker genes of the seven organ-specific GPs. Genes are the union of the top 20 positively scoring genes per GP (score > 0.25 on the max-abs-scaled gene-score matrix), ordered diagonally by each gene's dominant GP and then by descending score. Heatmap of the per-GP scaled gene scores for these genes across the seven GPs, centered at zero (blue, negative; red, positive).
+**Fig. 5c.** Genes associated with the seven organ-specific GPs shown in (a).
+Heatmap of the per-GP scaled gene scores for the top upregulated genes of each
+GP (top 20 per GP, gene score > 0.25; blue, negative; red, positive).
 :::
 
 ## (d) Max AUC: organ vs. cluster {#fig5d}
@@ -71,7 +76,10 @@ knitr::include_graphics("assets/Figure5/5d.png")
 ```
 
 ::: {.figcaption}
-**Fig. 5d.** As in (a), but predictive performance is measured against level 2 clusters (`annotation_level2`, from ImmgenT-cosmo; y-axis, clusters with < 100 cells dropped). All GPs are shown in grey; the seven organ-specific GPs from (a) -- GP3, GP6, GP11, GP26, GP29, GP37, GP177 -- are highlighted in red and labeled with their best clusters, and a contrasting set of cluster-specific GPs (high cluster AUC, low organ AUC) in blue; the dashed line marks equal performance.
+**Fig. 5d.** As in (a), but predictive performance is measured against level 2
+clusters (y-axis). The seven organ-specific GPs from (a) are highlighted in
+red, and a contrasting set of cluster-specific GPs (high cluster AUC, low
+organ AUC) in blue.
 :::
 
 ## (e) Organ, GP, and cluster alluvial diagram {#fig5e}
@@ -84,5 +92,8 @@ knitr::include_graphics("assets/Figure5/5e.png")
 ```
 
 ::: {.figcaption}
-**Fig. 5e.** Alluvial plot showing how tissue-specific GP activity is distributed across clusters. For each of the seven organ-specific GPs and each organ, GP-active cells (loading above that GP's best-organ threshold) are traced from their organ of origin through the GP to their level 2 cluster annotation. Flows are colored by GP (using each GP's best-predicted organ color), and width is proportional to the number of cells shown, after subsampling to <=300 cells per GP; flows representing fewer than 5 cells are dropped, and a cell may appear under more than one GP.
+**Fig. 5e.** Alluvial plot showing how tissue-specific GP activity is
+distributed across clusters. For each organ, GP-active cells are traced to
+their cluster annotation. Flows are colored by GP, and width is proportional
+to the number of cells.
 :::

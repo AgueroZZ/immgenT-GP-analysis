@@ -27,9 +27,11 @@ library(ggplot2)
 library(dplyr)
 library(ggrastr)
 library(tidyr)
-library(Matrix) # protein_mat_normalized_lognorm is a dgCMatrix; rownames()
-                # dispatch on it is unreliable unless Matrix is attached
-                # (not just loaded as a namespace) -- keep this library() call.
+library(Matrix) # protein_mat_normalized_lognorm is a dgCMatrix
+# --- internal ---
+# rownames() dispatch on a dgCMatrix is unreliable unless Matrix is attached
+# (not just loaded as a namespace) -- keep the library() call above.
+# --- end internal ---
 
 data_path <- "data/"
 figure_path <- "figures/final-selected/Figure S2/"

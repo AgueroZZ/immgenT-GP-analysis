@@ -59,9 +59,11 @@ figure_path <- "figures/final-selected/Figure S7/"
 source("code/R/gated_protein_helpers.R")
 source("code/R/citeseq_shared_setup.R")
 
+# Record when this run started, to assert at the end that every panel is newer.
+# --- internal ---
 # A figure script here was once seen to exit 0 with a complete log and write
-# nothing at all (see script/README.md, "A re-run can silently not write"), so
-# record when this run started and assert at the end that every panel is newer.
+# nothing at all -- see script/README.md, "A re-run can silently not write".
+# --- end internal ---
 run_started_at <- Sys.time()
 
 # ============================================================

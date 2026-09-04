@@ -100,8 +100,13 @@ protein_mat_normalized_lognorm <- protein_mat_normalized_lognorm[non_thymo_cells
 # 1C: gene-program network -- the 200 GPs linked by their shared top signature
 # genes, with a selected set of GPs highlighted. Each highlighted GP's color runs
 # along its edges to its top signature genes (which are labeled); non-highlighted
-# GPs are grey. Formal version: no legend / no GP-index labels -- the color->GP
-# mapping and interpretation are in the Fig 1C caption (analysis/Figure1.Rmd).
+# GPs are grey. No legend and no GP-index labels.
+# --- internal ---
+# The colour -> GP mapping used to be spelled out in the Fig. 1c caption on
+# analysis/Figure1.Rmd. That page now carries the published caption verbatim,
+# which does not list it; GP_HIGHLIGHTS in the 1D block below is the only
+# record of which GP takes which colour.
+# --- end internal ---
 # ============================================================
 suppressPackageStartupMessages({
   library(igraph); library(tidygraph); library(ggraph)
@@ -171,7 +176,7 @@ ggsave(filename = paste0(figure_path, "1C.pdf"), plot = p_1C, width = 20, height
 # 1D: giant loading heatmap (200 GP loadings x a stratified cell sample; rows =
 # cells by lineage x organ, columns = GPs clustered). The same GPs highlighted
 # in the 1C network are marked here by a top color bar, a colored/bold column
-# label, and a box around each GP column. See the Fig 1D caption (Figure1.Rmd).
+# label, and a box around each GP column.
 # ============================================================
 suppressPackageStartupMessages({ library(grid) })
 GP_HIGHLIGHTS <- c(
@@ -229,9 +234,8 @@ hl_val   <- ifelse(gpn %in% names(GP_HIGHLIGHTS), gpn, NA_character_)
 lab_col  <- ifelse(gpn %in% names(GP_HIGHLIGHTS), GP_HIGHLIGHTS[gpn], "grey55")
 lab_fs   <- ifelse(gpn %in% names(GP_HIGHLIGHTS), 9, 4)
 lab_face <- ifelse(gpn %in% names(GP_HIGHLIGHTS), 2, 1)
-# Publication version: only the highlighted GP columns keep an index label
-# (background GP indices dropped), and the highlighted-GP legend is hidden -- the
-# colour->GP mapping is given in the Fig 1D caption.
+# Only the highlighted GP columns keep an index label (background GP indices
+# dropped), and the highlighted-GP legend is hidden.
 top_ann <- HeatmapAnnotation(
   `Highlighted GP` = hl_val, col = list(`Highlighted GP` = GP_HIGHLIGHTS),
   na_col = "white", simple_anno_size = unit(4, "mm"), annotation_name_gp = gpar(fontsize = 8),

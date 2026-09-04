@@ -21,8 +21,8 @@
 # GPs was dropped from the figure, and the two heatmaps after it each moved up a
 # letter. So against figures/Previous/bits/Figure 3: 4a = 3c, 4b = 3d,
 # 4c = 3f, 4d = 3g, and the published 3e has no counterpart here any more. The
-# dropped panel was this script's only caller of code/R/tf_network.R -- Figure S3
-# panel s3g draws its own TF-GP network inline, so that helper is now unused.
+# dropped panel was this script's only caller of code/R/tf_network.R, so that
+# helper is now unused.
 #
 # Source: ported from Figure_Activation.R, which also produced the
 # Figure S3 panels (see FigureS3.R) from the same curated GP set and cell
@@ -131,12 +131,6 @@ p_4a <- ggplot(manual_curated_df, aes(x = d_CD4, y = d_CD8)) +
     point.padding = 0.5,
     segment.color = "grey50"
   ) +
-  # # TEMP: label the other auto-classified darkorange2 ("CD8 only") points too, just to eyeball them -- remove before final.
-  # ggrepel::geom_text_repel(
-  #   data = filter(manual_curated_df, auto_color == "darkorange2", !(GP %in% GPs_of_interest)),
-  #   aes(label = GP, color = point_color),
-  #   max.overlaps = Inf, size = 3, box.padding = 0.3, point.padding = 0.4, segment.color = "grey70"
-  # ) +
   scale_color_identity() +
   # Signed (pseudo-)log axes: d is signed, so a plain log drops negatives/zeros.
   scale_x_continuous(

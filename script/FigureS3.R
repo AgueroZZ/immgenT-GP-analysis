@@ -20,7 +20,6 @@
 #   s3e  Per-cell log2FC heatmap of activation GPs vs resting baseline.
 #   s3f  Fraction of activated CD8/CD4 cells with GP57 loading > 0.1: cancer
 #        vs all other conditions.
-#   s3g  Bipartite TF-GP network for Gata3, Rorc, Tbx21.
 #
 # --- internal ---
 # Source: ported from Figure_Activation.R (see Figure4.R for the main
@@ -40,7 +39,6 @@
 #   GSEA_signatures_select_toplot.csv        [external: curated gene-set collection]
 
 library(ggplot2)
-library(ggrepel)
 library(dplyr)
 library(stringr)
 library(pheatmap)
@@ -214,90 +212,6 @@ p_s3d <- ggplot(gp79_cd4_condition_plot_df, aes(x = proportion_gp79_high, y = co
     axis.text.y = element_text(size = 8), plot.margin = margin(10, 45, 10, 10)
   )
 ggsave(filename = paste0(figure_path, "s3d.pdf"), plot = p_s3d, width = 9, height = gp79_plot_height, limitsize = FALSE)
-
-# ============================================================
-# s3g: Bipartite TF-GP network for Gata3, Rorc, Tbx21
-# ============================================================
-tf_focus <- c("Gata3", "Rorc", "Tbx21")
-tf_focus_threshold <- 0.1
-tf_focus_edges <- do.call(rbind, lapply(tf_focus, function(tf_name) {
-  vals <- setNames(as.numeric(F_pm_filtered_norm[tf_name, ]), colnames(F_pm_filtered_norm))
-  idx <- which(is.finite(vals) & abs(vals) >= tf_focus_threshold)
-  data.frame(TF = tf_name, GP = names(vals)[idx], value = vals[idx], stringsAsFactors = FALSE)
-})) %>%
-  mutate(
-    GP_number = as.numeric(sub("^GP", "", GP)),
-    edge_sign = if_else(value < 0, "Negative", "Positive"),
-    abs_value = abs(value),
-    edge_label = sprintf("%+.2f", value)
-  ) %>%
-  arrange(match(TF, tf_focus), GP_number)
-
-tf_focus_nodes <- data.frame(name = tf_focus, x = c(0, 2.7, 1.65), y = c(0, -2.75, 2.35), node_type = "TF", stringsAsFactors = FALSE)
-tf_focus_colors <- c(Gata3 = "#E41A1C", Rorc = "#1F78B4", Tbx21 = "#33A02C")
-
-gp_tf_membership <- tf_focus_edges %>%
-  group_by(GP) %>%
-  summarise(tf_members = list(sort(unique(TF))), degree_tf = n_distinct(TF), .groups = "drop")
-
-shared_gp_nodes <- gp_tf_membership %>%
-  filter(degree_tf > 1) %>%
-  rowwise() %>%
-  mutate(
-    x = mean(tf_focus_nodes$x[match(tf_members, tf_focus_nodes$name)]),
-    y = mean(tf_focus_nodes$y[match(tf_members, tf_focus_nodes$name)])
-  ) %>%
-  ungroup() %>%
-  transmute(name = GP, x, y, node_type = "GP")
-
-tf_arc_range <- list(Gata3 = c(170, -105), Rorc = c(205, -20), Tbx21 = c(165, -15))
-tf_arc_radius <- c(Gata3 = 1.65, Rorc = 1.35, Tbx21 = 1.30)
-make_tf_arc_nodes <- function(tf_name, gp_names) {
-  if (length(gp_names) == 0) return(NULL)
-  center <- tf_focus_nodes[tf_focus_nodes$name == tf_name, ]
-  angles <- seq(tf_arc_range[[tf_name]][1], tf_arc_range[[tf_name]][2], length.out = length(gp_names)) * pi / 180
-  radius <- tf_arc_radius[[tf_name]]
-  data.frame(name = gp_names, x = center$x + radius * cos(angles), y = center$y + radius * sin(angles), node_type = "GP", stringsAsFactors = FALSE)
-}
-exclusive_gp_nodes <- do.call(rbind, lapply(tf_focus, function(tf_name) {
-  gp_names <- gp_tf_membership %>%
-    filter(degree_tf == 1, vapply(tf_members, identical, logical(1), tf_name)) %>%
-    pull(GP)
-  gp_names <- gp_names[order(as.numeric(sub("^GP", "", gp_names)))]
-  make_tf_arc_nodes(tf_name, gp_names)
-}))
-
-tf_focus_plot_nodes <- bind_rows(tf_focus_nodes, shared_gp_nodes, exclusive_gp_nodes)
-tf_focus_plot_edges <- tf_focus_edges %>%
-  left_join(tf_focus_plot_nodes %>% select(name, x, y) %>% rename(x0 = x, y0 = y), by = c("TF" = "name")) %>%
-  left_join(tf_focus_plot_nodes %>% select(name, x, y) %>% rename(x1 = x, y1 = y), by = c("GP" = "name")) %>%
-  mutate(
-    label_x = x0 + 0.55 * (x1 - x0), label_y = y0 + 0.55 * (y1 - y0),
-    label_angle = atan2(y1 - y0, x1 - x0) * 180 / pi,
-    label_angle = case_when(label_angle > 90 ~ label_angle - 180, label_angle < -90 ~ label_angle + 180, TRUE ~ label_angle)
-  )
-
-p_s3g <- ggplot() +
-  geom_segment(data = tf_focus_plot_edges, aes(x = x0, y = y0, xend = x1, yend = y1, color = edge_sign, linewidth = abs_value), alpha = 0.65, lineend = "round") +
-  geom_text(data = tf_focus_plot_edges, aes(x = label_x, y = label_y, label = edge_label, angle = label_angle), size = 3.0, color = "grey20") +
-  geom_point(data = tf_focus_plot_nodes %>% filter(node_type == "GP"), aes(x = x, y = y), shape = 21, size = 4.0, fill = "grey78", color = "grey45", stroke = 0.5) +
-  ggrepel::geom_text_repel(
-    seed = 42,
-    data = tf_focus_plot_nodes %>% filter(node_type == "GP"), aes(x = x, y = y, label = name),
-    size = 3.4, color = "grey20", max.overlaps = Inf, min.segment.length = Inf, box.padding = 0.2, point.padding = 0.25
-  ) +
-  geom_label(
-    data = tf_focus_plot_nodes %>% filter(node_type == "TF"), aes(x = x, y = y, label = name, fill = name),
-    color = "white", fontface = "bold", size = 4.6, label.padding = unit(0.22, "lines"), label.r = unit(0.16, "lines"), linewidth = 0, show.legend = FALSE
-  ) +
-  scale_color_manual(values = c(Negative = "#2B6CB0", Positive = "#D62728"), name = "Edge sign") +
-  scale_fill_manual(values = tf_focus_colors) +
-  scale_linewidth_continuous(range = c(0.45, 3.2), guide = "none") +
-  coord_equal(clip = "off") +
-  labs(title = paste0("TF <-> GP network (", length(tf_focus), " TFs, ", nrow(tf_focus_edges), " edges)")) +
-  theme_void(base_size = 12) +
-  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 15), legend.position = "right", legend.title = element_text(face = "bold"), plot.margin = margin(15, 25, 15, 25))
-ggsave(filename = paste0(figure_path, "s3g.pdf"), plot = p_s3g, width = 10, height = 8.5)
 
 # ============================================================
 # s3e: Per-cell log2FC heatmap of activation GPs (activated cells only),

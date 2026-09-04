@@ -1,5 +1,5 @@
 ---
-title: "Extended Data Table 3: GP AUC by lineage"
+title: "Extended Data Table 3: GP association with lineages"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -36,7 +36,6 @@ DT::datatable(
 ```
 
 ::: {.figcaption}
-**Extended Data Table 3.** One row per GP, one column per major lineage
-(annotation_level1). Each value is the one-vs-rest AUC for predicting membership
-in that lineage from the GP's loading, computed on healthy non-thymocyte cells.
+**Extended Data Table 3.** AUC score separating cells of each lineage from all
+others using GP loadings (computed in cells at baseline).
 :::

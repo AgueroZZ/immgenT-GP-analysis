@@ -1,5 +1,5 @@
 ---
-title: "Extended Data Figure 3: Characterizing activation-associated GPs"
+title: "Extended Data Figure 3: Activation-associated GPs"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -10,7 +10,7 @@ editor_options:
 source("../code/R/doc_code.R")
 ```
 
-Panels (b)-(g) are produced by
+Panels (b)-(f) are produced by
 [`script/FigureS3.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS3.R),
 which shares its curated GP set with [Figure 4](Figure4.html) via
 `code/R/activation_shared_setup.R`. The code below is shown for
@@ -30,10 +30,10 @@ This panel shows the CITE-seq gating used to define resting and activated
 cells; it is not generated from code, so only its caption is given here.
 
 ::: {.figcaption}
-**Extended Data Fig. 3a.** Definition of resting and activated CD4+ and CD8+ T cells.
-Activated CD44+CD62L- (top) and resting CD62L+CD44- (bottom) cells are
-highlighted in each lineage-specific MDE, and the gated cells are shown in the
-adjacent CD62L versus CD44 protein-expression plot (CITE-seq; log-normalized ADT
+**Extended Data Fig. 3a.** Definition of resting and activated CD4+ and CD8+ T
+cells. Activated CD44⁺CD62L⁻ (top) and resting CD62L⁺CD44⁻ (bottom) cells are
+highlighted in each lineage-specific MDE. Gated cells are shown in the
+adjacent CD62L versus CD44 protein-expression plot (CITE-seq, log-normalized
 counts).
 :::
 
@@ -52,7 +52,9 @@ knitr::include_graphics("assets/FigureS3/s3b.png")
 ```
 
 ::: {.figcaption}
-**Extended Data Fig. 3b.** Bar plot showing the percentage of **activated CD4+ and CD8+ T cells** in each organ (`organ_simplified`) with GP26 activity above **0.1**, sorted from highest to lowest. Activated cells are those with `annotation_level2_group == "activated"` among the CD4 and CD8 lineages.
+**Extended Data Fig. 3b.** Bar plot showing broad GP26 activity in activated
+CD4+ and CD8+ T cells across organs (percent of cells with GP26 activity above
+0.1 per tissue)
 :::
 
 ## (c) GSEA dot plot {#figs3c}
@@ -65,7 +67,10 @@ knitr::include_graphics("assets/FigureS3/s3c.png")
 ```
 
 ::: {.figcaption}
-**Extended Data Fig. 3c.** Gene set enrichment analysis (GSEA) dot plot relating activation-associated GPs to curated immunologic signature gene sets. Each dot is a significant GP-gene-set association; color denotes -log10 adjusted *P* value and dot size denotes the normalized enrichment score (NES). GP labels are colored by activation class.
+**Extended Data Fig. 3c.** Gene set enrichment analysis (GSEA) dot plot
+relating activation-associated GPs to curated immunologic signature gene sets.
+Color denotes −log10 adjusted *P* value, and dot size denotes the normalized
+enrichment score (NES).
 :::
 
 ## (d) GP79+ rate across conditions {#figs3d}
@@ -78,7 +83,8 @@ knitr::include_graphics("assets/FigureS3/s3d.png")
 ```
 
 ::: {.figcaption}
-**Extended Data Fig. 3d.** Bar plot showing the percentage of GP79-active cells (GP79 activity above 0.1) among all activated CD4+ T cells across immunological challenges -- condition categories (`condition_detailed_simplified`) that contain >= 50 activated CD4 cells, sorted from highest to lowest and colored by broad condition category.
+**Extended Data Fig. 3d.** Bar plot showing the percentage of GP79-active
+cells among all activated CD4+ T cells across immunological challenges.
 :::
 
 ## (e) Per-cell log2FC heatmap {#figs3e}
@@ -91,7 +97,9 @@ knitr::include_graphics("assets/FigureS3/s3e.png")
 ```
 
 ::: {.figcaption}
-**Extended Data Fig. 3e.** Heatmap showing single-cell GP activity in activated CD4+ and CD8+ T cells: per-cell log2 fold change in GP activity relative to the resting baseline of the same lineage (each activated CD4 cell versus the CD4 resting mean; each activated CD8 cell versus the CD8 resting mean), capped at +-2. Rows are the activation-associated GPs in semantic-group order; columns are individual activated cells grouped by cluster (Level-2 sub-lineage) within CD4 and CD8; color runs from purple (low) through black to gold (high).
+**Extended Data Fig. 3e.** Heatmap showing single-cell GP activity in
+activated CD4+ and CD8+ T cells (log2 fold change in GP activity relative to
+the resting baseline of the same lineage). Cells are grouped by cluster.
 :::
 
 ## (f) GP57+ rate, cancer vs. other conditions {#figs3f}
@@ -104,18 +112,7 @@ knitr::include_graphics("assets/FigureS3/s3f.png")
 ```
 
 ::: {.figcaption}
-**Extended Data Fig. 3f.** Bar plot showing the percentage of GP57-active cells (GP57 activity above 0.1) among activated CD8+ and CD4+ T cells in cancer versus all other conditions combined; bar labels give the percentage and the underlying cell counts.
-:::
-
-## (g) TF-GP network for Gata3/Rorc/Tbx21 {#figs3g}
-
-```{r figs3g-code, code=code_for("../script/FigureS3.R", "s3g"), eval=FALSE}
-```
-
-```{r figs3g-img, echo=FALSE, out.width="49%"}
-knitr::include_graphics("assets/FigureS3/s3g.png")
-```
-
-::: {.figcaption}
-**Extended Data Fig. 3g.** GP network centered on the lineage-defining TFs Gata3, Rorc, and Tbx21. An edge connects a TF to a GP when the TF's per-GP absolute gene score is >= 0.1; edges are colored by the sign of the score (red, up-regulated; blue, down-regulated), edge width is proportional to the score, and labels give the signed score.
+**Extended Data Fig. 3f.** Bar plot showing the percentage of GP57-active
+cells among activated CD8+ and CD4+ T cells in cancer versus all other
+conditions.
 :::

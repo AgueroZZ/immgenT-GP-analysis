@@ -146,11 +146,14 @@ n_spleen <- length(spleen_cells)
 # ============================================================
 # One-way ANOVA eta^2 per GP for each grouping, on the same cells:
 #   eta^2 = SS_between / SS_total,  SS_between = sum_g n_g (mean_g - mean)^2
-# Note this is NOT var(group means) / var(loading): SS_between weights each
-# group by its cell count and uses the cell-level grand mean, whereas the
-# unweighted variance of group means carries a G/(G-1) inflation and ignores
-# the 1-to-9320 spread in group sizes. On this data the unweighted ratio runs
-# 0.44x-4.06x the true eta^2 (median 1.40x).
+# SS_between weights each group by its cell count and uses the cell-level
+# grand mean.
+# --- internal ---
+# This is NOT var(group means) / var(loading): the unweighted variance of group
+# means carries a G/(G-1) inflation and ignores the 1-to-9320 spread in group
+# sizes. On this data the unweighted ratio runs 0.44x-4.06x the true eta^2
+# (median 1.40x).
+# --- end internal ---
 grand_mean <- colMeans(L_spleen)
 ss_total <- apply(L_spleen, 2, var) * (n_spleen - 1)
 eta2_by <- function(group) {
@@ -230,11 +233,13 @@ ggsave(paste0(figure_path, "S1D.pdf"), plot = p_S1D, width = 5.5, height = 6, dp
 # does not remove. GP171 is second on the same ranking; only GP1 is drawn here.
 #
 # Every one of the 35 IGTs is drawn identically -- same size, same colour, one
-# fit over all of them. Dataset size is deliberately not encoded: the panel is
-# about where a dataset sits on the two axes, and mapping n to area or colour
-# makes the big IGTs read as the more important ones, which is not the claim.
-# (35 is not a threshold either: the dataset has 80 IGTs, and the other 45
-# contributed no standard-spleen cell at all.)
+# fit over all of them. 35 is not a threshold: the dataset has 80 IGTs, and the
+# other 45 contributed no standard-spleen cell at all.
+# --- internal ---
+# Dataset size is deliberately not encoded: the panel is about where a dataset
+# sits on the two axes, and mapping n to area or colour makes the big IGTs read
+# as the more important ones, which is not the claim.
+# --- end internal ---
 depth_gp <- "K1"
 depth_vec <- seurat_meta_filtered_spleen[spleen_cells, "nCount_RNA"]
 

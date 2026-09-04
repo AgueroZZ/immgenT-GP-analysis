@@ -2,14 +2,16 @@
 #
 #   Rscript script/verify_cd69_gp_ranking.R      # exits non-zero on any mismatch
 #
-# cd69_top_gps_subset is a hand-picked list of 10 GPs, but two captions describe
-# it and the comment beside it quotes correlation ranks. Nothing in the build
-# recomputes either. Four things have to agree:
+# cd69_top_gps_subset is a hand-picked list of 10 GPs, and the comment beside it
+# quotes correlation ranks. Nothing in the build recomputes them. Two things have
+# to agree:
 #
 #   the curated list  ->  cd69_top_gps_subset   (code/R/citeseq_shared_setup.R)
 #                     ->  the ranks quoted in the comment beside it
-#                     ->  Fig. 6d's caption     (analysis/Figure6.Rmd)
-#                     ->  Fig. S7a, b's caption (analysis/FigureS7.Rmd)
+#
+# The pages carry the published captions verbatim, so they no longer describe the
+# subset as curated; that statement now lives only in the comment above, which is
+# why section 7 below checks it there.
 #
 # The list lives in the shared setup rather than in a figure script because the
 # panels that use it are split across two figures: Fig. 6d draws these GPs'
@@ -128,17 +130,21 @@ for (f in c("analysis/Figure6.Rmd", "analysis/FigureS7.Rmd", setup_file,
   check(length(hits) == 0, sprintf("%s still claims these are the ten GPs most associated with CD69", f))
 }
 
-cat("\n=== 7. both captions still hedge, and both name the subset ===\n")
-# A caption that dropped the "hand-picked" hedge would be overclaiming again in a
-# way the grep above does not catch.
-for (f in c("analysis/Figure6.Rmd", "analysis/FigureS7.Rmd")) {
+cat("\n=== 7. the definition still hedges, and still names the subset ===\n")
+# The pages carry the published captions verbatim, and those do not hedge -- they
+# say "ten GPs correlated with CD69 expression". So the hedge is checked where it
+# is now the project's own statement of what the subset is: the comment beside
+# cd69_top_gps_subset. Dropping it would leave nothing anywhere saying that these
+# ten are curated rather than a computed top-10.
+for (f in c(setup_file)) {
   txt <- paste(readLines(f, warn = FALSE), collapse = " ")
-  has_hedge <- grepl("hand-picked", txt, fixed = TRUE)
+  has_hedge <- grepl("NOT a top-10", txt, fixed = TRUE) ||
+    grepl("hand-picked", txt, fixed = TRUE)
   has_source <- grepl("from among", txt, fixed = TRUE) ||
-    grepl("most strongly correlated", txt, fixed = TRUE)
-  cat(sprintf("%-24s hand-picked: %-5s  \"from among/most strongly correlated\": %s\n",
+    grepl("most strongly", txt, fixed = TRUE)
+  cat(sprintf("%-34s curated hedge: %-5s  \"from among/most strongly\": %s\n",
               f, has_hedge, has_source))
-  check(has_hedge, sprintf("%s no longer calls the CD69 GP subset hand-picked", f))
+  check(has_hedge, sprintf("%s no longer calls the CD69 GP subset curated/hand-picked", f))
   check(has_source, sprintf("%s no longer says where the CD69 GP subset was drawn from", f))
 }
 
@@ -148,4 +154,4 @@ if (length(failures)) {
   quit(status = 1)
 }
 cat("PASS: the Fig. 6d / S7a-b subset is 10 curated GPs from among the most CD69-correlated,\n")
-cat("      it is not a true top-10, and both captions and the comment say so.\n")
+cat("      it is not a true top-10, and the comment beside the definition says so.\n")

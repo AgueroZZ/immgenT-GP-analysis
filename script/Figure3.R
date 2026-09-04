@@ -402,12 +402,14 @@ mat_3m <- F_pm_norm_3m[common_genes_3m, gps_3m, drop = FALSE]
 
 p_3M <- plot_cross_gp_heatmap(
   mat_3m, gps_3m,
-  # rank_by = "pos" makes this a genuine "top 30 up-regulated genes" panel:
-  # candidates are the genes positive in at least one of the three GPs
-  # (direction = "pos"), ranked by max(score) across them. Ranking by
-  # max|score| instead would admit genes on the strength of a large negative
-  # score, let through the "positive somewhere" gate by a token positive
-  # weight elsewhere.
+  # rank_by = "pos": candidates are the genes positive in at least one of the
+  # three GPs (direction = "pos"), ranked by max(score) across them.
+  # --- internal ---
+  # Ranking by max|score| instead would admit genes on the strength of a large
+  # negative score, let through the "positive somewhere" gate by a token
+  # positive weight elsewhere -- so this is a genuine "top 30 up-regulated
+  # genes" panel only with rank_by = "pos".
+  # --- end internal ---
   feat_label = "Gene", n_genes = 30, direction = "pos", rank_by = "pos",
   threshold = 0.05, colorscheme = "bwr", cluster_r = TRUE, cluster_c = FALSE,
   pin_top = c("Fcer1g", "Ccl5", "Cd7", "Ctsw")
