@@ -93,7 +93,7 @@ knitr::include_graphics("assets/Figure2/2E.png")
 
 ::: {.figcaption}
 **Fig. 2e.** Box plot showing the number of highly active GPs per cell in
-activated and resting CD4+ and CD8+ T cells.
+activated and resting T cells.
 :::
 
 ## (f) CD44 vs. active-GP count {#fig2f}

@@ -40,7 +40,7 @@ How the protein factor matrix is estimated is documented in
 each GP. Holding the cell-loading matrix L fixed from the GP model, a protein
 factor matrix was estimated by EBMF from the paired CITE-seq protein
 measurements, Y ≈ LUᵀ (cells × proteins matrix), yielding a protein signature
-U (GPs × proteins matrix) for each GP.
+U (proteins × GPs matrix) for each GP.
 :::
 
 ## (b, c) KLRG1 modulation across lineages {#fig6bc}

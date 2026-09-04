@@ -35,5 +35,5 @@ knitr::include_graphics("assets/FigureS6/s6.png")
 ::: {.figcaption}
 **Extended Data Fig. 6.** Heatmap of scaled protein scores for each GP. We
 focused on the 47 proteins that performed best in the immgenT CITE-seq
-dataset. Seventeen GPs lacked meaningful protein correlates and were omitted.
+dataset.
 :::
