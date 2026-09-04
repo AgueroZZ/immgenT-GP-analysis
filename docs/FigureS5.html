@@ -12,7 +12,7 @@
 <meta name="author" content="Ziang Zhang" />
 
 
-<title>Extended Data Figure 5: Cluster-level GP membership within each T cell lineage</title>
+<title>Extended Data Figure 5: Composition of GP activity in T cell clusters</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -353,8 +353,8 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Extended Data Figure 5: Cluster-level GP
-membership within each T cell lineage</h1>
+<h1 class="title toc-ignore">Extended Data Figure 5: Composition of GP
+activity in T cell clusters</h1>
 <h4 class="author">Ziang Zhang</h4>
 
 </div>
@@ -384,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-09-03
+<strong>Last updated:</strong> 2026-09-04
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree21018475ef9835cf143694c78e2b415ba2f4031atargetblank2101847a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0267e5bcfe5937ac6c891b4f72c4392fe1ac129ctargetblank0267e5ba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/21018475ef9835cf143694c78e2b415ba2f4031a" target="_blank">2101847</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0267e5bcfe5937ac6c891b4f72c4392fe1ac129c" target="_blank">0267e5b</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree21018475ef9835cf143694c78e2b415ba2f4031atargetblank2101847a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0267e5bcfe5937ac6c891b4f72c4392fe1ac129ctargetblank0267e5ba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/21018475ef9835cf143694c78e2b415ba2f4031a" target="_blank">2101847</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0267e5bcfe5937ac6c891b4f72c4392fe1ac129c" target="_blank">0267e5b</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -581,6 +581,7 @@ Ignored files:
     Ignored:    figures/final-selected/Figure S1/.DS_Store
     Ignored:    figures/final-selected/Figure S4/.DS_Store
     Ignored:    figures/templates_20260729/
+    Ignored:    internal/
     Ignored:    log/
     Ignored:    output/.DS_Store
     Ignored:    output/Figure2/
@@ -632,6 +633,41 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/0267e5bcfe5937ac6c891b4f72c4392fe1ac129c/analysis/FigureS5.Rmd" target="_blank">0267e5b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-04
+</td>
+<td>
+Captions from the published manuscript; trim editor notes off the page
+code
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/5d3b86cc04ed6099a3ad2e5c7b7b002969e34c47/docs/FigureS5.html" target="_blank">5d3b86c</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-03
+</td>
+<td>
+Build site: Extended Data Figure 5 page rebuilt after the recolouring
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1156,7 +1192,7 @@ lineage – produced by <a
 href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS5.R"><code>script/FigureS5.R</code></a>,
 which assembles the rows itself, so the figure on disk is always the one
 the script last drew. It is the per-cluster, all-GP counterpart of <a
-href="Figure3.html#fig3b">Fig. 3B</a>, which shows six hand-picked
+href="Figure3.html#fig3b">Fig. 3b</a>, which shows six hand-picked
 lineage-defining GPs grouped by lineage: here every GP that marks a
 sub-lineage cluster is shown, and cells are grouped by cluster within
 each lineage. The GPs are selected from the cluster AUCs published as <a
@@ -1184,9 +1220,7 @@ record_path &lt;- &quot;output/FigureS5/&quot;
 dir.create(figure_path, recursive = TRUE, showWarnings = FALSE)
 dir.create(record_path, recursive = TRUE, showWarnings = FALSE)
 
-# A figure script here was once seen to exit 0 with a complete log and write
-# nothing at all (see script/README.md, &quot;A re-run can silently not write&quot;), so
-# record when this run started and assert at the end that the figure is newer.
+# Record when this run started, to assert at the end that the figure is newer.
 run_started_at &lt;- Sys.time()</code></pre>
 </div>
 <div id="figs5-rows" class="section level2">
@@ -1234,10 +1268,6 @@ structure_plot_row_height &lt;- 3 # inches per lineage row</code></pre>
 # Which lineage each cluster belongs to, from the metadata.
 cluster_lineage &lt;- cluster_lineage_map(level2_all, level1_all)
 
-# verify_structure_plot_gps.R has only the published table to work from, so it
-# maps clusters to lineages by their name prefix (CD8.A -&gt; CD8) instead. Check
-# that shortcut here, where the metadata-derived map is available, so the check
-# cannot be re-deriving a different grouping than the figure drew.
 auc_clusters &lt;- rownames(auc_level2)
 prefix_lineage &lt;- sub(&quot;[.].*$&quot;, &quot;&quot;, auc_clusters)
 if (!identical(unname(cluster_lineage[auc_clusters]), prefix_lineage)) {
@@ -1266,9 +1296,7 @@ message(sprintf(
 # ============================================================
 # The loop iterates over the names of the row map, so a lineage cannot be drawn
 # under another lineage&#39;s letter. Each row is kept as a ggplot and the rows are
-# assembled below, rather than saved one file per lineage: the figure is the
-# stack, and assembling it here means no hand layout step can fall behind a
-# re-run.
+# assembled below, rather than saved one file per lineage.
 lineage_plots &lt;- list()
 cluster_records &lt;- list()
 gp_records &lt;- list()
@@ -1300,10 +1328,8 @@ for (lineage in names(structure_plot_panels)) {
   grouping_lineage &lt;- factor(level2_all[lineage_cells])
 
   # This row&#39;s colors, assigned from the top of the palette without reference to
-  # any other row. structure_plot() renames the colors it is given positionally,
-  # by the columns of the matrix, so a palette in any other order would mislabel
-  # every bar; structure_plot_row_colors() returns them in ascending GP order,
-  # which is the column order here.
+  # any other row. structure_plot_row_colors() returns them in ascending GP
+  # order, which is the column order here.
   colors_lineage &lt;- structure_plot_row_colors(gps_lineage)
   if (!identical(names(colors_lineage), colnames(fit_lineage))) {
     stop(sprintf(&quot;panel %s: palette order does not match its GP columns.&quot;, panel))
@@ -1420,6 +1446,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/5d3b86cc04ed6099a3ad2e5c7b7b002969e34c47/docs/assets/FigureS5/s5.png" target="_blank">5d3b86c</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/19c977fcfe3349cb39a0935774ea6c4d8d671c64/docs/assets/FigureS5/s5.png" target="_blank">19c977f</a>
 </td>
 <td>
@@ -1445,33 +1482,10 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Extended Data Fig. 5a-g.</strong> Structure plots of
-single-cell GP activity (membership / GP loading) in healthy
-non-thymocyte cells, one row per T cell lineage, with cells grouped by
-sub-lineage cluster (<code>annotation_level2</code>): <strong>(a) CD8,
-16 GPs; (b) CD4, 22 GPs; (c) Treg, 11 GPs; (d) gdT, 44 GPs; (e) CD8aa, 9
-GPs; (f) Tz, 10 GPs; (g) DN, 17 GPs</strong> – 69 distinct GPs across
-the seven rows. A GP is shown in a row when its one-vs-rest AUC for
-predicting membership in at least one cluster of that lineage, from the
-GP’s loading, exceeds 0.9 (<strong>AUC &gt; 0.9</strong>); those are the
-values of <a href="ExtendedDataTable6.html">Extended Data Table 6</a>,
-computed on the same healthy non-thymocyte cells. Selection uses all of
-a lineage’s clusters, including any too small to draw. Each vertical bar
-is one cell, partitioned among the GPs shown; bar height is that cell’s
-total membership over those GPs and is not normalized, so it exceeds 1
-where a cell loads on several of them. Each row is colored
-independently, taking as many colors as it has GPs from the start of the
-glasbey palette in ascending GP order, which maximizes contrast between
-the GPs within a row; <strong>color is therefore not comparable between
-rows</strong> – the same color in two rows is two different GPs, and
-each row’s legend lists its own GPs. Within a cluster, cells are ordered
-by a one-dimensional t-SNE of their memberships. Clusters with fewer
-than 100 cells are not drawn, larger clusters are subsampled to at most
-2,000 cells, and at most 10,000 cells are drawn per row – bar widths
-therefore reflect the cells drawn rather than cluster size. Rows share a
-common plot width so the cluster blocks line up down the figure.
-Thymocytes and DP cells are excluded, as in <a href="Figure3.html">Fig.
-3</a>.</p>
+<p><strong>Extended Data Fig. 5a-g.</strong> Structure plots showing
+single-cell GP activity across major clusters of baseline non-thymocyte
+(a) CD8, (b) CD4, (c) Treg, (d) gdT, (e) CD8aa, (f) Tz, and (g) DN
+cells, focusing on GPs with cluster-specific AUC &gt; 0.9.</p>
 </div>
 </div>
 <div id="figs5-record" class="section level2">
@@ -1484,10 +1498,6 @@ compares against <a href="ExtendedDataTable6.html">Extended Data Table
 <pre class="r"><code># ============================================================
 # What each panel drew, for the alignment check
 # ============================================================
-# script/verify_structure_plot_gps.R reads these two files, so that it can
-# re-derive the panels&#39; GP sets from the published Extended Data Table 6 without
-# reloading the 1 GB loading matrix, and check the clusters drawn and omitted
-# against the display filters above.
 cluster_record &lt;- do.call(rbind, cluster_records)
 cluster_record$n_cells_healthy[is.na(cluster_record$n_cells_healthy)] &lt;- 0L
 write.csv(

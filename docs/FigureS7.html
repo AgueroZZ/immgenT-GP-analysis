@@ -12,7 +12,7 @@
 <meta name="author" content="Ziang Zhang" />
 
 
-<title>Extended Data Figure 7: CD69-associated GPs and further surface-protein gating strategies</title>
+<title>Extended Data Figure 7: Surface proteins association with GP</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -353,8 +353,8 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Extended Data Figure 7: CD69-associated GPs
-and further surface-protein gating strategies</h1>
+<h1 class="title toc-ignore">Extended Data Figure 7: Surface proteins
+association with GP</h1>
 <h4 class="author">Ziang Zhang</h4>
 
 </div>
@@ -384,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-09-02
+<strong>Last updated:</strong> 2026-09-04
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree1e5721a5a4676b7e7ee1bb5593a9488b8abcf7c1targetblank1e5721aa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0267e5bcfe5937ac6c891b4f72c4392fe1ac129ctargetblank0267e5ba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/1e5721a5a4676b7e7ee1bb5593a9488b8abcf7c1" target="_blank">1e5721a</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0267e5bcfe5937ac6c891b4f72c4392fe1ac129c" target="_blank">0267e5b</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree1e5721a5a4676b7e7ee1bb5593a9488b8abcf7c1targetblank1e5721aa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0267e5bcfe5937ac6c891b4f72c4392fe1ac129ctargetblank0267e5ba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/1e5721a5a4676b7e7ee1bb5593a9488b8abcf7c1" target="_blank">1e5721a</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0267e5bcfe5937ac6c891b4f72c4392fe1ac129c" target="_blank">0267e5b</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -581,6 +581,7 @@ Ignored files:
     Ignored:    figures/final-selected/Figure S1/.DS_Store
     Ignored:    figures/final-selected/Figure S4/.DS_Store
     Ignored:    figures/templates_20260729/
+    Ignored:    internal/
     Ignored:    log/
     Ignored:    output/.DS_Store
     Ignored:    output/Figure2/
@@ -637,6 +638,41 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/0267e5bcfe5937ac6c891b4f72c4392fe1ac129c/analysis/FigureS7.Rmd" target="_blank">0267e5b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-04
+</td>
+<td>
+Captions from the published manuscript; trim editor notes off the page
+code
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/19c977fcfe3349cb39a0935774ea6c4d8d671c64/docs/FigureS7.html" target="_blank">19c977f</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-02
+</td>
+<td>
+Build site: Extended Data 5-7 renumbered, Figure S5 page rebuilt
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/1e5721a5a4676b7e7ee1bb5593a9488b8abcf7c1/analysis/FigureS7.Rmd" target="_blank">1e5721a</a>
 </td>
 <td>
@@ -678,9 +714,7 @@ figure_path &lt;- &quot;figures/final-selected/Figure S7/&quot;
 source(&quot;code/R/gated_protein_helpers.R&quot;)
 source(&quot;code/R/citeseq_shared_setup.R&quot;)
 
-# A figure script here was once seen to exit 0 with a complete log and write
-# nothing at all (see script/README.md, &quot;A re-run can silently not write&quot;), so
-# record when this run started and assert at the end that every panel is newer.
+# Record when this run started, to assert at the end that every panel is newer.
 run_started_at &lt;- Sys.time()</code></pre>
 </div>
 <div id="figs7ab" class="section level2">
@@ -692,20 +726,8 @@ figures and therefore in different scripts – cannot disagree about which
 GPs they show or in what order:</p>
 <pre class="r"><code># The CD69-associated GP subset, shared by Figure 6d (the up/down gene heatmap)
 # and Figure S7a/S7b (the same GPs&#39; mean activity per tissue and per lineage).
-# Those three panels are in two different figures and so in two different
-# scripts, but they must show the same GPs on the same axis order -- hence one
-# definition here rather than a copy in each script.
-#
-# Curated list -- NOT a top-10 computed from the correlations below. These 10
-# are drawn from among the most strongly CD69-correlated GPs, but are not the
-# top 10 under any single ranking: 8 are positively correlated (ranks 1, 3, 4,
-# 5, 6, 10, 12, 14 of 200) and GP58/GP171 are the two most *negatively*
-# correlated GPs of all 200. By |rho| they sit at ranks 1, 2, 4, 5, 6, 8, 12,
-# 14, 17, 18, skipping GP1/GP47/GP100/GP25. Treat as a hand-picked input like
-# Thresholds_Selected_Proteins.csv and well_aligned_gps -- don&#39;t &quot;fix&quot; it into
-# a computed ranking, and keep the captions&#39; &quot;from among the most associated&quot;
-# wording in sync (analysis/Figure6.Rmd Fig. 6d, analysis/FigureS7.Rmd
-# Fig. S7a, b). script/verify_cd69_gp_ranking.R enforces all of this.
+# Defined once here because those panels live in two different scripts and must
+# show the same GPs in the same axis order. Curated, not a computed top-10.
 cd69_top_gps_subset &lt;- c(&quot;GP35&quot;, &quot;GP6&quot;, &quot;GP170&quot;, &quot;GP26&quot;, &quot;GP58&quot;, &quot;GP171&quot;, &quot;GP63&quot;, &quot;GP62&quot;, &quot;GP3&quot;, &quot;GP29&quot;)
 shared_cells_cd69 &lt;- intersect(rownames(L_pm_filtered), rownames(protein_mat_normalized_lognorm))
 cd69_expr_vec &lt;- protein_mat_normalized_lognorm[shared_cells_cd69, &quot;CD69&quot;]
@@ -746,20 +768,85 @@ ggsave(paste0(figure_path, &quot;s7a.pdf&quot;), p_s7a, width = 9, height = 5)
 df_level1 &lt;- mean_loading_long(L_cd69_sub, meta_hm$annotation_level1, cd69_top_gps_sorted)
 p_s7b &lt;- make_mean_loading_heatmap(df_level1, &quot;Mean GP loading by cell type (level1)&quot;)
 ggsave(paste0(figure_path, &quot;s7b.pdf&quot;), p_s7b, width = 7, height = 5)</code></pre>
-<p><img src="assets/FigureS7/s7a.png" width="49%" style="display: block; margin: auto;" /><img src="assets/FigureS7/s7b.png" width="49%" style="display: block; margin: auto;" /></p>
+<p><img src="assets/FigureS7/s7a.png" width="49%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-s7a">
+Past versions of s7a.png
+</button>
+</p>
+<div id="fig-s7a" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/19c977fcfe3349cb39a0935774ea6c4d8d671c64/docs/assets/FigureS7/s7a.png" target="_blank">19c977f</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="assets/FigureS7/s7b.png" width="49%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-s7b">
+Past versions of s7b.png
+</button>
+</p>
+<div id="fig-s7b" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/19c977fcfe3349cb39a0935774ea6c4d8d671c64/docs/assets/FigureS7/s7b.png" target="_blank">19c977f</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div class="figcaption">
 <p><strong>Extended Data Fig. 7a, b.</strong> Mean activity of the ten
-CD69-associated GPs of <a href="Figure6.html#fig6d">Fig. 6d</a>, in the
-same order, <strong>(a) across tissues</strong>
-(<code>organ_simplified</code>) and <strong>(b) across lineages</strong>
-(<code>annotation_level1</code>). That order is the Spearman correlation
-between GP activity and CD69 protein expression. Color runs from white
-(zero) to firebrick (each panel’s largest mean activity). The ten GPs
-are a <strong>hand-picked</strong> set drawn from among the GPs most
-strongly correlated – positively or negatively – with CD69, not a
-computed top-10; <code>script/verify_cd69_gp_ranking.R</code> recomputes
-the correlation over all 200 GPs and fails if this wording and the code
-drift apart.</p>
+CD69-associated GPs (a) across tissues and (b) across lineages.</p>
 </div>
 </div>
 <div id="figs7cf" class="section level2">
@@ -789,22 +876,163 @@ for (gp in names(figs7_gating)) {
     save_path = paste0(figure_path, figs7_gating[gp], &quot;.pdf&quot;)
   )
 }</code></pre>
-<p><img src="assets/FigureS7/s7c.png" width="49%" style="display: block; margin: auto;" /><img src="assets/FigureS7/s7d.png" width="49%" style="display: block; margin: auto;" /><img src="assets/FigureS7/s7e.png" width="49%" style="display: block; margin: auto;" /><img src="assets/FigureS7/s7f.png" width="49%" style="display: block; margin: auto;" /></p>
+<p><img src="assets/FigureS7/s7c.png" width="49%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-s7c">
+Past versions of s7c.png
+</button>
+</p>
+<div id="fig-s7c" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/19c977fcfe3349cb39a0935774ea6c4d8d671c64/docs/assets/FigureS7/s7c.png" target="_blank">19c977f</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="assets/FigureS7/s7d.png" width="49%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-s7d">
+Past versions of s7d.png
+</button>
+</p>
+<div id="fig-s7d" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/19c977fcfe3349cb39a0935774ea6c4d8d671c64/docs/assets/FigureS7/s7d.png" target="_blank">19c977f</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="assets/FigureS7/s7e.png" width="49%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-s7e">
+Past versions of s7e.png
+</button>
+</p>
+<div id="fig-s7e" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/19c977fcfe3349cb39a0935774ea6c4d8d671c64/docs/assets/FigureS7/s7e.png" target="_blank">19c977f</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="assets/FigureS7/s7f.png" width="49%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-s7f">
+Past versions of s7f.png
+</button>
+</p>
+<div id="fig-s7f" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/19c977fcfe3349cb39a0935774ea6c4d8d671c64/docs/assets/FigureS7/s7f.png" target="_blank">19c977f</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div class="figcaption">
 <p><strong>Extended Data Fig. 7c-f.</strong> Examples of gating
-strategies used to identify GP-active cells, as in <a
-href="Figure6.html#fig6ej">Fig. 6e-j</a>, for <strong>(c) GP29, (d)
-GP58, (e) GP22 and (f) GP68</strong>. For each GP, all-T MDE plots
-highlight cells passing a protein gate built from the GP’s curated
-marker signature (left; positive markers above threshold, negative
-markers at or below, with the gate size reported in the panel title as
-“Matched n”) and, on the right, an equally sized set of cells with the
-highest GP activity – exactly as many cells as the protein gate
-selected. Color indicates cell density (two-dimensional); all other
-cells are grey. Thymocytes, proliferating, and “miniverse” cells are
-excluded. Each panel is labeled with its GP and the markers the gate
-actually applied; every marker in these four signatures has a manually
-reviewed positivity threshold, so none is silently dropped.</p>
+strategies used to identify GP-active cells for (c) GP29 (CD8aa gdT or
+ab T cell specific), (d) GP58 (CD8-specific), (e) GP22 (DN-specific),
+and (f) GP68 (Treg-specific).</p>
 </div>
 <br>
 <p>

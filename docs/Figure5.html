@@ -12,7 +12,7 @@
 <meta name="author" content="Ziang Zhang" />
 
 
-<title>Figure 5: GP expression in tissues is driven by T cell composition</title>
+<title>Figure 5: Tissue-associated gene programs reflect both tissue adaptation and T cell subset composition</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -353,8 +353,8 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Figure 5: GP expression in tissues is
-driven by T cell composition</h1>
+<h1 class="title toc-ignore">Figure 5: Tissue-associated gene programs
+reflect both tissue adaptation and T cell subset composition</h1>
 <h4 class="author">Ziang Zhang</h4>
 
 </div>
@@ -384,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-09-02
+<strong>Last updated:</strong> 2026-09-04
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree1e5721a5a4676b7e7ee1bb5593a9488b8abcf7c1targetblank1e5721aa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0267e5bcfe5937ac6c891b4f72c4392fe1ac129ctargetblank0267e5ba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/1e5721a5a4676b7e7ee1bb5593a9488b8abcf7c1" target="_blank">1e5721a</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0267e5bcfe5937ac6c891b4f72c4392fe1ac129c" target="_blank">0267e5b</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree1e5721a5a4676b7e7ee1bb5593a9488b8abcf7c1targetblank1e5721aa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0267e5bcfe5937ac6c891b4f72c4392fe1ac129ctargetblank0267e5ba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/1e5721a5a4676b7e7ee1bb5593a9488b8abcf7c1" target="_blank">1e5721a</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0267e5bcfe5937ac6c891b4f72c4392fe1ac129c" target="_blank">0267e5b</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -581,6 +581,7 @@ Ignored files:
     Ignored:    figures/final-selected/Figure S1/.DS_Store
     Ignored:    figures/final-selected/Figure S4/.DS_Store
     Ignored:    figures/templates_20260729/
+    Ignored:    internal/
     Ignored:    log/
     Ignored:    output/.DS_Store
     Ignored:    output/Figure2/
@@ -632,6 +633,41 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/0267e5bcfe5937ac6c891b4f72c4392fe1ac129c/analysis/Figure5.Rmd" target="_blank">0267e5b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-04
+</td>
+<td>
+Captions from the published manuscript; trim editor notes off the page
+code
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/19c977fcfe3349cb39a0935774ea6c4d8d671c64/docs/Figure5.html" target="_blank">19c977f</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-02
+</td>
+<td>
+Build site: Extended Data 5-7 renumbered, Figure S5 page rebuilt
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1105,7 +1141,6 @@ the images are its pre-rendered output.</p>
 # for the full picture:
 #   L_pm_filtered.rds, F_pm_filtered.rds     [code/pipeline/01b_filter_cells.R]
 #   igt1_96_..._ADTonly.Rds                  [primary input Seurat object]
-#   shifted_log_counts_subset.rds            [gap, no producer script here]
 #   level_1_AUC_list_figure_no_thymocytes_healthy.rds,
 #   level_2_AUC_list_figure_no_thymocytes_healthy.rds,
 #   organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds
@@ -1138,8 +1173,7 @@ level_2_AUC_list &lt;- readRDS(paste0(
 organ_AUC_list &lt;- readRDS(paste0(
   data_path, &quot;organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds&quot;
 ))
-# Read from the Seurat object directly, not the stale cached seurat_meta.rds
-# (see code/R/setup_data.R for why).
+# Metadata is read from the Seurat object directly.
 seurat_meta &lt;- readRDS(paste0(
   data_path, &quot;igt1_96_withtotalvi20260206_clean_ADTonly.Rds&quot;
 ))@meta.data
@@ -1346,14 +1380,10 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 5a.</strong> Per-GP maximum AUC for predicting organ of
-origin (x-axis) versus lineage (y-axis); each point is one GP and the
-dashed line marks equal performance. Categories with too few cells are
-dropped (lineage &lt; 1,000 cells, organ &lt; 100 cells). GPs reaching
-AUC &gt; 0.9 on either axis are highlighted – red below the diagonal
-(better at organ; organ-specific) labeled with their top organs, blue
-above the diagonal (better at lineage) labeled with their top lineages
-(up to three categories each, AUC &gt; 0.85).</p>
+<p><strong>Fig. 5a.</strong> Scatterplot showing each GP’s prediction
+(AUC) of organ of origin (x-axis) versus lineage (y-axis). GPs reaching
+AUC &gt; 0.9 on either axis are colored and labeled (organ-specific in
+red; lineage-specific in blue).</p>
 </div>
 </div>
 <div id="fig5b" class="section level2">
@@ -1536,11 +1566,8 @@ Ziang Zhang
 </div>
 <div class="figcaption">
 <p><strong>Fig. 5b.</strong> Proportion of GP37-active cells in each
-lineage in the mammary gland (solid bars) compared with the same lineage
-in all other organs (faded bars). A cell is GP37-active (GP37+) if its
-GP37 loading exceeds the organ-specific optimal threshold from the AUC
-analysis. Bars are colored by lineage and ordered by in-organ rate;
-lineages with fewer than 100 mammary-gland cells are omitted.</p>
+lineage in the mammary gland compared with all other organs (faded color
+bar).</p>
 </div>
 </div>
 <div id="fig5c" class="section level2">
@@ -1704,12 +1731,10 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 5c.</strong> Marker genes of the seven organ-specific
-GPs. Genes are the union of the top 20 positively scoring genes per GP
-(score &gt; 0.25 on the max-abs-scaled gene-score matrix), ordered
-diagonally by each gene’s dominant GP and then by descending score.
-Heatmap of the per-GP scaled gene scores for these genes across the
-seven GPs, centered at zero (blue, negative; red, positive).</p>
+<p><strong>Fig. 5c.</strong> Genes associated with the seven
+organ-specific GPs shown in (a). Heatmap of the per-GP scaled gene
+scores for the top upregulated genes of each GP (top 20 per GP, gene
+score &gt; 0.25; blue, negative; red, positive).</p>
 </div>
 </div>
 <div id="fig5d" class="section level2">
@@ -1742,9 +1767,7 @@ organ_AUC_masked_l2[!organ_AUC_positive_l2] &lt;- NA
 organ_AUC_max &lt;- apply(organ_AUC_masked_l2, 2, max, na.rm = TRUE)
 organ_AUC_max_name &lt;- apply(organ_AUC_masked_l2, 2, function(x) rownames(organ_AUC_masked_l2)[which.max(x)])
 
-# 5d needs its OWN max-AUC table -- it must not reuse 5a&#39;s `df`, whose
-# Max_AUC_Level1 column holds the Level-1 maxima. Reusing 5a&#39;s `df` silently
-# plots Level-1 AUC on this panel&#39;s &quot;Max AUC (Level-2)&quot; axis.
+# 5d&#39;s own max-AUC table, over the Level-2 categories.
 level_2_AUC_masked &lt;- level_2_AUC
 level_2_AUC_masked[!level_2_AUC_positive] &lt;- NA
 level_2_AUC_max &lt;- apply(level_2_AUC_masked, 2, max, na.rm = TRUE)
@@ -1889,13 +1912,9 @@ Ziang Zhang
 </div>
 <div class="figcaption">
 <p><strong>Fig. 5d.</strong> As in (a), but predictive performance is
-measured against level 2 clusters (<code>annotation_level2</code>, from
-ImmgenT-cosmo; y-axis, clusters with &lt; 100 cells dropped). All GPs
-are shown in grey; the seven organ-specific GPs from (a) – GP3, GP6,
-GP11, GP26, GP29, GP37, GP177 – are highlighted in red and labeled with
-their best clusters, and a contrasting set of cluster-specific GPs (high
-cluster AUC, low organ AUC) in blue; the dashed line marks equal
-performance.</p>
+measured against level 2 clusters (y-axis). The seven organ-specific GPs
+from (a) are highlighted in red, and a contrasting set of
+cluster-specific GPs (high cluster AUC, low organ AUC) in blue.</p>
 </div>
 </div>
 <div id="fig5e" class="section level2">
@@ -2031,14 +2050,9 @@ Ziang Zhang
 </div>
 <div class="figcaption">
 <p><strong>Fig. 5e.</strong> Alluvial plot showing how tissue-specific
-GP activity is distributed across clusters. For each of the seven
-organ-specific GPs and each organ, GP-active cells (loading above that
-GP’s best-organ threshold) are traced from their organ of origin through
-the GP to their level 2 cluster annotation. Flows are colored by GP
-(using each GP’s best-predicted organ color), and width is proportional
-to the number of cells shown, after subsampling to &lt;=300 cells per
-GP; flows representing fewer than 5 cells are dropped, and a cell may
-appear under more than one GP.</p>
+GP activity is distributed across clusters. For each organ, GP-active
+cells are traced to their cluster annotation. Flows are colored by GP,
+and width is proportional to the number of cells.</p>
 </div>
 <br>
 <p>

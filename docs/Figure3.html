@@ -12,7 +12,7 @@
 <meta name="author" content="Ziang Zhang" />
 
 
-<title>Figure 3: T cell lineage-related GPs</title>
+<title>Figure 3: T cell lineage identity is encoded by both lineage-restricted and shared gene programs</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -353,7 +353,8 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Figure 3: T cell lineage-related GPs</h1>
+<h1 class="title toc-ignore">Figure 3: T cell lineage identity is
+encoded by both lineage-restricted and shared gene programs</h1>
 <h4 class="author">Ziang Zhang</h4>
 
 </div>
@@ -383,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-09-02
+<strong>Last updated:</strong> 2026-09-04
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -515,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree1e5721a5a4676b7e7ee1bb5593a9488b8abcf7c1targetblank1e5721aa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0267e5bcfe5937ac6c891b4f72c4392fe1ac129ctargetblank0267e5ba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/1e5721a5a4676b7e7ee1bb5593a9488b8abcf7c1" target="_blank">1e5721a</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0267e5bcfe5937ac6c891b4f72c4392fe1ac129c" target="_blank">0267e5b</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree1e5721a5a4676b7e7ee1bb5593a9488b8abcf7c1targetblank1e5721aa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0267e5bcfe5937ac6c891b4f72c4392fe1ac129ctargetblank0267e5ba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -533,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/1e5721a5a4676b7e7ee1bb5593a9488b8abcf7c1" target="_blank">1e5721a</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0267e5bcfe5937ac6c891b4f72c4392fe1ac129c" target="_blank">0267e5b</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -580,6 +581,7 @@ Ignored files:
     Ignored:    figures/final-selected/Figure S1/.DS_Store
     Ignored:    figures/final-selected/Figure S4/.DS_Store
     Ignored:    figures/templates_20260729/
+    Ignored:    internal/
     Ignored:    log/
     Ignored:    output/.DS_Store
     Ignored:    output/Figure2/
@@ -631,6 +633,41 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/0267e5bcfe5937ac6c891b4f72c4392fe1ac129c/analysis/Figure3.Rmd" target="_blank">0267e5b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-04
+</td>
+<td>
+Captions from the published manuscript; trim editor notes off the page
+code
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/19c977fcfe3349cb39a0935774ea6c4d8d671c64/docs/Figure3.html" target="_blank">19c977f</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-02
+</td>
+<td>
+Build site: Extended Data 5-7 renumbered, Figure S5 page rebuilt
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1319,7 +1356,7 @@ colnames(level_1_AUC_list$auc) &lt;- gsub(
 )</code></pre>
 </div>
 <div id="fig3a" class="section level2">
-<h2>(A) AUC swarm plot by lineage</h2>
+<h2>(a) AUC swarm plot by lineage</h2>
 <pre class="r"><code># ============================================================
 # 3A: AUC swarm, up-regulated GPs only, GP3/22/29 forced highlight
 # ============================================================
@@ -1450,20 +1487,13 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 3A.</strong> Swarm plot showing the AUC of each GP for
-predicting major T cell lineage (one-vs-rest AUC, computed on healthy
-non-thymocyte cells) across the seven major lineages (CD8, CD4, Treg,
-gdT, CD8aa, Tz, DN). Only GPs up-regulated in a given lineage (mean
-loading &gt;= the overall mean) are plotted for it as circles. The most
-predictive GP per lineage is labeled – GP58 (CD8), GP74 (CD4), GP68
-(Treg), GP3 (gdT), GP29 (CD8aa), GP30 (Tz) and GP22 (DN) – as are GP3,
-GP29 and GP22 in each of gdT, CD8aa and DN; all three are shown in all
-three of those lineages, with triangles marking the ones that are
-down-regulated there. The dashed line marks AUC = 0.5.</p>
+<p><strong>Fig. 3a.</strong> Swarm plot showing the AUC of each GP for
+predicting major T cell lineage. The top GPs for each lineage are
+highlighted.</p>
 </div>
 </div>
 <div id="fig3b" class="section level2">
-<h2>(B) Structure plot of lineage-defining GPs</h2>
+<h2>(b) Structure plot of lineage-defining GPs</h2>
 <pre class="r"><code># ============================================================
 # 3B: Structure plot of 6 lineage-defining GPs
 # ============================================================
@@ -1600,18 +1630,12 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 3B.</strong> Structure plot showing single-cell activity
-(membership / GP loading) of the lineage-related GPs identified in (A),
-grouped by lineage (CD8, CD4, Treg, gdT, CD8aa, Tz, DN); CD4 and CD8
-cells are subsampled for visualization. Six of the seven most-predictive
-GPs from (A) are shown, one per lineage – GP58 (CD8), GP68 (Treg), GP30
-(Tz), GP3 (gdT), GP29 (CD8aa) and GP22 (DN). CD4’s top GP in (A), GP74,
-is not included: no single GP marks conventional CD4 cells strongly (its
-AUC is only ~0.68, the lowest of the seven).</p>
+<p><strong>Fig. 3b.</strong> Structure plot showing single-cell activity
+of the lineage-related GPs identified in (a), grouped by lineage.</p>
 </div>
 </div>
 <div id="fig3c" class="section level2">
-<h2>(C) GP68 activity on the all-T MDE</h2>
+<h2>(c) GP68 activity on the all-T MDE</h2>
 <pre class="r"><code># ============================================================
 # 3C/3E/3G: GP68, GP30, GP58 loading on the global MDE (reconstructed)
 # ============================================================
@@ -1723,12 +1747,11 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 3C.</strong> GP68 activity on the all-T MDE; each point
-is a cell, colored by its GP68 activity (loading).</p>
+<p><strong>Fig. 3c.</strong> All-T MDE colored by GP68 activity.</p>
 </div>
 </div>
 <div id="fig3d" class="section level2">
-<h2>(D) GP68 signature volcano</h2>
+<h2>(d) GP68 signature volcano</h2>
 <pre class="r"><code># ============================================================
 # 3D/3F/3H: &quot;signature volcano&quot; per-gene view for GP68, GP30, GP58.
 # ============================================================
@@ -1878,14 +1901,13 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 3D.</strong> Gene scores for GP68. The x axis shows the
-GP68 gene score, scaled as in Figure 2A (per-GP maximum |score| = 1),
-and the y axis shows mean shifted-log expression across all T cells; top
-genes are labeled.</p>
+<p><strong>Fig. 3d.</strong> Gene scores for GP68. The x-axis shows the
+GP68 gene score, and the y-axis shows mean expression across all T cells
+(log-transformed).</p>
 </div>
 </div>
 <div id="fig3e" class="section level2">
-<h2>(E) GP30 activity on the all-T MDE</h2>
+<h2>(e) GP30 activity on the all-T MDE</h2>
 <pre class="r"><code>p_3E &lt;- plot_loadings_on_mde(
   mde = df_mde,
   loading = L_pm_filtered[rownames(df_mde), &quot;GP30&quot;],
@@ -1994,12 +2016,11 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 3E.</strong> GP30 activity on the all-T MDE; each point
-is a cell, colored by its GP30 activity (loading).</p>
+<p><strong>Fig. 3e.</strong> All-T MDE colored by GP30 activity.</p>
 </div>
 </div>
 <div id="fig3f" class="section level2">
-<h2>(F) GP30 signature volcano</h2>
+<h2>(f) GP30 signature volcano</h2>
 <pre class="r"><code>p_3F &lt;- plot_gp_signature_volcano(
   &quot;GP30&quot;,
   F_pm_normalized_3d,
@@ -2141,14 +2162,11 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 3F.</strong> Gene scores for GP30. The x axis shows the
-GP30 gene score, scaled as in Figure 2A (per-GP maximum |score| = 1),
-and the y axis shows mean shifted-log expression across all T cells; top
-genes are labeled.</p>
+<p><strong>Fig. 3f.</strong> Gene scores for GP30, shown as in (d).</p>
 </div>
 </div>
 <div id="fig3g" class="section level2">
-<h2>(G) GP58 activity on the all-T MDE</h2>
+<h2>(g) GP58 activity on the all-T MDE</h2>
 <pre class="r"><code>p_3G &lt;- plot_loadings_on_mde(
   mde = df_mde,
   loading = L_pm_filtered[rownames(df_mde), &quot;GP58&quot;],
@@ -2257,12 +2275,11 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 3G.</strong> GP58 activity on the all-T MDE; each point
-is a cell, colored by its GP58 activity (loading).</p>
+<p><strong>Fig. 3g.</strong> All-T MDE colored by GP58 activity.</p>
 </div>
 </div>
 <div id="fig3h" class="section level2">
-<h2>(H) GP58 signature volcano</h2>
+<h2>(h) GP58 signature volcano</h2>
 <pre class="r"><code>p_3H &lt;- plot_gp_signature_volcano(
   &quot;GP58&quot;,
   F_pm_normalized_3d,
@@ -2393,14 +2410,11 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 3H.</strong> Gene scores for GP58. The x axis shows the
-GP58 gene score, scaled as in Figure 2A (per-GP maximum |score| = 1),
-and the y axis shows mean shifted-log expression across all T cells; top
-genes are labeled.</p>
+<p><strong>Fig. 3h.</strong> Gene scores for GP58, shown as in (d).</p>
 </div>
 </div>
 <div id="fig3i" class="section level2">
-<h2>(I) gdT/CD8aa/DN MDE by lineage</h2>
+<h2>(i) gdT/CD8aa/DN MDE by lineage</h2>
 <pre class="r"><code># ============================================================
 # 3I: MDE restricted to gdT/CD8aa/DN, colored by lineage
 #     (excludes proliferating / miniverse subsets)
@@ -2526,14 +2540,13 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 3I.</strong> All-T MDE subsetted to show only γδ T
-cells, CD8aa T cells and DN T cells (excluding proliferating and
-miniverse subsets), colored by lineage: γδ T in green, CD8aa in purple,
-and DN in blue.</p>
+<p><strong>Fig. 3i.</strong> All-T MDE subsetted to show only gdT cells,
+CD8aa T cells, and DN T cells. Cells are colored by (i) lineage (gdT in
+green, CD8aa in purple, and DN in blue).</p>
 </div>
 </div>
 <div id="fig3jl" class="section level2">
-<h2>(J-L) GP3, GP29, GP22 loading on the gdT/CD8aa/DN MDE</h2>
+<h2>(j-l) GP3, GP29, GP22 loading on the gdT/CD8aa/DN MDE</h2>
 <pre class="r"><code># ============================================================
 # 3J/3K/3L: GP3, GP29, GP22 loading on the gdT/CD8aa/DN MDE
 # ============================================================
@@ -2826,13 +2839,13 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 3J-L.</strong> GP activity on the same gdT/CD8aa/DN MDE
-for GP3 (J), GP29 (K), and GP22 (L) – the same GP order as the columns
-of (M).</p>
+<p><strong>Fig. 3j-l.</strong> The same subsetted MDE as in (i), with
+cells colored by (j) GP3 activity, (k) GP29 activity, and (l) GP22
+activity.</p>
 </div>
 </div>
 <div id="fig3m" class="section level2">
-<h2>(M) Top-30 gene score heatmap for GP3/GP29/GP22</h2>
+<h2>(m) Top-30 gene score heatmap for GP3/GP29/GP22</h2>
 <pre class="r"><code># ============================================================
 # 3M: cross-GP heatmap, top-30 UP-REGULATED gene weights for GP3, GP29, GP22
 # (heatmap built by code/R/cross_gp_helpers.R)
@@ -2853,12 +2866,8 @@ mat_3m &lt;- F_pm_norm_3m[common_genes_3m, gps_3m, drop = FALSE]
 
 p_3M &lt;- plot_cross_gp_heatmap(
   mat_3m, gps_3m,
-  # rank_by = &quot;pos&quot; makes this a genuine &quot;top 30 up-regulated genes&quot; panel:
-  # candidates are the genes positive in at least one of the three GPs
-  # (direction = &quot;pos&quot;), ranked by max(score) across them. Ranking by
-  # max|score| instead would admit genes on the strength of a large negative
-  # score, let through the &quot;positive somewhere&quot; gate by a token positive
-  # weight elsewhere.
+  # rank_by = &quot;pos&quot;: candidates are the genes positive in at least one of the
+  # three GPs (direction = &quot;pos&quot;), ranked by max(score) across them.
   feat_label = &quot;Gene&quot;, n_genes = 30, direction = &quot;pos&quot;, rank_by = &quot;pos&quot;,
   threshold = 0.05, colorscheme = &quot;bwr&quot;, cluster_r = TRUE, cluster_c = FALSE,
   pin_top = c(&quot;Fcer1g&quot;, &quot;Ccl5&quot;, &quot;Cd7&quot;, &quot;Ctsw&quot;)
@@ -2971,13 +2980,8 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 3M.</strong> Heatmap of the 30 most up-regulated genes
-across GP3, GP29 and GP22: of the genes with a positive score in at
-least one of the three, the 30 with the highest score across them. Gene
-scores are scaled so that each GP’s largest absolute score is 1 (blue,
-negative; red, positive), and a gene selected for one GP can still be
-negative in another. Rows are hierarchically clustered, with Fcer1g,
-Ccl5, Cd7 and Ctsw pinned to the top.</p>
+<p><strong>Fig. 3m.</strong> Heatmap showing the top 30 genes
+upregulated in GP3, GP22, and GP29.</p>
 </div>
 <br>
 <p>

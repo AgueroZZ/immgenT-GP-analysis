@@ -12,7 +12,7 @@
 <meta name="author" content="Ziang Zhang" />
 
 
-<title>Figure 4: GPs associated with T cell activation</title>
+<title>Figure 4: Activated T cell states arise from shared and lineage-biased combinations of gene programs</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -353,8 +353,8 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Figure 4: GPs associated with T cell
-activation</h1>
+<h1 class="title toc-ignore">Figure 4: Activated T cell states arise
+from shared and lineage-biased combinations of gene programs</h1>
 <h4 class="author">Ziang Zhang</h4>
 
 </div>
@@ -384,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-09-02
+<strong>Last updated:</strong> 2026-09-04
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree1e5721a5a4676b7e7ee1bb5593a9488b8abcf7c1targetblank1e5721aa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0267e5bcfe5937ac6c891b4f72c4392fe1ac129ctargetblank0267e5ba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/1e5721a5a4676b7e7ee1bb5593a9488b8abcf7c1" target="_blank">1e5721a</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0267e5bcfe5937ac6c891b4f72c4392fe1ac129c" target="_blank">0267e5b</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree1e5721a5a4676b7e7ee1bb5593a9488b8abcf7c1targetblank1e5721aa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0267e5bcfe5937ac6c891b4f72c4392fe1ac129ctargetblank0267e5ba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/1e5721a5a4676b7e7ee1bb5593a9488b8abcf7c1" target="_blank">1e5721a</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0267e5bcfe5937ac6c891b4f72c4392fe1ac129c" target="_blank">0267e5b</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -581,6 +581,7 @@ Ignored files:
     Ignored:    figures/final-selected/Figure S1/.DS_Store
     Ignored:    figures/final-selected/Figure S4/.DS_Store
     Ignored:    figures/templates_20260729/
+    Ignored:    internal/
     Ignored:    log/
     Ignored:    output/.DS_Store
     Ignored:    output/Figure2/
@@ -632,6 +633,41 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/0267e5bcfe5937ac6c891b4f72c4392fe1ac129c/analysis/Figure4.Rmd" target="_blank">0267e5b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-04
+</td>
+<td>
+Captions from the published manuscript; trim editor notes off the page
+code
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/19c977fcfe3349cb39a0935774ea6c4d8d671c64/docs/Figure4.html" target="_blank">19c977f</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-02
+</td>
+<td>
+Build site: Extended Data 5-7 renumbered, Figure S5 page rebuilt
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1276,7 +1312,7 @@ seurat_meta_filtered &lt;- seurat_meta[rownames(L_pm_filtered), ]
 source(&quot;code/R/activation_shared_setup.R&quot;)</code></pre>
 </div>
 <div id="fig4a" class="section level2">
-<h2>(4a) Activation effect, CD4 vs. CD8</h2>
+<h2>(a) Activation effect, CD4 vs. CD8</h2>
 <pre class="r"><code># ============================================================
 # 4a: Standardized mean difference, activated vs resting, CD4 vs CD8
 # ============================================================
@@ -1343,12 +1379,6 @@ p_4a &lt;- ggplot(manual_curated_df, aes(x = d_CD4, y = d_CD8)) +
     point.padding = 0.5,
     segment.color = &quot;grey50&quot;
   ) +
-  # # TEMP: label the other auto-classified darkorange2 (&quot;CD8 only&quot;) points too, just to eyeball them -- remove before final.
-  # ggrepel::geom_text_repel(
-  #   data = filter(manual_curated_df, auto_color == &quot;darkorange2&quot;, !(GP %in% GPs_of_interest)),
-  #   aes(label = GP, color = point_color),
-  #   max.overlaps = Inf, size = 3, box.padding = 0.3, point.padding = 0.4, segment.color = &quot;grey70&quot;
-  # ) +
   scale_color_identity() +
   # Signed (pseudo-)log axes: d is signed, so a plain log drops negatives/zeros.
   scale_x_continuous(
@@ -1488,21 +1518,16 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 4a.</strong> Standardized mean difference (<em>d</em>)
-in GP activity between activated and resting cells in CD4+ T cells
-(x-axis) and CD8+ T cells (y-axis); for each GP, <em>d</em> is the
-activated-minus-resting difference in mean loading divided by that GP’s
-loading SD pooled over all activated and resting CD4/CD8 cells. Points
-are colored according to whether they are highly up-regulated in both
-CD4+ and CD8+ activation (dark red/brown), down-regulated in both (dark
-green), or preferentially regulated, in either direction, in CD4 (blue)
-or CD8 (orange). Remaining GPs are shown in black; the
-<strong>25</strong> activation-associated GPs discussed in the text are
-the curated set, and only those are labeled.</p>
+<p><strong>Fig. 4a.</strong> Standardized mean difference in GP activity
+between activated and resting cells in CD4+ T cells (x-axis) and CD8+ T
+cells (y-axis). Points are colored according to whether they are highly
+upregulated in both CD4+ and CD8+ activation (brown), downregulated in
+both (green), or preferentially upregulated in CD4 (blue) or CD8
+(orange).</p>
 </div>
 </div>
 <div id="fig4b" class="section level2">
-<h2>(4b) GP-gene signature network</h2>
+<h2>(b) GP-gene signature network</h2>
 <pre class="r"><code># ============================================================
 # 4b: GP-gene signature network
 # ============================================================
@@ -1728,15 +1753,14 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 4b.</strong> GP-gene network in which each of these 25
-GPs is linked to its five most strongly regulated genes, based on
-per-GP-normalized GP gene scores; edges are colored by the sign of the
-gene score (red, up-regulated; blue, down-regulated). GP nodes are
-colored as in (4a).</p>
+<p><strong>Fig. 4b.</strong> GP-gene network in which each GP is linked
+to its five most strongly regulated genes, based on GP gene scores.
+Edges are colored by the sign of the gene score (red for upregulated,
+blue for downregulated). GP nodes are colored as in (a).</p>
 </div>
 </div>
 <div id="fig4c" class="section level2">
-<h2>(4c) Log2FC heatmap across conditions</h2>
+<h2>(c) Log2FC heatmap across conditions</h2>
 <pre class="r"><code># ============================================================
 # 4c: log2FC heatmap of activated CD4+CD8 cells across conditions,
 #     relative to the per-GP mean across all CD4/CD8 cells
@@ -1963,16 +1987,12 @@ Ziang Zhang
 <p><strong>Fig. 4c.</strong> Heatmap of log2 fold change in mean GP
 activity across experimental conditions for activated CD4+ and CD8+ T
 cells, computed relative to each GP’s mean loading across all CD4+/CD8+
-cells (resting and activated, all conditions) and capped at +-2, with a
-small pseudocount (1e-10) added to stabilize computation. Columns are
-conditions with &gt;=50 activated CD4 and &gt;=50 activated CD8 cells,
-grouped and annotated by broad condition category (including healthy
-controls), with color from purple (low) through black (no change) to
-gold (high). GPs are ordered and colored as in (4a).</p>
+cells. Columns grouped and annotated by immune challenge category. GPs
+are ordered and colored as in (a).</p>
 </div>
 </div>
 <div id="fig4d" class="section level2">
-<h2>(4d) Mean loading by sub-lineage</h2>
+<h2>(d) Mean loading by sub-lineage</h2>
 <pre class="r"><code># ============================================================
 # 4d: Mean GP loading per Level-2 sub-lineage
 # ============================================================
@@ -2178,11 +2198,8 @@ Ziang Zhang
 </div>
 <div class="figcaption">
 <p><strong>Fig. 4d.</strong> Heatmap of mean GP activity per level 2
-cluster (sub-lineage), with the top bar denoting parent lineage;
-thymocytes and DP cells are excluded, leaving the seven T-cell lineages
-(CD8, CD4, Treg, gdT, CD8aa, Tz, DN) and only sub-types with &gt;=50
-cells. Color runs from white (low) to red (high). GPs are ordered and
-colored as in (4a).</p>
+cluster, with the top bar denoting parent lineage. GP ordered and
+colored as in (a).</p>
 </div>
 <br>
 <p>

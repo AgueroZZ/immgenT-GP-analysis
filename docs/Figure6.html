@@ -12,7 +12,7 @@
 <meta name="author" content="Ziang Zhang" />
 
 
-<title>Figure 6: Surface proteins associated with GP activity</title>
+<title>Figure 6: Surface-marker associations are context-dependent, but combinatorial gating resolves specific gene programs</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -353,8 +353,9 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Figure 6: Surface proteins associated with
-GP activity</h1>
+<h1 class="title toc-ignore">Figure 6: Surface-marker associations are
+context-dependent, but combinatorial gating resolves specific gene
+programs</h1>
 <h4 class="author">Ziang Zhang</h4>
 
 </div>
@@ -384,7 +385,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-09-02
+<strong>Last updated:</strong> 2026-09-04
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +517,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree1e5721a5a4676b7e7ee1bb5593a9488b8abcf7c1targetblank1e5721aa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0267e5bcfe5937ac6c891b4f72c4392fe1ac129ctargetblank0267e5ba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/1e5721a5a4676b7e7ee1bb5593a9488b8abcf7c1" target="_blank">1e5721a</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0267e5bcfe5937ac6c891b4f72c4392fe1ac129c" target="_blank">0267e5b</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree1e5721a5a4676b7e7ee1bb5593a9488b8abcf7c1targetblank1e5721aa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0267e5bcfe5937ac6c891b4f72c4392fe1ac129ctargetblank0267e5ba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +535,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/1e5721a5a4676b7e7ee1bb5593a9488b8abcf7c1" target="_blank">1e5721a</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0267e5bcfe5937ac6c891b4f72c4392fe1ac129c" target="_blank">0267e5b</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -581,6 +582,7 @@ Ignored files:
     Ignored:    figures/final-selected/Figure S1/.DS_Store
     Ignored:    figures/final-selected/Figure S4/.DS_Store
     Ignored:    figures/templates_20260729/
+    Ignored:    internal/
     Ignored:    log/
     Ignored:    output/.DS_Store
     Ignored:    output/Figure2/
@@ -632,6 +634,41 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/0267e5bcfe5937ac6c891b4f72c4392fe1ac129c/analysis/Figure6.Rmd" target="_blank">0267e5b</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-04
+</td>
+<td>
+Captions from the published manuscript; trim editor notes off the page
+code
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/19c977fcfe3349cb39a0935774ea6c4d8d671c64/docs/Figure6.html" target="_blank">19c977f</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-02
+</td>
+<td>
+Build site: Extended Data 5-7 renumbered, Figure S5 page rebuilt
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1318,15 +1355,16 @@ source(&quot;code/R/citeseq_shared_setup.R&quot;)</code></pre>
 <div id="fig6a" class="section level2">
 <h2>(a) Protein-signature schematic</h2>
 <p>This panel is a hand-drawn schematic, not generated from code.</p>
-<div class="figcaption">
-<p><strong>Fig. 6a.</strong> Schematic illustrating how protein
-signatures were defined for each GP. Holding the cell-loading matrix
-<strong>L</strong> fixed from the GP model, a protein factor matrix was
-estimated by EBMF from the paired CITE-seq protein measurements, Y ≈ LUᵀ
-(cells × proteins matrix), yielding a protein signature
-<strong>U</strong> (proteins × GPs matrix) for each GP. See <a
+<p>How the protein factor matrix is estimated is documented in <a
 href="Methods_FlashierFit_Citeseq.html">Methods: fitting CITE-seq
 protein programs with fixed scRNA loadings</a>.</p>
+<div class="figcaption">
+<p><strong>Fig. 6a.</strong> Schematic illustrating how protein
+signatures were defined for each GP. Holding the cell-loading matrix L
+fixed from the GP model, a protein factor matrix was estimated by EBMF
+from the paired CITE-seq protein measurements, Y ≈ LUᵀ (cells × proteins
+matrix), yielding a protein signature U (GPs × proteins matrix) for each
+GP.</p>
 </div>
 </div>
 <div id="fig6bc" class="section level2">
@@ -1618,15 +1656,10 @@ Ziang Zhang
 </div>
 <div class="figcaption">
 <p><strong>Fig. 6b, c.</strong> GPs associated with KLRG1 protein
-expression in CD4, Tregs and CD8. Within each lineage, cells are split
-KLRG1+ versus KLRG1- based on the threshold on the KLRG1 protein, and
-for every GP the effect size is the difference in its mean activity
-between KLRG1+ and KLRG1- cells. These effect-size versus effect-size
-plots compare CD8+ T cells (x-axis) with CD4+ T cells (b) or Treg cells
-(c) (y-axis); each point is a GP, the dashed red line marks equal effect
-(y = x), and the dashed blue lines mark zero. Selected GPs are labeled –
-orange for large, concordant effects in both lineages, and blue/pink for
-lineage-biased GPs.</p>
+expression in CD4, Tregs, and CD8. Effect-size versus effect-size plots,
+where each GP’s effect size is the difference in its mean activity
+between KLRG1+ and KLRG1- cells, comparing CD8+ T cells (x-axis) with
+CD4+ T cells (b) or Treg cells (c).</p>
 </div>
 </div>
 <div id="fig6d" class="section level2">
@@ -1637,20 +1670,8 @@ href="FigureS7.html#figs7ab">Extended Data Fig. 7a, b</a> show the same
 GPs in the same order from a different script:</p>
 <pre class="r"><code># The CD69-associated GP subset, shared by Figure 6d (the up/down gene heatmap)
 # and Figure S7a/S7b (the same GPs&#39; mean activity per tissue and per lineage).
-# Those three panels are in two different figures and so in two different
-# scripts, but they must show the same GPs on the same axis order -- hence one
-# definition here rather than a copy in each script.
-#
-# Curated list -- NOT a top-10 computed from the correlations below. These 10
-# are drawn from among the most strongly CD69-correlated GPs, but are not the
-# top 10 under any single ranking: 8 are positively correlated (ranks 1, 3, 4,
-# 5, 6, 10, 12, 14 of 200) and GP58/GP171 are the two most *negatively*
-# correlated GPs of all 200. By |rho| they sit at ranks 1, 2, 4, 5, 6, 8, 12,
-# 14, 17, 18, skipping GP1/GP47/GP100/GP25. Treat as a hand-picked input like
-# Thresholds_Selected_Proteins.csv and well_aligned_gps -- don&#39;t &quot;fix&quot; it into
-# a computed ranking, and keep the captions&#39; &quot;from among the most associated&quot;
-# wording in sync (analysis/Figure6.Rmd Fig. 6d, analysis/FigureS7.Rmd
-# Fig. S7a, b). script/verify_cd69_gp_ranking.R enforces all of this.
+# Defined once here because those panels live in two different scripts and must
+# show the same GPs in the same axis order. Curated, not a computed top-10.
 cd69_top_gps_subset &lt;- c(&quot;GP35&quot;, &quot;GP6&quot;, &quot;GP170&quot;, &quot;GP26&quot;, &quot;GP58&quot;, &quot;GP171&quot;, &quot;GP63&quot;, &quot;GP62&quot;, &quot;GP3&quot;, &quot;GP29&quot;)
 shared_cells_cd69 &lt;- intersect(rownames(L_pm_filtered), rownames(protein_mat_normalized_lognorm))
 cd69_expr_vec &lt;- protein_mat_normalized_lognorm[shared_cells_cd69, &quot;CD69&quot;]
@@ -1817,23 +1838,10 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 6d.</strong> GPs associated with CD69 protein
-expression. Heatmap of the genes most strongly <strong>up- and
-down-regulated</strong> across ten representative CD69-associated GPs,
-ordered by the Spearman correlation between GP activity and CD69
-expression, with the left strip indicating that correlation
-(blue-white-red). The genes shown are, per GP, its top five positively
-and top five negatively scoring genes, then restricted to those reaching
-|score| &gt;= 0.5 in at least one of the ten (green-white-purple). Mean
-activity of the same ten GPs across tissues and lineages is shown in <a
-href="FigureS7.html#figs7ab">Extended Data Fig. 7a, b</a>.</p>
-<p>The ten GPs are a <strong>hand-picked</strong> set drawn from among
-the GPs most strongly correlated – positively or negatively – with CD69,
-not a computed top-10: eight are positively correlated (ranks 1, 3, 4,
-5, 6, 10, 12 and 14 of 200) and GP58/GP171 are the two most
-<em>negatively</em> correlated GPs of all 200.
-<code>script/verify_cd69_gp_ranking.R</code> recomputes the correlation
-over all 200 GPs and fails if this wording and the code drift apart.</p>
+<p><strong>Fig. 6d.</strong> Heatmap of the top five most strongly up-
+and down-regulated gene scores for ten GPs correlated with CD69
+expression, with the left strip indicating the Spearman correlation
+between GP activity and CD69 expression.</p>
 </div>
 </div>
 <div id="fig6ej" class="section level2">
@@ -1845,9 +1853,7 @@ over all 200 GPs and fails if this wording and the code drift apart.</p>
 # citeseq_shared_setup.R above)
 # ============================================================
 # Panel lettering is carried by this named vector and the loop iterates over its
-# names, so a GP can never be drawn under another GP&#39;s letter. (An earlier
-# version kept the GP list and the letters in two separate vectors and assigned
-# the letters positionally, which silently permuted three of the panels.)
+# names, so a GP can never be drawn under another GP&#39;s letter.
 fig6_gating &lt;- c(&quot;GP171&quot; = &quot;6e&quot;, &quot;GP12&quot; = &quot;6f&quot;, &quot;GP80&quot; = &quot;6g&quot;, &quot;GP23&quot; = &quot;6h&quot;, &quot;GP77&quot; = &quot;6i&quot;, &quot;GP8&quot; = &quot;6j&quot;)
 for (gp in names(fig6_gating)) {
   k_name &lt;- paste0(&quot;K&quot;, sub(&quot;^GP&quot;, &quot;&quot;, gp))
@@ -2492,17 +2498,9 @@ Ziang Zhang
 </div>
 <div class="figcaption">
 <p><strong>Fig. 6e-j.</strong> Examples of gating strategies used to
-identify GP-active cells, for <strong>(e) GP171, (f) GP12, (g) GP80, (h)
-GP23, (i) GP77 and (j) GP8</strong>. For each GP, cells are shown twice
-on the same MDE embedding. Left, cells selected by the proposed protein
-gate, built from the GP’s curated marker signature (positive markers
-above, and negative markers below), with the gate size reported in the
-panel title as “Matched n”; right, an equally sized set of cells with
-the highest GP activity – exactly as many cells as the protein gate
-selected. Color indicates cell density (two-dimensional); all other
-cells are grey. Thymocytes, proliferating, and “miniverse” cells are
-excluded. Four further GPs are gated the same way in <a
-href="FigureS7.html#figs7cf">Extended Data Fig. 7c-f</a>.</p>
+identify GP-active cells. All-T MDE plots highlight cells selected by
+the proposed gating strategy (left) and the corresponding GP-active
+cells (right). Color indicates cell density.</p>
 </div>
 <br>
 <p>
