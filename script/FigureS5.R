@@ -4,8 +4,8 @@
 #   s5a  Row-centered mean GP activity across the 18 tissues, restricted to the
 #        31 GPs that are active across tissues. Blue-white-red scale.
 #   s5b  The same 31 GPs in the same row order, but across the 8 T cell
-#        lineages. Purple-white-green scale, so the two halves of the figure
-#        cannot be mistaken for each other.
+#        lineages. Green-white-purple scale (purple positive), so the two halves
+#        of the figure cannot be mistaken for each other.
 #
 # --- internal ---
 # New Extended Data Figure 5 on 2026-09-09. Panel s5a is the retired Figure S4's
@@ -158,7 +158,7 @@ render_centered_heatmap(
   level1_column_order,
   level1_color_limit,
   "the same 31 GPs, row order from (a)",
-  palette = heatmap_palettes$purple_green
+  palette = heatmap_palettes$green_purple
 )
 
 # ============================================================
@@ -189,7 +189,7 @@ write.csv(
     group_count = c(ncol(organ_centered), ncol(level1_centered)),
     selection = paste0("raw mean loading >= ", raw_mean_cutoff, " in >= 1 tissue"),
     centered_definition = "group mean minus mean across groups for each GP",
-    palette = c("blue-white-red", "purple-white-green"),
+    palette = c("blue-white-red", "green-white-purple"),
     color_min = c(-organ_color_limit, -level1_color_limit),
     color_mid = 0,
     color_max = c(organ_color_limit, level1_color_limit),

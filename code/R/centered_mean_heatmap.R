@@ -20,12 +20,14 @@ suppressPackageStartupMessages({
   library(grid)
 })
 
-# The two diverging ramps the figures use. (a)-style panels keep the published
-# blue-white-red; the lineage panel of Figure S5 uses purple-white-green so the
-# two halves of one figure cannot be mistaken for each other.
+# The two diverging ramps the figures use, each written low -> mid -> high, so
+# the first colour is the negative end. (a)-style panels keep the published
+# blue-white-red; the lineage panel of Figure S5 uses green-white-purple so the
+# two halves of one figure cannot be mistaken for each other. Purple is the
+# positive end there by Ziang's call on 2026-09-09.
 heatmap_palettes <- list(
   blue_red = c("#2166AC", "#FFFFFF", "#B2182B"),
-  purple_green = c("#762A83", "#FFFFFF", "#1B7837")
+  green_purple = c("#1B7837", "#FFFFFF", "#762A83")
 )
 
 # Healthy non-thymocyte reference: the cells every panel here is computed on.

@@ -63,7 +63,7 @@ knitr::include_graphics("assets/FigureS5/s5b.png")
 ::: {.figcaption}
 **Extended Data Fig. 5b.** The same 31 GPs across the 8 T cell lineages, in the
 row order of (a). Mean GP activity computed in samples at baseline. Note the
-different color scale: purple-green rather than blue-red, and -0.1 to 0.1
+different color scale: green-purple rather than blue-red, and -0.1 to 0.1
 rather than -0.2 to 0.2, since spreading a program over 8 lineages instead of
 18 tissues gives correspondingly smaller deviations.
 :::
