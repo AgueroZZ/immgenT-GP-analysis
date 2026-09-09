@@ -173,10 +173,38 @@ p_1C <- ggraph(g, layout = "manual", x = lay[nm, "x"], y = lay[nm, "y"]) +
 ggsave(filename = paste0(figure_path, "1C.pdf"), plot = p_1C, width = 20, height = 20)
 
 # ============================================================
-# 1D: giant loading heatmap (200 GP loadings x a stratified cell sample; rows =
-# cells by lineage x organ, columns = GPs clustered). The same GPs highlighted
-# in the 1C network are marked here by a top color bar, a colored/bold column
-# label, and a box around each GP column.
+# 1D: giant loading heatmap. Rows are the 200 GPs (clustered); columns are a
+# stratified cell sample blocked lineage > annotation_level2_group > level2.
+# The GPs highlighted in the 1C network are marked here by a left colour bar,
+# a coloured/bold row label, and a box around each highlighted GP row.
+#
+# Two things to know about the cell set:
+#   * Cells whose annotation_level2_group is "miniverse" are excluded. Those are
+#     exactly the seven ".wM" level2 clusters (CD8.wM, CD4.wM, Treg.wM, gdT.wM,
+#     CD8aa.wM, Tz.wM, DN.wM), so 95 level2 clusters become 88. The exclusion is
+#     applied BEFORE sampling and before the anchor-cell search, so every GP
+#     still contributes K_ANCHOR top-loading cells that survive into the plot.
+#   * Cells are stratified by level2: every cluster with at least MIN_CELLS
+#     cells is sampled at N_SAMPLE.
+# --- internal ---
+# Rebuilt 2026-09-09. The previous version of this panel put the GPs on columns
+# and stratified cells by organ_simplified (top 5 organs per lineage); it had no
+# level2_group bar and did not exclude miniverse. The internal experiment behind
+# the change -- colour-scale variants, and a reconciliation of every level2
+# cluster in the atlas against what this panel draws -- is in gitignored
+# experiments/fig1d_gp_rows_by_level2/.
+#
+# The Fig. 1d caption on analysis/Figure1.Rmd is an interim stand-in: the
+# published legend says "from different organs and lineages", which this panel
+# no longer shows, and Ziang is sending the replacement wording separately.
+# --- end internal ---
+#
+# Column order: within each lineage the groups are sorted by the first
+# (alphabetically lowest) level2 cluster they contain, and level2 orders cells
+# inside each group. level2 is therefore alphabetical within a group but not
+# across a whole lineage -- each lineage's ".P" (proliferating) cluster is the
+# single exception, landing at the end of its lineage rather than mid-alphabet.
+# LEVEL2_GROUP_ORDER below fixes the legend order only, not the block order.
 # ============================================================
 suppressPackageStartupMessages({ library(grid) })
 GP_HIGHLIGHTS <- c(
@@ -184,77 +212,109 @@ GP_HIGHLIGHTS <- c(
   GP1  = "cyan2",  GP56 = "red2",    GP161 = "brown", GP6  = "green2",
   GP7  = "green3", GP196 = "yellow3")
 
-set.seed(6173)
-MIN_CELLS <- 20; N_SAMPLE <- 80; TOP_ORGANS <- 5; K_ANCHOR <- 5
-level1_order <- c("CD8", "CD4", "Treg", "gdT", "CD8aa", "Tz", "DN")
-organs_all <- as.character(unique(seurat_meta_filtered$organ_simplified))
-ln_match <- organs_all[grepl("^LN$|lymph", organs_all, ignore.case = TRUE)]
-spleen_match <- organs_all[grepl("spleen", organs_all, ignore.case = TRUE)]
-organ_order <- c(spleen_match, ln_match, sort(setdiff(organs_all, c(ln_match, spleen_match))))
+# No annotation_level2_group order or palette exists in ZemmourLib, so both are
+# defined here. The colours are a deliberately different family from the level1
+# primaries so the two annotation bars cannot be confused, and none is
+# near-white (against the white heatmap body a pale category would read as
+# missing data rather than as a level).
+LEVEL2_GROUP_ORDER  <- c("resting", "activated", "proliferating", "miniverse", "other")
+LEVEL2_GROUP_COLORS <- c(resting       = "#80cdc1", activated = "#b2182b",
+                         proliferating = "#542788", miniverse = "#8c510a",
+                         other         = "#bdbdbd")
+EXCLUDE_LEVEL2_GROUPS <- c("miniverse")
 
-top_organ_combos <- seurat_meta_filtered |>
-  dplyr::filter(annotation_level1 %in% level1_order) |>
-  dplyr::count(annotation_level1, organ_simplified) |>
-  dplyr::group_by(annotation_level1) |>
-  dplyr::slice_max(n, n = TOP_ORGANS, with_ties = FALSE) |>
-  dplyr::ungroup() |> dplyr::select(annotation_level1, organ_simplified)
-sampled_random <- seurat_meta_filtered |>
-  dplyr::filter(annotation_level1 %in% level1_order) |>
-  dplyr::inner_join(top_organ_combos, by = c("annotation_level1", "organ_simplified")) |>
-  dplyr::group_by(annotation_level1, organ_simplified) |>
+set.seed(6173)
+MIN_CELLS <- 20; N_SAMPLE <- 80; K_ANCHOR <- 5
+level1_order <- c("CD8", "CD4", "Treg", "gdT", "CD8aa", "Tz", "DN")
+
+meta_1d <- seurat_meta_filtered |>
+  dplyr::filter(annotation_level1 %in% level1_order,
+                !is.na(annotation_level2),
+                !annotation_level2_group %in% EXCLUDE_LEVEL2_GROUPS)
+stopifnot(nrow(meta_1d) > 0)
+L_1d <- L_pm_filtered[meta_1d$cellID, ]
+
+# level2 blocks follow the level1 order, alphabetised within each lineage.
+level2_order <- meta_1d |>
+  dplyr::distinct(annotation_level1, annotation_level2) |>
+  dplyr::arrange(factor(annotation_level1, levels = level1_order),
+                 as.character(annotation_level2)) |>
+  dplyr::pull(annotation_level2) |> as.character()
+
+sampled_random <- meta_1d |>
+  dplyr::group_by(annotation_level2) |>
   dplyr::filter(dplyr::n() >= MIN_CELLS) |>
   dplyr::slice_sample(n = N_SAMPLE) |> dplyr::ungroup()
-anchor_cellids <- apply(L_pm_filtered, 2, function(x)
-  rownames(L_pm_filtered)[order(x, decreasing = TRUE)[seq_len(K_ANCHOR)]]) |> as.vector() |> unique()
-anchor_meta <- seurat_meta_filtered |>
-  dplyr::filter(cellID %in% anchor_cellids, annotation_level1 %in% level1_order) |>
-  dplyr::inner_join(top_organ_combos, by = c("annotation_level1", "organ_simplified"))
+anchor_cellids <- apply(L_1d, 2, function(x)
+  rownames(L_1d)[order(x, decreasing = TRUE)[seq_len(K_ANCHOR)]]) |>
+  as.vector() |> unique()
+anchor_meta <- meta_1d |> dplyr::filter(cellID %in% anchor_cellids)
+
 all_meta <- dplyr::bind_rows(sampled_random, anchor_meta) |>
   dplyr::distinct(cellID, .keep_all = TRUE) |>
-  dplyr::arrange(factor(annotation_level1, levels = level1_order),
-                 factor(organ_simplified, levels = organ_order))
+  dplyr::filter(as.character(annotation_level2) %in% level2_order)
 
-L_sampled <- L_pm_filtered[all_meta$cellID, ]
+# Sort keys: lineage, then group by its first level2 cluster, then level2.
+l2g     <- as.character(all_meta$annotation_level2_group)
+l1_rank <- match(as.character(all_meta$annotation_level1), level1_order)
+l2_rank <- match(as.character(all_meta$annotation_level2), level2_order)
+stopifnot(!anyNA(l1_rank), !anyNA(l2_rank),
+          all(l2g %in% LEVEL2_GROUP_ORDER))
+blk      <- paste(l1_rank, l2g, sep = "|")
+grp_rank <- tapply(l2_rank, blk, min)[blk]
+all_meta <- all_meta[order(l1_rank, grp_rank, l2_rank), ]
+l2g <- as.character(all_meta$annotation_level2_group)
+
+level1_present       <- intersect(level1_order, unique(as.character(all_meta$annotation_level1)))
+level2_present       <- intersect(level2_order, unique(as.character(all_meta$annotation_level2)))
+level2_group_present <- intersect(LEVEL2_GROUP_ORDER, unique(l2g))
+# Each lineage x group pair must be one contiguous block on the axis.
+stopifnot(!any(duplicated(rle(paste(l1_rank[order(l1_rank, grp_rank, l2_rank)], l2g))$values)))
+
+L_sampled <- L_1d[all_meta$cellID, ]
 clip_val <- quantile(L_sampled, 0.99)
 L_display <- pmin(L_sampled, clip_val)
 colnames(L_display) <- gsub("^K", "GP", colnames(L_display))
+mat_1D <- t(L_display)   # rows = GPs, columns = cells
 col_fun <- colorRamp2(c(0, clip_val / 2, clip_val), c("white", "#4393c3", "#08306b"))
-level1_present <- intersect(level1_order, as.character(unique(all_meta$annotation_level1)))
-organ_present <- intersect(organ_order, as.character(unique(all_meta$organ_simplified)))
-row_ann <- rowAnnotation(
-  Cell_Type = factor(as.character(all_meta$annotation_level1), levels = level1_present),
-  Organ = factor(as.character(all_meta$organ_simplified), levels = organ_present),
-  col = list(Cell_Type = ZemmourLib::immgent_colors$level1[level1_present],
-             Organ = ZemmourLib::immgent_colors$organ_simplified[organ_present]),
-  annotation_name_gp = gpar(fontsize = 8),
-  annotation_legend_param = list(Cell_Type = list(title = "Cell Type"), Organ = list(title = "Organ")))
 
-gpn      <- colnames(L_display)
+col_ann <- HeatmapAnnotation(
+  Cell_Type    = factor(as.character(all_meta$annotation_level1), levels = level1_present),
+  Level2_Group = factor(l2g, levels = level2_group_present),
+  col = list(Cell_Type    = ZemmourLib::immgent_colors$level1[level1_present],
+             Level2_Group = LEVEL2_GROUP_COLORS[level2_group_present]),
+  simple_anno_size = unit(4, "mm"), annotation_name_gp = gpar(fontsize = 8),
+  annotation_legend_param = list(Cell_Type    = list(title = "Cell Type"),
+                                 Level2_Group = list(title = "Level2 Group")))
+
+gpn      <- rownames(mat_1D)
 hl_val   <- ifelse(gpn %in% names(GP_HIGHLIGHTS), gpn, NA_character_)
 lab_col  <- ifelse(gpn %in% names(GP_HIGHLIGHTS), GP_HIGHLIGHTS[gpn], "grey55")
 lab_fs   <- ifelse(gpn %in% names(GP_HIGHLIGHTS), 9, 4)
 lab_face <- ifelse(gpn %in% names(GP_HIGHLIGHTS), 2, 1)
-# Only the highlighted GP columns keep an index label (background GP indices
+# Only the highlighted GP rows keep an index label (background GP indices
 # dropped), and the highlighted-GP legend is hidden.
-top_ann <- HeatmapAnnotation(
+row_ann <- rowAnnotation(
   `Highlighted GP` = hl_val, col = list(`Highlighted GP` = GP_HIGHLIGHTS),
-  na_col = "white", simple_anno_size = unit(4, "mm"), annotation_name_gp = gpar(fontsize = 8),
-  show_legend = FALSE)
+  na_col = "white", simple_anno_size = unit(4, "mm"),
+  annotation_name_gp = gpar(fontsize = 8), show_legend = FALSE)
 ht_1D <- Heatmap(
-  L_display, name = "Loading", col = col_fun, left_annotation = row_ann, top_annotation = top_ann,
-  cluster_rows = FALSE, cluster_columns = TRUE,
-  clustering_distance_columns = "euclidean", clustering_method_columns = "ward.D2",
-  show_row_names = FALSE,
-  column_labels = ifelse(gpn %in% names(GP_HIGHLIGHTS), gpn, ""),
-  column_names_gp = gpar(col = lab_col, fontsize = lab_fs, fontface = lab_face),
-  column_title = "Gene Programs (GPs)", column_title_gp = gpar(fontsize = 11, fontface = "bold"),
+  mat_1D, name = "Loading", col = col_fun, left_annotation = row_ann, top_annotation = col_ann,
+  cluster_rows = TRUE, cluster_columns = FALSE,
+  clustering_distance_rows = "euclidean", clustering_method_rows = "ward.D2",
+  show_column_names = FALSE,
+  row_labels = ifelse(gpn %in% names(GP_HIGHLIGHTS), gpn, ""),
+  row_names_gp = gpar(col = lab_col, fontsize = lab_fs, fontface = lab_face),
+  row_title = "Gene Programs (GPs)", row_title_gp = gpar(fontsize = 11, fontface = "bold"),
   use_raster = TRUE, raster_quality = 3, border = FALSE,
   heatmap_legend_param = list(title = "Loading", direction = "vertical"))
-pdf(paste0(figure_path, "1D.pdf"), width = 15, height = 20, useDingbats = FALSE)
+pdf(paste0(figure_path, "1D.pdf"), width = 20, height = 15, useDingbats = FALSE)
 ht_drawn <- draw(ht_1D, merge_legend = TRUE)
-co <- column_order(ht_drawn); disp <- colnames(L_display)[co]; n_col_ht <- length(co)
+ro <- row_order(ht_drawn); disp <- rownames(mat_1D)[ro]; n_row_ht <- length(ro)
 decorate_heatmap_body("Loading", {
-  for (gp in names(GP_HIGHLIGHTS)) { j <- which(disp == gp)
-    if (length(j)) grid.rect(x = (j - 0.5) / n_col_ht, y = 0.5, width = 1.4 / n_col_ht, height = 1,
+  for (gp in names(GP_HIGHLIGHTS)) { i <- which(disp == gp)
+    if (length(i)) grid.rect(x = 0.5, y = 1 - (i - 0.5) / n_row_ht, width = 1, height = 1.4 / n_row_ht,
                              gp = gpar(col = GP_HIGHLIGHTS[gp], fill = NA, lwd = 2.5)) } })
 dev.off()
+cat(sprintf("1D: %d cells, %d level2 clusters, %d groups, clip_val=%.4f\n",
+            nrow(all_meta), length(level2_present), length(level2_group_present), clip_val))

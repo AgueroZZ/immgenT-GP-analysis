@@ -82,11 +82,11 @@ most strongly regulated genes. Grey nodes are GPs, and tan nodes are genes.
 ```{r fig1d-code, code=code_for("../script/Figure1.R", "1D"), eval=FALSE}
 ```
 
-```{r fig1d-img, echo=FALSE, out.width="70%"}
+```{r fig1d-img, echo=FALSE, out.width="100%"}
 knitr::include_graphics("assets/Figure1/1D.png")
 ```
 
 ::: {.figcaption}
 **Fig. 1d.** Heatmap showing the activity of the 200 GPs across T cells from
-different organs and lineages.
+different lineages and activation states (excluding cells in "miniverse").
 :::
