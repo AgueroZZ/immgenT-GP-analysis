@@ -8,10 +8,12 @@
 # New Extended Data Figure 3 on 2026-09-09. The panel itself is not new: it is
 # the retired Figure S4's panel s4b, unchanged, promoted to a figure of its own
 # when the two-panel "GP activity across tissues and T cell clusters" figure was
-# split up -- the cluster half here, and a 31-GP tissue half as Figure S5. The
-# PDF was carried over byte-identically rather than re-rendered; this script is
-# the old FigureS4.R with its tissue half removed and its shared helpers moved
-# into code/R/centered_mean_heatmap.R.
+# split up -- the cluster half here, and a tissue half that briefly shipped as
+# Figure S5 before being pulled back out of Extended Data the same day (it is
+# now the internal draft in experiments/fig_n5/). The PDF was carried over
+# byte-identically rather than re-rendered; this script is the old FigureS4.R
+# with its tissue half removed and its shared helpers moved into
+# code/R/centered_mean_heatmap.R.
 # --- end internal ---
 #
 # For each GP, its mean loading across clusters is subtracted from every cluster

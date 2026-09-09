@@ -45,7 +45,7 @@ check(length(subset_line) == 1,
 published <- eval(parse(text = sub("^cd69_top_gps_subset <- ", "", subset_line[1])))
 
 # Single source of truth: no figure script may keep its own copy of the list.
-for (f in c("script/Figure6.R", "script/FigureS8.R")) {
+for (f in c("script/Figure6.R", "script/FigureS7.R")) {
   copies <- grep("cd69_top_gps_subset <-", readLines(f, warn = FALSE), value = TRUE)
   check(length(copies) == 0,
         sprintf("%s re-assigns cd69_top_gps_subset -- it must come from %s only", f, setup_file))
@@ -123,8 +123,8 @@ check(grepl(paste0("skipping ", paste(setdiff(true_top10_abs, published), collap
 cat("\n=== 6. the old overclaiming wording is gone ===\n")
 # Both captions describe the subset now: Fig. 6d (the gene heatmap) and
 # Fig. S7a, b (the same GPs per tissue and per lineage).
-for (f in c("analysis/Figure6.Rmd", "analysis/FigureS8.Rmd", setup_file,
-            "script/Figure6.R", "script/FigureS8.R")) {
+for (f in c("analysis/Figure6.Rmd", "analysis/FigureS7.Rmd", setup_file,
+            "script/Figure6.R", "script/FigureS7.R")) {
   hits <- grep("(ten|10) GPs most associated", readLines(f, warn = FALSE), value = TRUE)
   cat(sprintf("%-34s %s\n", f, if (length(hits)) paste("STILL PRESENT:", hits[1]) else "clean"))
   check(length(hits) == 0, sprintf("%s still claims these are the ten GPs most associated with CD69", f))

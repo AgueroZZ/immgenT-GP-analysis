@@ -19,10 +19,8 @@ each GP, its mean loading across clusters is subtracted from every cluster
 mean, so a row says where a program is more or less active than its own
 average rather than how large its loading is. The centered color scale is
 fixed at -0.2 to 0.2; values outside this range are saturated at the endpoint
-colors. It is the cluster counterpart of
-[Extended Data Figure 5](FigureS5.html), which shows the tissue-associated GPs
-across tissues and lineages, and the mean-loading counterpart of
-[Extended Data Figure 6](FigureS6.html), which resolves the same clusters cell
+colors. It is the mean-loading counterpart of
+[Extended Data Figure 5](FigureS5.html), which resolves the same clusters cell
 by cell.
 
 ## Setup, centering, and ordering

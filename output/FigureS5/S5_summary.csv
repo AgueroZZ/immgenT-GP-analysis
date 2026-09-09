@@ -1,3 +1,0 @@
-panel,grouping,view,gp_count,group_count,selection,centered_definition,palette,color_min,color_mid,color_max,observed_min,observed_max,frac_saturated
-s5a,organ_simplified,row-centered mean loading of the 32 tissue-associated GPs,32,18,raw mean loading >= 0.1 in >= 1 tissue OR masked tissue AUC > 0.9,group mean minus mean across groups for each GP,blue-white-red,-0.2,0,0.2,-0.172020728605074,0.328021877246472,0.00868055555555556
-s5b,annotation_level1,row-centered mean loading of the 32 tissue-associated GPs,32,8,raw mean loading >= 0.1 in >= 1 tissue OR masked tissue AUC > 0.9,group mean minus mean across groups for each GP,green-white-purple,-0.1,0,0.1,-0.0872483925909589,0.243878525616068,0.03515625

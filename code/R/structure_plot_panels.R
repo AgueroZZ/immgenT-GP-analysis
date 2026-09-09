@@ -1,11 +1,11 @@
 # Shared definitions for the per-lineage GP structure plots.
 #
-# Extended Data Figure 6 is one stacked figure: seven rows, one structure plot
+# Extended Data Figure 5 is one stacked figure: seven rows, one structure plot
 # per T cell lineage, over the GPs that reach AUC > 0.9 for at least one of that
 # lineage's sub-lineage clusters. Two scripts need the same row map, the same
 # selection rule and the same palette:
 #
-#   script/FigureS6.R                    draws the seven rows, stacks them, and
+#   script/FigureS5.R                    draws the seven rows, stacks them, and
 #                                        records what it drew
 #   script/verify_structure_plot_gps.R   re-derives the GP sets from the
 #                                        published Extended Data Table 6 and

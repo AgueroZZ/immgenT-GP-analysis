@@ -1,5 +1,5 @@
 ---
-title: "Extended Data Figure 5: Tissue-associated GPs across tissues and lineages"
+title: "Extended Data Figure 5: Composition of GP activity in T cell clusters"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -10,82 +10,61 @@ editor_options:
 source("../code/R/doc_code.R")
 ```
 
-Both panels are produced by
-[`script/FigureS5.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS5.R).
-They show the same 32 GPs -- every program the manuscript calls
-tissue-associated -- first across
-the 18 tissues and then across the 8 T cell lineages, so that a program's
-tissue distribution can be read against its lineage distribution on the same
-rows. The analysis uses healthy non-thymocyte cells (`condition_broad ==
-"healthy"` and `annotation_level1 != "thymocyte"`). For each GP, its mean
-loading across the groups shown is subtracted from every group mean, so a row
-says where a program is more or less active than its own average rather than
-how large its loading is. It is the tissue counterpart of
-[Extended Data Figure 3](FigureS3.html), which shows all 200 GPs across the
-level-2 clusters, and it puts the tissue-associated programs behind
-[Figure 5](Figure5.html)'s AUC analysis on a single pair of axes.
+This figure is one stacked panel -- seven wide rows, one per T cell lineage --
+produced by
+[`script/FigureS5.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS5.R),
+which assembles the rows itself, so the figure on disk is always the one the
+script last drew. It is the per-cluster, all-GP counterpart of
+[Fig. 3b](Figure3.html#fig3b), which shows six hand-picked lineage-defining GPs
+grouped by lineage: here every GP that marks a sub-lineage cluster is shown, and
+cells are grouped by cluster within each lineage. The GPs are selected from the
+cluster AUCs published as [Extended Data Table 6](ExtendedDataTable6.html), and
+[`script/verify_structure_plot_gps.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/verify_structure_plot_gps.R)
+re-derives every row's GP set from that published table, failing if it disagrees
+with the figure or with the caption below. The code is shown for reference (not
+re-executed on this page, since it loads the full cell-by-GP loading matrix);
+the image is its pre-rendered output.
 
-## Setup and the 32 tissue-associated GPs
+## Setup
 
-The rows are the union of the two criteria by which a GP is called
-tissue-associated:
-
-+ **activity** -- its *raw* (uncentered) mean loading reaches 0.1 in at least
-  one of the 18 tissues. 31 of the 200 GPs pass. This is a threshold on average
-  activity, so a program carried by a small number of cells fails it.
-+ **discrimination** -- its one-vs-rest tissue AUC exceeds 0.9, under the same
-  positivity mask [Figure 5](Figure5.html) uses (mean loading in the tissue
-  above the GP's overall mean) and with tissues under 100 cells dropped. Seven
-  GPs pass; these are the seven [Figure 5](Figure5.html) highlights throughout.
-
-Six GPs satisfy both, so 32 are shown. GP37 is the only one selected by
-discrimination alone: its mammary-gland AUC is 0.9918, but it is active in 2.5%
-of mammary gland cells, which dilutes its mean loading there to 0.011 -- so its
-row is near-white in both panels by construction. The AUC criterion is
-re-derived here and checked against the GP list in `script/Figure5.R`, and the
-union is checked against a literal list, so a change in the loadings, the AUCs,
-the cell filter or either cutoff fails the run rather than quietly redrawing a
-different figure:
-
-```{r figs5-setup, code=code_for("../script/FigureS5.R", c("^", "Setup:", "GP selection", "Ordering")), eval=FALSE}
+```{r figs5-setup, code=code_for("../script/FigureS5.R", "doc:setup"), eval=FALSE}
 ```
 
-## (a) Tissue mean loading {#figs5a}
+## Row definitions and GP selection {#figs5-rows}
 
-```{r figs5a-code, code=code_for("../script/FigureS5.R", "s5a"), eval=FALSE}
+The row map, the AUC threshold, the display filters and the assembled geometry
+live in `code/R/structure_plot_panels.R`, which the verification script reads as
+well, so the figure and the check cannot disagree about what is shown:
+
+```{r figs5-rows-code, code=code_for("../code/R/structure_plot_panels.R", "doc:panels"), eval=FALSE}
 ```
 
-```{r figs5a-img, echo=FALSE, out.width="100%"}
-knitr::include_graphics("assets/FigureS5/s5a.png")
+```{r figs5-selection-code, code=code_for("../script/FigureS5.R", "GP selection"), eval=FALSE}
+```
+
+## (a-g) Cluster-level GP membership by lineage {#figs5}
+
+```{r figs5-code, code=code_for("../script/FigureS5.R", "s5:"), eval=FALSE}
+```
+
+```{r figs5-img, echo=FALSE, out.width="100%"}
+knitr::include_graphics("assets/FigureS5/s5.png")
 ```
 
 ::: {.figcaption}
-**Extended Data Fig. 5a.** Row-centered mean GP activity across 18 tissues,
-for the 32 tissue-associated GPs. Mean GP activity computed in samples at
-baseline.
+**Extended Data Fig. 5a-g.** Structure plots showing single-cell GP activity
+across major clusters of baseline non-thymocyte (a) CD8, (b) CD4, (c) Treg,
+(d) gdT, (e) CD8aa, (f) Tz, and (g) DN cells, focusing on GPs with
+cluster-specific AUC > 0.9.
 :::
 
-## (b) Lineage mean loading {#figs5b}
+## Record of what the rows drew {#figs5-record}
 
-```{r figs5b-code, code=code_for("../script/FigureS5.R", "s5b"), eval=FALSE}
-```
+The GP sets, the palette, and the clusters each row drew or omitted are written
+out alongside the figure, which is what
+[`script/verify_structure_plot_gps.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/verify_structure_plot_gps.R)
+compares against [Extended Data Table 6](ExtendedDataTable6.html) and against
+the caption above:
 
-```{r figs5b-img, echo=FALSE, out.width="70%"}
-knitr::include_graphics("assets/FigureS5/s5b.png")
-```
-
-::: {.figcaption}
-**Extended Data Fig. 5b.** The same 32 GPs across the 8 T cell lineages, in the
-row order of (a). Mean GP activity computed in samples at baseline. Note the
-different color scale: green-purple rather than blue-red, and -0.1 to 0.1
-rather than -0.2 to 0.2, since spreading a program over 8 lineages instead of
-18 tissues gives correspondingly smaller deviations.
-:::
-
-## What the panels drew
-
-The 32 GPs, which criterion selected each, their dominant tissue and lineage,
-and their row position are written out alongside the figure:
-
-```{r figs5-record-code, code=code_for("../script/FigureS5.R", "What the panels drew"), eval=FALSE}
+```{r figs5-record-code, code=code_for("../script/FigureS5.R", "What each panel drew"), eval=FALSE}
 ```
