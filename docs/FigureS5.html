@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0e84840937f3e5cd6e9797a08404989152da6628targetblank0e84840a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree5be33df67b47ca1fe0df9142274bf211b33daee1targetblank5be33dfa">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0e84840937f3e5cd6e9797a08404989152da6628" target="_blank">0e84840</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/5be33df67b47ca1fe0df9142274bf211b33daee1" target="_blank">5be33df</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0e84840937f3e5cd6e9797a08404989152da6628targetblank0e84840a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree5be33df67b47ca1fe0df9142274bf211b33daee1targetblank5be33dfa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0e84840937f3e5cd6e9797a08404989152da6628" target="_blank">0e84840</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/5be33df67b47ca1fe0df9142274bf211b33daee1" target="_blank">5be33df</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -632,6 +632,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/5be33df67b47ca1fe0df9142274bf211b33daee1/analysis/FigureS5.Rmd" target="_blank">5be33df</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-09
+</td>
+<td>
+Extended Data Figure 5b: purple is the positive end, green the negative
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/a7a481feaa81a930533e380487fd08ccea0b0d0e/docs/FigureS5.html" target="_blank">a7a481f</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-09
+</td>
+<td>
+Build site: the rebuilt Figure 1d and the Extended Data renumbering
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1251,8 +1285,8 @@ quietly redrawing a different figure:</p>
 #   s5a  Row-centered mean GP activity across the 18 tissues, restricted to the
 #        31 GPs that are active across tissues. Blue-white-red scale.
 #   s5b  The same 31 GPs in the same row order, but across the 8 T cell
-#        lineages. Purple-white-green scale, so the two halves of the figure
-#        cannot be mistaken for each other.
+#        lineages. Green-white-purple scale (purple positive), so the two halves
+#        of the figure cannot be mistaken for each other.
 #
 #
 # &quot;Active across tissues&quot; is the selection the manuscript&#39;s &quot;31 programs active
@@ -1446,7 +1480,7 @@ render_centered_heatmap(
   level1_column_order,
   level1_color_limit,
   &quot;the same 31 GPs, row order from (a)&quot;,
-  palette = heatmap_palettes$purple_green
+  palette = heatmap_palettes$green_purple
 )</code></pre>
 <p><img src="assets/FigureS5/s5b.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>
@@ -1473,6 +1507,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/5be33df67b47ca1fe0df9142274bf211b33daee1/docs/assets/FigureS5/s5b.png" target="_blank">5be33df</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-09
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/c233cd8210f5f908358ca6f17246829fcd369968/docs/assets/FigureS5/s5b.png" target="_blank">c233cd8</a>
 </td>
 <td>
@@ -1489,7 +1534,7 @@ Ziang Zhang
 <div class="figcaption">
 <p><strong>Extended Data Fig. 5b.</strong> The same 31 GPs across the 8
 T cell lineages, in the row order of (a). Mean GP activity computed in
-samples at baseline. Note the different color scale: purple-green rather
+samples at baseline. Note the different color scale: green-purple rather
 than blue-red, and -0.1 to 0.1 rather than -0.2 to 0.2, since spreading
 a program over 8 lineages instead of 18 tissues gives correspondingly
 smaller deviations.</p>
@@ -1527,7 +1572,7 @@ write.csv(
     group_count = c(ncol(organ_centered), ncol(level1_centered)),
     selection = paste0(&quot;raw mean loading &gt;= &quot;, raw_mean_cutoff, &quot; in &gt;= 1 tissue&quot;),
     centered_definition = &quot;group mean minus mean across groups for each GP&quot;,
-    palette = c(&quot;blue-white-red&quot;, &quot;purple-white-green&quot;),
+    palette = c(&quot;blue-white-red&quot;, &quot;green-white-purple&quot;),
     color_min = c(-organ_color_limit, -level1_color_limit),
     color_mid = 0,
     color_max = c(organ_color_limit, level1_color_limit),
