@@ -12,7 +12,8 @@ source("../code/R/doc_code.R")
 
 Both panels are produced by
 [`script/FigureS5.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS5.R).
-They show the same 31 GPs -- the programs active across tissues -- first across
+They show the same 32 GPs -- every program the manuscript calls
+tissue-associated -- first across
 the 18 tissues and then across the 8 T cell lineages, so that a program's
 tissue distribution can be read against its lineage distribution on the same
 rows. The analysis uses healthy non-thymocyte cells (`condition_broad ==
@@ -21,17 +22,30 @@ loading across the groups shown is subtracted from every group mean, so a row
 says where a program is more or less active than its own average rather than
 how large its loading is. It is the tissue counterpart of
 [Extended Data Figure 3](FigureS3.html), which shows all 200 GPs across the
-level-2 clusters, and it puts the 31 programs behind
+level-2 clusters, and it puts the tissue-associated programs behind
 [Figure 5](Figure5.html)'s AUC analysis on a single pair of axes.
 
-## Setup and the 31 tissue-active GPs
+## Setup and the 32 tissue-associated GPs
 
-A GP is taken to be active across tissues when its *raw* (uncentered) mean
-loading reaches 0.1 in at least one of the 18 tissues; 31 of the 200 GPs pass.
-This is a threshold on activity, not on differential activity -- the panels
-then show how that activity is distributed. The expected set is written out in
-the script, so a change in the loadings, the cell filter or the cutoff fails
-the run rather than quietly redrawing a different figure:
+The rows are the union of the two criteria by which a GP is called
+tissue-associated:
+
++ **activity** -- its *raw* (uncentered) mean loading reaches 0.1 in at least
+  one of the 18 tissues. 31 of the 200 GPs pass. This is a threshold on average
+  activity, so a program carried by a small number of cells fails it.
++ **discrimination** -- its one-vs-rest tissue AUC exceeds 0.9, under the same
+  positivity mask [Figure 5](Figure5.html) uses (mean loading in the tissue
+  above the GP's overall mean) and with tissues under 100 cells dropped. Seven
+  GPs pass; these are the seven [Figure 5](Figure5.html) highlights throughout.
+
+Six GPs satisfy both, so 32 are shown. GP37 is the only one selected by
+discrimination alone: its mammary-gland AUC is 0.9918, but it is active in 2.5%
+of mammary gland cells, which dilutes its mean loading there to 0.011 -- so its
+row is near-white in both panels by construction. The AUC criterion is
+re-derived here and checked against the GP list in `script/Figure5.R`, and the
+union is checked against a literal list, so a change in the loadings, the AUCs,
+the cell filter or either cutoff fails the run rather than quietly redrawing a
+different figure:
 
 ```{r figs5-setup, code=code_for("../script/FigureS5.R", c("^", "Setup:", "GP selection", "Ordering")), eval=FALSE}
 ```
@@ -47,7 +61,7 @@ knitr::include_graphics("assets/FigureS5/s5a.png")
 
 ::: {.figcaption}
 **Extended Data Fig. 5a.** Row-centered mean GP activity across 18 tissues,
-for the 31 GPs active across tissues. Mean GP activity computed in samples at
+for the 32 tissue-associated GPs. Mean GP activity computed in samples at
 baseline.
 :::
 
@@ -61,7 +75,7 @@ knitr::include_graphics("assets/FigureS5/s5b.png")
 ```
 
 ::: {.figcaption}
-**Extended Data Fig. 5b.** The same 31 GPs across the 8 T cell lineages, in the
+**Extended Data Fig. 5b.** The same 32 GPs across the 8 T cell lineages, in the
 row order of (a). Mean GP activity computed in samples at baseline. Note the
 different color scale: green-purple rather than blue-red, and -0.1 to 0.1
 rather than -0.2 to 0.2, since spreading a program over 8 lineages instead of
@@ -70,8 +84,8 @@ rather than -0.2 to 0.2, since spreading a program over 8 lineages instead of
 
 ## What the panels drew
 
-The 31 GPs, their dominant tissue and lineage, and their row position are
-written out alongside the figure:
+The 32 GPs, which criterion selected each, their dominant tissue and lineage,
+and their row position are written out alongside the figure:
 
 ```{r figs5-record-code, code=code_for("../script/FigureS5.R", "What the panels drew"), eval=FALSE}
 ```
