@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree5be33df67b47ca1fe0df9142274bf211b33daee1targetblank5be33dfa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree9fab2f6dc4cd1b9d75b7eec4a0823cdeddad7824targetblank9fab2f6a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/5be33df67b47ca1fe0df9142274bf211b33daee1" target="_blank">5be33df</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/9fab2f6dc4cd1b9d75b7eec4a0823cdeddad7824" target="_blank">9fab2f6</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree5be33df67b47ca1fe0df9142274bf211b33daee1targetblank5be33dfa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree9fab2f6dc4cd1b9d75b7eec4a0823cdeddad7824targetblank9fab2f6a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/5be33df67b47ca1fe0df9142274bf211b33daee1" target="_blank">5be33df</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/9fab2f6dc4cd1b9d75b7eec4a0823cdeddad7824" target="_blank">9fab2f6</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -554,6 +554,7 @@ Ignored files:
     Ignored:    analysis/.DS_Store
     Ignored:    analysis/.Rhistory
     Ignored:    analysis/assets/.DS_Store
+    Ignored:    analysis/site_libs/
     Ignored:    captions/
     Ignored:    code/.DS_Store
     Ignored:    code/other/topic_flashier_20250212.R
@@ -632,6 +633,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/9fab2f6dc4cd1b9d75b7eec4a0823cdeddad7824/analysis/FigureS5.Rmd" target="_blank">9fab2f6</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-09
+</td>
+<td>
+Extended Data Figure 5: show the union of both tissue-associated GP sets
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/b0c1d19c5ec62adf7f83c9c60e03f3ee696f457a/docs/FigureS5.html" target="_blank">b0c1d19</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-09
+</td>
+<td>
+Build site: Extended Data Figure 5b recoloured
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1257,43 +1292,56 @@ Add Figure S5: EBMF vs matched-RQVI level2-cluster comparison
 </div>
 <p>Both panels are produced by <a
 href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS5.R"><code>script/FigureS5.R</code></a>.
-They show the same 31 GPs – the programs active across tissues – first
-across the 18 tissues and then across the 8 T cell lineages, so that a
-program’s tissue distribution can be read against its lineage
-distribution on the same rows. The analysis uses healthy non-thymocyte
-cells (<code>condition_broad == "healthy"</code> and
-<code>annotation_level1 != "thymocyte"</code>). For each GP, its mean
-loading across the groups shown is subtracted from every group mean, so
-a row says where a program is more or less active than its own average
-rather than how large its loading is. It is the tissue counterpart of <a
-href="FigureS3.html">Extended Data Figure 3</a>, which shows all 200 GPs
-across the level-2 clusters, and it puts the 31 programs behind <a
-href="Figure5.html">Figure 5</a>’s AUC analysis on a single pair of
-axes.</p>
-<div id="setup-and-the-31-tissue-active-gps" class="section level2">
-<h2>Setup and the 31 tissue-active GPs</h2>
-<p>A GP is taken to be active across tissues when its <em>raw</em>
-(uncentered) mean loading reaches 0.1 in at least one of the 18 tissues;
-31 of the 200 GPs pass. This is a threshold on activity, not on
-differential activity – the panels then show how that activity is
-distributed. The expected set is written out in the script, so a change
-in the loadings, the cell filter or the cutoff fails the run rather than
-quietly redrawing a different figure:</p>
+They show the same 32 GPs – every program the manuscript calls
+tissue-associated – first across the 18 tissues and then across the 8 T
+cell lineages, so that a program’s tissue distribution can be read
+against its lineage distribution on the same rows. The analysis uses
+healthy non-thymocyte cells (<code>condition_broad == "healthy"</code>
+and <code>annotation_level1 != "thymocyte"</code>). For each GP, its
+mean loading across the groups shown is subtracted from every group
+mean, so a row says where a program is more or less active than its own
+average rather than how large its loading is. It is the tissue
+counterpart of <a href="FigureS3.html">Extended Data Figure 3</a>, which
+shows all 200 GPs across the level-2 clusters, and it puts the
+tissue-associated programs behind <a href="Figure5.html">Figure 5</a>’s
+AUC analysis on a single pair of axes.</p>
+<div id="setup-and-the-32-tissue-associated-gps" class="section level2">
+<h2>Setup and the 32 tissue-associated GPs</h2>
+<p>The rows are the union of the two criteria by which a GP is called
+tissue-associated:</p>
+<ul>
+<li><strong>activity</strong> – its <em>raw</em> (uncentered) mean
+loading reaches 0.1 in at least one of the 18 tissues. 31 of the 200 GPs
+pass. This is a threshold on average activity, so a program carried by a
+small number of cells fails it.</li>
+<li><strong>discrimination</strong> – its one-vs-rest tissue AUC exceeds
+0.9, under the same positivity mask <a href="Figure5.html">Figure 5</a>
+uses (mean loading in the tissue above the GP’s overall mean) and with
+tissues under 100 cells dropped. Seven GPs pass; these are the seven <a
+href="Figure5.html">Figure 5</a> highlights throughout.</li>
+</ul>
+<p>Six GPs satisfy both, so 32 are shown. GP37 is the only one selected
+by discrimination alone: its mammary-gland AUC is 0.9918, but it is
+active in 2.5% of mammary gland cells, which dilutes its mean loading
+there to 0.011 – so its row is near-white in both panels by
+construction. The AUC criterion is re-derived here and checked against
+the GP list in <code>script/Figure5.R</code>, and the union is checked
+against a literal list, so a change in the loadings, the AUCs, the cell
+filter or either cutoff fails the run rather than quietly redrawing a
+different figure:</p>
 <pre class="r"><code># Figure S5. The tissue-associated GPs, across tissues and across lineages.
 #
 # Panels produced (see analysis/FigureS5.Rmd for the caption text):
 #   s5a  Row-centered mean GP activity across the 18 tissues, restricted to the
-#        31 GPs that are active across tissues. Blue-white-red scale.
-#   s5b  The same 31 GPs in the same row order, but across the 8 T cell
+#        32 tissue-associated GPs. Blue-white-red scale.
+#   s5b  The same 32 GPs in the same row order, but across the 8 T cell
 #        lineages. Green-white-purple scale (purple positive), so the two halves
 #        of the figure cannot be mistaken for each other.
 #
 #
-# &quot;Active across tissues&quot; is the selection the manuscript&#39;s &quot;31 programs active
-# across tissues&quot; refers to: a GP is kept when its *raw* (uncentered) mean
-# loading reaches 0.1 in at least one of the 18 tissues. That is a threshold on
-# activity, not on differential activity -- the panels then show, per GP, how
-# that activity is distributed, by subtracting the GP&#39;s mean across the groups
+# The rows are the union of the two tissue-associated GP sets the manuscript
+# names -- see &quot;GP selection&quot; below. The panels then show, per GP, how that
+# activity is distributed, by subtracting the GP&#39;s mean across the groups
 # shown from every group mean. Each panel&#39;s centered color scale is fixed:
 # [-0.2, 0.2] for (a), matching the retired 200-GP tissue heatmap it comes from,
 # and the tighter [-0.1, 0.1] for (b), because spreading a program over eight
@@ -1305,6 +1353,8 @@ quietly redrawing a different figure:</p>
 # for the full picture:
 #   L_pm_filtered.rds                        [code/pipeline/01b_filter_cells.R]
 #   igt1_96_..._ADTonly.Rds                  [primary input Seurat object]
+#   organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds
+#                                            [code/pipeline/02_compute_auc.R]
 
 suppressPackageStartupMessages({
   library(ComplexHeatmap)
@@ -1340,35 +1390,94 @@ organ_raw &lt;- mean_loading_by_group(L_reference, meta_reference$organ_simplifi
 level1_raw &lt;- mean_loading_by_group(L_reference, meta_reference$annotation_level1)$matrix
 
 # ============================================================
-# GP selection: the 31 GPs active across tissues
+# GP selection: the union of the two tissue-associated GP sets
 # ============================================================
-# The same filter as experiments/healthy_nonthymus_mean_loading_heatmaps/: a GP
-# is kept when at least one tissue&#39;s raw mean loading reaches the cutoff. The
-# expected set is spelled out so that a change in the loadings, the cell
-# filter or the cutoff fails here instead of quietly redrawing a different
-# figure from the one the manuscript&#39;s &quot;31 programs&quot; sentence describes.
+# The manuscript names two, by different criteria, and this figure shows both:
+#
+#   A  &quot;31 programs active across tissues&quot; -- raw (uncentered) mean loading
+#      reaches 0.1 in at least one of the 18 tissues. The filter from
+#      experiments/healthy_nonthymus_mean_loading_heatmaps/. It is a threshold
+#      on *average* activity, so a program carried by a few cells fails it.
+#   B  &quot;Seven GPs were strongly tissue-associated (AUC &gt; 0.9)&quot; -- Figure 5&#39;s
+#      rule: one-vs-rest tissue AUC above 0.9 under Figure 5&#39;s positivity mask
+#      (mean loading in the tissue above the GP&#39;s overall mean), with tissues
+#      under 100 cells dropped.
+#
+# Six GPs satisfy both, so the union is 32. GP37 is the only member of B alone:
+# its mammary-gland AUC is 0.9918, but it is active in 2.5% of mammary gland
+# cells, which dilutes its mean loading there to 0.011 -- an order of magnitude
+# under rule A&#39;s cutoff. Its row is therefore near-white in (a) by construction.
+#
+# Rule B is re-derived here rather than retyped, and checked against the literal
+# `gps_of_interest` in script/Figure5.R, so the two figures cannot disagree
+# about which GPs are the strongly tissue-associated ones. The union is checked
+# against a literal list as well, so a change in the loadings, the AUCs, the
+# cell filter or either cutoff fails here instead of quietly redrawing a
+# different figure.
 raw_mean_cutoff &lt;- 0.1
+auc_cutoff &lt;- 0.9
+min_tissue_cells &lt;- 100L
+
+# --- A: mean activity ---
 tissue_active &lt;- rowSums(organ_raw &gt;= raw_mean_cutoff) &gt; 0L
-selected_gps &lt;- rownames(organ_raw)[tissue_active]
+
+# --- B: tissue discrimination, on Figure 5&#39;s terms ---
+organ_auc &lt;- readRDS(paste0(
+  &quot;data/&quot;, &quot;organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds&quot;
+))$auc
+colnames(organ_auc) &lt;- paste0(&quot;GP&quot;, seq_len(ncol(organ_auc)))
+tissue_counts &lt;- table(meta_reference$organ_simplified)
+large_tissues &lt;- setdiff(
+  rownames(organ_auc), names(tissue_counts[tissue_counts &lt; min_tissue_cells])
+)
+organ_auc &lt;- organ_auc[large_tissues, , drop = FALSE]
+
+overall_mean &lt;- colMeans(L_reference, na.rm = TRUE)
+tissue_mean &lt;- t(vapply(
+  large_tissues,
+  function(tissue) {
+    colMeans(L_reference[meta_reference$organ_simplified == tissue, , drop = FALSE], na.rm = TRUE)
+  },
+  numeric(ncol(L_reference))
+))
+positive_mask &lt;- sweep(tissue_mean, 2L, overall_mean, &quot;-&quot;) &gt; 0
+tissue_specific &lt;- colSums((organ_auc &gt; auc_cutoff) &amp; positive_mask) &gt; 0L
+tissue_specific &lt;- rownames(organ_raw) %in% colnames(organ_auc)[tissue_specific]
+
+# Figure 5 highlights these seven throughout; rule B must reproduce exactly them.
+figure5_gps_of_interest &lt;- local({
+  lines &lt;- readLines(&quot;script/Figure5.R&quot;, warn = FALSE)
+  hit &lt;- grep(&quot;^gps_of_interest &lt;- &quot;, lines, value = TRUE)
+  if (length(hit) != 1L) {
+    stop(&quot;gps_of_interest is not assigned exactly once in script/Figure5.R&quot;)
+  }
+  eval(parse(text = sub(&quot;^gps_of_interest &lt;- &quot;, &quot;&quot;, hit)))
+})
+stopifnot(setequal(rownames(organ_raw)[tissue_specific], figure5_gps_of_interest))
+
+selected &lt;- tissue_active | tissue_specific
+selected_gps &lt;- rownames(organ_raw)[selected]
 
 expected_gps &lt;- paste0(&quot;GP&quot;, c(
-  1, 3, 4, 6, 8, 9, 11, 22, 23, 25, 26, 29, 30, 32, 35, 41, 43, 49, 51, 58,
+  1, 3, 4, 6, 8, 9, 11, 22, 23, 25, 26, 29, 30, 32, 35, 37, 41, 43, 49, 51, 58,
   62, 63, 72, 80, 93, 100, 166, 170, 171, 174, 177
 ))
 stopifnot(
-  length(expected_gps) == 31L,
+  sum(tissue_active) == 31L,
+  sum(tissue_specific) == 7L,
+  length(expected_gps) == 32L,
   identical(selected_gps, expected_gps)
 )
 
-organ_selected_raw &lt;- organ_raw[tissue_active, , drop = FALSE]
-level1_selected_raw &lt;- level1_raw[tissue_active, , drop = FALSE]
+organ_selected_raw &lt;- organ_raw[selected, , drop = FALSE]
+level1_selected_raw &lt;- level1_raw[selected, , drop = FALSE]
 organ_centered &lt;- center_by_gp_mean(organ_selected_raw)
 level1_centered &lt;- center_by_gp_mean(level1_selected_raw)
 
 # ============================================================
 # Ordering: (a) sets the row order, (b) reuses it
 # ============================================================
-# Recomputing the dominant-group order on the 31-row submatrix (rather than
+# Recomputing the dominant-group order on the 32-row submatrix (rather than
 # inheriting the retired 200-GP order) is what makes the tissue columns reflect
 # the GPs actually on display. Panel (b) then keeps (a)&#39;s row order, so a GP sits
 # on the same line in both halves and can be read across; its columns are
@@ -1386,8 +1495,8 @@ level1_row_order &lt;- match(
 )
 
 stopifnot(
-  nrow(organ_centered) == 31L,
-  nrow(level1_centered) == 31L,
+  nrow(organ_centered) == 32L,
+  nrow(level1_centered) == 32L,
   ncol(organ_centered) == 18L,
   ncol(level1_centered) == 8L,
   identical(rownames(organ_centered), rownames(level1_centered)),
@@ -1419,7 +1528,7 @@ render_centered_heatmap(
   organ_order$row_order,
   organ_order$column_order,
   organ_color_limit,
-  &quot;31 tissue-active GPs; dominant-group blocks&quot;,
+  &quot;32 tissue-associated GPs; dominant-group blocks&quot;,
   palette = heatmap_palettes$blue_red
 )</code></pre>
 <p><img src="assets/FigureS5/s5a.png" width="100%" style="display: block; margin: auto;" /></p>
@@ -1447,6 +1556,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/9fab2f6dc4cd1b9d75b7eec4a0823cdeddad7824/docs/assets/FigureS5/s5a.png" target="_blank">9fab2f6</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-09
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/c233cd8210f5f908358ca6f17246829fcd369968/docs/assets/FigureS5/s5a.png" target="_blank">c233cd8</a>
 </td>
 <td>
@@ -1462,8 +1582,8 @@ Ziang Zhang
 </div>
 <div class="figcaption">
 <p><strong>Extended Data Fig. 5a.</strong> Row-centered mean GP activity
-across 18 tissues, for the 31 GPs active across tissues. Mean GP
-activity computed in samples at baseline.</p>
+across 18 tissues, for the 32 tissue-associated GPs. Mean GP activity
+computed in samples at baseline.</p>
 </div>
 </div>
 <div id="figs5b" class="section level2">
@@ -1479,7 +1599,7 @@ render_centered_heatmap(
   level1_row_order,
   level1_column_order,
   level1_color_limit,
-  &quot;the same 31 GPs, row order from (a)&quot;,
+  &quot;the same 32 GPs, row order from (a)&quot;,
   palette = heatmap_palettes$green_purple
 )</code></pre>
 <p><img src="assets/FigureS5/s5b.png" width="70%" style="display: block; margin: auto;" /></p>
@@ -1507,6 +1627,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/9fab2f6dc4cd1b9d75b7eec4a0823cdeddad7824/docs/assets/FigureS5/s5b.png" target="_blank">9fab2f6</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-09
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/5be33df67b47ca1fe0df9142274bf211b33daee1/docs/assets/FigureS5/s5b.png" target="_blank">5be33df</a>
 </td>
 <td>
@@ -1532,7 +1663,7 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Extended Data Fig. 5b.</strong> The same 31 GPs across the 8
+<p><strong>Extended Data Fig. 5b.</strong> The same 32 GPs across the 8
 T cell lineages, in the row order of (a). Mean GP activity computed in
 samples at baseline. Note the different color scale: green-purple rather
 than blue-red, and -0.1 to 0.1 rather than -0.2 to 0.2, since spreading
@@ -1542,8 +1673,9 @@ smaller deviations.</p>
 </div>
 <div id="what-the-panels-drew" class="section level2">
 <h2>What the panels drew</h2>
-<p>The 31 GPs, their dominant tissue and lineage, and their row position
-are written out alongside the figure:</p>
+<p>The 32 GPs, which criterion selected each, their dominant tissue and
+lineage, and their row position are written out alongside the
+figure:</p>
 <pre class="r"><code># ============================================================
 # What the panels drew
 # ============================================================
@@ -1556,6 +1688,14 @@ write.csv(
     max_raw_tissue_mean = as.numeric(apply(organ_selected_raw, 1L, max)),
     dominant_tissue = colnames(organ_selected_raw)[max.col(organ_selected_raw, ties.method = &quot;first&quot;)],
     dominant_lineage = colnames(level1_selected_raw)[max.col(level1_selected_raw, ties.method = &quot;first&quot;)],
+    max_masked_tissue_auc = as.numeric(apply(
+      ifelse(positive_mask[, selected, drop = FALSE], organ_auc[, selected, drop = FALSE], NA_real_),
+      2L, max, na.rm = TRUE
+    )),
+    rule = ifelse(
+      tissue_active[selected] &amp; tissue_specific[selected], &quot;A+B&quot;,
+      ifelse(tissue_active[selected], &quot;A&quot;, &quot;B&quot;)
+    ),
     row_in_panel = match(rownames(organ_centered), rownames(organ_centered)[organ_order$row_order])
   ),
   file.path(record_dir, &quot;s5_selected_gps.csv&quot;),
@@ -1567,10 +1707,11 @@ write.csv(
   data.frame(
     panel = c(&quot;s5a&quot;, &quot;s5b&quot;),
     grouping = c(&quot;organ_simplified&quot;, &quot;annotation_level1&quot;),
-    view = &quot;row-centered mean loading of the 31 tissue-active GPs&quot;,
+    view = &quot;row-centered mean loading of the 32 tissue-associated GPs&quot;,
     gp_count = c(nrow(organ_centered), nrow(level1_centered)),
     group_count = c(ncol(organ_centered), ncol(level1_centered)),
-    selection = paste0(&quot;raw mean loading &gt;= &quot;, raw_mean_cutoff, &quot; in &gt;= 1 tissue&quot;),
+    selection = paste0(&quot;raw mean loading &gt;= &quot;, raw_mean_cutoff,
+                       &quot; in &gt;= 1 tissue OR masked tissue AUC &gt; &quot;, auc_cutoff),
     centered_definition = &quot;group mean minus mean across groups for each GP&quot;,
     palette = c(&quot;blue-white-red&quot;, &quot;green-white-purple&quot;),
     color_min = c(-organ_color_limit, -level1_color_limit),
