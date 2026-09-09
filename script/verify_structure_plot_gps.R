@@ -1,4 +1,4 @@
-# Verify Extended Data Figure 5's GP selection against the published cluster AUCs.
+# Verify Extended Data Figure 6's GP selection against the published cluster AUCs.
 #
 #   Rscript script/verify_structure_plot_gps.R    # exits non-zero on any mismatch
 #
@@ -25,7 +25,7 @@
 # code/R/structure_plot_panels.R -- the file the figure itself uses -- so this
 # is a re-derivation from the published numbers, not a second copy of the
 # figure's logic. What the figure drew is read from the record it writes into
-# output/FigureS5/ (so this check does not need the 1 GB loading matrix).
+# output/FigureS6/ (so this check does not need the 1 GB loading matrix).
 #
 # The three inputs can be pointed elsewhere, which is how the failing path gets
 # tested:
@@ -40,10 +40,10 @@ arg_value <- function(name, default) {
   if (length(hit) == 0) default else sub(paste0("^--", name, "="), "", hit)
 }
 
-record_dir <- arg_value("record-dir", "output/FigureS5/")
+record_dir <- arg_value("record-dir", "output/FigureS6/")
 table_file <- arg_value("table", "figures/final-selected/ExtendedDataTable6_GP_AUC_cluster.xlsx")
-page_file <- arg_value("page", "analysis/FigureS5.Rmd")
-panel_dir <- arg_value("panel-dir", "figures/final-selected/Figure S5/")
+page_file <- arg_value("page", "analysis/FigureS6.Rmd")
+panel_dir <- arg_value("panel-dir", "figures/final-selected/Figure S6/")
 
 failures <- character(0)
 check <- function(ok, msg) if (!isTRUE(ok)) failures <<- c(failures, msg)
@@ -51,8 +51,8 @@ check <- function(ok, msg) if (!isTRUE(ok)) failures <<- c(failures, msg)
 # ------------------------------------------------------------
 # Inputs
 # ------------------------------------------------------------
-gp_record <- utils::read.csv(file.path(record_dir, "s5_panel_gps.csv"), stringsAsFactors = FALSE)
-cluster_record <- utils::read.csv(file.path(record_dir, "s5_panel_clusters.csv"), stringsAsFactors = FALSE)
+gp_record <- utils::read.csv(file.path(record_dir, "s6_panel_gps.csv"), stringsAsFactors = FALSE)
+cluster_record <- utils::read.csv(file.path(record_dir, "s6_panel_clusters.csv"), stringsAsFactors = FALSE)
 
 # Extended Data Table 6 is one row per GP, one column per cluster; the figure
 # thresholds it the other way round.
@@ -188,7 +188,7 @@ for (lineage in lineages) {
 # 4. panel PDFs
 # ------------------------------------------------------------
 cat("\n=== 4. the assembled figure is on disk, with no per-row leftovers ===\n")
-want_pdfs <- "s5.pdf"
+want_pdfs <- "s6.pdf"
 on_disk <- list.files(panel_dir, pattern = "\\.pdf$")
 missing <- want_pdfs[!file.exists(file.path(panel_dir, want_pdfs))]
 empty <- want_pdfs[file.exists(file.path(panel_dir, want_pdfs)) &

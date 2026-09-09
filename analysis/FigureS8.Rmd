@@ -1,0 +1,64 @@
+---
+title: "Extended Data Figure 8: Surface proteins association with GP"
+author: "Ziang Zhang"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r doc-code, include=FALSE}
+source("../code/R/doc_code.R")
+```
+
+All panels are produced by
+[`script/FigureS8.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS8.R),
+which shares its CITE-seq setup, gating logic and CD69 GP subset with
+[Figure 6](Figure6.html) via `code/R/citeseq_shared_setup.R` and
+`code/R/gated_protein_helpers.R`. The code below is shown for
+reference (not re-executed on this page, since this script takes about a minute
+to run); the images are its pre-rendered output.
+
+## Setup
+
+```{r figs8-setup, code=code_for("../script/FigureS8.R", "doc:setup"), eval=FALSE}
+```
+
+## (a, b) CD69-associated GPs across tissues and lineages {#figs8ab}
+
+The ten GPs and their order are defined in `code/R/citeseq_shared_setup.R`, so
+that these two panels and [Fig. 6d](Figure6.html#fig6d) -- which live in
+different figures and therefore in different scripts -- cannot disagree about
+which GPs they show or in what order:
+
+```{r figs8ab-gps, code=code_for("../code/R/citeseq_shared_setup.R", "doc:cd69"), eval=FALSE}
+```
+
+```{r figs8ab-code, code=code_for("../script/FigureS8.R", "s8a"), eval=FALSE}
+```
+
+```{r figs8ab-img, echo=FALSE, out.width="49%"}
+knitr::include_graphics(c("assets/FigureS8/s8a.png", "assets/FigureS8/s8b.png"))
+```
+
+::: {.figcaption}
+**Extended Data Fig. 8a, b.** Mean activity of the ten CD69-associated GPs (a)
+across tissues and (b) across lineages.
+:::
+
+## (c-f) Further protein-gated vs. GP-loading populations {#figs8cf}
+
+```{r figs8cf-code, code=code_for("../script/FigureS8.R", "s8c"), eval=FALSE}
+```
+
+```{r figs8cf-img, echo=FALSE, out.width="49%"}
+knitr::include_graphics(c(
+  "assets/FigureS8/s8c.png", "assets/FigureS8/s8d.png",
+  "assets/FigureS8/s8e.png", "assets/FigureS8/s8f.png"
+))
+```
+
+::: {.figcaption}
+**Extended Data Fig. 8c-f.** Examples of gating strategies used to identify
+GP-active cells for (c) GP29 (CD8aa gdT or ab T cell specific), (d) GP58
+(CD8-specific), (e) GP22 (DN-specific), and (f) GP68 (Treg-specific).
+:::

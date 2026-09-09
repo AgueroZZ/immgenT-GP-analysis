@@ -1,306 +1,216 @@
-# Figure S5. Cluster-level GP membership within each T cell lineage.
+# Figure S5. The tissue-associated GPs, across tissues and across lineages.
 #
-# One stacked figure (s5.pdf): seven rows, one per lineage, labelled
-# a = CD8, b = CD4, c = Treg, d = gdT, e = CD8aa, f = Tz, g = DN. Each row is a
-# structure plot of the healthy non-thymocyte cells of that lineage, grouped by
-# their annotation_level2 cluster, over every GP that reaches AUC > 0.9 for at
-# least one cluster of that lineage. It is the per-cluster, all-GP counterpart
-# of Figure 3B, which shows six hand-picked lineage-defining GPs grouped by
-# lineage.
-#
-# The row map, the AUC rule, the display filters, the palette and the assembled
-# geometry all come from code/R/structure_plot_panels.R. This script records what
-# it drew into output/FigureS5/, and script/verify_structure_plot_gps.R checks
-# that record against the AUCs published as Extended Data Table 6 and against the
-# caption on analysis/FigureS5.Rmd.
+# Panels produced (see analysis/FigureS5.Rmd for the caption text):
+#   s5a  Row-centered mean GP activity across the 18 tissues, restricted to the
+#        31 GPs that are active across tissues. Blue-white-red scale.
+#   s5b  The same 31 GPs in the same row order, but across the 8 T cell
+#        lineages. Purple-white-green scale, so the two halves of the figure
+#        cannot be mistaken for each other.
 #
 # --- internal ---
-# Ported from experiments/giant_structure_plot_by_lineage/save_separate_pdfs.R
-# and the "Giant structure plot" section of experiments/assess_structure_plot.R,
-# whose stacked layout (16 in wide, 3 in per row, plot_grid(align = "v")) this
-# figure follows. Two changes from the exploratory rows: DP is dropped (seven
-# rows, not eight), and each row is coloured on its own rather than from one
-# GP -> colour map shared by all rows, which is what those PDFs and this figure
-# did until 2026-09-02 -- see the palette comment in
-# code/R/structure_plot_panels.R and the trials in
-# experiments/structure_plot_recolor/, whose per_lineage_glasbey variant this
-# figure now reproduces exactly (RMSE 0; script/README.md records the check).
-# The cells, clusters, GP sets and geometry have never changed.
-#
-# Took the Extended Data Figure 5 slot on 2026-08-27, when it moved there from
-# Figure S8: the protein-program heatmap that had been Figure S5 became Figure
-# S6, and the CD69/gating figure became Figure S7.
+# New Extended Data Figure 5 on 2026-09-09. Panel s5a is the retired Figure S4's
+# panel s4a with its rows filtered to the 31 GPs and the dominant-group order
+# recomputed on that submatrix; s5b is new. The retired figure's other panel
+# (the cluster heatmap) became Figure S3.
 # --- end internal ---
 #
-# Required inputs (data/) -- see code/README.md's "Data provenance" table for
-# the full picture:
-#   igt1_96_..._ADTonly.Rds                           [primary input Seurat object]
-#   L_pm_filtered.rds                                 [code/pipeline/01b_filter_cells.R]
-#   level_2_AUC_list_figure_no_thymocytes_healthy.rds [code/pipeline/02_compute_auc.R]
+# "Active across tissues" is the selection the manuscript's "31 programs active
+# across tissues" refers to: a GP is kept when its *raw* (uncentered) mean
+# loading reaches 0.1 in at least one of the 18 tissues. That is a threshold on
+# activity, not on differential activity -- the panels then show, per GP, how
+# that activity is distributed, by subtracting the GP's mean across the groups
+# shown from every group mean. Each panel's centered color scale is fixed:
+# [-0.2, 0.2] for (a), matching the retired 200-GP tissue heatmap it comes from,
+# and the tighter [-0.1, 0.1] for (b), because spreading a program over eight
+# lineages instead of eighteen tissues gives much smaller deviations and (a)'s
+# scale renders the lineage panel almost blank. Values outside each range
+# saturate at the endpoint colors: 0.9% of (a)'s cells and 3.6% of (b)'s.
+#
+# Required inputs (data/) -- see code/README.md's "Data provenance" table
+# for the full picture:
+#   L_pm_filtered.rds                        [code/pipeline/01b_filter_cells.R]
+#   igt1_96_..._ADTonly.Rds                  [primary input Seurat object]
 
-# --- doc:setup ---
-library(ggplot2)
-library(ggrastr)
-library(cowplot)
-library(fastTopics) # structure_plot()
+suppressPackageStartupMessages({
+  library(ComplexHeatmap)
+  library(circlize)
+  library(grid)
+  library(ZemmourLib)
+})
 
-if (!file.exists("code/R/structure_plot_panels.R")) {
+if (!file.exists("code/R/setup_data.R")) {
   stop("Run this script from the immgenT-GP-analysis repository root.")
 }
-source("code/R/structure_plot_panels.R")
 
-data_path <- "data/"
-figure_path <- "figures/final-selected/Figure S5/"
-record_path <- "output/FigureS5/"
+source("code/R/setup_data.R")
+source("code/R/centered_mean_heatmap.R")
+
+figure_path <- "figures/final-selected/Figure S5"
 dir.create(figure_path, recursive = TRUE, showWarnings = FALSE)
-dir.create(record_path, recursive = TRUE, showWarnings = FALSE)
-
-# Record when this run started, to assert at the end that the figure is newer.
-# --- internal ---
-# A figure script here was once seen to exit 0 with a complete log and write
-# nothing at all -- see script/README.md, "A re-run can silently not write".
-# --- end internal ---
 run_started_at <- Sys.time()
 
 # ============================================================
-# Load data
+# Setup: the healthy non-thymocyte tissue and lineage mean matrices
 # ============================================================
-seurat_meta <- readRDS(paste0(
-  data_path,
-  "igt1_96_withtotalvi20260206_clean_ADTonly.Rds"
-))@meta.data
-L_pm_filtered <- readRDS(paste0(data_path, "L_pm_filtered.rds"))
-seurat_meta_filtered <- seurat_meta[rownames(L_pm_filtered), ]
-colnames(L_pm_filtered) <- gsub("^K", "GP", colnames(L_pm_filtered))
+gp_data <- load_gp_data()
+reference <- healthy_nonthymocyte_reference(gp_data)
+L_reference <- reference$L
+meta_reference <- reference$meta
 
-level_2_AUC_list <- readRDS(paste0(
-  data_path,
-  "level_2_AUC_list_figure_no_thymocytes_healthy.rds"
+organ_color_limit <- 0.2
+level1_color_limit <- 0.1
+level1_order <- c("CD8", "CD4", "Treg", "gdT", "CD8aa", "Tz", "DN", "DP")
+
+organ_raw <- mean_loading_by_group(L_reference, meta_reference$organ_simplified)$matrix
+level1_raw <- mean_loading_by_group(L_reference, meta_reference$annotation_level1)$matrix
+
+# ============================================================
+# GP selection: the 31 GPs active across tissues
+# ============================================================
+# The same filter as experiments/healthy_nonthymus_mean_loading_heatmaps/: a GP
+# is kept when at least one tissue's raw mean loading reaches the cutoff. The
+# expected set is spelled out so that a change in the loadings, the cell
+# filter or the cutoff fails here instead of quietly redrawing a different
+# figure from the one the manuscript's "31 programs" sentence describes.
+raw_mean_cutoff <- 0.1
+tissue_active <- rowSums(organ_raw >= raw_mean_cutoff) > 0L
+selected_gps <- rownames(organ_raw)[tissue_active]
+
+expected_gps <- paste0("GP", c(
+  1, 3, 4, 6, 8, 9, 11, 22, 23, 25, 26, 29, 30, 32, 35, 41, 43, 49, 51, 58,
+  62, 63, 72, 80, 93, 100, 166, 170, 171, 174, 177
 ))
-auc_level2 <- level_2_AUC_list$auc
-colnames(auc_level2) <- gsub("^K", "GP", colnames(auc_level2))
+stopifnot(
+  length(expected_gps) == 31L,
+  identical(selected_gps, expected_gps)
+)
 
-# The AUC matrix and the loading matrix have to be talking about the same GPs
-# in the same order: the panels index one by names taken from the other.
-if (!identical(colnames(auc_level2), colnames(L_pm_filtered))) {
-  stop("The AUC matrix and L_pm_filtered do not carry the same GP columns in the same order.")
+organ_selected_raw <- organ_raw[tissue_active, , drop = FALSE]
+level1_selected_raw <- level1_raw[tissue_active, , drop = FALSE]
+organ_centered <- center_by_gp_mean(organ_selected_raw)
+level1_centered <- center_by_gp_mean(level1_selected_raw)
+
+# ============================================================
+# Ordering: (a) sets the row order, (b) reuses it
+# ============================================================
+# Recomputing the dominant-group order on the 31-row submatrix (rather than
+# inheriting the retired 200-GP order) is what makes the tissue columns reflect
+# the GPs actually on display. Panel (b) then keeps (a)'s row order, so a GP sits
+# on the same line in both halves and can be read across; its columns are
+# Figure 1's lineage order rather than a dominant-group order.
+organ_order <- dominant_group_order(organ_selected_raw)
+
+level1_groups <- colnames(level1_centered)
+if (!setequal(level1_groups, level1_order)) {
+  stop("The observed lineages do not match the Figure 1 level1 order.")
 }
+level1_column_order <- order(match(level1_groups, level1_order))
+level1_row_order <- match(
+  rownames(organ_centered)[organ_order$row_order],
+  rownames(level1_centered)
+)
 
-level1_all <- seurat_meta_filtered$annotation_level1
-level2_all <- seurat_meta_filtered$annotation_level2
-healthy_non_thymocyte <- which(
-  seurat_meta_filtered$condition_broad == "healthy" &
-    level1_all != "thymocyte"
+stopifnot(
+  nrow(organ_centered) == 31L,
+  nrow(level1_centered) == 31L,
+  ncol(organ_centered) == 18L,
+  ncol(level1_centered) == 8L,
+  identical(rownames(organ_centered), rownames(level1_centered)),
+  max(abs(rowMeans(organ_centered))) < 1e-12,
+  max(abs(rowMeans(level1_centered))) < 1e-12
+)
+
+organ_palette <- palette_for_groups(
+  colnames(organ_centered),
+  ZemmourLib::immgent_colors$organ_simplified,
+  "organ_simplified"
+)
+level1_palette <- palette_for_groups(
+  colnames(level1_centered),
+  ZemmourLib::immgent_colors$level1,
+  "annotation_level1"
 )
 
 # ============================================================
-# GP selection
+# s5a: the 31 tissue-active GPs across the 18 tissues
 # ============================================================
-# Which lineage each cluster belongs to, from the metadata.
-cluster_lineage <- cluster_lineage_map(level2_all, level1_all)
-
-# --- internal ---
-# verify_structure_plot_gps.R has only the published table to work from, so it
-# maps clusters to lineages by their name prefix (CD8.A -> CD8) instead. Check
-# that shortcut here, where the metadata-derived map is available, so the check
-# cannot be re-deriving a different grouping than the figure drew.
-# --- end internal ---
-auc_clusters <- rownames(auc_level2)
-prefix_lineage <- sub("[.].*$", "", auc_clusters)
-if (!identical(unname(cluster_lineage[auc_clusters]), prefix_lineage)) {
-  disagree <- auc_clusters[unname(cluster_lineage[auc_clusters]) != prefix_lineage]
-  stop(sprintf(
-    "cluster name prefixes disagree with annotation_level1 for: %s",
-    paste(disagree, collapse = ", ")
-  ))
-}
-
-# One GP set per row. Each row's palette is then assigned inside the loop
-# below, independently of the other rows -- see structure_plot_row_colors().
-panel_gps <- gps_above_auc_by_lineage(auc_level2, cluster_lineage)
-
-message(sprintf(
-  "%d GPs over %d rows (AUC > %.1f): %s",
-  length(unique(unlist(panel_gps, use.names = FALSE))), length(panel_gps),
-  structure_plot_auc_threshold,
-  paste(sprintf("%s %d", names(panel_gps), lengths(panel_gps)), collapse = ", ")
-))
-
-# ============================================================
-# s5: per-lineage rows, stacked into one figure
-# ============================================================
-# The loop iterates over the names of the row map, so a lineage cannot be drawn
-# under another lineage's letter. Each row is kept as a ggplot and the rows are
-# assembled below, rather than saved one file per lineage.
-# --- internal ---
-# The figure is the stack, and assembling it here means no hand layout step can
-# fall behind a re-run.
-# --- end internal ---
-lineage_plots <- list()
-cluster_records <- list()
-gp_records <- list()
-
-for (lineage in names(structure_plot_panels)) {
-  panel <- structure_plot_panels[[lineage]]
-  gps_lineage <- panel_gps[[lineage]]
-
-  lineage_cells <- healthy_non_thymocyte[level1_all[healthy_non_thymocyte] == lineage]
-  cluster_size <- table(droplevels(factor(level2_all[lineage_cells])))
-  small_clusters <- names(cluster_size)[cluster_size < structure_plot_min_cluster_cells]
-  lineage_cells <- lineage_cells[!level2_all[lineage_cells] %in% small_clusters]
-
-  # Cap each cluster's width so one large cluster cannot crowd out the rest.
-  set.seed(1234)
-  keep <- unlist(lapply(
-    split(seq_along(lineage_cells), level2_all[lineage_cells]),
-    function(idx) {
-      if (length(idx) > structure_plot_max_cells_per_cluster) {
-        sample(idx, structure_plot_max_cells_per_cluster)
-      } else {
-        idx
-      }
-    }
-  ))
-  lineage_cells <- lineage_cells[keep]
-
-  fit_lineage <- L_pm_filtered[lineage_cells, gps_lineage, drop = FALSE]
-  grouping_lineage <- factor(level2_all[lineage_cells])
-
-  # This row's colors, assigned from the top of the palette without reference to
-  # any other row. structure_plot_row_colors() returns them in ascending GP
-  # order, which is the column order here.
-  # --- internal ---
-  # structure_plot() renames the colors it is given positionally, by the columns
-  # of the matrix, so a palette in any other order would mislabel every bar.
-  # --- end internal ---
-  colors_lineage <- structure_plot_row_colors(gps_lineage)
-  if (!identical(names(colors_lineage), colnames(fit_lineage))) {
-    stop(sprintf("panel %s: palette order does not match its GP columns.", panel))
-  }
-
-  set.seed(1234)
-  p <- structure_plot(
-    fit_lineage,
-    topics = gps_lineage,
-    gap = 40,
-    n = 10000,
-    colors = colors_lineage,
-    grouping = grouping_lineage,
-    ggplot_call = rasterized_structure_plot_call
-  ) +
-    labs(
-      y = "membership",
-      color = "",
-      fill = "",
-      title = sprintf(
-        "%s (%d GPs, AUC > %.1f)",
-        lineage,
-        length(gps_lineage),
-        structure_plot_auc_threshold
-      )
-    ) +
-    guides(
-      fill = guide_legend(ncol = 2),
-      color = guide_legend(ncol = 2)
-    ) +
-    theme(
-      plot.title = element_text(size = 11, face = "bold"),
-      axis.text.x = element_text(size = 6, angle = 45, hjust = 1),
-      axis.text.y = element_text(size = 9),
-      axis.title = element_text(size = 10, face = "bold"),
-      legend.position = "right",
-      legend.key.size = unit(0.25, "cm"),
-      legend.text = element_text(size = 5),
-      legend.spacing.y = unit(0.02, "cm")
-    )
-
-  lineage_plots[[lineage]] <- p
-
-  # What this row used, for the alignment check. Every cluster of the lineage
-  # is listed, drawn or not: the GP selection above uses all of them.
-  lineage_clusters <- sort(auc_clusters[prefix_lineage == lineage])
-  drawn_size <- table(droplevels(factor(level2_all[lineage_cells])))
-  cluster_records[[lineage]] <- data.frame(
-    panel = panel,
-    lineage = lineage,
-    cluster = lineage_clusters,
-    n_cells_healthy = as.integer(cluster_size[lineage_clusters]),
-    n_cells_drawn = as.integer(ifelse(
-      lineage_clusters %in% names(drawn_size),
-      drawn_size[lineage_clusters],
-      0L
-    )),
-    stringsAsFactors = FALSE
-  )
-  gp_records[[lineage]] <- data.frame(
-    panel = panel,
-    lineage = lineage,
-    gp = gps_lineage,
-    color = unname(colors_lineage),
-    max_auc_in_lineage = unname(apply(
-      auc_level2[lineage_clusters, gps_lineage, drop = FALSE], 2,
-      max, na.rm = TRUE
-    )),
-    stringsAsFactors = FALSE
-  )
-}
-
-# Rows are stacked in the map's order and labelled a-g. align = "v" equalises
-# everything outside the plotting panel -- y-axis labels and the per-row legends,
-# which differ in width because the rows show 9 to 44 GPs -- so the cluster
-# blocks line up down the figure instead of each row starting at its own x.
-p_s5 <- cowplot::plot_grid(
-  plotlist = lineage_plots[names(structure_plot_panels)],
-  nrow = length(structure_plot_panels),
-  align = "v",
-  labels = "auto",
-  label_size = 14
-)
-ggsave(
-  filename = paste0(figure_path, "s5.pdf"),
-  plot = p_s5,
-  width = structure_plot_width,
-  height = structure_plot_row_height * length(structure_plot_panels),
-  dpi = 300,
-  limitsize = FALSE
+render_centered_heatmap(
+  organ_centered,
+  organ_palette,
+  "tissue (organ_simplified)",
+  file.path(figure_path, "s5a.pdf"),
+  organ_order$row_order,
+  organ_order$column_order,
+  organ_color_limit,
+  "31 tissue-active GPs; dominant-group blocks",
+  palette = heatmap_palettes$blue_red
 )
 
 # ============================================================
-# What each panel drew, for the alignment check
+# s5b: the same 31 GPs across the 8 lineages
 # ============================================================
-# --- internal ---
-# script/verify_structure_plot_gps.R reads these two files, so that it can
-# re-derive the panels' GP sets from the published Extended Data Table 6 without
-# reloading the 1 GB loading matrix, and check the clusters drawn and omitted
-# against the display filters above.
-# --- end internal ---
-cluster_record <- do.call(rbind, cluster_records)
-cluster_record$n_cells_healthy[is.na(cluster_record$n_cells_healthy)] <- 0L
+render_centered_heatmap(
+  level1_centered,
+  level1_palette,
+  "lineage (annotation_level1)",
+  file.path(figure_path, "s5b.pdf"),
+  level1_row_order,
+  level1_column_order,
+  level1_color_limit,
+  "the same 31 GPs, row order from (a)",
+  palette = heatmap_palettes$purple_green
+)
+
+# ============================================================
+# What the panels drew
+# ============================================================
+record_dir <- "output/FigureS5"   # build intermediate (not a manuscript panel)
+dir.create(record_dir, recursive = TRUE, showWarnings = FALSE)
+
 write.csv(
-  cluster_record,
-  paste0(record_path, "s5_panel_clusters.csv"),
-  row.names = FALSE
-)
-write.csv(
-  do.call(rbind, gp_records),
-  paste0(record_path, "s5_panel_gps.csv"),
-  row.names = FALSE
+  data.frame(
+    GP = rownames(organ_centered),
+    max_raw_tissue_mean = as.numeric(apply(organ_selected_raw, 1L, max)),
+    dominant_tissue = colnames(organ_selected_raw)[max.col(organ_selected_raw, ties.method = "first")],
+    dominant_lineage = colnames(level1_selected_raw)[max.col(level1_selected_raw, ties.method = "first")],
+    row_in_panel = match(rownames(organ_centered), rownames(organ_centered)[organ_order$row_order])
+  ),
+  file.path(record_dir, "s5_selected_gps.csv"),
+  row.names = FALSE,
+  quote = FALSE
 )
 
-# ============================================================
-# Did this run actually write the figure?
-# ============================================================
-expected_panel <- paste0(figure_path, "s5.pdf")
-if (!file.exists(expected_panel) ||
-      file.mtime(expected_panel) < run_started_at ||
-      file.size(expected_panel) == 0) {
-  stop(sprintf(
-    "%s was not written by this run (missing, empty, or older than the run)",
-    expected_panel
-  ))
+write.csv(
+  data.frame(
+    panel = c("s5a", "s5b"),
+    grouping = c("organ_simplified", "annotation_level1"),
+    view = "row-centered mean loading of the 31 tissue-active GPs",
+    gp_count = c(nrow(organ_centered), nrow(level1_centered)),
+    group_count = c(ncol(organ_centered), ncol(level1_centered)),
+    selection = paste0("raw mean loading >= ", raw_mean_cutoff, " in >= 1 tissue"),
+    centered_definition = "group mean minus mean across groups for each GP",
+    palette = c("blue-white-red", "purple-white-green"),
+    color_min = c(-organ_color_limit, -level1_color_limit),
+    color_mid = 0,
+    color_max = c(organ_color_limit, level1_color_limit),
+    observed_min = c(min(organ_centered), min(level1_centered)),
+    observed_max = c(max(organ_centered), max(level1_centered)),
+    frac_saturated = c(mean(abs(organ_centered) > organ_color_limit),
+                       mean(abs(level1_centered) > level1_color_limit))
+  ),
+  file.path(record_dir, "S5_summary.csv"),
+  row.names = FALSE,
+  quote = FALSE
+)
+
+# A panel that fails to write leaves the previous PDF in place and the script
+# still exits 0, so check the files rather than the exit code.
+expected_panels <- file.path(figure_path, c("s5a.pdf", "s5b.pdf"))
+stale <- expected_panels[!file.exists(expected_panels) |
+                           file.mtime(expected_panels) < run_started_at |
+                           file.size(expected_panels) == 0]
+if (length(stale) > 0L) {
+  stop("These panels were not written by this run: ", paste(stale, collapse = ", "))
 }
-message(sprintf(
-  "wrote %s (%d rows, %.0f x %.0f in)",
-  expected_panel, length(structure_plot_panels), structure_plot_width,
-  structure_plot_row_height * length(structure_plot_panels)
-))
+
+message("Wrote Figure S5 to ", normalizePath(figure_path))

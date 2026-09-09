@@ -1,5 +1,5 @@
 ---
-title: "Extended Data Figure 3: Activation-associated GPs"
+title: "Extended Data Figure 3: GP activity across T cell clusters"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -10,109 +10,36 @@ editor_options:
 source("../code/R/doc_code.R")
 ```
 
-Panels (b)-(f) are produced by
-[`script/FigureS3.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS3.R),
-which shares its curated GP set with [Figure 4](Figure4.html) via
-`code/R/activation_shared_setup.R`. The code below is shown for
-reference (not re-executed on this page); the images are its pre-rendered
-output.
+This single-panel figure is produced by
+[`script/FigureS3.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS3.R).
+It shows the final full row-centered matrix, with all 200 GPs and all 107
+observed level-2 clusters. The analysis uses healthy non-thymocyte cells
+(`condition_broad == "healthy"` and `annotation_level1 != "thymocyte"`). For
+each GP, its mean loading across clusters is subtracted from every cluster
+mean, so a row says where a program is more or less active than its own
+average rather than how large its loading is. The centered color scale is
+fixed at -0.2 to 0.2; values outside this range are saturated at the endpoint
+colors. It is the cluster counterpart of
+[Extended Data Figure 5](FigureS5.html), which shows the tissue-associated GPs
+across tissues and lineages, and the mean-loading counterpart of
+[Extended Data Figure 6](FigureS6.html), which resolves the same clusters cell
+by cell.
 
-Panel (a) is not generated from code -- see below.
+## Setup, centering, and ordering
 
-## Setup
-
-```{r figs3-setup, code=code_for("../script/FigureS3.R", c("^", "Load data")), eval=FALSE}
+```{r figs3-setup, code=code_for("../script/FigureS3.R", c("^", "Setup, centering")), eval=FALSE}
 ```
 
-## (a) Definition of resting and activated CD4/CD8 cells {#figs3a}
+## Cluster mean loading {#figs3}
 
-This panel shows the CITE-seq gating used to define resting and activated
-cells; it is not generated from code, so only its caption is given here.
-
-::: {.figcaption}
-**Extended Data Fig. 3a.** Definition of resting and activated CD4+ and CD8+ T
-cells. Activated CD44⁺CD62L⁻ (top) and resting CD62L⁺CD44⁻ (bottom) cells are
-highlighted in each lineage-specific MDE. Gated cells are shown in the
-adjacent CD62L versus CD44 protein-expression plot (CITE-seq, log-normalized
-counts).
-:::
-
-The `annotation_level2_group` "activated"/"resting" labels that every other panel
-on this page (and all of [Figure 4](Figure4.html)) filters on are the labels this
-panel defines, so the gate itself is already in use here -- only the figure
-illustrating it is absent.
-
-## (b) GP26+ rate by organ {#figs3b}
-
-```{r figs3b-code, code=code_for("../script/FigureS3.R", "s3b"), eval=FALSE}
+```{r figs3-code, code=code_for("../script/FigureS3.R", "doc:rendering"), eval=FALSE}
 ```
 
-```{r figs3b-img, echo=FALSE, out.width="32%"}
-knitr::include_graphics("assets/FigureS3/s3b.png")
+```{r figs3-img, echo=FALSE, out.width="100%"}
+knitr::include_graphics("assets/FigureS3/s3.png")
 ```
 
 ::: {.figcaption}
-**Extended Data Fig. 3b.** Bar plot showing broad GP26 activity in activated
-CD4+ and CD8+ T cells across organs (percent of cells with GP26 activity above
-0.1 per tissue)
-:::
-
-## (c) GSEA dot plot {#figs3c}
-
-```{r figs3c-code, code=code_for("../script/FigureS3.R", "s3c"), eval=FALSE}
-```
-
-```{r figs3c-img, echo=FALSE, out.width="32%"}
-knitr::include_graphics("assets/FigureS3/s3c.png")
-```
-
-::: {.figcaption}
-**Extended Data Fig. 3c.** Gene set enrichment analysis (GSEA) dot plot
-relating activation-associated GPs to curated immunologic signature gene sets.
-Color denotes −log10 adjusted *P* value, and dot size denotes the normalized
-enrichment score (NES).
-:::
-
-## (d) GP79+ rate across conditions {#figs3d}
-
-```{r figs3d-code, code=code_for("../script/FigureS3.R", "s3d"), eval=FALSE}
-```
-
-```{r figs3d-img, echo=FALSE, out.width="49%"}
-knitr::include_graphics("assets/FigureS3/s3d.png")
-```
-
-::: {.figcaption}
-**Extended Data Fig. 3d.** Bar plot showing the percentage of GP79-active
-cells among all activated CD4+ T cells across immunological challenges.
-:::
-
-## (e) Per-cell log2FC heatmap {#figs3e}
-
-```{r figs3e-code, code=code_for("../script/FigureS3.R", "s3e"), eval=FALSE}
-```
-
-```{r figs3e-img, echo=FALSE, out.width="100%"}
-knitr::include_graphics("assets/FigureS3/s3e.png")
-```
-
-::: {.figcaption}
-**Extended Data Fig. 3e.** Heatmap showing single-cell GP activity in
-activated CD4+ and CD8+ T cells (log2 fold change in GP activity relative to
-the resting baseline of the same lineage). Cells are grouped by cluster.
-:::
-
-## (f) GP57+ rate, cancer vs. other conditions {#figs3f}
-
-```{r figs3f-code, code=code_for("../script/FigureS3.R", "s3f"), eval=FALSE}
-```
-
-```{r figs3f-img, echo=FALSE, out.width="49%"}
-knitr::include_graphics("assets/FigureS3/s3f.png")
-```
-
-::: {.figcaption}
-**Extended Data Fig. 3f.** Bar plot showing the percentage of GP57-active
-cells among activated CD8+ and CD4+ T cells in cancer versus all other
-conditions.
+**Extended Data Fig. 3.** Row-centered mean GP activity across the 107
+level-2 clusters. Mean GP activity computed in samples at baseline.
 :::

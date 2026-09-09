@@ -26,13 +26,13 @@
 #   6i   --     gating, GP77   (new panel)
 #   6j   --     gating, GP8    (new panel, promoted from the retired S6 gallery)
 #   --   6b     protein-program heatmap  -> moved out; since 2026-07-30 it is
-#                 its own figure, now Figure S6 (script/FigureS6.R)
+#                 its own figure, now Figure S7 (script/FigureS7.R)
 #   --   6j,6k  CD69 GPs per tissue/lineage -> moved to Figure S7, s7a/s7b
 #
 # Source: ported from Figure_CITEseq.R (panels b, c, d) and
 # gated_protein_loading_plot.R (panels e-j, using
 # plot_gated_gp_vs_protein() from code/R/gated_protein_helpers.R,
-# shared with FigureS7.R).
+# shared with FigureS8.R).
 #
 # Required inputs (data/), read via code/R/citeseq_shared_setup.R below --
 # see code/README.md's "Data provenance" table for the full picture:
@@ -63,7 +63,7 @@ source("code/R/gated_protein_helpers.R")
 # 6a: hand-drawn schematic -- not code-generated, no output here.
 
 # ============================================================
-# Load data (shared with FigureS6.R and FigureS7.R)
+# Load data (shared with FigureS7.R and FigureS8.R)
 # ============================================================
 source("code/R/citeseq_shared_setup.R")
 

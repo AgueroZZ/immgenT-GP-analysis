@@ -1,0 +1,3 @@
+panel,grouping,view,gp_count,group_count,selection,centered_definition,palette,color_min,color_mid,color_max,observed_min,observed_max,frac_saturated
+s5a,organ_simplified,row-centered mean loading of the 31 tissue-active GPs,31,18,raw mean loading >= 0.1 in >= 1 tissue,group mean minus mean across groups for each GP,blue-white-red,-0.2,0,0.2,-0.172020728605074,0.328021877246472,0.00896057347670251
+s5b,annotation_level1,row-centered mean loading of the 31 tissue-active GPs,31,8,raw mean loading >= 0.1 in >= 1 tissue,group mean minus mean across groups for each GP,purple-white-green,-0.1,0,0.1,-0.0872483925909589,0.243878525616068,0.0362903225806452

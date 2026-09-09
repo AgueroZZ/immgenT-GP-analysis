@@ -1,5 +1,5 @@
 ---
-title: "Extended Data Figure 6: Protein programs across GPs"
+title: "Extended Data Figure 6: Composition of GP activity in T cell clusters"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -10,12 +10,19 @@ editor_options:
 source("../code/R/doc_code.R")
 ```
 
-This single-panel figure is produced by
+This figure is one stacked panel -- seven wide rows, one per T cell lineage --
+produced by
 [`script/FigureS6.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS6.R),
-which shares its CITE-seq setup and protein filters with
-[Figure 6](Figure6.html) and [Extended Data Figure 7](FigureS7.html) via
-`code/R/citeseq_shared_setup.R`. The code below is shown for reference (not
-re-executed on this page, since the shared setup takes about a minute to load);
+which assembles the rows itself, so the figure on disk is always the one the
+script last drew. It is the per-cluster, all-GP counterpart of
+[Fig. 3b](Figure3.html#fig3b), which shows six hand-picked lineage-defining GPs
+grouped by lineage: here every GP that marks a sub-lineage cluster is shown, and
+cells are grouped by cluster within each lineage. The GPs are selected from the
+cluster AUCs published as [Extended Data Table 6](ExtendedDataTable6.html), and
+[`script/verify_structure_plot_gps.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/verify_structure_plot_gps.R)
+re-derives every row's GP set from that published table, failing if it disagrees
+with the figure or with the caption below. The code is shown for reference (not
+re-executed on this page, since it loads the full cell-by-GP loading matrix);
 the image is its pre-rendered output.
 
 ## Setup
@@ -23,9 +30,21 @@ the image is its pre-rendered output.
 ```{r figs6-setup, code=code_for("../script/FigureS6.R", "doc:setup"), eval=FALSE}
 ```
 
-## Protein-program heatmap {#figs6}
+## Row definitions and GP selection {#figs6-rows}
 
-```{r figs6-code, code=code_for("../script/FigureS6.R", "s6"), eval=FALSE}
+The row map, the AUC threshold, the display filters and the assembled geometry
+live in `code/R/structure_plot_panels.R`, which the verification script reads as
+well, so the figure and the check cannot disagree about what is shown:
+
+```{r figs6-rows-code, code=code_for("../code/R/structure_plot_panels.R", "doc:panels"), eval=FALSE}
+```
+
+```{r figs6-selection-code, code=code_for("../script/FigureS6.R", "GP selection"), eval=FALSE}
+```
+
+## (a-g) Cluster-level GP membership by lineage {#figs6}
+
+```{r figs6-code, code=code_for("../script/FigureS6.R", "s6:"), eval=FALSE}
 ```
 
 ```{r figs6-img, echo=FALSE, out.width="100%"}
@@ -33,7 +52,19 @@ knitr::include_graphics("assets/FigureS6/s6.png")
 ```
 
 ::: {.figcaption}
-**Extended Data Fig. 6.** Heatmap of scaled protein scores for each GP. We
-focused on the 47 proteins that performed best in the immgenT CITE-seq
-dataset.
+**Extended Data Fig. 6a-g.** Structure plots showing single-cell GP activity
+across major clusters of baseline non-thymocyte (a) CD8, (b) CD4, (c) Treg,
+(d) gdT, (e) CD8aa, (f) Tz, and (g) DN cells, focusing on GPs with
+cluster-specific AUC > 0.9.
 :::
+
+## Record of what the rows drew {#figs6-record}
+
+The GP sets, the palette, and the clusters each row drew or omitted are written
+out alongside the figure, which is what
+[`script/verify_structure_plot_gps.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/verify_structure_plot_gps.R)
+compares against [Extended Data Table 6](ExtendedDataTable6.html) and against
+the caption above:
+
+```{r figs6-record-code, code=code_for("../script/FigureS6.R", "What each panel drew"), eval=FALSE}
+```

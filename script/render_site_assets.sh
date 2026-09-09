@@ -26,8 +26,6 @@ DST="analysis/assets"
 # Panels deliberately NOT on the site:
 #   Figure 1/1B, Figure 6/6a  -- hand-drawn schematics, no code, not shown
 #   Figure 7/7A, 7C-7G        -- out of scope (Figma + Matplotlib, no source)
-# Panels whose asset filename differs from the PDF basename:
-#   Figure S4/s4a -> S4a_centered_mean_loading, s4b -> S4b_centered_mean_loading
 # Not handled here:
 #   Figure 7/7B -- script/Figure7b_plot.py saves the published PDF and
 #   analysis/assets/Figure7/7B.png from the SAME matplotlib figure in one call,
@@ -42,14 +40,6 @@ skip() {
   esac
 }
 
-asset_name() {
-  case "$1" in
-    s4a) echo "S4a_centered_mean_loading" ;;
-    s4b) echo "S4b_centered_mean_loading" ;;
-    *) echo "$1" ;;
-  esac
-}
-
 n=0
 for pdf in "$SRC"/Figure*/*.pdf; do
   dir=$(basename "$(dirname "$pdf")")   # e.g. "Figure S1"
@@ -57,7 +47,7 @@ for pdf in "$SRC"/Figure*/*.pdf; do
   skip "$dir/$base" && continue
   outdir="$DST/${dir// /}"              # "Figure S1" -> "FigureS1"
   mkdir -p "$outdir"
-  out="$outdir/$(asset_name "$base").png"
+  out="$outdir/$base.png"
   # -strip / exclude-chunk: ImageMagick otherwise writes creation-time text and
   # tIME chunks, so re-running would rewrite all 60 PNGs with new bytes and show
   # up as a 60-file diff even when nothing changed.

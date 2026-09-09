@@ -12,7 +12,7 @@ source("../code/R/doc_code.R")
 
 All panels are produced by
 [`script/Figure4.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure4.R),
-which shares its curated GP set with [Extended Data Figure 3](FigureS3.html) via
+which shares its curated GP set with [Extended Data Figure 4](FigureS4.html) via
 `code/R/activation_shared_setup.R`. The code below is shown for
 reference (not re-executed on this page); the images are its pre-rendered
 output.

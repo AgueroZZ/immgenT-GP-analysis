@@ -12,8 +12,8 @@ source("../code/R/doc_code.R")
 
 All panels except (a) are produced by
 [`script/Figure6.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure6.R),
-which shares its CITE-seq setup with [Extended Data Figure 6](FigureS6.html) and
-[Extended Data Figure 7](FigureS7.html) via
+which shares its CITE-seq setup with [Extended Data Figure 7](FigureS7.html) and
+[Extended Data Figure 8](FigureS8.html) via
 `code/R/citeseq_shared_setup.R`. The code below is shown for
 reference (not re-executed on this page, since this script takes about a
 minute to run); the images are its pre-rendered output.
@@ -63,7 +63,7 @@ CD8+ T cells (x-axis) with CD4+ T cells (b) or Treg cells (c).
 
 The ten GPs, and the correlation-based order they are drawn in, are defined once
 in `code/R/citeseq_shared_setup.R`, because
-[Extended Data Fig. 7a, b](FigureS7.html#figs7ab) show the same GPs in the same
+[Extended Data Fig. 8a, b](FigureS8.html#figs8ab) show the same GPs in the same
 order from a different script:
 
 ```{r fig6d-gps, code=code_for("../code/R/citeseq_shared_setup.R", "doc:cd69"), eval=FALSE}

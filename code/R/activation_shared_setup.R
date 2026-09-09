@@ -1,6 +1,6 @@
 # Shared setup for the Figure 3 / Figure S3 scripts (T-cell activation GPs).
 #
-# Figure3.R and FigureS3.R both build on the same curated set of "activation"
+# Figure4.R and FigureS4.R both build on the same curated set of "activation"
 # GPs, the same CD4/CD8 activated-vs-resting cell groupings, and the same
 # semantic color grouping (CD4-only / CD8-only / both-up / both-down). This
 # was duplicated near-verbatim across panels in the original

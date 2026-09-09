@@ -33,13 +33,14 @@ documented on the page above; the RQVI panels are documented in the
 
 + [Extended Data Figure 1: GP reproducibility and batch-effect evaluation](FigureS1.html)
 + [Extended Data Figure 2: Tz- and CD8-specific GPs (GP30 and GP58, respectively)](FigureS2.html)
-+ [Extended Data Figure 3: Activation-associated GPs](FigureS3.html)
-+ [Extended Data Figure 4: GP activity across tissues and T cell clusters](FigureS4.html)
-+ [Extended Data Figure 5: Composition of GP activity in T cell clusters](FigureS5.html)
-+ [Extended Data Figure 6: Protein programs across GPs](FigureS6.html)
-+ [Extended Data Figure 7: Surface proteins association with GP](FigureS7.html)
++ [Extended Data Figure 3: GP activity across T cell clusters](FigureS3.html)
++ [Extended Data Figure 4: Activation-associated GPs](FigureS4.html)
++ [Extended Data Figure 5: Tissue-associated GPs across tissues and lineages](FigureS5.html)
++ [Extended Data Figure 6: Composition of GP activity in T cell clusters](FigureS6.html)
++ [Extended Data Figure 7: Protein programs across GPs](FigureS7.html)
++ [Extended Data Figure 8: Surface proteins association with GP](FigureS8.html)
 
-Extended Data Figure 8 (RQVI scalability and representative matches to
+Extended Data Figure 9 (RQVI scalability and representative matches to
 lineage-associated EBMF GPs) is documented in the same
 [companion repository for the RQVI framework](https://github.com/TianzeCompbio/RQVI_GP_figures/tree/main).
 

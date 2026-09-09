@@ -25,7 +25,7 @@
 # helper is now unused.
 #
 # Source: ported from Figure_Activation.R, which also produced the
-# Figure S3 panels (see FigureS3.R) from the same curated GP set and cell
+# Figure S4 panels (see FigureS4.R) from the same curated GP set and cell
 # groupings -- that shared setup now lives in
 # code/R/activation_shared_setup.R, sourced by both scripts.
 #
