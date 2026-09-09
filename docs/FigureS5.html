@@ -12,7 +12,7 @@
 <meta name="author" content="Ziang Zhang" />
 
 
-<title>Extended Data Figure 5: Composition of GP activity in T cell clusters</title>
+<title>Extended Data Figure 5: Tissue-associated GPs across tissues and lineages</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -353,8 +353,8 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Extended Data Figure 5: Composition of GP
-activity in T cell clusters</h1>
+<h1 class="title toc-ignore">Extended Data Figure 5: Tissue-associated
+GPs across tissues and lineages</h1>
 <h4 class="author">Ziang Zhang</h4>
 
 </div>
@@ -384,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-09-04
+<strong>Last updated:</strong> 2026-09-09
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0267e5bcfe5937ac6c891b4f72c4392fe1ac129ctargetblank0267e5ba">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0e84840937f3e5cd6e9797a08404989152da6628targetblank0e84840a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0267e5bcfe5937ac6c891b4f72c4392fe1ac129c" target="_blank">0267e5b</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0e84840937f3e5cd6e9797a08404989152da6628" target="_blank">0e84840</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0267e5bcfe5937ac6c891b4f72c4392fe1ac129ctargetblank0267e5ba"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0e84840937f3e5cd6e9797a08404989152da6628targetblank0e84840a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0267e5bcfe5937ac6c891b4f72c4392fe1ac129c" target="_blank">0267e5b</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0e84840937f3e5cd6e9797a08404989152da6628" target="_blank">0e84840</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -579,7 +579,6 @@ Ignored files:
     Ignored:    figures/final-selected/Figure 2/.DS_Store
     Ignored:    figures/final-selected/Figure 4/.DS_Store
     Ignored:    figures/final-selected/Figure S1/.DS_Store
-    Ignored:    figures/final-selected/Figure S4/.DS_Store
     Ignored:    figures/templates_20260729/
     Ignored:    internal/
     Ignored:    log/
@@ -633,6 +632,41 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/c233cd8210f5f908358ca6f17246829fcd369968/analysis/FigureS5.Rmd" target="_blank">c233cd8</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-09
+</td>
+<td>
+Extended Data reorganisation: split the tissue/cluster figure, renumber
+3-8
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/1e88d7e2755e5b6789d37c355e8fb93b18ae9848/docs/FigureS5.html" target="_blank">1e88d7e</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-04
+</td>
+<td>
+Build site: published captions and titles across all 24 pages
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1187,247 +1221,180 @@ Add Figure S5: EBMF vs matched-RQVI level2-cluster comparison
 </div>
 </div>
 </div>
-<p>This figure is one stacked panel – seven wide rows, one per T cell
-lineage – produced by <a
-href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS5.R"><code>script/FigureS5.R</code></a>,
-which assembles the rows itself, so the figure on disk is always the one
-the script last drew. It is the per-cluster, all-GP counterpart of <a
-href="Figure3.html#fig3b">Fig. 3b</a>, which shows six hand-picked
-lineage-defining GPs grouped by lineage: here every GP that marks a
-sub-lineage cluster is shown, and cells are grouped by cluster within
-each lineage. The GPs are selected from the cluster AUCs published as <a
-href="ExtendedDataTable6.html">Extended Data Table 6</a>, and <a
-href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/verify_structure_plot_gps.R"><code>script/verify_structure_plot_gps.R</code></a>
-re-derives every row’s GP set from that published table, failing if it
-disagrees with the figure or with the caption below. The code is shown
-for reference (not re-executed on this page, since it loads the full
-cell-by-GP loading matrix); the image is its pre-rendered output.</p>
-<div id="setup" class="section level2">
-<h2>Setup</h2>
-<pre class="r"><code>library(ggplot2)
-library(ggrastr)
-library(cowplot)
-library(fastTopics) # structure_plot()
+<p>Both panels are produced by <a
+href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS5.R"><code>script/FigureS5.R</code></a>.
+They show the same 31 GPs – the programs active across tissues – first
+across the 18 tissues and then across the 8 T cell lineages, so that a
+program’s tissue distribution can be read against its lineage
+distribution on the same rows. The analysis uses healthy non-thymocyte
+cells (<code>condition_broad == "healthy"</code> and
+<code>annotation_level1 != "thymocyte"</code>). For each GP, its mean
+loading across the groups shown is subtracted from every group mean, so
+a row says where a program is more or less active than its own average
+rather than how large its loading is. It is the tissue counterpart of <a
+href="FigureS3.html">Extended Data Figure 3</a>, which shows all 200 GPs
+across the level-2 clusters, and it puts the 31 programs behind <a
+href="Figure5.html">Figure 5</a>’s AUC analysis on a single pair of
+axes.</p>
+<div id="setup-and-the-31-tissue-active-gps" class="section level2">
+<h2>Setup and the 31 tissue-active GPs</h2>
+<p>A GP is taken to be active across tissues when its <em>raw</em>
+(uncentered) mean loading reaches 0.1 in at least one of the 18 tissues;
+31 of the 200 GPs pass. This is a threshold on activity, not on
+differential activity – the panels then show how that activity is
+distributed. The expected set is written out in the script, so a change
+in the loadings, the cell filter or the cutoff fails the run rather than
+quietly redrawing a different figure:</p>
+<pre class="r"><code># Figure S5. The tissue-associated GPs, across tissues and across lineages.
+#
+# Panels produced (see analysis/FigureS5.Rmd for the caption text):
+#   s5a  Row-centered mean GP activity across the 18 tissues, restricted to the
+#        31 GPs that are active across tissues. Blue-white-red scale.
+#   s5b  The same 31 GPs in the same row order, but across the 8 T cell
+#        lineages. Purple-white-green scale, so the two halves of the figure
+#        cannot be mistaken for each other.
+#
+#
+# &quot;Active across tissues&quot; is the selection the manuscript&#39;s &quot;31 programs active
+# across tissues&quot; refers to: a GP is kept when its *raw* (uncentered) mean
+# loading reaches 0.1 in at least one of the 18 tissues. That is a threshold on
+# activity, not on differential activity -- the panels then show, per GP, how
+# that activity is distributed, by subtracting the GP&#39;s mean across the groups
+# shown from every group mean. Each panel&#39;s centered color scale is fixed:
+# [-0.2, 0.2] for (a), matching the retired 200-GP tissue heatmap it comes from,
+# and the tighter [-0.1, 0.1] for (b), because spreading a program over eight
+# lineages instead of eighteen tissues gives much smaller deviations and (a)&#39;s
+# scale renders the lineage panel almost blank. Values outside each range
+# saturate at the endpoint colors: 0.9% of (a)&#39;s cells and 3.6% of (b)&#39;s.
+#
+# Required inputs (data/) -- see code/README.md&#39;s &quot;Data provenance&quot; table
+# for the full picture:
+#   L_pm_filtered.rds                        [code/pipeline/01b_filter_cells.R]
+#   igt1_96_..._ADTonly.Rds                  [primary input Seurat object]
 
-if (!file.exists(&quot;code/R/structure_plot_panels.R&quot;)) {
+suppressPackageStartupMessages({
+  library(ComplexHeatmap)
+  library(circlize)
+  library(grid)
+  library(ZemmourLib)
+})
+
+if (!file.exists(&quot;code/R/setup_data.R&quot;)) {
   stop(&quot;Run this script from the immgenT-GP-analysis repository root.&quot;)
 }
-source(&quot;code/R/structure_plot_panels.R&quot;)
 
-data_path &lt;- &quot;data/&quot;
-figure_path &lt;- &quot;figures/final-selected/Figure S5/&quot;
-record_path &lt;- &quot;output/FigureS5/&quot;
+source(&quot;code/R/setup_data.R&quot;)
+source(&quot;code/R/centered_mean_heatmap.R&quot;)
+
+figure_path &lt;- &quot;figures/final-selected/Figure S5&quot;
 dir.create(figure_path, recursive = TRUE, showWarnings = FALSE)
-dir.create(record_path, recursive = TRUE, showWarnings = FALSE)
+run_started_at &lt;- Sys.time()
 
-# Record when this run started, to assert at the end that the figure is newer.
-run_started_at &lt;- Sys.time()</code></pre>
-</div>
-<div id="figs5-rows" class="section level2">
-<h2>Row definitions and GP selection</h2>
-<p>The row map, the AUC threshold, the display filters and the assembled
-geometry live in <code>code/R/structure_plot_panels.R</code>, which the
-verification script reads as well, so the figure and the check cannot
-disagree about what is shown:</p>
-<pre class="r"><code># Row letter per lineage, in stacking order -- the level-1 lineage order of
-# Figure 1D and Figure 3, with thymocytes and DP cells excluded as they are
-# there. The letters are the panel labels cowplot::plot_grid() draws on the
-# assembled figure. Both consumers iterate over the names of this map, so a
-# lineage cannot be drawn, or checked, under another lineage&#39;s letter.
-structure_plot_panels &lt;- c(
-  &quot;CD8&quot; = &quot;a&quot;,
-  &quot;CD4&quot; = &quot;b&quot;,
-  &quot;Treg&quot; = &quot;c&quot;,
-  &quot;gdT&quot; = &quot;d&quot;,
-  &quot;CD8aa&quot; = &quot;e&quot;,
-  &quot;Tz&quot; = &quot;f&quot;,
-  &quot;DN&quot; = &quot;g&quot;
+# ============================================================
+# Setup: the healthy non-thymocyte tissue and lineage mean matrices
+# ============================================================
+gp_data &lt;- load_gp_data()
+reference &lt;- healthy_nonthymocyte_reference(gp_data)
+L_reference &lt;- reference$L
+meta_reference &lt;- reference$meta
+
+organ_color_limit &lt;- 0.2
+level1_color_limit &lt;- 0.1
+level1_order &lt;- c(&quot;CD8&quot;, &quot;CD4&quot;, &quot;Treg&quot;, &quot;gdT&quot;, &quot;CD8aa&quot;, &quot;Tz&quot;, &quot;DN&quot;, &quot;DP&quot;)
+
+organ_raw &lt;- mean_loading_by_group(L_reference, meta_reference$organ_simplified)$matrix
+level1_raw &lt;- mean_loading_by_group(L_reference, meta_reference$annotation_level1)$matrix
+
+# ============================================================
+# GP selection: the 31 GPs active across tissues
+# ============================================================
+# The same filter as experiments/healthy_nonthymus_mean_loading_heatmaps/: a GP
+# is kept when at least one tissue&#39;s raw mean loading reaches the cutoff. The
+# expected set is spelled out so that a change in the loadings, the cell
+# filter or the cutoff fails here instead of quietly redrawing a different
+# figure from the one the manuscript&#39;s &quot;31 programs&quot; sentence describes.
+raw_mean_cutoff &lt;- 0.1
+tissue_active &lt;- rowSums(organ_raw &gt;= raw_mean_cutoff) &gt; 0L
+selected_gps &lt;- rownames(organ_raw)[tissue_active]
+
+expected_gps &lt;- paste0(&quot;GP&quot;, c(
+  1, 3, 4, 6, 8, 9, 11, 22, 23, 25, 26, 29, 30, 32, 35, 41, 43, 49, 51, 58,
+  62, 63, 72, 80, 93, 100, 166, 170, 171, 174, 177
+))
+stopifnot(
+  length(expected_gps) == 31L,
+  identical(selected_gps, expected_gps)
 )
 
-# A GP is shown in a lineage&#39;s panel when its one-vs-rest AUC for predicting
-# membership in at least one of that lineage&#39;s annotation_level2 clusters
-# exceeds this threshold. Those AUCs are the values published as Extended Data
-# Table 6 -- script/ExtendedDataTable6_GP_AUC_cluster.R reads the same file --
-# which is what makes the two checkable against each other.
-structure_plot_auc_threshold &lt;- 0.9
+organ_selected_raw &lt;- organ_raw[tissue_active, , drop = FALSE]
+level1_selected_raw &lt;- level1_raw[tissue_active, , drop = FALSE]
+organ_centered &lt;- center_by_gp_mean(organ_selected_raw)
+level1_centered &lt;- center_by_gp_mean(level1_selected_raw)
 
-# Display filters. These apply to the plotted cells only, never to the
-# AUC-based GP selection above, which always uses every cluster of the lineage.
-structure_plot_min_cluster_cells &lt;- 100      # smaller clusters are not drawn
-structure_plot_max_cells_per_cluster &lt;- 2000 # larger clusters are subsampled
-
-# Assembled geometry: each row is drawn wide and short, and the seven are
-# stacked into one figure. A row carries up to 21 cluster blocks and their
-# labels, so it needs the width; the height then follows from keeping seven
-# rows on one page.
-structure_plot_width &lt;- 16     # inches, the whole figure
-structure_plot_row_height &lt;- 3 # inches per lineage row</code></pre>
-<pre class="r"><code># ============================================================
-# GP selection
 # ============================================================
-# Which lineage each cluster belongs to, from the metadata.
-cluster_lineage &lt;- cluster_lineage_map(level2_all, level1_all)
-
-auc_clusters &lt;- rownames(auc_level2)
-prefix_lineage &lt;- sub(&quot;[.].*$&quot;, &quot;&quot;, auc_clusters)
-if (!identical(unname(cluster_lineage[auc_clusters]), prefix_lineage)) {
-  disagree &lt;- auc_clusters[unname(cluster_lineage[auc_clusters]) != prefix_lineage]
-  stop(sprintf(
-    &quot;cluster name prefixes disagree with annotation_level1 for: %s&quot;,
-    paste(disagree, collapse = &quot;, &quot;)
-  ))
-}
-
-# One GP set per row. Each row&#39;s palette is then assigned inside the loop
-# below, independently of the other rows -- see structure_plot_row_colors().
-panel_gps &lt;- gps_above_auc_by_lineage(auc_level2, cluster_lineage)
-
-message(sprintf(
-  &quot;%d GPs over %d rows (AUC &gt; %.1f): %s&quot;,
-  length(unique(unlist(panel_gps, use.names = FALSE))), length(panel_gps),
-  structure_plot_auc_threshold,
-  paste(sprintf(&quot;%s %d&quot;, names(panel_gps), lengths(panel_gps)), collapse = &quot;, &quot;)
-))</code></pre>
-</div>
-<div id="figs5" class="section level2">
-<h2>(a-g) Cluster-level GP membership by lineage</h2>
-<pre class="r"><code># ============================================================
-# s5: per-lineage rows, stacked into one figure
+# Ordering: (a) sets the row order, (b) reuses it
 # ============================================================
-# The loop iterates over the names of the row map, so a lineage cannot be drawn
-# under another lineage&#39;s letter. Each row is kept as a ggplot and the rows are
-# assembled below, rather than saved one file per lineage.
-lineage_plots &lt;- list()
-cluster_records &lt;- list()
-gp_records &lt;- list()
+# Recomputing the dominant-group order on the 31-row submatrix (rather than
+# inheriting the retired 200-GP order) is what makes the tissue columns reflect
+# the GPs actually on display. Panel (b) then keeps (a)&#39;s row order, so a GP sits
+# on the same line in both halves and can be read across; its columns are
+# Figure 1&#39;s lineage order rather than a dominant-group order.
+organ_order &lt;- dominant_group_order(organ_selected_raw)
 
-for (lineage in names(structure_plot_panels)) {
-  panel &lt;- structure_plot_panels[[lineage]]
-  gps_lineage &lt;- panel_gps[[lineage]]
-
-  lineage_cells &lt;- healthy_non_thymocyte[level1_all[healthy_non_thymocyte] == lineage]
-  cluster_size &lt;- table(droplevels(factor(level2_all[lineage_cells])))
-  small_clusters &lt;- names(cluster_size)[cluster_size &lt; structure_plot_min_cluster_cells]
-  lineage_cells &lt;- lineage_cells[!level2_all[lineage_cells] %in% small_clusters]
-
-  # Cap each cluster&#39;s width so one large cluster cannot crowd out the rest.
-  set.seed(1234)
-  keep &lt;- unlist(lapply(
-    split(seq_along(lineage_cells), level2_all[lineage_cells]),
-    function(idx) {
-      if (length(idx) &gt; structure_plot_max_cells_per_cluster) {
-        sample(idx, structure_plot_max_cells_per_cluster)
-      } else {
-        idx
-      }
-    }
-  ))
-  lineage_cells &lt;- lineage_cells[keep]
-
-  fit_lineage &lt;- L_pm_filtered[lineage_cells, gps_lineage, drop = FALSE]
-  grouping_lineage &lt;- factor(level2_all[lineage_cells])
-
-  # This row&#39;s colors, assigned from the top of the palette without reference to
-  # any other row. structure_plot_row_colors() returns them in ascending GP
-  # order, which is the column order here.
-  colors_lineage &lt;- structure_plot_row_colors(gps_lineage)
-  if (!identical(names(colors_lineage), colnames(fit_lineage))) {
-    stop(sprintf(&quot;panel %s: palette order does not match its GP columns.&quot;, panel))
-  }
-
-  set.seed(1234)
-  p &lt;- structure_plot(
-    fit_lineage,
-    topics = gps_lineage,
-    gap = 40,
-    n = 10000,
-    colors = colors_lineage,
-    grouping = grouping_lineage,
-    ggplot_call = rasterized_structure_plot_call
-  ) +
-    labs(
-      y = &quot;membership&quot;,
-      color = &quot;&quot;,
-      fill = &quot;&quot;,
-      title = sprintf(
-        &quot;%s (%d GPs, AUC &gt; %.1f)&quot;,
-        lineage,
-        length(gps_lineage),
-        structure_plot_auc_threshold
-      )
-    ) +
-    guides(
-      fill = guide_legend(ncol = 2),
-      color = guide_legend(ncol = 2)
-    ) +
-    theme(
-      plot.title = element_text(size = 11, face = &quot;bold&quot;),
-      axis.text.x = element_text(size = 6, angle = 45, hjust = 1),
-      axis.text.y = element_text(size = 9),
-      axis.title = element_text(size = 10, face = &quot;bold&quot;),
-      legend.position = &quot;right&quot;,
-      legend.key.size = unit(0.25, &quot;cm&quot;),
-      legend.text = element_text(size = 5),
-      legend.spacing.y = unit(0.02, &quot;cm&quot;)
-    )
-
-  lineage_plots[[lineage]] &lt;- p
-
-  # What this row used, for the alignment check. Every cluster of the lineage
-  # is listed, drawn or not: the GP selection above uses all of them.
-  lineage_clusters &lt;- sort(auc_clusters[prefix_lineage == lineage])
-  drawn_size &lt;- table(droplevels(factor(level2_all[lineage_cells])))
-  cluster_records[[lineage]] &lt;- data.frame(
-    panel = panel,
-    lineage = lineage,
-    cluster = lineage_clusters,
-    n_cells_healthy = as.integer(cluster_size[lineage_clusters]),
-    n_cells_drawn = as.integer(ifelse(
-      lineage_clusters %in% names(drawn_size),
-      drawn_size[lineage_clusters],
-      0L
-    )),
-    stringsAsFactors = FALSE
-  )
-  gp_records[[lineage]] &lt;- data.frame(
-    panel = panel,
-    lineage = lineage,
-    gp = gps_lineage,
-    color = unname(colors_lineage),
-    max_auc_in_lineage = unname(apply(
-      auc_level2[lineage_clusters, gps_lineage, drop = FALSE], 2,
-      max, na.rm = TRUE
-    )),
-    stringsAsFactors = FALSE
-  )
+level1_groups &lt;- colnames(level1_centered)
+if (!setequal(level1_groups, level1_order)) {
+  stop(&quot;The observed lineages do not match the Figure 1 level1 order.&quot;)
 }
-
-# Rows are stacked in the map&#39;s order and labelled a-g. align = &quot;v&quot; equalises
-# everything outside the plotting panel -- y-axis labels and the per-row legends,
-# which differ in width because the rows show 9 to 44 GPs -- so the cluster
-# blocks line up down the figure instead of each row starting at its own x.
-p_s5 &lt;- cowplot::plot_grid(
-  plotlist = lineage_plots[names(structure_plot_panels)],
-  nrow = length(structure_plot_panels),
-  align = &quot;v&quot;,
-  labels = &quot;auto&quot;,
-  label_size = 14
+level1_column_order &lt;- order(match(level1_groups, level1_order))
+level1_row_order &lt;- match(
+  rownames(organ_centered)[organ_order$row_order],
+  rownames(level1_centered)
 )
-ggsave(
-  filename = paste0(figure_path, &quot;s5.pdf&quot;),
-  plot = p_s5,
-  width = structure_plot_width,
-  height = structure_plot_row_height * length(structure_plot_panels),
-  dpi = 300,
-  limitsize = FALSE
+
+stopifnot(
+  nrow(organ_centered) == 31L,
+  nrow(level1_centered) == 31L,
+  ncol(organ_centered) == 18L,
+  ncol(level1_centered) == 8L,
+  identical(rownames(organ_centered), rownames(level1_centered)),
+  max(abs(rowMeans(organ_centered))) &lt; 1e-12,
+  max(abs(rowMeans(level1_centered))) &lt; 1e-12
+)
+
+organ_palette &lt;- palette_for_groups(
+  colnames(organ_centered),
+  ZemmourLib::immgent_colors$organ_simplified,
+  &quot;organ_simplified&quot;
+)
+level1_palette &lt;- palette_for_groups(
+  colnames(level1_centered),
+  ZemmourLib::immgent_colors$level1,
+  &quot;annotation_level1&quot;
 )</code></pre>
-<p><img src="assets/FigureS5/s5.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="figs5a" class="section level2">
+<h2>(a) Tissue mean loading</h2>
+<pre class="r"><code># ============================================================
+# s5a: the 31 tissue-active GPs across the 18 tissues
+# ============================================================
+render_centered_heatmap(
+  organ_centered,
+  organ_palette,
+  &quot;tissue (organ_simplified)&quot;,
+  file.path(figure_path, &quot;s5a.pdf&quot;),
+  organ_order$row_order,
+  organ_order$column_order,
+  organ_color_limit,
+  &quot;31 tissue-active GPs; dominant-group blocks&quot;,
+  palette = heatmap_palettes$blue_red
+)</code></pre>
+<p><img src="assets/FigureS5/s5a.png" width="100%" style="display: block; margin: auto;" /></p>
 <p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-s5">
-Past versions of s5.png
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-s5a">
+Past versions of s5a.png
 </button>
 </p>
-<div id="fig-s5" class="collapse">
+<div id="fig-s5a" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -1446,35 +1413,13 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/5d3b86cc04ed6099a3ad2e5c7b7b002969e34c47/docs/assets/FigureS5/s5.png" target="_blank">5d3b86c</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/c233cd8210f5f908358ca6f17246829fcd369968/docs/assets/FigureS5/s5a.png" target="_blank">c233cd8</a>
 </td>
 <td>
 Ziang Zhang
 </td>
 <td>
-2026-09-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/19c977fcfe3349cb39a0935774ea6c4d8d671c64/docs/assets/FigureS5/s5.png" target="_blank">19c977f</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-09-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/ac650a0acf95ac77b58c2a65d03ecf420a71dbe8/docs/assets/FigureS5/s5.png" target="_blank">ac650a0</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-30
+2026-09-09
 </td>
 </tr>
 </tbody>
@@ -1482,34 +1427,131 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Extended Data Fig. 5a-g.</strong> Structure plots showing
-single-cell GP activity across major clusters of baseline non-thymocyte
-(a) CD8, (b) CD4, (c) Treg, (d) gdT, (e) CD8aa, (f) Tz, and (g) DN
-cells, focusing on GPs with cluster-specific AUC &gt; 0.9.</p>
+<p><strong>Extended Data Fig. 5a.</strong> Row-centered mean GP activity
+across 18 tissues, for the 31 GPs active across tissues. Mean GP
+activity computed in samples at baseline.</p>
 </div>
 </div>
-<div id="figs5-record" class="section level2">
-<h2>Record of what the rows drew</h2>
-<p>The GP sets, the palette, and the clusters each row drew or omitted
-are written out alongside the figure, which is what <a
-href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/verify_structure_plot_gps.R"><code>script/verify_structure_plot_gps.R</code></a>
-compares against <a href="ExtendedDataTable6.html">Extended Data Table
-6</a> and against the caption above:</p>
+<div id="figs5b" class="section level2">
+<h2>(b) Lineage mean loading</h2>
 <pre class="r"><code># ============================================================
-# What each panel drew, for the alignment check
+# s5b: the same 31 GPs across the 8 lineages
 # ============================================================
-cluster_record &lt;- do.call(rbind, cluster_records)
-cluster_record$n_cells_healthy[is.na(cluster_record$n_cells_healthy)] &lt;- 0L
-write.csv(
-  cluster_record,
-  paste0(record_path, &quot;s5_panel_clusters.csv&quot;),
-  row.names = FALSE
-)
-write.csv(
-  do.call(rbind, gp_records),
-  paste0(record_path, &quot;s5_panel_gps.csv&quot;),
-  row.names = FALSE
+render_centered_heatmap(
+  level1_centered,
+  level1_palette,
+  &quot;lineage (annotation_level1)&quot;,
+  file.path(figure_path, &quot;s5b.pdf&quot;),
+  level1_row_order,
+  level1_column_order,
+  level1_color_limit,
+  &quot;the same 31 GPs, row order from (a)&quot;,
+  palette = heatmap_palettes$purple_green
 )</code></pre>
+<p><img src="assets/FigureS5/s5b.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-s5b">
+Past versions of s5b.png
+</button>
+</p>
+<div id="fig-s5b" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/c233cd8210f5f908358ca6f17246829fcd369968/docs/assets/FigureS5/s5b.png" target="_blank">c233cd8</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-09
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="figcaption">
+<p><strong>Extended Data Fig. 5b.</strong> The same 31 GPs across the 8
+T cell lineages, in the row order of (a). Mean GP activity computed in
+samples at baseline. Note the different color scale: purple-green rather
+than blue-red, and -0.1 to 0.1 rather than -0.2 to 0.2, since spreading
+a program over 8 lineages instead of 18 tissues gives correspondingly
+smaller deviations.</p>
+</div>
+</div>
+<div id="what-the-panels-drew" class="section level2">
+<h2>What the panels drew</h2>
+<p>The 31 GPs, their dominant tissue and lineage, and their row position
+are written out alongside the figure:</p>
+<pre class="r"><code># ============================================================
+# What the panels drew
+# ============================================================
+record_dir &lt;- &quot;output/FigureS5&quot;   # build intermediate (not a manuscript panel)
+dir.create(record_dir, recursive = TRUE, showWarnings = FALSE)
+
+write.csv(
+  data.frame(
+    GP = rownames(organ_centered),
+    max_raw_tissue_mean = as.numeric(apply(organ_selected_raw, 1L, max)),
+    dominant_tissue = colnames(organ_selected_raw)[max.col(organ_selected_raw, ties.method = &quot;first&quot;)],
+    dominant_lineage = colnames(level1_selected_raw)[max.col(level1_selected_raw, ties.method = &quot;first&quot;)],
+    row_in_panel = match(rownames(organ_centered), rownames(organ_centered)[organ_order$row_order])
+  ),
+  file.path(record_dir, &quot;s5_selected_gps.csv&quot;),
+  row.names = FALSE,
+  quote = FALSE
+)
+
+write.csv(
+  data.frame(
+    panel = c(&quot;s5a&quot;, &quot;s5b&quot;),
+    grouping = c(&quot;organ_simplified&quot;, &quot;annotation_level1&quot;),
+    view = &quot;row-centered mean loading of the 31 tissue-active GPs&quot;,
+    gp_count = c(nrow(organ_centered), nrow(level1_centered)),
+    group_count = c(ncol(organ_centered), ncol(level1_centered)),
+    selection = paste0(&quot;raw mean loading &gt;= &quot;, raw_mean_cutoff, &quot; in &gt;= 1 tissue&quot;),
+    centered_definition = &quot;group mean minus mean across groups for each GP&quot;,
+    palette = c(&quot;blue-white-red&quot;, &quot;purple-white-green&quot;),
+    color_min = c(-organ_color_limit, -level1_color_limit),
+    color_mid = 0,
+    color_max = c(organ_color_limit, level1_color_limit),
+    observed_min = c(min(organ_centered), min(level1_centered)),
+    observed_max = c(max(organ_centered), max(level1_centered)),
+    frac_saturated = c(mean(abs(organ_centered) &gt; organ_color_limit),
+                       mean(abs(level1_centered) &gt; level1_color_limit))
+  ),
+  file.path(record_dir, &quot;S5_summary.csv&quot;),
+  row.names = FALSE,
+  quote = FALSE
+)
+
+# A panel that fails to write leaves the previous PDF in place and the script
+# still exits 0, so check the files rather than the exit code.
+expected_panels &lt;- file.path(figure_path, c(&quot;s5a.pdf&quot;, &quot;s5b.pdf&quot;))
+stale &lt;- expected_panels[!file.exists(expected_panels) |
+                           file.mtime(expected_panels) &lt; run_started_at |
+                           file.size(expected_panels) == 0]
+if (length(stale) &gt; 0L) {
+  stop(&quot;These panels were not written by this run: &quot;, paste(stale, collapse = &quot;, &quot;))
+}
+
+message(&quot;Wrote Figure S5 to &quot;, normalizePath(figure_path))</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">

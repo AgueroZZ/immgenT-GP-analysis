@@ -384,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-09-04
+<strong>Last updated:</strong> 2026-09-09
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0267e5bcfe5937ac6c891b4f72c4392fe1ac129ctargetblank0267e5ba">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0e84840937f3e5cd6e9797a08404989152da6628targetblank0e84840a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0267e5bcfe5937ac6c891b4f72c4392fe1ac129c" target="_blank">0267e5b</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0e84840937f3e5cd6e9797a08404989152da6628" target="_blank">0e84840</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0267e5bcfe5937ac6c891b4f72c4392fe1ac129ctargetblank0267e5ba"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0e84840937f3e5cd6e9797a08404989152da6628targetblank0e84840a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0267e5bcfe5937ac6c891b4f72c4392fe1ac129c" target="_blank">0267e5b</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0e84840937f3e5cd6e9797a08404989152da6628" target="_blank">0e84840</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -579,7 +579,6 @@ Ignored files:
     Ignored:    figures/final-selected/Figure 2/.DS_Store
     Ignored:    figures/final-selected/Figure 4/.DS_Store
     Ignored:    figures/final-selected/Figure S1/.DS_Store
-    Ignored:    figures/final-selected/Figure S4/.DS_Store
     Ignored:    figures/templates_20260729/
     Ignored:    internal/
     Ignored:    log/
@@ -633,6 +632,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/0e84840937f3e5cd6e9797a08404989152da6628/analysis/Figure1.Rmd" target="_blank">0e84840</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-09
+</td>
+<td>
+Figure 1d rebuilt: GPs on rows, stratified by level2_group
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/1e88d7e2755e5b6789d37c355e8fb93b18ae9848/docs/Figure1.html" target="_blank">1e88d7e</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-04
+</td>
+<td>
+Build site: published captions and titles across all 24 pages
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1716,10 +1749,26 @@ and tan nodes are genes.</p>
 <div id="fig1d" class="section level2">
 <h2>(d) GP loading heatmap</h2>
 <pre class="r"><code># ============================================================
-# 1D: giant loading heatmap (200 GP loadings x a stratified cell sample; rows =
-# cells by lineage x organ, columns = GPs clustered). The same GPs highlighted
-# in the 1C network are marked here by a top color bar, a colored/bold column
-# label, and a box around each GP column.
+# 1D: giant loading heatmap. Rows are the 200 GPs (clustered); columns are a
+# stratified cell sample blocked lineage &gt; annotation_level2_group &gt; level2.
+# The GPs highlighted in the 1C network are marked here by a left colour bar,
+# a coloured/bold row label, and a box around each highlighted GP row.
+#
+# Two things to know about the cell set:
+#   * Cells whose annotation_level2_group is &quot;miniverse&quot; are excluded. Those are
+#     exactly the seven &quot;.wM&quot; level2 clusters (CD8.wM, CD4.wM, Treg.wM, gdT.wM,
+#     CD8aa.wM, Tz.wM, DN.wM), so 95 level2 clusters become 88. The exclusion is
+#     applied BEFORE sampling and before the anchor-cell search, so every GP
+#     still contributes K_ANCHOR top-loading cells that survive into the plot.
+#   * Cells are stratified by level2: every cluster with at least MIN_CELLS
+#     cells is sampled at N_SAMPLE.
+#
+# Column order: within each lineage the groups are sorted by the first
+# (alphabetically lowest) level2 cluster they contain, and level2 orders cells
+# inside each group. level2 is therefore alphabetical within a group but not
+# across a whole lineage -- each lineage&#39;s &quot;.P&quot; (proliferating) cluster is the
+# single exception, landing at the end of its lineage rather than mid-alphabet.
+# LEVEL2_GROUP_ORDER below fixes the legend order only, not the block order.
 # ============================================================
 suppressPackageStartupMessages({ library(grid) })
 GP_HIGHLIGHTS &lt;- c(
@@ -1727,81 +1776,113 @@ GP_HIGHLIGHTS &lt;- c(
   GP1  = &quot;cyan2&quot;,  GP56 = &quot;red2&quot;,    GP161 = &quot;brown&quot;, GP6  = &quot;green2&quot;,
   GP7  = &quot;green3&quot;, GP196 = &quot;yellow3&quot;)
 
-set.seed(6173)
-MIN_CELLS &lt;- 20; N_SAMPLE &lt;- 80; TOP_ORGANS &lt;- 5; K_ANCHOR &lt;- 5
-level1_order &lt;- c(&quot;CD8&quot;, &quot;CD4&quot;, &quot;Treg&quot;, &quot;gdT&quot;, &quot;CD8aa&quot;, &quot;Tz&quot;, &quot;DN&quot;)
-organs_all &lt;- as.character(unique(seurat_meta_filtered$organ_simplified))
-ln_match &lt;- organs_all[grepl(&quot;^LN$|lymph&quot;, organs_all, ignore.case = TRUE)]
-spleen_match &lt;- organs_all[grepl(&quot;spleen&quot;, organs_all, ignore.case = TRUE)]
-organ_order &lt;- c(spleen_match, ln_match, sort(setdiff(organs_all, c(ln_match, spleen_match))))
+# No annotation_level2_group order or palette exists in ZemmourLib, so both are
+# defined here. The colours are a deliberately different family from the level1
+# primaries so the two annotation bars cannot be confused, and none is
+# near-white (against the white heatmap body a pale category would read as
+# missing data rather than as a level).
+LEVEL2_GROUP_ORDER  &lt;- c(&quot;resting&quot;, &quot;activated&quot;, &quot;proliferating&quot;, &quot;miniverse&quot;, &quot;other&quot;)
+LEVEL2_GROUP_COLORS &lt;- c(resting       = &quot;#80cdc1&quot;, activated = &quot;#b2182b&quot;,
+                         proliferating = &quot;#542788&quot;, miniverse = &quot;#8c510a&quot;,
+                         other         = &quot;#bdbdbd&quot;)
+EXCLUDE_LEVEL2_GROUPS &lt;- c(&quot;miniverse&quot;)
 
-top_organ_combos &lt;- seurat_meta_filtered |&gt;
-  dplyr::filter(annotation_level1 %in% level1_order) |&gt;
-  dplyr::count(annotation_level1, organ_simplified) |&gt;
-  dplyr::group_by(annotation_level1) |&gt;
-  dplyr::slice_max(n, n = TOP_ORGANS, with_ties = FALSE) |&gt;
-  dplyr::ungroup() |&gt; dplyr::select(annotation_level1, organ_simplified)
-sampled_random &lt;- seurat_meta_filtered |&gt;
-  dplyr::filter(annotation_level1 %in% level1_order) |&gt;
-  dplyr::inner_join(top_organ_combos, by = c(&quot;annotation_level1&quot;, &quot;organ_simplified&quot;)) |&gt;
-  dplyr::group_by(annotation_level1, organ_simplified) |&gt;
+set.seed(6173)
+MIN_CELLS &lt;- 20; N_SAMPLE &lt;- 80; K_ANCHOR &lt;- 5
+level1_order &lt;- c(&quot;CD8&quot;, &quot;CD4&quot;, &quot;Treg&quot;, &quot;gdT&quot;, &quot;CD8aa&quot;, &quot;Tz&quot;, &quot;DN&quot;)
+
+meta_1d &lt;- seurat_meta_filtered |&gt;
+  dplyr::filter(annotation_level1 %in% level1_order,
+                !is.na(annotation_level2),
+                !annotation_level2_group %in% EXCLUDE_LEVEL2_GROUPS)
+stopifnot(nrow(meta_1d) &gt; 0)
+L_1d &lt;- L_pm_filtered[meta_1d$cellID, ]
+
+# level2 blocks follow the level1 order, alphabetised within each lineage.
+level2_order &lt;- meta_1d |&gt;
+  dplyr::distinct(annotation_level1, annotation_level2) |&gt;
+  dplyr::arrange(factor(annotation_level1, levels = level1_order),
+                 as.character(annotation_level2)) |&gt;
+  dplyr::pull(annotation_level2) |&gt; as.character()
+
+sampled_random &lt;- meta_1d |&gt;
+  dplyr::group_by(annotation_level2) |&gt;
   dplyr::filter(dplyr::n() &gt;= MIN_CELLS) |&gt;
   dplyr::slice_sample(n = N_SAMPLE) |&gt; dplyr::ungroup()
-anchor_cellids &lt;- apply(L_pm_filtered, 2, function(x)
-  rownames(L_pm_filtered)[order(x, decreasing = TRUE)[seq_len(K_ANCHOR)]]) |&gt; as.vector() |&gt; unique()
-anchor_meta &lt;- seurat_meta_filtered |&gt;
-  dplyr::filter(cellID %in% anchor_cellids, annotation_level1 %in% level1_order) |&gt;
-  dplyr::inner_join(top_organ_combos, by = c(&quot;annotation_level1&quot;, &quot;organ_simplified&quot;))
+anchor_cellids &lt;- apply(L_1d, 2, function(x)
+  rownames(L_1d)[order(x, decreasing = TRUE)[seq_len(K_ANCHOR)]]) |&gt;
+  as.vector() |&gt; unique()
+anchor_meta &lt;- meta_1d |&gt; dplyr::filter(cellID %in% anchor_cellids)
+
 all_meta &lt;- dplyr::bind_rows(sampled_random, anchor_meta) |&gt;
   dplyr::distinct(cellID, .keep_all = TRUE) |&gt;
-  dplyr::arrange(factor(annotation_level1, levels = level1_order),
-                 factor(organ_simplified, levels = organ_order))
+  dplyr::filter(as.character(annotation_level2) %in% level2_order)
 
-L_sampled &lt;- L_pm_filtered[all_meta$cellID, ]
+# Sort keys: lineage, then group by its first level2 cluster, then level2.
+l2g     &lt;- as.character(all_meta$annotation_level2_group)
+l1_rank &lt;- match(as.character(all_meta$annotation_level1), level1_order)
+l2_rank &lt;- match(as.character(all_meta$annotation_level2), level2_order)
+stopifnot(!anyNA(l1_rank), !anyNA(l2_rank),
+          all(l2g %in% LEVEL2_GROUP_ORDER))
+blk      &lt;- paste(l1_rank, l2g, sep = &quot;|&quot;)
+grp_rank &lt;- tapply(l2_rank, blk, min)[blk]
+all_meta &lt;- all_meta[order(l1_rank, grp_rank, l2_rank), ]
+l2g &lt;- as.character(all_meta$annotation_level2_group)
+
+level1_present       &lt;- intersect(level1_order, unique(as.character(all_meta$annotation_level1)))
+level2_present       &lt;- intersect(level2_order, unique(as.character(all_meta$annotation_level2)))
+level2_group_present &lt;- intersect(LEVEL2_GROUP_ORDER, unique(l2g))
+# Each lineage x group pair must be one contiguous block on the axis.
+stopifnot(!any(duplicated(rle(paste(l1_rank[order(l1_rank, grp_rank, l2_rank)], l2g))$values)))
+
+L_sampled &lt;- L_1d[all_meta$cellID, ]
 clip_val &lt;- quantile(L_sampled, 0.99)
 L_display &lt;- pmin(L_sampled, clip_val)
 colnames(L_display) &lt;- gsub(&quot;^K&quot;, &quot;GP&quot;, colnames(L_display))
+mat_1D &lt;- t(L_display)   # rows = GPs, columns = cells
 col_fun &lt;- colorRamp2(c(0, clip_val / 2, clip_val), c(&quot;white&quot;, &quot;#4393c3&quot;, &quot;#08306b&quot;))
-level1_present &lt;- intersect(level1_order, as.character(unique(all_meta$annotation_level1)))
-organ_present &lt;- intersect(organ_order, as.character(unique(all_meta$organ_simplified)))
-row_ann &lt;- rowAnnotation(
-  Cell_Type = factor(as.character(all_meta$annotation_level1), levels = level1_present),
-  Organ = factor(as.character(all_meta$organ_simplified), levels = organ_present),
-  col = list(Cell_Type = ZemmourLib::immgent_colors$level1[level1_present],
-             Organ = ZemmourLib::immgent_colors$organ_simplified[organ_present]),
-  annotation_name_gp = gpar(fontsize = 8),
-  annotation_legend_param = list(Cell_Type = list(title = &quot;Cell Type&quot;), Organ = list(title = &quot;Organ&quot;)))
 
-gpn      &lt;- colnames(L_display)
+col_ann &lt;- HeatmapAnnotation(
+  Cell_Type    = factor(as.character(all_meta$annotation_level1), levels = level1_present),
+  Level2_Group = factor(l2g, levels = level2_group_present),
+  col = list(Cell_Type    = ZemmourLib::immgent_colors$level1[level1_present],
+             Level2_Group = LEVEL2_GROUP_COLORS[level2_group_present]),
+  simple_anno_size = unit(4, &quot;mm&quot;), annotation_name_gp = gpar(fontsize = 8),
+  annotation_legend_param = list(Cell_Type    = list(title = &quot;Cell Type&quot;),
+                                 Level2_Group = list(title = &quot;Level2 Group&quot;)))
+
+gpn      &lt;- rownames(mat_1D)
 hl_val   &lt;- ifelse(gpn %in% names(GP_HIGHLIGHTS), gpn, NA_character_)
 lab_col  &lt;- ifelse(gpn %in% names(GP_HIGHLIGHTS), GP_HIGHLIGHTS[gpn], &quot;grey55&quot;)
 lab_fs   &lt;- ifelse(gpn %in% names(GP_HIGHLIGHTS), 9, 4)
 lab_face &lt;- ifelse(gpn %in% names(GP_HIGHLIGHTS), 2, 1)
-# Only the highlighted GP columns keep an index label (background GP indices
+# Only the highlighted GP rows keep an index label (background GP indices
 # dropped), and the highlighted-GP legend is hidden.
-top_ann &lt;- HeatmapAnnotation(
+row_ann &lt;- rowAnnotation(
   `Highlighted GP` = hl_val, col = list(`Highlighted GP` = GP_HIGHLIGHTS),
-  na_col = &quot;white&quot;, simple_anno_size = unit(4, &quot;mm&quot;), annotation_name_gp = gpar(fontsize = 8),
-  show_legend = FALSE)
+  na_col = &quot;white&quot;, simple_anno_size = unit(4, &quot;mm&quot;),
+  annotation_name_gp = gpar(fontsize = 8), show_legend = FALSE)
 ht_1D &lt;- Heatmap(
-  L_display, name = &quot;Loading&quot;, col = col_fun, left_annotation = row_ann, top_annotation = top_ann,
-  cluster_rows = FALSE, cluster_columns = TRUE,
-  clustering_distance_columns = &quot;euclidean&quot;, clustering_method_columns = &quot;ward.D2&quot;,
-  show_row_names = FALSE,
-  column_labels = ifelse(gpn %in% names(GP_HIGHLIGHTS), gpn, &quot;&quot;),
-  column_names_gp = gpar(col = lab_col, fontsize = lab_fs, fontface = lab_face),
-  column_title = &quot;Gene Programs (GPs)&quot;, column_title_gp = gpar(fontsize = 11, fontface = &quot;bold&quot;),
+  mat_1D, name = &quot;Loading&quot;, col = col_fun, left_annotation = row_ann, top_annotation = col_ann,
+  cluster_rows = TRUE, cluster_columns = FALSE,
+  clustering_distance_rows = &quot;euclidean&quot;, clustering_method_rows = &quot;ward.D2&quot;,
+  show_column_names = FALSE,
+  row_labels = ifelse(gpn %in% names(GP_HIGHLIGHTS), gpn, &quot;&quot;),
+  row_names_gp = gpar(col = lab_col, fontsize = lab_fs, fontface = lab_face),
+  row_title = &quot;Gene Programs (GPs)&quot;, row_title_gp = gpar(fontsize = 11, fontface = &quot;bold&quot;),
   use_raster = TRUE, raster_quality = 3, border = FALSE,
   heatmap_legend_param = list(title = &quot;Loading&quot;, direction = &quot;vertical&quot;))
-pdf(paste0(figure_path, &quot;1D.pdf&quot;), width = 15, height = 20, useDingbats = FALSE)
+pdf(paste0(figure_path, &quot;1D.pdf&quot;), width = 20, height = 15, useDingbats = FALSE)
 ht_drawn &lt;- draw(ht_1D, merge_legend = TRUE)
-co &lt;- column_order(ht_drawn); disp &lt;- colnames(L_display)[co]; n_col_ht &lt;- length(co)
+ro &lt;- row_order(ht_drawn); disp &lt;- rownames(mat_1D)[ro]; n_row_ht &lt;- length(ro)
 decorate_heatmap_body(&quot;Loading&quot;, {
-  for (gp in names(GP_HIGHLIGHTS)) { j &lt;- which(disp == gp)
-    if (length(j)) grid.rect(x = (j - 0.5) / n_col_ht, y = 0.5, width = 1.4 / n_col_ht, height = 1,
+  for (gp in names(GP_HIGHLIGHTS)) { i &lt;- which(disp == gp)
+    if (length(i)) grid.rect(x = 0.5, y = 1 - (i - 0.5) / n_row_ht, width = 1, height = 1.4 / n_row_ht,
                              gp = gpar(col = GP_HIGHLIGHTS[gp], fill = NA, lwd = 2.5)) } })
-dev.off()</code></pre>
-<p><img src="assets/Figure1/1D.png" width="70%" style="display: block; margin: auto;" /></p>
+dev.off()
+cat(sprintf(&quot;1D: %d cells, %d level2 clusters, %d groups, clip_val=%.4f\n&quot;,
+            nrow(all_meta), length(level2_present), length(level2_group_present), clip_val))</code></pre>
+<p><img src="assets/Figure1/1D.png" width="100%" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-1D">
 Past versions of 1D.png
@@ -1918,7 +1999,8 @@ Ziang Zhang
 </div>
 <div class="figcaption">
 <p><strong>Fig. 1d.</strong> Heatmap showing the activity of the 200 GPs
-across T cells from different organs and lineages.</p>
+across T cells from different lineages and activation states (excluding
+cells in “miniverse”).</p>
 </div>
 <br>
 <p>
