@@ -3,18 +3,18 @@
 # The Figure*.Rmd pages show, for each panel, the exact block of script/*.R
 # that produced it. Those blocks used to be selected by hard-coded line
 # numbers (readLines(f)[52:100]), which silently went stale every time a
-# script was edited -- a page could end up showing panel 4c's code under the
-# heading for 4d. code_for() selects blocks by *name* instead, so the docs
+# script was edited -- a page could end up showing panel 5c's code under the
+# heading for 5d. code_for() selects blocks by *name* instead, so the docs
 # follow the code.
 #
 # A block is delimited by an anchor. Two anchor styles are recognised:
 #
 #   # ============================================================
-#   # 4a: Standardized mean difference, activated vs resting
+#   # 5a: Standardized mean difference, activated vs resting
 #   # ============================================================
 #
 #     the banner comments the scripts already use. Its name is the banner
-#     text, so `id = "4a"` matches this one (ids are matched as a prefix of
+#     text, so `id = "5a"` matches this one (ids are matched as a prefix of
 #     the banner text).
 #
 #   # --- doc:3f ---
@@ -30,8 +30,8 @@
 #
 # An id that matches no anchor, or more than one, is an error -- better a
 # failed build than a page quietly showing the wrong code. Disambiguate by
-# making the prefix longer: "4d prep" and "4d:" pick out the two blocks that
-# a bare "4d" would match.
+# making the prefix longer: "5d prep" and "5d:" pick out the two blocks that
+# a bare "5d" would match.
 #
 # Anything between
 #
@@ -129,7 +129,7 @@
     return(.doc_trim(lines[seq_len(anchors$start[1L] - 1L)]))
   }
   # Sub-anchor names match exactly; banner ids match as a prefix of the
-  # banner text, so "4a" finds "4a: Standardized mean difference, ...".
+  # banner text, so "5a" finds "5a: Standardized mean difference, ...".
   hit <- if (startsWith(id, "doc:")) {
     which(anchors$id == id)
   } else {
@@ -156,7 +156,7 @@
 #' Code block(s) for a documented panel
 #'
 #' @param file Path to the script, relative to the Rmd (e.g.
-#'   "../script/Figure4.R").
+#'   "../script/Figure5.R").
 #' @param ids One or more anchor names; blocks are returned in the order given.
 #' @return A character vector of source lines, for a chunk's `code=` option.
 code_for <- function(file, ids) {

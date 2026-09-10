@@ -1,5 +1,5 @@
 ---
-title: "Figure 6: Surface-marker associations are context-dependent, but combinatorial gating resolves specific gene programs"
+title: "Figure 6: Tissue-associated gene programs reflect both tissue adaptation and T cell subset composition"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -10,94 +10,90 @@ editor_options:
 source("../code/R/doc_code.R")
 ```
 
-All panels except (a) are produced by
-[`script/Figure6.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure6.R),
-which shares its CITE-seq setup with [Extended Data Figure 6](FigureS6.html) and
-[Extended Data Figure 7](FigureS7.html) via
-`code/R/citeseq_shared_setup.R`. The code below is shown for
-reference (not re-executed on this page, since this script takes about a
-minute to run); the images are its pre-rendered output.
+All panels are produced by
+[`script/Figure6.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure6.R).
+The code below is shown for reference (not re-executed on this page); the
+images are its pre-rendered output.
 
 ## Setup
 
-```{r fig6-setup, code=code_for("../script/Figure6.R", "doc:setup"), eval=FALSE}
+Data loading, shared across all panels below.
+
+```{r fig6-setup, code=code_for("../script/Figure6.R", c("^", "Load data")), eval=FALSE}
 ```
 
-Panels (b) onward additionally load the shared CITE-seq cell/protein setup:
+## (a) Max AUC: organ vs. lineage {#fig6a}
 
-```{r fig6-setup2, code=code_for("../script/Figure6.R", "Load data"), eval=FALSE}
+```{r fig6a-code, code=code_for("../script/Figure6.R", "6a"), eval=FALSE}
 ```
 
-## (a) Protein-signature schematic {#fig6a}
-
-This panel is a hand-drawn schematic, not generated from code.
-
-How the protein factor matrix is estimated is documented in
-[Methods: fitting CITE-seq protein programs with fixed scRNA loadings](Methods_FlashierFit_Citeseq.html).
-
-::: {.figcaption}
-**Fig. 6a.** Schematic illustrating how protein signatures were defined for
-each GP. Holding the cell-loading matrix L fixed from the GP model, a protein
-factor matrix was estimated by EBMF from the paired CITE-seq protein
-measurements, Y ≈ LUᵀ (cells × proteins matrix), yielding a protein signature
-U (proteins × GPs matrix) for each GP.
-:::
-
-## (b, c) KLRG1 modulation across lineages {#fig6bc}
-
-```{r fig6bc-code, code=code_for("../script/Figure6.R", "6b"), eval=FALSE}
-```
-
-```{r fig6bc-img, echo=FALSE, out.width="49%"}
-knitr::include_graphics(c("assets/Figure6/6b.png", "assets/Figure6/6c.png"))
+```{r fig6a-img, echo=FALSE, out.width="60%"}
+knitr::include_graphics("assets/Figure6/6a.png")
 ```
 
 ::: {.figcaption}
-**Fig. 6b, c.** GPs associated with KLRG1 protein expression in CD4, Tregs,
-and CD8. Effect-size versus effect-size plots, where each GP's effect size is
-the difference in its mean activity between KLRG1+ and KLRG1- cells, comparing
-CD8+ T cells (x-axis) with CD4+ T cells (b) or Treg cells (c).
+**Fig. 6a.** Scatterplot showing each GP's prediction (AUC) of organ of origin
+(x-axis) versus lineage (y-axis). GPs reaching AUC > 0.9 on either axis are
+colored and labeled (organ-specific in red; lineage-specific in blue).
 :::
 
-## (d) Genes up- and down-regulated across the CD69-associated GPs {#fig6d}
+## (b) GP37+ rate in mammary gland vs. elsewhere {#fig6b}
 
-The ten GPs, and the correlation-based order they are drawn in, are defined once
-in `code/R/citeseq_shared_setup.R`, because
-[Extended Data Fig. 7a, b](FigureS7.html#figs7ab) show the same GPs in the same
-order from a different script:
-
-```{r fig6d-gps, code=code_for("../code/R/citeseq_shared_setup.R", "doc:cd69"), eval=FALSE}
+```{r fig6b-code, code=code_for("../script/Figure6.R", "6b"), eval=FALSE}
 ```
 
-```{r fig6d-code, code=code_for("../script/Figure6.R", "6d"), eval=FALSE}
+```{r fig6b-img, echo=FALSE, out.width="60%"}
+knitr::include_graphics("assets/Figure6/6b.png")
 ```
 
-```{r fig6d-img, echo=FALSE, out.width="100%"}
+::: {.figcaption}
+**Fig. 6b.** Proportion of GP37-active cells in each lineage in the mammary
+gland compared with all other organs (faded color bar).
+:::
+
+## (c) Marker genes of the 7 organ-specific GPs {#fig6c}
+
+```{r fig6c-code, code=code_for("../script/Figure6.R", "6c"), eval=FALSE}
+```
+
+```{r fig6c-img, echo=FALSE, out.width="60%"}
+knitr::include_graphics("assets/Figure6/6c.png")
+```
+
+::: {.figcaption}
+**Fig. 6c.** Genes associated with the seven organ-specific GPs shown in (a).
+Heatmap of the per-GP scaled gene scores for the top upregulated genes of each
+GP (top 20 per GP, gene score > 0.25; blue, negative; red, positive).
+:::
+
+## (d) Max AUC: organ vs. cluster {#fig6d}
+
+```{r fig6d-code, code=code_for("../script/Figure6.R", c("6d prep", "6d:")), eval=FALSE}
+```
+
+```{r fig6d-img, echo=FALSE, out.width="60%"}
 knitr::include_graphics("assets/Figure6/6d.png")
 ```
 
 ::: {.figcaption}
-**Fig. 6d.** Heatmap of the top five most strongly up- and down-regulated gene
-scores for ten GPs correlated with CD69 expression, with the left strip
-indicating the Spearman correlation between GP activity and CD69 expression.
+**Fig. 6d.** As in (a), but predictive performance is measured against level 2
+clusters (y-axis). The seven organ-specific GPs from (a) are highlighted in
+red, and a contrasting set of cluster-specific GPs (high cluster AUC, low
+organ AUC) in blue.
 :::
 
-## (e-j) Protein-gated vs. GP-loading populations {#fig6ej}
+## (e) Organ, GP, and cluster alluvial diagram {#fig6e}
 
-```{r fig6ej-code, code=code_for("../script/Figure6.R", "6e"), eval=FALSE}
+```{r fig6e-code, code=code_for("../script/Figure6.R", "6e"), eval=FALSE}
 ```
 
-```{r fig6ej-img, echo=FALSE, out.width="49%"}
-knitr::include_graphics(c(
-  "assets/Figure6/6e.png", "assets/Figure6/6f.png",
-  "assets/Figure6/6g.png", "assets/Figure6/6h.png",
-  "assets/Figure6/6i.png", "assets/Figure6/6j.png"
-))
+```{r fig6e-img, echo=FALSE, out.width="80%"}
+knitr::include_graphics("assets/Figure6/6e.png")
 ```
 
 ::: {.figcaption}
-**Fig. 6e-j.** Examples of gating strategies used to identify GP-active cells.
-All-T MDE plots highlight cells selected by the proposed gating strategy
-(left) and the corresponding GP-active cells (right). Color indicates cell
-density.
+**Fig. 6e.** Alluvial plot showing how tissue-specific GP activity is
+distributed across clusters. For each organ, GP-active cells are traced to
+their cluster annotation. Flows are colored by GP, and width is proportional
+to the number of cells.
 :::

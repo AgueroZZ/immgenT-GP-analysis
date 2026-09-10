@@ -9,20 +9,21 @@ single-cell RNA-seq/CITE-seq data: ~200 GPs learned by empirical Bayes matrix
 factorization (EBMF), and how they relate to cell lineage, tissue, activation
 state, transcription factors, and surface protein expression.
 
-Each page below covers one published figure: for every panel, the R code that
-produced it, the figure itself, and the published caption.
+Each page below covers one figure: for every panel, the R code that produced
+it, the figure itself, and its caption.
 
 ## Main figures
 
 + [Figure 1: A gene-program architecture underlies T cell heterogeneity across the immgenT atlas](Figure1.html)
 + [Figure 2: Individual T cells deploy sparse combinations of gene programs that expand with activation](Figure2.html)
 + [Figure 3: T cell lineage identity is encoded by both lineage-restricted and shared gene programs](Figure3.html)
-+ [Figure 4: Activated T cell states arise from shared and lineage-biased combinations of gene programs](Figure4.html)
-+ [Figure 5: Tissue-associated gene programs reflect both tissue adaptation and T cell subset composition](Figure5.html)
-+ [Figure 6: Surface-marker associations are context-dependent, but combinatorial gating resolves specific gene programs](Figure6.html)
-+ [Figure 7b: A nonlinear deep-learning framework independently recovers the immgenT gene-program landscape](Figure7.html)
++ [Figure 4: Gene programs resolve T cell states below the level of lineage](Figure4.html)
++ [Figure 5: Activated T cell states arise from shared and lineage-biased combinations of gene programs](Figure5.html)
++ [Figure 6: Tissue-associated gene programs reflect both tissue adaptation and T cell subset composition](Figure6.html)
++ [Figure 7: Surface-marker associations are context-dependent, but combinatorial gating resolves specific gene programs](Figure7.html)
++ [Figure 8b: A nonlinear deep-learning framework independently recovers the immgenT gene-program landscape](Figure8.html)
 
-Figure 7 (A nonlinear deep-learning framework independently recovers the
+Figure 8 (A nonlinear deep-learning framework independently recovers the
 immgenT gene-program landscape) brings the EBMF programs documented here
 together with RQVI, a non-linear deep-learning factorization of the same cells.
 Panel **b**, the cluster-level comparison of the two factorizations, is
@@ -32,14 +33,13 @@ documented on the page above; the RQVI panels are documented in the
 ## Extended Data figures
 
 + [Extended Data Figure 1: GP reproducibility and batch-effect evaluation](FigureS1.html)
-+ [Extended Data Figure 2: Tz- and CD8-specific GPs (GP30 and GP58, respectively)](FigureS2.html)
-+ [Extended Data Figure 3: GP activity across T cell clusters](FigureS3.html)
-+ [Extended Data Figure 4: Activation-associated GPs](FigureS4.html)
-+ [Extended Data Figure 5: Composition of GP activity in T cell clusters](FigureS5.html)
-+ [Extended Data Figure 6: Protein programs across GPs](FigureS6.html)
-+ [Extended Data Figure 7: Surface proteins association with GP](FigureS7.html)
++ [Extended Data Figure 2: Tz- and CD8-specific GPs (GP30 and GP58, respectively), and GP activity across T cell clusters](FigureS2.html)
++ [Extended Data Figure 3: Activation-associated GPs](FigureS3.html)
++ [Extended Data Figure 4: Composition of GP activity in T cell clusters](FigureS4.html)
++ [Extended Data Figure 5: Protein programs across GPs](FigureS5.html)
++ [Extended Data Figure 6: Surface proteins association with GP](FigureS6.html)
 
-Extended Data Figure 8 (RQVI scalability and representative matches to
+Extended Data Figure 7 (RQVI scalability and representative matches to
 lineage-associated EBMF GPs) is documented in the same
 [companion repository for the RQVI framework](https://github.com/TianzeCompbio/RQVI_GP_figures/tree/main).
 

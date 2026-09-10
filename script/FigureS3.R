@@ -1,123 +1,344 @@
-# Figure S3. GP activity across T cell clusters.
-#
-# One panel (see analysis/FigureS3.Rmd for the caption text):
-#   s3   Row-centered mean GP activity across the 107 level-2 clusters, all
-#        200 GPs, in healthy non-thymocyte cells.
+# Figure S3. Characterizing activation GPs.
 #
 # --- internal ---
-# New Extended Data Figure 3 on 2026-09-09. The panel itself is not new: it is
-# the retired Figure S4's panel s4b, unchanged, promoted to a figure of its own
-# when the two-panel "GP activity across tissues and T cell clusters" figure was
-# split up -- the cluster half here, and a tissue half that briefly shipped as
-# Figure S5 before being pulled back out of Extended Data the same day (it is
-# now the internal draft in experiments/fig_n5/). The PDF was carried over
-# byte-identically rather than re-rendered; this script is the old FigureS4.R
-# with its tissue half removed and its shared helpers moved into
-# code/R/centered_mean_heatmap.R.
+# See figures/Previous/bits/Figure S3/FigureS3_caption.md for the full caption
+# text (that directory keeps the PUBLISHED numbering); captioned A-F there,
+# and published as s3c-s3h before the 2026-07-28 re-lettering -- this script
+# uses the current lettering. The published s3a's two halves used to be
+# lettered s3a and s3b, which is why every panel below is one letter lower
+# than the published figure. The figure moved from Extended Data 3 to 4 on
+# 2026-09-09, when a new cluster-level figure was inserted at 3, and back to 3
+# on 2026-09-10, when that cluster figure was folded into Extended Data
+# Figure 2 as its panel d. Only numbers and paths changed either time; nothing
+# was re-rendered.
 # --- end internal ---
+# Panels produced:
 #
-# For each GP, its mean loading across clusters is subtracted from every cluster
-# mean, so the panel shows where a program is more or less active than its own
-# average rather than how large its loading is. The centered color scale is
-# fixed at [-0.2, 0.2]; values outside this range saturate at the endpoint
-# colors. Level2 columns follow Figure 1's level1 order, with level2 labels
-# alphabetized within each level1 block.
+# s3a is the definition of resting vs activated CD4/CD8 cells (the
+# lineage-specific MDEs plus the adjacent CD62L-vs-CD44 protein plot, one
+# panel). It is NOT produced here -- no code in this repository draws it; see
+# analysis/FigureS3.Rmd.
+#
+#   s3b  Fraction of activated CD4/CD8 cells per organ with GP26 > 0.1, sorted.
+#   s3c  GSEA dot plot relating the activation GPs to curated gene sets.
+#   s3d  Fraction of activated CD4 cells with GP79 loading > 0.1, by condition.
+#   s3e  Per-cell log2FC heatmap of activation GPs vs resting baseline.
+#   s3f  Fraction of activated CD8/CD4 cells with GP57 loading > 0.1: cancer
+#        vs all other conditions.
+#
+# --- internal ---
+# Source: ported from Figure_Activation.R (see Figure5.R for the main
+# Figure 5 panels from the same file).
+# --- end internal ---
+# The curated GP set and activated/resting cell groupings are shared with
+# Figure 5 via code/R/activation_shared_setup.R.
+#
+# Panel s3b is computed on activated CD4/CD8 cells only (annotation_level1 in
+# {CD4, CD8} and annotation_level2_group == "activated"): the per-organ fraction
+# with GP26 loading > 0.1.
 #
 # Required inputs (data/) -- see code/README.md's "Data provenance" table
 # for the full picture:
-#   L_pm_filtered.rds                        [code/pipeline/01b_filter_cells.R]
+#   L_pm_filtered.rds, F_pm_filtered.rds     [code/pipeline/01b_filter_cells.R]
 #   igt1_96_..._ADTonly.Rds                  [primary input Seurat object]
+#   GSEA_signatures_select_toplot.csv        [external: curated gene-set collection]
 
-suppressPackageStartupMessages({
-  library(ComplexHeatmap)
-  library(circlize)
-  library(grid)
-  library(ZemmourLib)
-})
+library(ggplot2)
+library(dplyr)
+library(stringr)
+library(pheatmap)
+library(scales)
 
-if (!file.exists("code/R/setup_data.R")) {
-  stop("Run this script from the immgenT-GP-analysis repository root.")
+data_path <- "data/"
+figure_path <- "figures/final-selected/Figure S3/"
+source("code/R/plot_utils.R") # scale_cols()
+
+# ============================================================
+# Load data
+# ============================================================
+L_pm_filtered <- readRDS(paste0(data_path, "L_pm_filtered.rds"))
+colnames(L_pm_filtered) <- paste0("GP", seq_len(ncol(L_pm_filtered)))
+F_pm_filtered <- readRDS(paste0(data_path, "F_pm_filtered.rds"))
+colnames(F_pm_filtered) <- paste0("GP", seq_len(ncol(F_pm_filtered)))
+seurat_meta <- readRDS(paste0(data_path, "igt1_96_withtotalvi20260206_clean_ADTonly.Rds"))@meta.data
+seurat_meta_filtered <- seurat_meta[rownames(L_pm_filtered), ]
+df_sig <- read.csv(paste0(data_path, "GSEA_signatures_select_toplot.csv"), header = TRUE, sep = ",")
+
+source("code/R/activation_shared_setup.R")
+
+# ============================================================
+# s3b: Fraction of activated CD4/CD8 cells per organ with GP26 loading > 0.1
+# ============================================================
+act_cd4_cd8 <- seurat_meta_filtered$annotation_level1 %in% c("CD4", "CD8") &
+  seurat_meta_filtered$annotation_level2_group == "activated"
+gp26_organ_df <- data.frame(
+  organ = seurat_meta_filtered$organ_simplified[act_cd4_cd8],
+  gp26_high = L_pm_filtered[act_cd4_cd8, "GP26"] > 0.1
+) %>%
+  filter(!is.na(organ), organ != "") %>%
+  group_by(organ) %>%
+  summarise(n_cells = n(), proportion_gp26_high = mean(gp26_high), .groups = "drop") %>%
+  arrange(desc(proportion_gp26_high)) %>%
+  mutate(organ = factor(organ, levels = organ),
+         pct = 100 * proportion_gp26_high,
+         pct_lab = sub("\\.0%$", "%", sprintf("%.1f%%", pct)))  # e.g. 99%, 98.7%
+
+# abbreviate a few long organ names to match the published panel
+organ_abbrev <- c("submandibular gland" = "submand. gland",
+                  "mammary gland"       = "mam. gland",
+                  "small intestine epi" = "sm intestine epi",
+                  "small intestine LP"  = "sm intestine LP",
+                  "peritoneal cavity"   = "perit. cav.")
+
+p_s3b <- ggplot(gp26_organ_df, aes(x = organ, y = pct)) +
+  geom_col(fill = "#4C72B0", width = 0.7) +
+  geom_text(aes(label = pct_lab), vjust = -0.4, size = 3, color = "grey20") +
+  scale_x_discrete(labels = function(x) ifelse(x %in% names(organ_abbrev), organ_abbrev[x], x)) +
+  scale_y_continuous(breaks = c(0, 50, 100), labels = c("0", "50%", "100"),
+                     expand = expansion(mult = c(0, 0.10))) +
+  labs(x = NULL, y = "Proportion activated (loading > 0.1) (%)",
+       title = "Activation of GP26 (threshold = 0.1) across Organ") +
+  theme_classic(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.title = element_text(hjust = 0.5))
+ggsave(filename = paste0(figure_path, "s3b.pdf"), plot = p_s3b, width = 9, height = 4.8)
+
+# ============================================================
+# s3c: GSEA dot plot for the activation GPs
+# ============================================================
+df_sig <- df_sig %>% mutate(factor = str_replace(factor, "^F", "GP"))
+present_GPs <- intersect(ordered_GPs, unique(df_sig$factor))
+y_levels <- rev(present_GPs) # first GP (GP56) appears at the top of the y-axis
+df_plot <- df_sig %>%
+  filter(factor %in% present_GPs) %>%
+  mutate(pathway = factor(pathway, levels = unique(pathway)), factor = factor(factor, levels = y_levels), log10padj = -log10(padj))
+y_factors <- levels(df_plot$factor)
+y_colors <- highlight_colors[y_factors]
+
+p_s3c <- ggplot(df_plot, aes(x = pathway, y = factor)) +
+  geom_point(aes(size = NES, color = log10padj)) +
+  scale_color_viridis_c(name = "-log10(p-adj)") +
+  scale_size(range = c(3, 10)) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1), axis.text.y = element_text(color = y_colors, face = "bold")) +
+  labs(size = "NES", x = "Pathway", y = "Gene Program")
+ggsave(filename = paste0(figure_path, "s3c.pdf"), plot = p_s3c, width = 8, height = 10)
+
+# ============================================================
+# s3f: GP57 high-loading proportion, cancer vs other conditions
+#      (activated CD4 and CD8)
+# ============================================================
+gp57_condition_df <- data.frame(
+  lineage = seurat_meta_filtered$annotation_level1,
+  activation_group = seurat_meta_filtered$annotation_level2_group,
+  condition_broad = as.character(seurat_meta_filtered$condition_broad),
+  gp57_loading = L_pm_filtered[, "GP57"],
+  stringsAsFactors = FALSE
+) %>%
+  filter(lineage %in% c("CD8", "CD4"), activation_group == "activated") %>%
+  mutate(
+    lineage = factor(lineage, levels = c("CD8", "CD4")),
+    condition_group = if_else(condition_broad == "cancer", "Cancer", "Other conditions"),
+    condition_group = factor(condition_group, levels = c("Cancer", "Other conditions")),
+    gp57_high = gp57_loading > 0.1
+  )
+
+gp57_condition_summary <- gp57_condition_df %>%
+  group_by(lineage, condition_group) %>%
+  summarise(n_cells = n(), n_gp57_high = sum(gp57_high), proportion_gp57_high = mean(gp57_high), .groups = "drop")
+
+gp57_ymax <- max(gp57_condition_summary$proportion_gp57_high, na.rm = TRUE)
+gp57_ymax <- ifelse(gp57_ymax > 0, gp57_ymax * 1.25, 0.05)
+
+p_s3f <- ggplot(gp57_condition_summary, aes(x = lineage, y = proportion_gp57_high, fill = condition_group)) +
+  geom_col(position = position_dodge(width = 0.72), width = 0.62, color = "grey20", linewidth = 0.25) +
+  geom_text(
+    aes(label = paste0(scales::percent(proportion_gp57_high, accuracy = 0.1), "\n", n_gp57_high, "/", n_cells)),
+    position = position_dodge(width = 0.72), vjust = -0.25, size = 3.4, lineheight = 0.9
+  ) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1), limits = c(0, gp57_ymax), expand = expansion(mult = c(0, 0.04))) +
+  scale_fill_manual(values = c("Cancer" = "#C44E52", "Other conditions" = "#4C72B0")) +
+  labs(x = NULL, y = "Proportion of activated cells", fill = "Condition", title = "GP57 loading > 0.1 in activated CD8 and CD4 cells") +
+  theme_classic(base_size = 12) +
+  theme(legend.position = "top", legend.title = element_text(face = "bold"), axis.text.x = element_text(face = "bold"), plot.title = element_text(face = "bold", hjust = 0.5))
+ggsave(filename = paste0(figure_path, "s3f.pdf"), plot = p_s3f, width = 5.4, height = 4.2)
+
+# ============================================================
+# s3d: GP79 high-loading proportion across conditions, activated CD4 cells
+# ============================================================
+min_cells_gp79_condition <- 50
+gp79_cd4_condition_df <- data.frame(
+  condition_broad = as.character(seurat_meta_filtered$condition_broad),
+  condition_detailed_simplified = as.character(seurat_meta_filtered$condition_detailed_simplified),
+  lineage = seurat_meta_filtered$annotation_level1,
+  activation_group = seurat_meta_filtered$annotation_level2_group,
+  gp79_loading = L_pm_filtered[, "GP79"],
+  stringsAsFactors = FALSE
+) %>%
+  filter(lineage == "CD4", activation_group == "activated", !is.na(condition_detailed_simplified), condition_detailed_simplified != "") %>%
+  mutate(gp79_high = gp79_loading > 0.1)
+
+gp79_cd4_condition_summary <- gp79_cd4_condition_df %>%
+  group_by(condition_detailed_simplified) %>%
+  summarise(
+    condition_broad = names(sort(table(condition_broad), decreasing = TRUE))[1],
+    n_cells = n(), n_gp79_high = sum(gp79_high), proportion_gp79_high = mean(gp79_high), .groups = "drop"
+  ) %>%
+  mutate(included_in_plot = n_cells >= min_cells_gp79_condition) %>%
+  arrange(desc(proportion_gp79_high), condition_detailed_simplified)
+
+gp79_cd4_condition_plot_df <- gp79_cd4_condition_summary %>%
+  filter(included_in_plot) %>%
+  arrange(proportion_gp79_high, condition_detailed_simplified) %>%
+  mutate(condition_label = factor(condition_detailed_simplified, levels = condition_detailed_simplified))
+
+gp79_broad_levels <- sort(unique(gp79_cd4_condition_plot_df$condition_broad))
+gp79_broad_colors <- setNames(scales::hue_pal()(length(gp79_broad_levels)), gp79_broad_levels)
+gp79_xmax <- max(gp79_cd4_condition_plot_df$proportion_gp79_high, na.rm = TRUE)
+gp79_xmax <- ifelse(gp79_xmax > 0, gp79_xmax, 0.05)
+gp79_label_pad <- gp79_xmax * 0.015
+gp79_plot_height <- max(7, 0.18 * nrow(gp79_cd4_condition_plot_df) + 2)
+
+p_s3d <- ggplot(gp79_cd4_condition_plot_df, aes(x = proportion_gp79_high, y = condition_label, fill = condition_broad)) +
+  geom_col(width = 0.75, color = "grey25", linewidth = 0.2) +
+  geom_text(aes(x = proportion_gp79_high + gp79_label_pad, label = scales::percent(proportion_gp79_high, accuracy = 1)), hjust = 0, size = 2.7) +
+  scale_x_continuous(labels = scales::percent_format(accuracy = 10), expand = expansion(mult = c(0, 0.02))) +
+  scale_fill_manual(values = gp79_broad_colors) +
+  coord_cartesian(xlim = c(0, gp79_xmax * 1.15), clip = "off") +
+  labs(
+    x = "Proportion of activated CD4 cells with GP79 loading > 0.1", y = NULL, fill = "Condition broad",
+    title = "GP79-high fraction across activated CD4 conditions",
+    subtitle = paste0("condition_detailed_simplified categories with >= ", min_cells_gp79_condition, " activated CD4 cells")
+  ) +
+  theme_classic(base_size = 11) +
+  theme(
+    legend.position = "right", legend.title = element_text(face = "bold"),
+    plot.title = element_text(face = "bold", hjust = 0.5), plot.subtitle = element_text(hjust = 0.5),
+    axis.text.y = element_text(size = 8), plot.margin = margin(10, 45, 10, 10)
+  )
+ggsave(filename = paste0(figure_path, "s3d.pdf"), plot = p_s3d, width = 9, height = gp79_plot_height, limitsize = FALSE)
+
+# ============================================================
+# s3e: Per-cell log2FC heatmap of activation GPs (activated cells only),
+#      relative to each cell's own-lineage resting baseline
+# ============================================================
+L <- L_pm_filtered[c(CD4_cells, CD8_cells), GPs_of_interest, drop = FALSE]
+cell_ids <- rownames(L)
+cell_type <- seurat_meta_filtered$annotation_level2[match(cell_ids, seurat_meta_filtered$cellID)]
+
+set.seed(123)
+total_budget <- 8000
+small_keep_all <- 150
+min_per_cluster <- 150
+max_per_cluster <- 600
+cells_by_ct <- split(cell_ids, cell_type)
+sizes <- sapply(cells_by_ct, length)
+alloc <- ifelse(sizes <= small_keep_all, sizes, pmin(min_per_cluster, sizes))
+remaining <- total_budget - sum(alloc)
+if (remaining > 0) {
+  room <- pmax(pmin(sizes, max_per_cluster) - alloc, 0)
+  if (sum(room) > 0) {
+    extra <- floor(remaining * room / sum(room))
+    alloc <- alloc + extra
+    leftover <- total_budget - sum(alloc)
+    if (leftover > 0) {
+      idx <- order(room, decreasing = TRUE)
+      for (j in idx) {
+        if (leftover <= 0) break
+        addable <- pmin(room[j] - extra[j], leftover)
+        if (addable > 0) {
+          alloc[j] <- alloc[j] + addable
+          leftover <- leftover - addable
+        }
+      }
+    }
+  }
 }
+sampled_cells <- unlist(mapply(function(v, m) if (length(v) <= m) v else sample(v, m), cells_by_ct, pmin(alloc, sizes), SIMPLIFY = FALSE), use.names = FALSE)
 
-source("code/R/setup_data.R")
-source("code/R/centered_mean_heatmap.R")
+cell_group_s <- seurat_meta_filtered$annotation_level2_group[match(sampled_cells, seurat_meta_filtered$cellID)]
+cell_level2_s <- seurat_meta_filtered$annotation_level2[match(sampled_cells, seurat_meta_filtered$cellID)]
+cell_group_s <- trimws(tolower(as.character(cell_group_s)))
+cell_level2_s <- trimws(as.character(cell_level2_s))
+cell_level1_s <- sapply(strsplit(cell_level2_s, "[_.]"), `[`, 1)
+is_w_cell <- grepl("\\.w", cell_level2_s)
+valid_idx <- which(!is.na(cell_level2_s) & !tolower(cell_level2_s) %in% c("", "na", "nan") & cell_group_s %in% c("resting", "activated") & !is_w_cell)
+final_cells <- sampled_cells[valid_idx]
+final_group <- cell_group_s[valid_idx]
+final_level1 <- cell_level1_s[valid_idx]
+final_level2 <- cell_level2_s[valid_idx]
+col_order <- order(final_group, final_level1, final_level2)
+final_cells <- final_cells[col_order]
+final_group <- final_group[col_order]
+final_level1 <- final_level1[col_order]
+final_level2 <- final_level2[col_order]
 
-figure_path <- "figures/final-selected/Figure S3"
-dir.create(figure_path, recursive = TRUE, showWarnings = FALSE)
-
-# ============================================================
-# Setup, centering, and ordering
-# ============================================================
-gp_data <- load_gp_data()
-reference <- healthy_nonthymocyte_reference(gp_data)
-L_reference <- reference$L
-meta_reference <- reference$meta
-
-centered_color_limit <- 0.2
-level1_order <- c("CD8", "CD4", "Treg", "gdT", "CD8aa", "Tz", "DN", "DP")
-
-level2_result <- mean_loading_by_group(L_reference, meta_reference$annotation_level2)
-level2_raw <- level2_result$matrix
-level2_centered <- center_by_gp_mean(level2_raw)
-
-level2_group_level1 <- level2_to_level1_map(
-  meta_reference, colnames(level2_raw), level1_order
-)
-level2_order <- dominant_group_order(
-  level2_raw,
-  level2_column_order(colnames(level2_raw), level2_group_level1, level1_order)
-)
-
-stopifnot(
-  nrow(level2_centered) == 200L,
-  ncol(level2_centered) == 107L,
-  max(abs(rowMeans(level2_centered))) < 1e-12
-)
-
-level2_palette <- palette_for_groups(
-  colnames(level2_centered),
-  ZemmourLib::immgent_colors$level2,
-  "annotation_level2"
-)
-level1_palette <- ZemmourLib::immgent_colors$level1[level1_order]
-
-# --- doc:rendering ---
-render_centered_heatmap(
-  level2_centered,
-  level2_palette,
-  "cluster (annotation_level2)",
-  file.path(figure_path, "s3.pdf"),
-  level2_order$row_order,
-  level2_order$column_order,
-  centered_color_limit,
-  paste0(
-    "all 200 GPs; level2 columns: Figure 1 level1 order ",
-    "(CD8, CD4, Treg, gdT, CD8aa, Tz, DN, DP); ",
-    "alphabetical within level1; GP rows: dominant-group blocks"
+pc <- 1e-10
+cap <- 2
+group_counts <- sapply(
+  list(
+    c("GP56", "GP162", "GP36", "GP152", "GP161", "GP177", "GP79", "GP12", "GP13", "GP159"),
+    c("GP10", "GP58", "GP181", "GP176"),
+    c("GP25", "GP26", "GP35", "GP32", "GP80", "GP57"),
+    c("GP9", "GP171", "GP49", "GP41", "GP11")
   ),
-  group_level1 = level2_group_level1,
-  level1_palette = level1_palette
+  function(gp_group) sum(ordered_GPs %in% gp_group)
 )
+group_counts <- group_counts[group_counts > 0]
+gaps_row <- cumsum(group_counts)[-length(group_counts)]
 
-summary_dir <- "output/FigureS3"   # build intermediate (not a manuscript panel)
-dir.create(summary_dir, recursive = TRUE, showWarnings = FALSE)
-write.csv(
-  data.frame(
-    panel = "s3",
-    grouping = "annotation_level2",
-    view = "full row-centered mean loading",
-    gp_count = nrow(level2_centered),
-    group_count = ncol(level2_centered),
-    centered_definition = "group mean minus mean across groups for each GP",
-    color_min = -centered_color_limit,
-    color_mid = 0,
-    color_max = centered_color_limit,
-    observed_min = min(level2_centered),
-    observed_max = max(level2_centered)
-  ),
-  file.path(summary_dir, "S3_summary.csv"),
-  row.names = FALSE,
-  quote = FALSE
+act_idx <- which(final_group == "activated")
+act_cells <- final_cells[act_idx]
+act_level1 <- final_level1[act_idx]
+act_level2 <- final_level2[act_idx]
+act_order <- order(act_level1, act_level2)
+act_cells <- act_cells[act_order]
+act_level1 <- act_level1[act_order]
+act_level2 <- act_level2[act_order]
+
+L_sub_act <- L[act_cells, , drop = FALSE]
+M_raw_act <- t(L_sub_act)
+
+# Per-lineage resting baseline: each activated cell's log2FC is computed
+# against the mean loading in resting cells of its own lineage.
+mu_resting_CD4 <- colMeans(L_pm_filtered[CD4_resting_cells, GPs_of_interest, drop = FALSE])
+mu_resting_CD8 <- colMeans(L_pm_filtered[CD8_resting_cells, GPs_of_interest, drop = FALSE])
+baseline_mat <- matrix(NA_real_, nrow = nrow(M_raw_act), ncol = ncol(M_raw_act))
+rownames(baseline_mat) <- rownames(M_raw_act)
+baseline_mat[, act_level1 == "CD4"] <- mu_resting_CD4[rownames(M_raw_act)]
+baseline_mat[, act_level1 == "CD8"] <- mu_resting_CD8[rownames(M_raw_act)]
+M_fc_act <- log2((M_raw_act + pc) / (baseline_mat + pc))
+M_fc_act_cap <- pmax(pmin(M_fc_act, cap), -cap)
+M_fc_act_cap <- M_fc_act_cap[ordered_GPs, , drop = FALSE]
+
+ann_col_act <- data.frame(Level2 = factor(act_level2), Level1 = factor(act_level1))
+rownames(ann_col_act) <- colnames(M_fc_act_cap)
+present_level1_act <- levels(ann_col_act$Level1)
+present_level2_act <- levels(ann_col_act$Level2)
+level1_cols_act <- ZemmourLib::immgent_colors$level1
+level1_cols_act <- level1_cols_act[names(level1_cols_act) %in% present_level1_act]
+level2_cols_act <- ZemmourLib::immgent_colors$level2
+level2_cols_act <- level2_cols_act[names(level2_cols_act) %in% present_level2_act]
+missing_l2_act <- setdiff(present_level2_act, names(level2_cols_act))
+if (length(missing_l2_act) > 0) {
+  level2_cols_act <- c(level2_cols_act, setNames(rep("grey80", length(missing_l2_act)), missing_l2_act))
+}
+ann_colors_act <- list(Level1 = level1_cols_act, Level2 = level2_cols_act)
+
+rle_l1_act <- rle(as.character(ann_col_act$Level1))
+gaps_col_act <- cumsum(rle_l1_act$lengths)
+gaps_col_act <- gaps_col_act[-length(gaps_col_act)]
+
+pheatmap(
+  M_fc_act_cap,
+  cluster_rows = FALSE, cluster_cols = FALSE,
+  gaps_row = gaps_row, gaps_col = gaps_col_act,
+  color = colorRampPalette(c("#7A0177", "black", "#FFD700"))(101),
+  breaks = seq(-cap, cap, length.out = 102),
+  show_colnames = FALSE, fontsize_row = 7, fontface_row = "bold", border_color = NA,
+  annotation_col = ann_col_act, annotation_colors = ann_colors_act, annotation_names_col = TRUE,
+  useRaster = TRUE,
+  main = "GP Log2FC vs per-lineage RESTING baseline (CD4 cells vs CD4 resting; CD8 vs CD8 resting)",
+  filename = paste0(figure_path, "s3e.pdf"),
+  width = 12, height = 4
 )
-
-message("Wrote Figure S3 to ", normalizePath(figure_path))

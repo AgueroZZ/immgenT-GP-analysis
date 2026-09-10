@@ -1,5 +1,5 @@
 ---
-title: "Figure 4: Activated T cell states arise from shared and lineage-biased combinations of gene programs"
+title: "Figure 4: Gene programs resolve T cell states below the level of lineage"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -12,77 +12,83 @@ source("../code/R/doc_code.R")
 
 All panels are produced by
 [`script/Figure4.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure4.R),
-which shares its curated GP set with [Extended Data Figure 4](FigureS4.html) via
-`code/R/activation_shared_setup.R`. The code below is shown for
-reference (not re-executed on this page); the images are its pre-rendered
-output.
+which shares its GP selection and cells with
+[Extended Data Figure 4](FigureS4.html) via `code/R/structure_plot_panels.R`,
+and its heatmap rendering with [Extended Data Figure 2d](FigureS2.html#figs2d) via
+`code/R/centered_mean_heatmap.R`. The code below is shown for reference (not
+re-executed on this page); the images are its pre-rendered output.
 
 ## Setup
 
 Data loading, shared across all panels below.
 
-```{r fig4-setup, code=code_for("../script/Figure4.R", c("^", "Load data")), eval=FALSE}
+```{r fig4-setup, code=code_for("../script/Figure4.R", c("doc:setup", "Load data")), eval=FALSE}
 ```
 
-## (a) Activation effect, CD4 vs. CD8 {#fig4a}
+## (a) Lineage vs. cluster prediction {#fig4a}
 
 ```{r fig4a-code, code=code_for("../script/Figure4.R", "4a"), eval=FALSE}
 ```
 
-```{r fig4a-img, echo=FALSE, out.width="50%"}
+```{r fig4a-img, echo=FALSE, out.width="60%"}
 knitr::include_graphics("assets/Figure4/4a.png")
 ```
 
 ::: {.figcaption}
-**Fig. 4a.** Standardized mean difference in GP activity between activated and
-resting cells in CD4+ T cells (x-axis) and CD8+ T cells (y-axis). Points are
-colored according to whether they are highly upregulated in both CD4+ and CD8+
-activation (brown), downregulated in both (green), or preferentially
-upregulated in CD4 (blue) or CD8 (orange).
+**Fig. 4a.** Scatterplot showing each GP's prediction (AUC) of level 1 lineage
+(x-axis) versus level 2 cluster (y-axis), in healthy non-thymocyte cells. Each
+point is one GP; the dashed line is the identity. GPs reaching AUC > 0.9 on
+either axis are colored and labelled: blue where the cluster AUC is the larger
+of the two, red where the lineage AUC is. Most GPs sit above the identity line,
+predicting a cluster better than any whole lineage.
 :::
 
-## (b) GP-gene signature network {#fig4b}
+## (b) The cluster-associated GPs across clusters {#fig4b}
 
 ```{r fig4b-code, code=code_for("../script/Figure4.R", "4b"), eval=FALSE}
 ```
 
-```{r fig4b-img, echo=FALSE, out.width="50%"}
+```{r fig4b-img, echo=FALSE, out.width="100%"}
 knitr::include_graphics("assets/Figure4/4b.png")
 ```
 
 ::: {.figcaption}
-**Fig. 4b.** GP-gene network in which each GP is linked to its five most
-strongly regulated genes, based on GP gene scores. Edges are colored by the
-sign of the gene score (red for upregulated, blue for downregulated). GP nodes
-are colored as in (a).
+**Fig. 4b.** Heatmap of mean GP activity per level 2 cluster, for the 69 GPs
+that reach AUC > 0.9 in at least one cluster. Each row is centered on that GP's
+mean across the clusters shown (blue, below; red, above; saturating at 0.2).
+Columns are the clusters with at least 100 healthy non-thymocyte cells, grouped
+by lineage (top bar) and alphabetical within each lineage; rows are grouped by
+the cluster in which the GP is most active.
 :::
 
-## (c) Log2FC heatmap across conditions {#fig4c}
+## (c) Mean GP activity of the Treg clusters {#fig4c}
 
 ```{r fig4c-code, code=code_for("../script/Figure4.R", "4c"), eval=FALSE}
 ```
 
-```{r fig4c-img, echo=FALSE, out.width="50%"}
+```{r fig4c-img, echo=FALSE, out.width="45%"}
 knitr::include_graphics("assets/Figure4/4c.png")
 ```
 
 ::: {.figcaption}
-**Fig. 4c.** Heatmap of log2 fold change in mean GP activity across
-experimental conditions for activated CD4+ and CD8+ T cells, computed relative
-to each GP’s mean loading across all CD4+/CD8+ cells. Columns grouped and
-annotated by immune challenge category. GPs are ordered and colored as in (a).
+**Fig. 4c.** Mean GP activity of each Treg cluster, for the 11 GPs reaching
+AUC > 0.9 in at least one Treg cluster. Each bar is one cluster and is stacked
+by GP, so its height is that cluster's total mean loading over these GPs.
+Clusters with fewer than 100 healthy non-thymocyte cells, and the wM cluster,
+are not shown.
 :::
 
-## (d) Mean loading by sub-lineage {#fig4d}
+## (d) The same GPs and cells, cell by cell {#fig4d}
 
 ```{r fig4d-code, code=code_for("../script/Figure4.R", "4d"), eval=FALSE}
 ```
 
-```{r fig4d-img, echo=FALSE, out.width="50%"}
+```{r fig4d-img, echo=FALSE, out.width="100%"}
 knitr::include_graphics("assets/Figure4/4d.png")
 ```
 
 ::: {.figcaption}
-**Fig. 4d.** Heatmap of mean GP activity per level 2 cluster, with the top bar
-denoting parent lineage. GP ordered and colored as in (a).
+**Fig. 4d.** Structure plot of the same GPs in the same cells at single-cell
+resolution: each bar is one cell, colored by its GP membership and grouped by
+cluster. Colors match (c). Panel (c) is the per-cluster average of these bars.
 :::

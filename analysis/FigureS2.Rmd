@@ -1,5 +1,5 @@
 ---
-title: "Extended Data Figure 2: Tz- and CD8-specific GPs (GP30 and GP58, respectively)"
+title: "Extended Data Figure 2: Tz- and CD8-specific GPs (GP30 and GP58, respectively), and GP activity across T cell clusters"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -10,11 +10,15 @@ editor_options:
 source("../code/R/doc_code.R")
 ```
 
-All panels are produced by
+Panels (a)-(c) are produced by
 [`script/FigureS2.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS2.R),
-which shares its source data setup with [Figure 3](Figure3.html). The code
-below is shown for reference (not re-executed on this page); the images are
-its pre-rendered output.
+which shares its source data setup with [Figure 3](Figure3.html). Panel (d) is
+produced by
+[`script/FigureS2d.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS2d.R),
+which shares nothing with them -- a different reference cell set and a
+different rendering module -- and so is kept as its own script. The code below
+is shown for reference (not re-executed on this page); the images are its
+pre-rendered output.
 
 ## Setup
 
@@ -62,4 +66,44 @@ knitr::include_graphics("assets/FigureS2/S2C.png")
 ::: {.figcaption}
 **Extended Data Fig. 2c.** Box plots of CD8A and CD8B protein expression
 (CITE-seq, log-normalized counts) in resting and activated CD8+ T cells.
+:::
+
+## (d) GP activity across T cell clusters {#figs2d}
+
+This panel shows the full row-centered matrix: all 200 GPs against the 99
+level-2 clusters observed in healthy non-thymocyte cells (`condition_broad ==
+"healthy"` and `annotation_level1 != "thymocyte"`), with the miniverse (`.wM`)
+clusters excluded as in [Fig. 1d](Figure1.html#fig1d). For each GP, its mean
+loading across clusters is subtracted from every cluster mean, so a row says
+where a program is more or less active than its own average rather than how
+large its loading is. The centered color scale is fixed at -0.2 to 0.2; values
+outside this range are saturated at the endpoint colors. The columns carry the
+same two annotations Fig. 1d gives its cells -- lineage and
+`annotation_level2_group`, each with a legend -- rather than a per-cluster
+color bar, since the column labels already name every cluster. The columns are
+also ordered the way Fig. 1d orders its cells -- lineage, then
+`annotation_level2_group` as a contiguous block, then cluster alphabetically
+within the block, which is what puts each lineage's proliferating (`.P`)
+cluster at the end of its lineage rather than mid-alphabet -- and the GP rows
+follow the columns, in dominant-cluster blocks. It is the mean-loading
+counterpart of [Extended Data Figure 4](FigureS4.html), which resolves the
+same clusters cell by cell.
+
+### Setup, centering, and ordering
+
+```{r figs2d-setup, code=code_for("../script/FigureS2d.R", c("^", "Setup, centering")), eval=FALSE}
+```
+
+### Cluster mean loading
+
+```{r figs2d-code, code=code_for("../script/FigureS2d.R", "doc:rendering"), eval=FALSE}
+```
+
+```{r figs2d-img, echo=FALSE, out.width="100%"}
+knitr::include_graphics("assets/FigureS2/S2D.png")
+```
+
+::: {.figcaption}
+**Extended Data Fig. 2d.** Row-centered mean GP activity across the 99
+level-2 clusters. Mean GP activity computed in samples at baseline.
 :::

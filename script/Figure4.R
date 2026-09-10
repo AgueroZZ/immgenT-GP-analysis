@@ -1,419 +1,648 @@
-# Figure 4. GPs associated with T-cell activation.
+# Figure 4. GP activity across level-2 clusters.
 #
-# --- internal ---
-# NOTE the renumbering: this figure's published counterpart is
-# figures/Previous/bits/Figure *3*, panels 3c-3g (the old 3a/3b moved to
-# Figure S3). Full caption text:
-# ../immgen-t-factors/figures/Figure_Activation/Figure3_caption.md.
-# --- end internal ---
 # Panels produced:
-#   4a  Standardized mean difference (d) in GP loading, activated vs resting,
-#       CD4 (x) vs CD8 (y); curated GPs colored by semantic group and labeled.
-#   4b  GP-gene signature network: each curated GP linked to its top 5
-#       positively/negatively regulated genes.
-#   4c  Heatmap of log2FC in mean GP loading across experimental conditions,
-#       for activated CD4/CD8 cells.
-#   4d  Heatmap of mean GP loading per Level-2 sub-lineage, across the 7
-#       T-cell lineages.
+#   4a  Max AUC (level-1 lineage) vs max AUC (level-2 cluster) scatter, per GP.
+#   4b  The 69 cluster-associated GPs across the level-2 clusters: row-centered
+#       mean-loading heatmap, columns grouped by level 1.
+#   4c  The Treg row of Extended Data Figure 4 as stacked bars: one bar per
+#       cluster, holding that cluster's mean loading per GP.
+#   4d  Extended Data Figure 4's Treg structure plot (its panel c), one bar per
+#       cell.
+#
+# 4b, 4c and 4d show the GPs and the cells of Extended Data Figure 4, so the row
+# map, the AUC > 0.9 rule, the display filters and the palette come from
+# code/R/structure_plot_panels.R, and 4b's rendering from
+# code/R/centered_mean_heatmap.R -- the module Extended Data Figure 2d uses --
+# rather than being restated here. The checks at the bottom compare what this
+# script drew against output/FigureS4/, which is what that figure recorded.
 #
 # --- internal ---
-# Re-lettered 2026-07-29: the bipartite TF-GP network for the curated activation
-# GPs was dropped from the figure, and the two heatmaps after it each moved up a
-# letter. So against figures/Previous/bits/Figure 3: 4a = 3c, 4b = 3d,
-# 4c = 3f, 4d = 3g, and the published 3e has no counterpart here any more. The
-# dropped panel was this script's only caller of code/R/tf_network.R, so that
-# helper is now unused.
+# New figure, inserted at 4 on 2026-09-10 (the activation, tissue and CITE-seq
+# figures moved to 5, 6, 7 and the RQVI figure to 8). It has no published
+# counterpart, so verify_panels.sh has no pair for it and the captions on
+# analysis/Figure4.Rmd are ours, not the published legends every other page
+# carries.
 #
-# Source: ported from Figure_Activation.R, which also produced the
-# Figure S4 panels (see FigureS4.R) from the same curated GP set and cell
-# groupings -- that shared setup now lives in
-# code/R/activation_shared_setup.R, sourced by both scripts.
-#
+# Ported from experiments/GP-level2/, which is retired: this script is the only
+# copy. Decisions made there and kept here: 4a is labelled with GP names, not
+# Figure 6a's top-three-categories blocks (53 of 200 GPs clear 0.9 here, 52 of
+# them above the diagonal); 4c's bars are raw mean loadings, not renormalized,
+# because that is what makes them the average of a structure plot's bars; 4c is
+# drawn tall and narrow rather than at the structure plot's shape; and every
+# lineage's .wM cluster is dropped from 4c and 4d, but not from 4b.
 # --- end internal ---
-# The curated GP set and activated/resting cell groupings are shared with
-# Figure S3 via code/R/activation_shared_setup.R.
 #
-# Required inputs (data/) -- see code/README.md's "Data provenance" table
-# for the full picture:
-#   L_pm_filtered.rds, F_pm_filtered.rds     [code/pipeline/01b_filter_cells.R]
-#   igt1_96_..._ADTonly.Rds                  [primary input Seurat object]
+# Required inputs (data/) -- see code/README.md's "Data provenance" table:
+#   igt1_96_..._ADTonly.Rds                           [primary input Seurat object]
+#   L_pm_filtered.rds                                 [code/pipeline/01b_filter_cells.R]
+#   level_1_AUC_list_figure_no_thymocytes_healthy.rds [code/pipeline/02_compute_auc.R]
+#   level_2_AUC_list_figure_no_thymocytes_healthy.rds [code/pipeline/02_compute_auc.R]
 
-library(ggplot2)
-library(ggrepel)
-library(dplyr)
-library(tidygraph)
-library(ggraph)
-library(pheatmap)
-library(scales)
+# --- doc:setup ---
+suppressPackageStartupMessages({
+  library(ggplot2)
+  library(ggrepel)
+  library(ggrastr)
+  library(cowplot)
+  library(dplyr)
+  library(fastTopics)      # structure_plot()
+  library(ComplexHeatmap)
+  library(circlize)
+  library(grid)
+  library(ZemmourLib)      # immgent_colors
+})
 
-data_path <- "data/"
+if (!file.exists("code/R/structure_plot_panels.R")) {
+  stop("Run this script from the immgenT-GP-analysis repository root.")
+}
+source("code/R/structure_plot_panels.R")   # Extended Data Figure 4's rows, GP rule, palette
+source("code/R/centered_mean_heatmap.R")   # Extended Data Figure 2d's heatmap rendering
+
+data_path   <- "data/"
 figure_path <- "figures/final-selected/Figure 4/"
-source("code/R/plot_utils.R") # scale_cols()
+record_path <- "output/Figure4/"
+dir.create(figure_path, recursive = TRUE, showWarnings = FALSE)
+dir.create(record_path, recursive = TRUE, showWarnings = FALSE)
+
+# Figure scripts here have been seen to exit 0 having written nothing, so every
+# PDF is checked against this timestamp at the end rather than against the exit
+# code (script/README.md, "A re-run can silently not write").
+run_started_at <- Sys.time()
 
 # ============================================================
 # Load data
 # ============================================================
-L_pm_filtered <- readRDS(paste0(data_path, "L_pm_filtered.rds"))
-colnames(L_pm_filtered) <- paste0("GP", seq_len(ncol(L_pm_filtered)))
-F_pm_filtered <- readRDS(paste0(data_path, "F_pm_filtered.rds"))
-colnames(F_pm_filtered) <- paste0("GP", seq_len(ncol(F_pm_filtered)))
 seurat_meta <- readRDS(paste0(
-  data_path,
-  "igt1_96_withtotalvi20260206_clean_ADTonly.Rds"
+  data_path, "igt1_96_withtotalvi20260206_clean_ADTonly.Rds"
 ))@meta.data
+L_pm_filtered <- readRDS(paste0(data_path, "L_pm_filtered.rds"))
 seurat_meta_filtered <- seurat_meta[rownames(L_pm_filtered), ]
+colnames(L_pm_filtered) <- gsub("^K", "GP", colnames(L_pm_filtered))
+if (!all(grepl("^GP[0-9]+$", colnames(L_pm_filtered)))) {
+  stop("The loading matrix does not carry K##/GP## column names.")
+}
 
-source("code/R/activation_shared_setup.R")
+level_1_AUC_list <- readRDS(paste0(
+  data_path, "level_1_AUC_list_figure_no_thymocytes_healthy.rds"
+))
+level_2_AUC_list <- readRDS(paste0(
+  data_path, "level_2_AUC_list_figure_no_thymocytes_healthy.rds"
+))
+colnames(level_1_AUC_list$auc) <- gsub("^K", "GP", colnames(level_1_AUC_list$auc))
+colnames(level_2_AUC_list$auc) <- gsub("^K", "GP", colnames(level_2_AUC_list$auc))
 
-# ============================================================
-# 4a: Standardized mean difference, activated vs resting, CD4 vs CD8
-# ============================================================
-d_thr <- 0.15
-ratio_cutoff <- 3
+# Both AUC matrices index GPs by names taken from the loading matrix, so they
+# have to be talking about the same GPs in the same order.
+if (!identical(colnames(level_1_AUC_list$auc), colnames(L_pm_filtered)) ||
+      !identical(colnames(level_2_AUC_list$auc), colnames(L_pm_filtered))) {
+  stop("The AUC matrices and L_pm_filtered do not carry the same GP columns in the same order.")
+}
 
-GP_activation_summary <- diff_factors_merged %>%
-  dplyr::inner_join(
-    d_factors_merged %>% dplyr::select(SYMBOL, d_CD4, d_CD8),
-    by = "SYMBOL"
-  ) %>%
-  dplyr::mutate(
-    Ratio_CD8_CD4 = mean_change_loadings_CD8 / mean_change_loadings_CD4
-  ) %>%
-  dplyr::select(
-    GP = SYMBOL,
-    mean_change_loadings_CD4,
-    mean_change_loadings_CD8,
-    AveExpr_CD4,
-    AveExpr_CD8,
-    d_CD4,
-    d_CD8,
-    Ratio_CD8_CD4
-  )
-
-# Colour every GP using the same four-category rule (ratio + sign + magnitude
-# gate via d_thr). Curated GPs (GPs_of_interest) override with their fixed
-# manual highlight_colors; non-curated GPs are classified automatically.
-# Only the curated GPs are labelled, to keep the plot readable.
-manual_curated_df <- GP_activation_summary %>%
-  dplyr::mutate(
-    auto_color = dplyr::case_when(
-      abs(Ratio_CD8_CD4) > ratio_cutoff & abs(d_CD8) > d_thr ~ "darkorange2",
-      abs(Ratio_CD8_CD4) < 1 / ratio_cutoff & abs(d_CD4) > d_thr ~ "blue",
-      abs(Ratio_CD8_CD4) > 1 / ratio_cutoff &
-        abs(Ratio_CD8_CD4) < ratio_cutoff &
-        d_CD4 > d_thr &
-        d_CD8 > d_thr ~ "darkred",
-      abs(Ratio_CD8_CD4) > 1 / ratio_cutoff &
-        abs(Ratio_CD8_CD4) < ratio_cutoff &
-        d_CD4 < -d_thr &
-        d_CD8 < -d_thr ~ "darkgreen",
-      TRUE ~ "black"
-    ),
-    point_color = ifelse(
-      GP %in% GPs_of_interest,
-      highlight_colors[GP],
-      auto_color
-    )
-  )
-
-p_4a <- ggplot(manual_curated_df, aes(x = d_CD4, y = d_CD8)) +
-  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "blue") +
-  geom_vline(xintercept = 0, linetype = "dashed", color = "blue") +
-  geom_point(aes(color = point_color), size = 2) +
-  ggrepel::geom_text_repel(
-    seed = 42,
-    data = filter(manual_curated_df, GP %in% GPs_of_interest),
-    aes(label = GP, color = point_color),
-    max.overlaps = Inf,
-    size = 3.5,
-    box.padding = 0.35,
-    point.padding = 0.5,
-    segment.color = "grey50"
-  ) +
-  scale_color_identity() +
-  # Signed (pseudo-)log axes: d is signed, so a plain log drops negatives/zeros.
-  scale_x_continuous(
-    trans = scales::pseudo_log_trans(sigma = 0.15),
-    breaks = c(-1, -0.5, -0.2, -0.1, 0, 0.1, 0.2, 0.5, 1)
-  ) +
-  scale_y_continuous(
-    trans = scales::pseudo_log_trans(sigma = 0.15),
-    breaks = c(-1, -0.5, -0.2, -0.1, 0, 0.1, 0.2, 0.5, 1)
-  ) +
-  coord_equal(xlim = c(-1.6, 1.6), ylim = c(-1.6, 1.6)) +
-  labs(
-    x = "Standardized Mean Difference (d) for CD4 Activated vs Resting",
-    y = "Standardized Mean Difference (d) for CD8 Activated vs Resting",
-    title = "GPs colored by semantic category (curated set labeled)"
-  ) +
-  theme_minimal()
-ggsave(
-  filename = paste0(figure_path, "4a.pdf"),
-  plot = p_4a,
-  width = 8,
-  height = 7
+level1_all <- seurat_meta_filtered$annotation_level1
+level2_all <- seurat_meta_filtered$annotation_level2
+healthy_non_thymocyte <- which(
+  seurat_meta_filtered$condition_broad == "healthy" & level1_all != "thymocyte"
 )
+meta_reference <- seurat_meta_filtered[healthy_non_thymocyte, , drop = FALSE]
+L_healthy <- L_pm_filtered[healthy_non_thymocyte, , drop = FALSE]
+overall_mean <- colMeans(L_healthy, na.rm = TRUE)
+
+message(sprintf(
+  "%d healthy non-thymocyte cells, %d GPs, %d level-2 clusters",
+  nrow(L_healthy), ncol(L_healthy), dplyr::n_distinct(meta_reference$annotation_level2)
+))
 
 # ============================================================
-# 4b: GP-gene signature network
+# 4a: Max AUC level-1 vs max AUC level-2
 # ============================================================
-set.seed(42)
-F_pm_filtered_norm_subset <- F_pm_filtered_norm[, GPs_of_interest, drop = FALSE]
-top_5_pos <- apply(F_pm_filtered_norm_subset, 2, function(x) {
-  idx <- order(abs(x), decreasing = TRUE)[1:5]
-  idx <- idx[x[idx] > 0]
-  names(x)[idx]
-})
-top_5_neg <- apply(F_pm_filtered_norm_subset, 2, function(x) {
-  idx <- order(abs(x), decreasing = TRUE)[1:5]
-  idx <- idx[x[idx] < 0]
-  names(x)[idx]
-})
-names(top_5_pos) <- GPs_of_interest
-names(top_5_neg) <- GPs_of_interest
-
-pos_edges <- stack(top_5_pos) %>%
-  dplyr::rename(Gene = values, GP = ind) %>%
-  dplyr::mutate(Type = "Positive", Color = "red")
-neg_edges <- stack(top_5_neg) %>%
-  dplyr::rename(Gene = values, GP = ind) %>%
-  dplyr::mutate(Type = "Negative", Color = "blue")
-all_edges <- dplyr::bind_rows(pos_edges, neg_edges) %>%
-  dplyr::filter(Gene != "" & !is.na(Gene))
-all_edges_sorted <- all_edges %>% dplyr::arrange(Type, GP, Gene)
-
-gp_group_df <- data.frame(
-  name = names(highlight_colors),
-  ManualGroup = dplyr::case_when(
-    highlight_colors == "blue" ~ "CD4 only",
-    highlight_colors == "darkorange2" ~ "CD8 only",
-    highlight_colors == "darkgreen" ~ "both down",
-    highlight_colors == "darkred" ~ "both up",
-  )
-)
-manual_colors_palette <- c(
-  "CD4 only" = "blue",
-  "CD8 only" = "darkorange2",
-  "both down" = "darkgreen",
-  "both up" = "darkred",
-  "Gene" = "#666666"
-)
-
-graph <- tidygraph::as_tbl_graph(all_edges_sorted) %>%
-  tidygraph::activate(nodes) %>%
-  dplyr::mutate(
-    NodeGroup = ifelse(name %in% all_edges$GP, "GP", "Gene"),
-    Importance = tidygraph::centrality_degree()
-  ) %>%
-  dplyr::left_join(gp_group_df, by = "name") %>%
-  dplyr::mutate(
-    ColorGroup = ifelse(NodeGroup == "Gene", "Gene", ManualGroup),
-    gp_label = ifelse(NodeGroup == "GP", name, "")
-  )
-
-set.seed(2)
-p_4b <- ggraph(graph, layout = "stress") +
-  geom_edge_link(aes(color = Color), alpha = 0.4, width = 0.6) +
-  geom_node_point(
-    aes(filter = (NodeGroup == "Gene"), color = ColorGroup),
-    shape = 16,
-    size = 2,
-    alpha = 0.8
-  ) +
-  geom_node_point(
-    aes(filter = (NodeGroup == "GP"), color = ColorGroup),
-    shape = 15,
-    size = 10,
-    alpha = 0.7
-  ) +
-  geom_node_text(
-    aes(filter = (NodeGroup == "GP"), label = gp_label),
-    color = "white",
-    fontface = "bold",
-    size = 3
-  ) +
-  geom_node_text(
-    aes(filter = (NodeGroup == "Gene"), label = name),
-    repel = TRUE,
-    size = 2.5,
-    color = "black",
-    max.overlaps = 20
-  ) +
-  scale_edge_color_identity() +
-  scale_color_manual(
-    name = "GP Types",
-    values = manual_colors_palette,
-    breaks = c("CD4 only", "CD8 only", "both down", "both up")
-  ) +
-  theme_void() +
-  labs(
-    title = "GP-Gene Signature Network",
-    subtitle = "Nodes colored by manual GP classification",
-    caption = "Red edges: Positive | Blue edges: Negative"
-  ) +
-  theme(
-    legend.position = "bottom",
-    legend.title = element_text(face = "bold"),
-    plot.margin = margin(10, 10, 10, 10)
-  ) +
-  guides(color = guide_legend(override.aes = list(size = 5, shape = 15)))
-ggsave(
-  filename = paste0(figure_path, "4b.pdf"),
-  plot = p_4b,
-  width = 10,
-  height = 10
-)
-
-# ============================================================
-# 4c: log2FC heatmap of activated CD4+CD8 cells across conditions,
-#     relative to the per-GP mean across all CD4/CD8 cells
-# ============================================================
-act_keep <- seurat_meta_filtered$annotation_level1 %in%
-  c("CD4", "CD8") &
-  seurat_meta_filtered$annotation_level2_group == "activated"
-meta_act <- seurat_meta_filtered[act_keep, ]
-L_act <- L_subset[act_keep, , drop = FALSE]
-
-min_cells_cond <- 50
-cd_lin <- table(
-  meta_act$condition_detailed_simplified,
-  meta_act$annotation_level1
-)
-cond_keep <- rownames(cd_lin)[
-  cd_lin[, "CD4"] >= min_cells_cond & cd_lin[, "CD8"] >= min_cells_cond
+# Figure 6a and 6d's construction, with their category-count filters kept as
+# they are there: level-1 lineages need 1000 cells, level-2 clusters 100.
+# --- internal ---
+# Ported from script/Figure6.R's "6a" and "6d prep" sections. The only change
+# is which two of the three maxima are plotted against each other.
+# --- end internal ---
+level_1_small <- table(meta_reference$annotation_level1)
+level_1_small <- names(level_1_small[level_1_small < 1000])
+level_1_AUC <- level_1_AUC_list$auc[
+  !rownames(level_1_AUC_list$auc) %in% level_1_small, , drop = FALSE
 ]
 
-cd_br <- table(meta_act$condition_detailed_simplified, meta_act$condition_broad)
-cd_to_broad <- setNames(
-  colnames(cd_br)[apply(cd_br, 1, which.max)],
-  rownames(cd_br)
-)[cond_keep]
+level_2_small <- table(meta_reference$annotation_level2)
+level_2_small <- names(level_2_small[level_2_small < 100])
+level_2_AUC <- level_2_AUC_list$auc[
+  !rownames(level_2_AUC_list$auc) %in% level_2_small, , drop = FALSE
+]
 
-# Column order: `healthy` broad first (with `baseline` as its first condition)
-broad_rank <- ifelse(cd_to_broad == "healthy", 0L, 1L)
-within_broad_rank <- ifelse(
-  cd_to_broad == "healthy" & cond_keep == "baseline",
-  0L,
-  1L
-)
-col_order_cond <- order(broad_rank, cd_to_broad, within_broad_rank, cond_keep)
-cond_keep <- cond_keep[col_order_cond]
-cd_to_broad <- cd_to_broad[cond_keep]
+# A high AUC only means "GP predicts this category" when the category's mean
+# loading is above the overall mean; the other direction is a GP the category
+# lacks. Same masking as Figure 6.
+category_mean <- function(labels, categories) {
+  t(vapply(categories, function(cat) {
+    colMeans(L_healthy[labels == cat, , drop = FALSE], na.rm = TRUE)
+  }, numeric(ncol(L_healthy))))
+}
+level_1_positive <- sweep(
+  category_mean(meta_reference$annotation_level1, rownames(level_1_AUC)),
+  2, overall_mean, "-"
+) > 0
+level_2_positive <- sweep(
+  category_mean(meta_reference$annotation_level2, rownames(level_2_AUC)),
+  2, overall_mean, "-"
+) > 0
 
-mean_mat_cond <- vapply(
-  cond_keep,
-  function(cond) {
-    colMeans(L_act[
-      meta_act$condition_detailed_simplified == cond,
-      ,
-      drop = FALSE
-    ])
-  },
-  numeric(ncol(L_act))
-)
-mean_mat_cond <- mean_mat_cond[gp_row_order, , drop = FALSE]
-broad_levels <- unique(cd_to_broad)
-col_anno_cond <- data.frame(
-  condition_broad = factor(cd_to_broad, levels = broad_levels),
-  row.names = colnames(mean_mat_cond)
-)
-row_label_cols <- group_colors[gp_to_group[gp_row_order]]
+masked_max <- function(auc, positive) {
+  auc[!positive] <- NA
+  list(
+    value = apply(auc, 2, max, na.rm = TRUE),
+    name = apply(auc, 2, function(x) rownames(auc)[which.max(x)])
+  )
+}
+l1_max <- masked_max(level_1_AUC, level_1_positive)
+l2_max <- masked_max(level_2_AUC, level_2_positive)
 
-pc_lfc <- 1e-10
-cap_lfc <- 2
-cd4cd8_idx <- seurat_meta_filtered$annotation_level1 %in% c("CD4", "CD8")
-L_cd4cd8 <- L_subset[cd4cd8_idx, , drop = FALSE]
-mu_lfc_mean <- colMeans(L_cd4cd8, na.rm = TRUE)[rownames(mean_mat_cond)]
-lfc_mat_mean <- log2((mean_mat_cond + pc_lfc) / (mu_lfc_mean + pc_lfc))
-lfc_mat_mean <- pmax(pmin(lfc_mat_mean, cap_lfc), -cap_lfc)
+df_a <- data.frame(
+  Factor = colnames(level_1_AUC),
+  annotation_Level1 = l1_max$name,
+  annotation_Level2 = l2_max$name[colnames(level_1_AUC)],
+  Max_AUC_Level1 = l1_max$value,
+  Max_AUC_Level2 = l2_max$value[colnames(level_1_AUC)],
+  stringsAsFactors = FALSE
+) |>
+  dplyr::mutate(residual = Max_AUC_Level2 - Max_AUC_Level1)
 
-ph_cond_lfc_mean <- pheatmap(
-  lfc_mat_mean,
-  cluster_rows = FALSE,
-  cluster_cols = FALSE,
-  color = colorRampPalette(c("#7A0177", "black", "#FFD700"))(101),
-  breaks = seq(-cap_lfc, cap_lfc, length.out = 102),
-  annotation_col = col_anno_cond,
-  gaps_row = head(cumsum(lengths(gp_groups)), -1),
-  gaps_col = head(cumsum(rle(as.character(cd_to_broad))$lengths), -1),
-  main = "log2FC vs per-GP MEAN across all CD4/CD8 (activated CD4+CD8 by condition_detailed_simplified)",
-  silent = TRUE
-)
-row_idx_lfc_m <- which(ph_cond_lfc_mean$gtable$layout$name == "row_names")
-ph_cond_lfc_mean$gtable$grobs[[row_idx_lfc_m]]$gp$col <- row_label_cols
+# Figure 6a's highlight rule verbatim: AUC > 0.9 on either axis, coloured by
+# which of the two maxima is the larger. Only the labelling differs -- GP names,
+# not each point's top categories.
+highlighted <- df_a |>
+  dplyr::filter(is.finite(residual), Max_AUC_Level1 > 0.9 | Max_AUC_Level2 > 0.9) |>
+  dplyr::pull(Factor)
 
-pdf(
-  paste0(figure_path, "4c.pdf"),
-  width = max(8, 0.18 * ncol(lfc_mat_mean) + 4),
-  height = 6
+label_above <- df_a |>
+  dplyr::filter(Factor %in% highlighted, residual > 0) |>
+  dplyr::mutate(
+    label_text = Factor
+  )
+label_below <- df_a |>
+  dplyr::filter(Factor %in% highlighted, residual <= 0) |>
+  dplyr::mutate(
+    label_text = Factor
+  )
+message(sprintf(
+  "a: %d of %d GPs highlighted (%d above the diagonal, %d on or below)",
+  length(highlighted), nrow(df_a), nrow(label_above), nrow(label_below)
+))
+
+axis_limits <- function(x, pad = 0.04) {
+  x <- x[is.finite(x)]
+  c(min(x) - pad, max(x) + pad)
+}
+
+# --- internal ---
+# Figure 6a labels each highlighted point with its top three categories. Here 53
+# of 200 GPs clear 0.9 and 52 do it above the diagonal, which at that label size
+# is unreadable and costs the points ggrepel cannot place, so Ziang's call on
+# 2026-09-09 was GP names only. Which categories each maximum is attained in is
+# in records/a_max_auc_level1_level2.csv.
+# --- end internal ---
+p_4a <- ggplot(df_a, aes(Max_AUC_Level1, Max_AUC_Level2)) +
+  geom_point(alpha = 0.3, size = 1.8) +
+  geom_point(data = label_above, color = "#1f78b4", alpha = 0.8, size = 1.8) +
+  geom_point(data = label_below, color = "#e31a1c", alpha = 0.8, size = 1.8) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black") +
+  coord_cartesian(
+    xlim = axis_limits(df_a$Max_AUC_Level1),
+    ylim = axis_limits(df_a$Max_AUC_Level2),
+    expand = FALSE, clip = "off"
+  ) +
+  labs(
+    x = "Max AUC (Level-1)", y = "Max AUC (Level-2)",
+    title = "Max AUC: Level-1 vs Level-2"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(plot.margin = margin(10, 40, 10, 40)) +
+  geom_text_repel(
+    seed = 42, data = label_above, aes(label = label_text), color = "#1f78b4",
+    size = 2.5, lineheight = 0.85, direction = "y", nudge_x = -0.035,
+    segment.color = "#1f78b4",
+    arrow = arrow(length = unit(0.008, "npc"), type = "closed", angle = 20),
+    force = 3, force_pull = 0.1, box.padding = 0.4, point.padding = 0.15,
+    max.time = 10, max.iter = 2e4, max.overlaps = 20,
+    min.segment.length = 0.01, segment.alpha = 0.7
+  ) +
+  geom_text_repel(
+    seed = 42, data = label_below, aes(label = label_text), color = "#e31a1c",
+    size = 2.5, lineheight = 0.85, direction = "y", nudge_x = 0.035,
+    segment.color = "#e31a1c",
+    arrow = arrow(length = unit(0.008, "npc"), type = "closed", angle = 20),
+    force = 3, force_pull = 0.1, box.padding = 0.4, point.padding = 0.15,
+    max.time = 10, max.iter = 2e4, max.overlaps = 20,
+    min.segment.length = 0.01, segment.alpha = 0.7
+  )
+ggsave(paste0(figure_path, "4a.pdf"), p_4a, width = 8, height = 8, dpi = 300)
+
+write.csv(
+  df_a[order(-df_a$Max_AUC_Level2), c(
+    "Factor", "Max_AUC_Level1", "annotation_Level1",
+    "Max_AUC_Level2", "annotation_Level2", "residual"
+  )],
+  file.path(record_path, "4a_max_auc_level1_level2.csv"),
+  row.names = FALSE
 )
-grid::grid.draw(ph_cond_lfc_mean$gtable)
-invisible(dev.off())
 
 # ============================================================
-# 4d: Mean GP loading per Level-2 sub-lineage
+# Shared with 4b, 4c and 4d: the Extended Data Figure 4 GP sets and cells
 # ============================================================
-keep_cells <- seurat_meta_filtered$annotation_level1 %in% lineages
-meta_sub <- seurat_meta_filtered[keep_cells, ]
-L_keep <- L_subset[keep_cells, , drop = FALSE]
+cluster_lineage <- cluster_lineage_map(level2_all, level1_all)
+auc_level2_full <- level_2_AUC_list$auc
+auc_clusters <- rownames(auc_level2_full)
+prefix_lineage <- sub("[.].*$", "", auc_clusters)
 
-l2_counts <- table(meta_sub$annotation_level2)
-l2_keep <- names(l2_counts)[l2_counts >= 50]
-# Drop the "P" cluster and any "w..." clusters (wM, wW, etc.) across all lineages
-l2_stripped <- sub("^[^._]+[._]", "", l2_keep)
-exclude_l2 <- l2_stripped == "P" |
-  grepl("^w", l2_stripped, ignore.case = TRUE) |
-  grepl("[._]w", l2_keep, ignore.case = TRUE)
-l2_keep <- l2_keep[!exclude_l2]
+# GP selection uses every cluster of the lineage, as it does in FigureS4.R --
+# the 100-cell filter below is a display filter only.
+panel_gps <- gps_above_auc_by_lineage(auc_level2_full, cluster_lineage)
+gp_union <- unique(unlist(panel_gps, use.names = FALSE))
+gp_union <- gp_union[order(as.integer(sub("^GP", "", gp_union)))]
 
-mean_mat <- vapply(
-  l2_keep,
-  function(l2) {
-    colMeans(L_keep[meta_sub$annotation_level2 == l2, , drop = FALSE])
-  },
-  numeric(ncol(L_keep))
+message(sprintf(
+  "%d GPs over %d rows (AUC > %.1f): %s",
+  length(gp_union), length(panel_gps), structure_plot_auc_threshold,
+  paste(sprintf("%s %d", names(panel_gps), lengths(panel_gps)), collapse = ", ")
+))
+
+# Cells and clusters drawn per lineage: the healthy non-thymocyte cells of the
+# lineage, in clusters of at least structure_plot_min_cluster_cells cells.
+# --- internal ---
+# Unlike FigureS4.R these means are taken over every cell of the cluster, with
+# no 2000-cell cap: the cap is there so one large cluster cannot crowd out the
+# rest of a structure plot's width, and a bar of means has no width to crowd.
+# The cluster *set* is the same, which is what the check at the bottom compares.
+# --- end internal ---
+lineage_cells_drawn <- list()
+for (lineage in names(structure_plot_panels)) {
+  cells <- healthy_non_thymocyte[level1_all[healthy_non_thymocyte] == lineage]
+  size <- table(droplevels(factor(level2_all[cells])))
+  keep <- names(size)[size >= structure_plot_min_cluster_cells]
+  lineage_cells_drawn[[lineage]] <- cells[level2_all[cells] %in% keep]
+}
+
+# c and d additionally drop the .wM cluster of every lineage (all seven have
+# one: CD4.wM 10543 cells, CD8.wM 6174, gdT.wM 1732, DN.wM 822, Tz.wM 706,
+# Treg.wM 654, CD8aa.wM 247 healthy non-thymocyte cells).
+# --- internal ---
+# Ziang's request, 2026-09-09, stated as temporary. It is a display filter and
+# nothing else: the GP sets still come from every cluster of the lineage, as
+# they do in Extended Data Figure 4, and 4b keeps its wM columns, so 4c's clusters
+# are a subset of 4b's rather than a different selection. Only .wM goes -- the
+# other w-clusters (CD8.wV, CD8.wY, CD4.wN, CD4.wZ, ...) stay.
+# --- end internal ---
+bar_cluster_pattern_dropped <- "[.]wM$"
+drop_wM <- function(cells) {
+  cells[!grepl(bar_cluster_pattern_dropped, as.character(level2_all[cells]))]
+}
+lineage_cells_bars <- lapply(lineage_cells_drawn, drop_wM)
+
+# Mean loading per cluster, over the GPs of that cluster's lineage row.
+mean_loading_by_cluster <- function(cells, gps) {
+  labels <- droplevels(factor(level2_all[cells]))
+  sums <- rowsum(L_pm_filtered[cells, gps, drop = FALSE], group = labels, reorder = TRUE)
+  counts <- as.integer(table(labels)[rownames(sums)])
+  list(matrix = sweep(sums, 1L, counts, "/"), counts = counts)
+}
+
+# ============================================================
+# 4b: the same GPs as a heatmap, level-2 columns grouped by level 1
+# ============================================================
+# --- internal ---
+# The centering, the fixed [-0.2, 0.2] scale, the dominant-group row order and
+# the two-track column annotation are Extended Data Figure 2d's, called from
+# code/R/centered_mean_heatmap.R -- the module that figure itself uses -- rather
+# than copied, so this panel cannot drift from it. It is not a subset of that
+# panel's matrix: the columns here are the clusters Extended Data Figure 4 draws
+# (>= 100 healthy non-thymocyte cells, no DP, no thymocytes), and each GP is
+# centered on its mean across those columns. It keeps the .wM clusters that c
+# and d drop, so its columns are the wider set.
+# --- end internal ---
+cells_drawn <- sort(unlist(lineage_cells_drawn, use.names = FALSE))
+labels_drawn <- droplevels(factor(level2_all[cells_drawn]))
+heat_means <- mean_loading_by_group(
+  L_pm_filtered[cells_drawn, gp_union, drop = FALSE], labels_drawn
 )
-l2_to_l1 <- vapply(
-  l2_keep,
-  function(l2) {
-    as.character(meta_sub$annotation_level1[meta_sub$annotation_level2 == l2][
-      1
-    ])
-  },
-  character(1)
-)
-col_order <- order(match(l2_to_l1, lineages), l2_keep)
-mean_mat <- mean_mat[gp_row_order, col_order]
-l2_to_l1 <- l2_to_l1[col_order]
+heat_raw <- heat_means$matrix          # GPs x clusters
+heat_centered <- center_by_gp_mean(heat_raw)
 
-immgen_cols <- ZemmourLib::immgent_colors
-col_anno <- data.frame(
-  Lineage = factor(l2_to_l1, levels = lineages),
-  row.names = colnames(mean_mat)
+# Figure 1's level-1 order, minus DP and thymocytes, which these rows exclude.
+level1_order <- c("CD8", "CD4", "Treg", "gdT", "CD8aa", "Tz", "DN")
+level2_group_level1 <- level2_to_level1_map(
+  meta_reference, colnames(heat_raw), level1_order
 )
-anno_colors_mean <- list(Lineage = immgen_cols$level1[lineages])
-row_label_cols <- group_colors[gp_to_group[gp_row_order]]
-col_label_cols <- immgen_cols$level2[colnames(mean_mat)]
-col_label_cols[is.na(col_label_cols)] <- "black"
-
-ph <- pheatmap(
-  mean_mat,
-  cluster_rows = FALSE,
-  cluster_cols = FALSE,
-  color = colorRampPalette(c("white", "red"))(200),
-  annotation_col = col_anno,
-  annotation_colors = anno_colors_mean,
-  gaps_row = head(cumsum(lengths(gp_groups)), -1),
-  gaps_col = head(cumsum(rle(l2_to_l1)$lengths), -1),
-  main = "Average loading of Figure 4 GPs per Level-2 sub-lineage",
-  silent = TRUE
+heat_order <- dominant_group_order(
+  heat_raw,
+  level2_column_order(colnames(heat_raw), level2_group_level1, level1_order)
 )
-row_idx <- which(ph$gtable$layout$name == "row_names")
-col_idx <- which(ph$gtable$layout$name == "col_names")
-ph$gtable$grobs[[row_idx]]$gp$col <- row_label_cols
-ph$gtable$grobs[[col_idx]]$gp$col <- col_label_cols
 
-pdf(paste0(figure_path, "4d.pdf"), width = 11, height = 5.5)
-grid::grid.draw(ph$gtable)
-invisible(dev.off())
+level2_palette <- palette_for_groups(
+  colnames(heat_centered), ZemmourLib::immgent_colors$level2, "annotation_level2"
+)
+level1_palette <- ZemmourLib::immgent_colors$level1[level1_order]
+
+centered_color_limit <- 0.2
+render_centered_heatmap(
+  heat_centered,
+  level2_palette,
+  "cluster (annotation_level2)",
+  paste0(figure_path, "4b.pdf"),
+  heat_order$row_order,
+  heat_order$column_order,
+  centered_color_limit,
+  sprintf(
+    paste0(
+      "%d GPs with AUC > %.1f in some cluster; level2 columns: level1 order ",
+      "(%s); alphabetical within level1; GP rows: dominant-cluster blocks"
+    ),
+    nrow(heat_centered), structure_plot_auc_threshold,
+    paste(level1_order, collapse = ", ")
+  ),
+  group_level1 = level2_group_level1,
+  level1_palette = level1_palette
+)
+
+write.csv(
+  data.frame(gp = rownames(heat_centered), heat_centered, check.names = FALSE),
+  file.path(record_path, "4b_row_centered_mean_loading.csv"), row.names = FALSE
+)
+write.csv(
+  data.frame(
+    cluster = heat_means$counts$group,
+    level1 = unname(level2_group_level1[heat_means$counts$group]),
+    n_cells = heat_means$counts$n_cells
+  ),
+  file.path(record_path, "4b_column_cells.csv"), row.names = FALSE
+)
+
+# ============================================================
+# 4c: one stacked bar of mean loadings per level-2 cluster, the Treg row
+# ============================================================
+# The Treg row of Extended Data Figure 4 with one bar per cluster, holding that
+# cluster's mean loading per GP instead of one bar per cell -- the average of
+# that row's bars. Same GPs (the 11 with AUC > 0.9 in some Treg cluster), same
+# per-row palette, same cells, minus Treg.wM.
+#
+# Bars are raw mean loadings, not rescaled to a common height: that is what
+# makes them the average of those bars, since structure_plot() does not
+# renormalize a subset of topics either. A tall bar means the cluster carries
+# more total activity over the row's GPs, not just a different mix.
+#
+# --- internal ---
+# Drawn for all seven lineages until 2026-09-09, when Ziang cut the panel to
+# Treg to pair with d. The means are still computed for all seven, because they
+# are the numbers behind 4b's columns and the check at the bottom compares all
+# 1794 of them against that panel; only the Treg row is plotted. A normalized
+# view (every cluster rescaled to sum to 1) was drawn while choosing and is not
+# produced any more, but its numbers are the record's `proportion` column.
+# --- end internal ---
+#
+# Unlike 4d and Extended Data Figure 4 this panel is not drawn at the structure
+# plot's 16 x 3 in: a chart of seven bars does not need a structure plot's
+# width, and Ziang asked for tall and narrow.
+bar_figure_width <- 5.5  # inches
+bar_figure_height <- 7
+
+# Mean loading per cluster over the row's GPs, plus the record of every segment.
+bar_means <- function(lineage) {
+  gps_lineage <- panel_gps[[lineage]]
+  means <- mean_loading_by_cluster(lineage_cells_bars[[lineage]], gps_lineage)
+  bar_matrix <- means$matrix
+  totals <- rowSums(bar_matrix)
+  if (any(!is.finite(totals)) || any(totals <= 0)) {
+    stop(sprintf("row %s: a cluster has no loading at all.", lineage))
+  }
+
+  # This row's colours, assigned from the top of the palette without reference
+  # to any other row -- the same per-row rule Extended Data Figure 4 uses, so
+  # colour means different GPs in different rows.
+  colors_lineage <- structure_plot_row_colors(gps_lineage)
+  if (!identical(names(colors_lineage), colnames(bar_matrix))) {
+    stop(sprintf("row %s: palette order does not match its GP columns.", lineage))
+  }
+
+  long <- data.frame(
+    cluster = factor(
+      rep(rownames(bar_matrix), times = ncol(bar_matrix)),
+      levels = rownames(bar_matrix)
+    ),
+    gp = factor(
+      rep(colnames(bar_matrix), each = nrow(bar_matrix)),
+      levels = colnames(bar_matrix)
+    ),
+    value = as.vector(bar_matrix),
+    stringsAsFactors = FALSE
+  )
+
+  record <- data.frame(
+    panel = structure_plot_panels[[lineage]],
+    lineage = lineage,
+    drawn_in_4c = lineage == bar_lineage,
+    cluster = as.character(long$cluster),
+    n_cells = means$counts[match(long$cluster, rownames(bar_matrix))],
+    gp = as.character(long$gp),
+    color = unname(colors_lineage[as.character(long$gp)]),
+    mean_loading = long$value,
+    # The same segment as a share of its cluster's total -- the normalized view's
+    # number, kept so that variant can be redrawn from the record alone.
+    proportion = long$value / totals[as.character(long$cluster)],
+    stringsAsFactors = FALSE
+  )
+
+  list(long = long, colors = colors_lineage, record = record, gps = gps_lineage)
+}
+
+bar_lineage <- "Treg"
+bar_data <- lapply(names(structure_plot_panels), bar_means)
+names(bar_data) <- names(structure_plot_panels)
+
+drawn <- bar_data[[bar_lineage]]
+p_4c <- ggplot(drawn$long, aes(cluster, value, fill = gp)) +
+  geom_col(width = 0.85) +
+  scale_fill_manual(values = drawn$colors) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.02))) +
+  labs(
+    x = "", y = "mean loading", fill = "",
+    title = sprintf(
+      "%s (%d GPs, AUC > %.1f)", bar_lineage, length(drawn$gps),
+      structure_plot_auc_threshold
+    )
+  ) +
+  guides(fill = guide_legend(ncol = 1)) +
+  cowplot::theme_cowplot(9) +
+  theme(
+    plot.title = element_text(size = 11, face = "bold"),
+    axis.text.x = element_text(size = 7, angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 9),
+    axis.title = element_text(size = 10, face = "bold"),
+    axis.line = element_blank(),
+    axis.ticks = element_blank(),
+    legend.position = "right",
+    legend.key.size = unit(0.3, "cm"),
+    legend.text = element_text(size = 7)
+  )
+ggsave(
+  paste0(figure_path, "4c.pdf"), p_4c,
+  width = bar_figure_width, height = bar_figure_height, dpi = 300
+)
+
+# Every bar segment of all seven rows, raw and as a share of its cluster's
+# total; drawn_in_4c marks the row this panel shows.
+bar_record <- do.call(rbind, lapply(bar_data, `[[`, "record"))
+write.csv(bar_record, file.path(record_path, "4c_mean_loading_by_cluster.csv"), row.names = FALSE)
+
+# ============================================================
+# 4d: Extended Data Figure 4's Treg row on its own
+# ============================================================
+# FigureS4.R's loop body for one lineage, unchanged including its seeds and its
+# 2000-cell cap, so this is that row and not a redrawing of it.
+d_lineage <- "Treg"
+gps_d <- panel_gps[[d_lineage]]
+cells_d <- healthy_non_thymocyte[level1_all[healthy_non_thymocyte] == d_lineage]
+cluster_size_d <- table(droplevels(factor(level2_all[cells_d])))
+small_d <- names(cluster_size_d)[cluster_size_d < structure_plot_min_cluster_cells]
+cells_d <- cells_d[!level2_all[cells_d] %in% small_d]
+cells_d <- drop_wM(cells_d)   # as in 4c; Treg.wM's 654 cells are not drawn
+
+set.seed(1234)
+keep_d <- unlist(lapply(
+  split(seq_along(cells_d), level2_all[cells_d]),
+  function(idx) {
+    if (length(idx) > structure_plot_max_cells_per_cluster) {
+      sample(idx, structure_plot_max_cells_per_cluster)
+    } else {
+      idx
+    }
+  }
+))
+cells_d <- cells_d[keep_d]
+
+fit_d <- L_pm_filtered[cells_d, gps_d, drop = FALSE]
+colors_d <- structure_plot_row_colors(gps_d)
+if (!identical(names(colors_d), colnames(fit_d))) {
+  stop("4d: palette order does not match its GP columns.")
+}
+
+set.seed(1234)
+p_4d <- structure_plot(
+  fit_d, topics = gps_d, gap = 40, n = 10000, colors = colors_d,
+  grouping = factor(level2_all[cells_d]),
+  ggplot_call = rasterized_structure_plot_call
+) +
+  labs(
+    y = "membership", color = "", fill = "",
+    title = sprintf(
+      "%s (%d GPs, AUC > %.1f)", d_lineage, length(gps_d), structure_plot_auc_threshold
+    )
+  ) +
+  guides(fill = guide_legend(ncol = 2), color = guide_legend(ncol = 2)) +
+  theme(
+    plot.title = element_text(size = 11, face = "bold"),
+    axis.text.x = element_text(size = 6, angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 9),
+    axis.title = element_text(size = 10, face = "bold"),
+    legend.position = "right",
+    legend.key.size = unit(0.25, "cm"),
+    legend.text = element_text(size = 5),
+    legend.spacing.y = unit(0.02, "cm")
+  )
+ggsave(
+  paste0(figure_path, "4d.pdf"), p_4d,
+  width = structure_plot_width, height = structure_plot_row_height,
+  dpi = 300, limitsize = FALSE
+)
+
+# ============================================================
+# Do 4b, 4c and 4d show what Extended Data Figure 4 shows?
+# ============================================================
+# The point of these panels is to be that figure's GPs and cells in another
+# form, so they are checked against what it recorded rather than against a
+# second copy of the rule.
+s5_gps <- read.csv("output/FigureS4/s4_panel_gps.csv", stringsAsFactors = FALSE)
+s5_clusters <- read.csv("output/FigureS4/s4_panel_clusters.csv", stringsAsFactors = FALSE)
+
+for (lineage in names(structure_plot_panels)) {
+  recorded <- s5_gps[s5_gps$lineage == lineage, ]
+  drawn_colors <- structure_plot_row_colors(panel_gps[[lineage]])
+  if (!identical(recorded$gp, unname(names(drawn_colors))) ||
+        !identical(recorded$color, unname(drawn_colors))) {
+    stop(sprintf("row %s: GPs or colours differ from Extended Data Figure 4's record.", lineage))
+  }
+  # b keeps every cluster that figure drew; c and d drop the lineage's .wM
+  # cluster and nothing else.
+  recorded_clusters <- sort(s5_clusters$cluster[
+    s5_clusters$lineage == lineage & s5_clusters$n_cells_drawn > 0
+  ])
+  drawn_clusters <- sort(unique(as.character(level2_all[lineage_cells_drawn[[lineage]]])))
+  if (!identical(recorded_clusters, drawn_clusters)) {
+    stop(sprintf("row %s: clusters differ from Extended Data Figure 4's record.", lineage))
+  }
+  bar_clusters <- sort(unique(as.character(level2_all[lineage_cells_bars[[lineage]]])))
+  expected_bar_clusters <- grep(bar_cluster_pattern_dropped, recorded_clusters,
+                                value = TRUE, invert = TRUE)
+  if (!identical(bar_clusters, expected_bar_clusters) ||
+        length(bar_clusters) == length(recorded_clusters)) {
+    stop(sprintf("row %s: c and d dropped something other than the .wM cluster.", lineage))
+  }
+}
+
+# 4b's rows are exactly the GPs c draws, and its uncentered entries are 4c's bar
+# segments -- the two panels must not be able to show different numbers.
+if (!identical(sort(rownames(heat_raw)), sort(unique(as.character(bar_record$gp))))) {
+  stop("4b's GP rows are not the union of 4c's row GP sets.")
+}
+# 4c's clusters are a subset of 4b's columns, so every segment must be findable
+# there; a missing one indexes to NA and fails this comparison.
+c_vs_b <- max(abs(
+  bar_record$mean_loading - heat_raw[cbind(bar_record$gp, bar_record$cluster)]
+))
+if (!is.finite(c_vs_b) || c_vs_b > 1e-12) {
+  stop(sprintf("4c's bar segments and 4b's entries disagree (max |diff| = %g).", c_vs_b))
+}
+
+# The record's proportion column is 4c's bars rescaled per cluster, so each
+# cluster's shares sum to 1.
+cluster_totals <- tapply(bar_record$proportion, bar_record$cluster, sum)
+if (max(abs(cluster_totals - 1)) > 1e-12) {
+  stop(sprintf(
+    "the record's shares do not sum to 1 per cluster (worst |sum - 1| = %g).",
+    max(abs(cluster_totals - 1))
+  ))
+}
+share_diff <- max(abs(
+  bar_record$proportion -
+    bar_record$mean_loading / ave(bar_record$mean_loading, bar_record$cluster, FUN = sum)
+))
+if (share_diff > 1e-12) {
+  stop(sprintf("the record's shares are not 4c's bars rescaled (max |diff| = %g).", share_diff))
+}
+
+# d is that row minus Treg.wM, so on the clusters it keeps it must have kept the
+# same cells: same 100-cell filter, same 2000-cell cap, same seed, hence the
+# same per-cluster counts.
+d_drawn <- table(droplevels(factor(level2_all[cells_d])))
+d_recorded <- s5_clusters[
+  s5_clusters$lineage == d_lineage & s5_clusters$n_cells_drawn > 0 &
+    !grepl(bar_cluster_pattern_dropped, s5_clusters$cluster),
+]
+d_recorded <- d_recorded[order(d_recorded$cluster), ]
+if (!identical(names(d_drawn), d_recorded$cluster) ||
+      !identical(as.integer(d_drawn), as.integer(d_recorded$n_cells_drawn))) {
+  stop("4d does not draw the same Treg cells as Extended Data Figure 4's row c.")
+}
+
+# Did this run actually write the panels?
+expected <- paste0(figure_path, c("4a.pdf", "4b.pdf", "4c.pdf", "4d.pdf"))
+for (f in expected) {
+  if (!file.exists(f) || file.mtime(f) < run_started_at || file.size(f) == 0) {
+    stop(sprintf("%s was not written by this run (missing, empty, or older than the run)", f))
+  }
+}
+message(sprintf(
+  "wrote %s; 4b/4c/4d match output/FigureS4's record (4c vs 4b max |diff| = %g)",
+  paste(basename(expected), collapse = ", "), c_vs_b
+))

@@ -19,7 +19,7 @@ activation state, transcription factors, and surface protein expression.
   provenance notes.
 - `figures/final-selected/` -- the current selected panel set, one PDF per
   panel: everything `script/` regenerates, plus the few panels not produced
-  by R in this repo (Figure 7 apart from 7B, plus 1B and 6a -- see
+  by R in this repo (Figure 8 apart from 8B, plus 1B and 7a -- see
   `script/README.md`).
 - `figures/Previous/` -- the earlier published panels, kept as the
   byte-comparison ground truth.

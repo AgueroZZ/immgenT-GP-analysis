@@ -1,5 +1,5 @@
 ---
-title: "Extended Data Figure 6: Protein programs across GPs"
+title: "Extended Data Figure 6: Surface proteins association with GP"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -10,30 +10,55 @@ editor_options:
 source("../code/R/doc_code.R")
 ```
 
-This single-panel figure is produced by
+All panels are produced by
 [`script/FigureS6.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS6.R),
-which shares its CITE-seq setup and protein filters with
-[Figure 6](Figure6.html) and [Extended Data Figure 7](FigureS7.html) via
-`code/R/citeseq_shared_setup.R`. The code below is shown for reference (not
-re-executed on this page, since the shared setup takes about a minute to load);
-the image is its pre-rendered output.
+which shares its CITE-seq setup, gating logic and CD69 GP subset with
+[Figure 7](Figure7.html) via `code/R/citeseq_shared_setup.R` and
+`code/R/gated_protein_helpers.R`. The code below is shown for
+reference (not re-executed on this page, since this script takes about a minute
+to run); the images are its pre-rendered output.
 
 ## Setup
 
 ```{r figs6-setup, code=code_for("../script/FigureS6.R", "doc:setup"), eval=FALSE}
 ```
 
-## Protein-program heatmap {#figs6}
+## (a, b) CD69-associated GPs across tissues and lineages {#figs6ab}
 
-```{r figs6-code, code=code_for("../script/FigureS6.R", "s6"), eval=FALSE}
+The ten GPs and their order are defined in `code/R/citeseq_shared_setup.R`, so
+that these two panels and [Fig. 7d](Figure7.html#fig7d) -- which live in
+different figures and therefore in different scripts -- cannot disagree about
+which GPs they show or in what order:
+
+```{r figs6ab-gps, code=code_for("../code/R/citeseq_shared_setup.R", "doc:cd69"), eval=FALSE}
 ```
 
-```{r figs6-img, echo=FALSE, out.width="100%"}
-knitr::include_graphics("assets/FigureS6/s6.png")
+```{r figs6ab-code, code=code_for("../script/FigureS6.R", "s6a"), eval=FALSE}
+```
+
+```{r figs6ab-img, echo=FALSE, out.width="49%"}
+knitr::include_graphics(c("assets/FigureS6/s6a.png", "assets/FigureS6/s6b.png"))
 ```
 
 ::: {.figcaption}
-**Extended Data Fig. 6.** Heatmap of scaled protein scores for each GP. We
-focused on the 47 proteins that performed best in the immgenT CITE-seq
-dataset.
+**Extended Data Fig. 6a, b.** Mean activity of the ten CD69-associated GPs (a)
+across tissues and (b) across lineages.
+:::
+
+## (c-f) Further protein-gated vs. GP-loading populations {#figs6cf}
+
+```{r figs6cf-code, code=code_for("../script/FigureS6.R", "s6c"), eval=FALSE}
+```
+
+```{r figs6cf-img, echo=FALSE, out.width="49%"}
+knitr::include_graphics(c(
+  "assets/FigureS6/s6c.png", "assets/FigureS6/s6d.png",
+  "assets/FigureS6/s6e.png", "assets/FigureS6/s6f.png"
+))
+```
+
+::: {.figcaption}
+**Extended Data Fig. 6c-f.** Examples of gating strategies used to identify
+GP-active cells for (c) GP29 (CD8aa gdT or ab T cell specific), (d) GP58
+(CD8-specific), (e) GP22 (DN-specific), and (f) GP68 (Treg-specific).
 :::

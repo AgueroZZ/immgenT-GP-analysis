@@ -5,7 +5,7 @@
 # loading (activated minus resting), the standardized mean difference d
 # (= change / pooled loading SD; see code/R/activation_shared_setup.R's
 # std_mean_diff), and the CD8/CD4 ratio of the mean loading changes. These are
-# the `GP_activation_summary` quantities behind Figure 4a.
+# the `GP_activation_summary` quantities behind Figure 5a.
 
 library(dplyr)
 

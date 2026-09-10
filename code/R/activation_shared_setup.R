@@ -1,6 +1,6 @@
-# Shared setup for the Figure 3 / Figure S3 scripts (T-cell activation GPs).
+# Shared setup for the Figure 5 / Figure S3 scripts (T-cell activation GPs).
 #
-# Figure4.R and FigureS4.R both build on the same curated set of "activation"
+# Figure5.R and FigureS3.R both build on the same curated set of "activation"
 # GPs, the same CD4/CD8 activated-vs-resting cell groupings, and the same
 # semantic color grouping (CD4-only / CD8-only / both-up / both-down). This
 # was duplicated near-verbatim across panels in the original
@@ -99,9 +99,9 @@ ordered_GPs <- c(
 
 # ============================================================
 # Normalized gene-score matrix (max |score| = 1 per GP) -- used by the
-# GP-gene network (Fig 4b) and reused wherever a per-GP-normalized score is
-# needed. (It also fed the two TF-GP network panels, in Figure 4 and
-# Figure S3, until both were dropped.)
+# GP-gene network (Fig 5b) and reused wherever a per-GP-normalized score is
+# needed. (It also fed the two TF-GP network panels, in Figure 5 and in the
+# activation Extended Data figure, until both were dropped.)
 # ============================================================
 F_pm_filtered_norm <- scale_cols(F_pm_filtered, 1 / apply(abs(F_pm_filtered), 2, max))
 colnames(F_pm_filtered_norm) <- paste0("GP", seq_len(ncol(F_pm_filtered_norm)))

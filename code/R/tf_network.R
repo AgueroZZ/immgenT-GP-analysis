@@ -1,8 +1,9 @@
 # Bipartite TF-GP network layout + plotting.
 #
 # CURRENTLY UNUSED. Its only caller was Figure 4's bipartite TF-GP network panel,
-# which was dropped from the figure on 2026-07-29. Figure S3 built its own TF-GP
-# network inline, never calling into this file, until that panel was dropped too.
+# which was dropped from the figure on 2026-07-29. The activation Extended Data
+# figure (our Figure S3) built its own TF-GP network inline, never calling into
+# this file, until that panel was dropped too.
 # Kept for provenance.
 # Ported from Figure_Activation.R (which
 # itself absorbed this logic from Figure_TF.R and

@@ -1,19 +1,21 @@
 #!/usr/bin/env bash
 # Pixel-compare every regenerated panel against its published counterpart in
 # figures/Previous/bits/, using the old->new panel mapping (Figure 1 was split
-# into 1+2 and Figures 2/3/4 shifted up to 3/4/5, so same-letter filenames are
-# NOT counterparts -- see script/README.md).
+# into 1+2, a new cluster-level Figure 4 was inserted on 2026-09-10, and the
+# published 2/3/4/6 are now our 3/5/6/7, so same-letter filenames are NOT
+# counterparts -- see script/README.md).
 #
 #     bash script/verify_panels.sh            # all panels
-#     bash script/verify_panels.sh 5d 6d 3M   # just these
+#     bash script/verify_panels.sh 6d 7d 3M   # just these
 #
 # Prints one line per panel: RMSE (0 = pixel-identical) and a verdict. Panels
 # that differ on purpose are listed in script/README.md's "Verification status"
 # -- check any *new* non-zero entry against that list before shipping.
 #
 # Do NOT verify by comparing file sizes: a panel can plot the wrong variable at
-# almost exactly the same size (this is how a Level-1/Level-2 mix-up in 5d, and
-# a permuted 6d-6f gallery, both survived an earlier review). md5 never matches
+# almost exactly the same size (this is how a Level-1/Level-2 mix-up in what is
+# now 6d, and a permuted 7d-7f gallery, both survived an earlier review). md5
+# never matches
 # either, because each PDF embeds a fresh /CreationDate.
 set -uo pipefail
 
@@ -32,21 +34,26 @@ DENSITY=${DENSITY:-110}
 # compare different GPs and look like a huge regression. It also matters for
 # the Extended Data figures, which have been re-lettered and renumbered three
 # times. In their current numbering: the protein-program heatmap (published
-# Figure 6b) is **Figure S6/s6**, and the CD69 mean-activity and gating panels
-# are **Figure S7/s7a-s7f**; the activation figure -- published S3, ours **S4**
-# since 2026-09-09 -- had its panels each drop one letter when the published
-# s3a/s3b were merged into a single s3a; and Figure 6 was reordered (its KLRG1
+# Figure 6b) is **Figure S5/s5**, and the CD69 mean-activity and gating panels
+# are **Figure S6/s6a-s6f**; the activation figure -- published S3, ours **S3**
+# again since 2026-09-10 -- had its panels each drop one letter when the
+# published s3a/s3b were merged into a single s3a, so its letters still do not
+# line up even though its number does; and our Figure 7 (the published 6) was
+# reordered (its KLRG1
 # and CD69 panels moved to the front, the heatmap and the two CD69 panels moved
-# out). Figure S5 is the per-lineage structure plots, new on 2026-08-27, which is
-# what pushed the two CITE-seq figures to S6 and S7. Careful:
-# `figures/Previous/bits/Figure S6/` and `Figure S7/` are the OLD numbering and
-# are NOT the counterparts of our Figure S6 / S7.
-# And for Figure 4 after 2026-07-29: its TF-GP network was dropped, so the two
+# out). Figure S4 is the per-lineage structure plots, new on 2026-08-27.
+# Careful: `figures/Previous/bits/Figure S6/` and `Figure S7/` are the OLD
+# numbering and are NOT the counterparts of our Figure S5 / S6.
+# And for our Figure 5 (the published 3) after 2026-07-29: its TF-GP network was
+# dropped, so the two
 # heatmaps that followed moved up a letter and the published 3e is now unpaired.
 # The activation figure's own TF-GP network (published s3h) was dropped too, so
-# it is now unpaired as well. Careful: `figures/Previous/bits/Figure S3/` is the
-# PUBLISHED activation figure and pairs with our **S4**, not our S3 -- our S3 is
-# the cluster heatmap, new on 2026-09-09 and unpaired.
+# it is now unpaired as well. `figures/Previous/bits/Figure S3/` is the
+# PUBLISHED activation figure and pairs with our **S3** -- same number, but the
+# letters are off by one, as above. The cluster heatmap that briefly held the
+# S3 slot became **Figure S2/S2D** on 2026-09-10 and is unpaired. Our **Figure 4** (GPs
+# across level-2 clusters, inserted 2026-09-10) is new too, and unpaired: it is
+# what pushed the published 3/4/6 from our 4/5/6 to our 5/6/7.
 MAP=$(
   cat <<'EOF'
 Figure 1/1A	Figure 1/1A
@@ -71,36 +78,36 @@ Figure 3/3J	Figure 2/2L
 Figure 3/3K	Figure 2/2K
 Figure 3/3L	Figure 2/2J
 Figure 3/3M	Figure 2/2M
-Figure 4/4a	Figure 3/3c
-Figure 4/4b	Figure 3/3d
-Figure 4/4c	Figure 3/3f
-Figure 4/4d	Figure 3/3g
-Figure 5/5a	Figure 4/4a
-Figure 5/5b	Figure 4/4b
-Figure 5/5c	Figure 4/4c
-Figure 5/5d	Figure 4/4d
-Figure 5/5e	Figure 4/4e
-Figure 6/6a	Figure 6/6a
-Figure 6/6b	Figure 6/6g
-Figure 6/6c	Figure 6/6h
-Figure 6/6d	Figure 6/6i
-Figure 6/6e	Figure 6/6c
-Figure 6/6f	Figure 6/6d
-Figure 6/6g	Figure 6/6e
-Figure 6/6h	Figure 6/6f
-Figure S6/s6	Figure 6/6b
-Figure S7/s7a	Figure 6/6j
-Figure S7/s7b	Figure 6/6k
+Figure 5/5a	Figure 3/3c
+Figure 5/5b	Figure 3/3d
+Figure 5/5c	Figure 3/3f
+Figure 5/5d	Figure 3/3g
+Figure 6/6a	Figure 4/4a
+Figure 6/6b	Figure 4/4b
+Figure 6/6c	Figure 4/4c
+Figure 6/6d	Figure 4/4d
+Figure 6/6e	Figure 4/4e
+Figure 7/7a	Figure 6/6a
+Figure 7/7b	Figure 6/6g
+Figure 7/7c	Figure 6/6h
+Figure 7/7d	Figure 6/6i
+Figure 7/7e	Figure 6/6c
+Figure 7/7f	Figure 6/6d
+Figure 7/7g	Figure 6/6e
+Figure 7/7h	Figure 6/6f
+Figure S5/s5	Figure 6/6b
+Figure S6/s6a	Figure 6/6j
+Figure S6/s6b	Figure 6/6k
 Figure S1/S1A	Figure S1/S1A
 Figure S1/S1B	Figure S1/S1B
 Figure S2/S2A	Figure S2/S2A
 Figure S2/S2B	Figure S2/S2B
 Figure S2/S2C	Figure S2/S2C
-Figure S4/s4b	Figure S3/s3c
-Figure S4/s4c	Figure S3/s3d
-Figure S4/s4d	Figure S3/s3e
-Figure S4/s4e	Figure S3/s3f
-Figure S4/s4f	Figure S3/s3g
+Figure S3/s3b	Figure S3/s3c
+Figure S3/s3c	Figure S3/s3d
+Figure S3/s3d	Figure S3/s3e
+Figure S3/s3e	Figure S3/s3f
+Figure S3/s3f	Figure S3/s3g
 EOF
 )
 # Published panels with no counterpart HERE any more: Figure 3/3e, the TF-GP
@@ -111,15 +118,15 @@ EOF
 # Panels with no published counterpart: Figure 1/1C, Figure S1/S1C, S1D, S1E and
 # S1F (S1C/S1D are the 2026-07-30 replacements above and are new analyses, not
 # reproductions; S1E is new; S1F is the former S1E, which never had one),
-# Figure S3/s3 (the cluster heatmap, all that survives of the retired
-# all-200-GP tissue/cluster figure), Figure S5/* (a new figure),
-# Figure 6/6i (GP77) and 6j (GP8),
-# Figure S7/s7c-s7f (their GPs were only ever drawn inside the retired
-# s6-1/s6-2 gallery pages, not as standalone panels), and Figure 7/7B (ours
+# Figure S2/S2D (the cluster heatmap, all that survives of the retired
+# all-200-GP tissue/cluster figure), Figure S4/* (a new figure),
+# Figure 4/4a-4d (a new figure), Figure 7/7i (GP77) and 7j (GP8),
+# Figure S6/s6c-s6f (their GPs were only ever drawn inside the retired
+# s6-1/s6-2 gallery pages, not as standalone panels), and Figure 8/8B (ours
 # since 2026-07-28 -- it is the former
 # Extended Data Figure 5, assembled into one panel, and it replaced a different
 # collaborator panel, so the published 7B is NOT its counterpart).
-# The rest of Figure 7, and all of the published S7 (the RQVI figure, published
+# The rest of Figure 8, and all of the published S7 (the RQVI figure, published
 # as Extended Data Figure 7 and renumbered to 8 here on 2026-08-27), are out of
 # scope (straight copies).
 

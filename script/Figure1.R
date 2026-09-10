@@ -212,16 +212,11 @@ GP_HIGHLIGHTS <- c(
   GP1  = "cyan2",  GP56 = "red2",    GP161 = "brown", GP6  = "green2",
   GP7  = "green3", GP196 = "yellow3")
 
-# No annotation_level2_group order or palette exists in ZemmourLib, so both are
-# defined here. The colours are a deliberately different family from the level1
-# primaries so the two annotation bars cannot be confused, and none is
-# near-white (against the white heatmap body a pale category would read as
-# missing data rather than as a level).
-LEVEL2_GROUP_ORDER  <- c("resting", "activated", "proliferating", "miniverse", "other")
-LEVEL2_GROUP_COLORS <- c(resting       = "#80cdc1", activated = "#b2182b",
-                         proliferating = "#542788", miniverse = "#8c510a",
-                         other         = "#bdbdbd")
-EXCLUDE_LEVEL2_GROUPS <- c("miniverse")
+# LEVEL2_GROUP_ORDER, LEVEL2_GROUP_COLORS and EXCLUDE_LEVEL2_GROUPS: no
+# annotation_level2_group order or palette exists in ZemmourLib, so they are
+# defined in code/R/level2_group_palette.R and shared with Extended Data
+# Figure 2d, which annotates its columns the same way.
+source("code/R/level2_group_palette.R")
 
 set.seed(6173)
 MIN_CELLS <- 20; N_SAMPLE <- 80; K_ANCHOR <- 5

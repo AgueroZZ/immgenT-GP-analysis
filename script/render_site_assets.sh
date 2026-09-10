@@ -24,18 +24,18 @@ SRC="figures/final-selected"
 DST="analysis/assets"
 
 # Panels deliberately NOT on the site:
-#   Figure 1/1B, Figure 6/6a  -- hand-drawn schematics, no code, not shown
-#   Figure 7/7A, 7C-7G        -- out of scope (Figma + Matplotlib, no source)
+#   Figure 1/1B, Figure 7/7a  -- hand-drawn schematics, no code, not shown
+#   Figure 8/8A, 8C-8G        -- out of scope (Figma + Matplotlib, no source)
 # Not handled here:
-#   Figure 7/7B -- script/Figure7b_plot.py saves the published PDF and
-#   analysis/assets/Figure7/7B.png from the SAME matplotlib figure in one call,
+#   Figure 8/8B -- script/Figure8b_plot.py saves the published PDF and
+#   analysis/assets/Figure8/8B.png from the SAME matplotlib figure in one call,
 #   so unlike every other panel there is no second plotting path that could
 #   drift from the first, and converting the PDF here would only lower the
 #   preview's resolution.
 skip() {
   case "$1" in
-    "Figure 1/1B" | "Figure 6/6a") return 0 ;;
-    "Figure 7/"*) return 0 ;;
+    "Figure 1/1B" | "Figure 7/7a") return 0 ;;
+    "Figure 8/"*) return 0 ;;
     *) return 1 ;;
   esac
 }

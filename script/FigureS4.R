@@ -1,342 +1,308 @@
-# Figure S4. Characterizing activation GPs.
+# Figure S4. Cluster-level GP membership within each T cell lineage.
+#
+# One stacked figure (s4.pdf): seven rows, one per lineage, labelled
+# a = CD8, b = CD4, c = Treg, d = gdT, e = CD8aa, f = Tz, g = DN. Each row is a
+# structure plot of the healthy non-thymocyte cells of that lineage, grouped by
+# their annotation_level2 cluster, over every GP that reaches AUC > 0.9 for at
+# least one cluster of that lineage. It is the per-cluster, all-GP counterpart
+# of Figure 3B, which shows six hand-picked lineage-defining GPs grouped by
+# lineage.
+#
+# The row map, the AUC rule, the display filters, the palette and the assembled
+# geometry all come from code/R/structure_plot_panels.R. This script records what
+# it drew into output/FigureS4/, and script/verify_structure_plot_gps.R checks
+# that record against the AUCs published as Extended Data Table 6 and against the
+# caption on analysis/FigureS4.Rmd.
 #
 # --- internal ---
-# See figures/Previous/bits/Figure S3/FigureS3_caption.md for the full caption
-# text (that directory keeps the PUBLISHED numbering); captioned A-F there,
-# and published as s3c-s3h before the 2026-07-28 re-lettering -- this script
-# uses the current lettering. The published s3a's two halves used to be
-# lettered s3a and s3b, which is why every panel below is one letter lower
-# than the published figure. The figure moved from Extended Data 3 to 4 on
-# 2026-09-09, when a new cluster-level figure was inserted at 3; only numbers
-# and paths changed, nothing was re-rendered.
+# Ported from experiments/giant_structure_plot_by_lineage/save_separate_pdfs.R
+# and the "Giant structure plot" section of experiments/assess_structure_plot.R,
+# whose stacked layout (16 in wide, 3 in per row, plot_grid(align = "v")) this
+# figure follows. Two changes from the exploratory rows: DP is dropped (seven
+# rows, not eight), and each row is coloured on its own rather than from one
+# GP -> colour map shared by all rows, which is what those PDFs and this figure
+# did until 2026-09-02 -- see the palette comment in
+# code/R/structure_plot_panels.R and the trials in
+# experiments/structure_plot_recolor/, whose per_lineage_glasbey variant this
+# figure now reproduces exactly (RMSE 0; script/README.md records the check).
+# The cells, clusters, GP sets and geometry have never changed.
+#
+# Took the Extended Data Figure 5 slot on 2026-08-27, when it moved there from
+# Figure S8: the protein-program heatmap that had been Figure S5 became Figure
+# S6, and the CD69/gating figure became Figure S7. Renumbered to Extended Data
+# Figure 4 on 2026-09-10, when Extended Data Figure 3 was folded into Extended
+# Data Figure 2 as its panel d and everything after it moved up one.
 # --- end internal ---
-# Panels produced:
 #
-# s4a is the definition of resting vs activated CD4/CD8 cells (the
-# lineage-specific MDEs plus the adjacent CD62L-vs-CD44 protein plot, one
-# panel). It is NOT produced here -- no code in this repository draws it; see
-# analysis/FigureS4.Rmd.
-#
-#   s4b  Fraction of activated CD4/CD8 cells per organ with GP26 > 0.1, sorted.
-#   s4c  GSEA dot plot relating the activation GPs to curated gene sets.
-#   s4d  Fraction of activated CD4 cells with GP79 loading > 0.1, by condition.
-#   s4e  Per-cell log2FC heatmap of activation GPs vs resting baseline.
-#   s4f  Fraction of activated CD8/CD4 cells with GP57 loading > 0.1: cancer
-#        vs all other conditions.
-#
-# --- internal ---
-# Source: ported from Figure_Activation.R (see Figure4.R for the main
-# Figure 4 panels from the same file).
-# --- end internal ---
-# The curated GP set and activated/resting cell groupings are shared with
-# Figure 4 via code/R/activation_shared_setup.R.
-#
-# Panel s4b is computed on activated CD4/CD8 cells only (annotation_level1 in
-# {CD4, CD8} and annotation_level2_group == "activated"): the per-organ fraction
-# with GP26 loading > 0.1.
-#
-# Required inputs (data/) -- see code/README.md's "Data provenance" table
-# for the full picture:
-#   L_pm_filtered.rds, F_pm_filtered.rds     [code/pipeline/01b_filter_cells.R]
-#   igt1_96_..._ADTonly.Rds                  [primary input Seurat object]
-#   GSEA_signatures_select_toplot.csv        [external: curated gene-set collection]
+# Required inputs (data/) -- see code/README.md's "Data provenance" table for
+# the full picture:
+#   igt1_96_..._ADTonly.Rds                           [primary input Seurat object]
+#   L_pm_filtered.rds                                 [code/pipeline/01b_filter_cells.R]
+#   level_2_AUC_list_figure_no_thymocytes_healthy.rds [code/pipeline/02_compute_auc.R]
 
+# --- doc:setup ---
 library(ggplot2)
-library(dplyr)
-library(stringr)
-library(pheatmap)
-library(scales)
+library(ggrastr)
+library(cowplot)
+library(fastTopics) # structure_plot()
+
+if (!file.exists("code/R/structure_plot_panels.R")) {
+  stop("Run this script from the immgenT-GP-analysis repository root.")
+}
+source("code/R/structure_plot_panels.R")
 
 data_path <- "data/"
 figure_path <- "figures/final-selected/Figure S4/"
-source("code/R/plot_utils.R") # scale_cols()
+record_path <- "output/FigureS4/"
+dir.create(figure_path, recursive = TRUE, showWarnings = FALSE)
+dir.create(record_path, recursive = TRUE, showWarnings = FALSE)
+
+# Record when this run started, to assert at the end that the figure is newer.
+# --- internal ---
+# A figure script here was once seen to exit 0 with a complete log and write
+# nothing at all -- see script/README.md, "A re-run can silently not write".
+# --- end internal ---
+run_started_at <- Sys.time()
 
 # ============================================================
 # Load data
 # ============================================================
+seurat_meta <- readRDS(paste0(
+  data_path,
+  "igt1_96_withtotalvi20260206_clean_ADTonly.Rds"
+))@meta.data
 L_pm_filtered <- readRDS(paste0(data_path, "L_pm_filtered.rds"))
-colnames(L_pm_filtered) <- paste0("GP", seq_len(ncol(L_pm_filtered)))
-F_pm_filtered <- readRDS(paste0(data_path, "F_pm_filtered.rds"))
-colnames(F_pm_filtered) <- paste0("GP", seq_len(ncol(F_pm_filtered)))
-seurat_meta <- readRDS(paste0(data_path, "igt1_96_withtotalvi20260206_clean_ADTonly.Rds"))@meta.data
 seurat_meta_filtered <- seurat_meta[rownames(L_pm_filtered), ]
-df_sig <- read.csv(paste0(data_path, "GSEA_signatures_select_toplot.csv"), header = TRUE, sep = ",")
+colnames(L_pm_filtered) <- gsub("^K", "GP", colnames(L_pm_filtered))
 
-source("code/R/activation_shared_setup.R")
+level_2_AUC_list <- readRDS(paste0(
+  data_path,
+  "level_2_AUC_list_figure_no_thymocytes_healthy.rds"
+))
+auc_level2 <- level_2_AUC_list$auc
+colnames(auc_level2) <- gsub("^K", "GP", colnames(auc_level2))
 
-# ============================================================
-# s4b: Fraction of activated CD4/CD8 cells per organ with GP26 loading > 0.1
-# ============================================================
-act_cd4_cd8 <- seurat_meta_filtered$annotation_level1 %in% c("CD4", "CD8") &
-  seurat_meta_filtered$annotation_level2_group == "activated"
-gp26_organ_df <- data.frame(
-  organ = seurat_meta_filtered$organ_simplified[act_cd4_cd8],
-  gp26_high = L_pm_filtered[act_cd4_cd8, "GP26"] > 0.1
-) %>%
-  filter(!is.na(organ), organ != "") %>%
-  group_by(organ) %>%
-  summarise(n_cells = n(), proportion_gp26_high = mean(gp26_high), .groups = "drop") %>%
-  arrange(desc(proportion_gp26_high)) %>%
-  mutate(organ = factor(organ, levels = organ),
-         pct = 100 * proportion_gp26_high,
-         pct_lab = sub("\\.0%$", "%", sprintf("%.1f%%", pct)))  # e.g. 99%, 98.7%
+# The AUC matrix and the loading matrix have to be talking about the same GPs
+# in the same order: the panels index one by names taken from the other.
+if (!identical(colnames(auc_level2), colnames(L_pm_filtered))) {
+  stop("The AUC matrix and L_pm_filtered do not carry the same GP columns in the same order.")
+}
 
-# abbreviate a few long organ names to match the published panel
-organ_abbrev <- c("submandibular gland" = "submand. gland",
-                  "mammary gland"       = "mam. gland",
-                  "small intestine epi" = "sm intestine epi",
-                  "small intestine LP"  = "sm intestine LP",
-                  "peritoneal cavity"   = "perit. cav.")
-
-p_s4b <- ggplot(gp26_organ_df, aes(x = organ, y = pct)) +
-  geom_col(fill = "#4C72B0", width = 0.7) +
-  geom_text(aes(label = pct_lab), vjust = -0.4, size = 3, color = "grey20") +
-  scale_x_discrete(labels = function(x) ifelse(x %in% names(organ_abbrev), organ_abbrev[x], x)) +
-  scale_y_continuous(breaks = c(0, 50, 100), labels = c("0", "50%", "100"),
-                     expand = expansion(mult = c(0, 0.10))) +
-  labs(x = NULL, y = "Proportion activated (loading > 0.1) (%)",
-       title = "Activation of GP26 (threshold = 0.1) across Organ") +
-  theme_classic(base_size = 12) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.title = element_text(hjust = 0.5))
-ggsave(filename = paste0(figure_path, "s4b.pdf"), plot = p_s4b, width = 9, height = 4.8)
+level1_all <- seurat_meta_filtered$annotation_level1
+level2_all <- seurat_meta_filtered$annotation_level2
+healthy_non_thymocyte <- which(
+  seurat_meta_filtered$condition_broad == "healthy" &
+    level1_all != "thymocyte"
+)
 
 # ============================================================
-# s4c: GSEA dot plot for the activation GPs
+# GP selection
 # ============================================================
-df_sig <- df_sig %>% mutate(factor = str_replace(factor, "^F", "GP"))
-present_GPs <- intersect(ordered_GPs, unique(df_sig$factor))
-y_levels <- rev(present_GPs) # first GP (GP56) appears at the top of the y-axis
-df_plot <- df_sig %>%
-  filter(factor %in% present_GPs) %>%
-  mutate(pathway = factor(pathway, levels = unique(pathway)), factor = factor(factor, levels = y_levels), log10padj = -log10(padj))
-y_factors <- levels(df_plot$factor)
-y_colors <- highlight_colors[y_factors]
+# Which lineage each cluster belongs to, from the metadata.
+cluster_lineage <- cluster_lineage_map(level2_all, level1_all)
 
-p_s4c <- ggplot(df_plot, aes(x = pathway, y = factor)) +
-  geom_point(aes(size = NES, color = log10padj)) +
-  scale_color_viridis_c(name = "-log10(p-adj)") +
-  scale_size(range = c(3, 10)) +
-  theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1), axis.text.y = element_text(color = y_colors, face = "bold")) +
-  labs(size = "NES", x = "Pathway", y = "Gene Program")
-ggsave(filename = paste0(figure_path, "s4c.pdf"), plot = p_s4c, width = 8, height = 10)
+# --- internal ---
+# verify_structure_plot_gps.R has only the published table to work from, so it
+# maps clusters to lineages by their name prefix (CD8.A -> CD8) instead. Check
+# that shortcut here, where the metadata-derived map is available, so the check
+# cannot be re-deriving a different grouping than the figure drew.
+# --- end internal ---
+auc_clusters <- rownames(auc_level2)
+prefix_lineage <- sub("[.].*$", "", auc_clusters)
+if (!identical(unname(cluster_lineage[auc_clusters]), prefix_lineage)) {
+  disagree <- auc_clusters[unname(cluster_lineage[auc_clusters]) != prefix_lineage]
+  stop(sprintf(
+    "cluster name prefixes disagree with annotation_level1 for: %s",
+    paste(disagree, collapse = ", ")
+  ))
+}
 
-# ============================================================
-# s4f: GP57 high-loading proportion, cancer vs other conditions
-#      (activated CD4 and CD8)
-# ============================================================
-gp57_condition_df <- data.frame(
-  lineage = seurat_meta_filtered$annotation_level1,
-  activation_group = seurat_meta_filtered$annotation_level2_group,
-  condition_broad = as.character(seurat_meta_filtered$condition_broad),
-  gp57_loading = L_pm_filtered[, "GP57"],
-  stringsAsFactors = FALSE
-) %>%
-  filter(lineage %in% c("CD8", "CD4"), activation_group == "activated") %>%
-  mutate(
-    lineage = factor(lineage, levels = c("CD8", "CD4")),
-    condition_group = if_else(condition_broad == "cancer", "Cancer", "Other conditions"),
-    condition_group = factor(condition_group, levels = c("Cancer", "Other conditions")),
-    gp57_high = gp57_loading > 0.1
-  )
+# One GP set per row. Each row's palette is then assigned inside the loop
+# below, independently of the other rows -- see structure_plot_row_colors().
+panel_gps <- gps_above_auc_by_lineage(auc_level2, cluster_lineage)
 
-gp57_condition_summary <- gp57_condition_df %>%
-  group_by(lineage, condition_group) %>%
-  summarise(n_cells = n(), n_gp57_high = sum(gp57_high), proportion_gp57_high = mean(gp57_high), .groups = "drop")
-
-gp57_ymax <- max(gp57_condition_summary$proportion_gp57_high, na.rm = TRUE)
-gp57_ymax <- ifelse(gp57_ymax > 0, gp57_ymax * 1.25, 0.05)
-
-p_s4f <- ggplot(gp57_condition_summary, aes(x = lineage, y = proportion_gp57_high, fill = condition_group)) +
-  geom_col(position = position_dodge(width = 0.72), width = 0.62, color = "grey20", linewidth = 0.25) +
-  geom_text(
-    aes(label = paste0(scales::percent(proportion_gp57_high, accuracy = 0.1), "\n", n_gp57_high, "/", n_cells)),
-    position = position_dodge(width = 0.72), vjust = -0.25, size = 3.4, lineheight = 0.9
-  ) +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1), limits = c(0, gp57_ymax), expand = expansion(mult = c(0, 0.04))) +
-  scale_fill_manual(values = c("Cancer" = "#C44E52", "Other conditions" = "#4C72B0")) +
-  labs(x = NULL, y = "Proportion of activated cells", fill = "Condition", title = "GP57 loading > 0.1 in activated CD8 and CD4 cells") +
-  theme_classic(base_size = 12) +
-  theme(legend.position = "top", legend.title = element_text(face = "bold"), axis.text.x = element_text(face = "bold"), plot.title = element_text(face = "bold", hjust = 0.5))
-ggsave(filename = paste0(figure_path, "s4f.pdf"), plot = p_s4f, width = 5.4, height = 4.2)
+message(sprintf(
+  "%d GPs over %d rows (AUC > %.1f): %s",
+  length(unique(unlist(panel_gps, use.names = FALSE))), length(panel_gps),
+  structure_plot_auc_threshold,
+  paste(sprintf("%s %d", names(panel_gps), lengths(panel_gps)), collapse = ", ")
+))
 
 # ============================================================
-# s4d: GP79 high-loading proportion across conditions, activated CD4 cells
+# s4: per-lineage rows, stacked into one figure
 # ============================================================
-min_cells_gp79_condition <- 50
-gp79_cd4_condition_df <- data.frame(
-  condition_broad = as.character(seurat_meta_filtered$condition_broad),
-  condition_detailed_simplified = as.character(seurat_meta_filtered$condition_detailed_simplified),
-  lineage = seurat_meta_filtered$annotation_level1,
-  activation_group = seurat_meta_filtered$annotation_level2_group,
-  gp79_loading = L_pm_filtered[, "GP79"],
-  stringsAsFactors = FALSE
-) %>%
-  filter(lineage == "CD4", activation_group == "activated", !is.na(condition_detailed_simplified), condition_detailed_simplified != "") %>%
-  mutate(gp79_high = gp79_loading > 0.1)
+# The loop iterates over the names of the row map, so a lineage cannot be drawn
+# under another lineage's letter. Each row is kept as a ggplot and the rows are
+# assembled below, rather than saved one file per lineage.
+# --- internal ---
+# The figure is the stack, and assembling it here means no hand layout step can
+# fall behind a re-run.
+# --- end internal ---
+lineage_plots <- list()
+cluster_records <- list()
+gp_records <- list()
 
-gp79_cd4_condition_summary <- gp79_cd4_condition_df %>%
-  group_by(condition_detailed_simplified) %>%
-  summarise(
-    condition_broad = names(sort(table(condition_broad), decreasing = TRUE))[1],
-    n_cells = n(), n_gp79_high = sum(gp79_high), proportion_gp79_high = mean(gp79_high), .groups = "drop"
-  ) %>%
-  mutate(included_in_plot = n_cells >= min_cells_gp79_condition) %>%
-  arrange(desc(proportion_gp79_high), condition_detailed_simplified)
+for (lineage in names(structure_plot_panels)) {
+  panel <- structure_plot_panels[[lineage]]
+  gps_lineage <- panel_gps[[lineage]]
 
-gp79_cd4_condition_plot_df <- gp79_cd4_condition_summary %>%
-  filter(included_in_plot) %>%
-  arrange(proportion_gp79_high, condition_detailed_simplified) %>%
-  mutate(condition_label = factor(condition_detailed_simplified, levels = condition_detailed_simplified))
+  lineage_cells <- healthy_non_thymocyte[level1_all[healthy_non_thymocyte] == lineage]
+  cluster_size <- table(droplevels(factor(level2_all[lineage_cells])))
+  small_clusters <- names(cluster_size)[cluster_size < structure_plot_min_cluster_cells]
+  lineage_cells <- lineage_cells[!level2_all[lineage_cells] %in% small_clusters]
 
-gp79_broad_levels <- sort(unique(gp79_cd4_condition_plot_df$condition_broad))
-gp79_broad_colors <- setNames(scales::hue_pal()(length(gp79_broad_levels)), gp79_broad_levels)
-gp79_xmax <- max(gp79_cd4_condition_plot_df$proportion_gp79_high, na.rm = TRUE)
-gp79_xmax <- ifelse(gp79_xmax > 0, gp79_xmax, 0.05)
-gp79_label_pad <- gp79_xmax * 0.015
-gp79_plot_height <- max(7, 0.18 * nrow(gp79_cd4_condition_plot_df) + 2)
-
-p_s4d <- ggplot(gp79_cd4_condition_plot_df, aes(x = proportion_gp79_high, y = condition_label, fill = condition_broad)) +
-  geom_col(width = 0.75, color = "grey25", linewidth = 0.2) +
-  geom_text(aes(x = proportion_gp79_high + gp79_label_pad, label = scales::percent(proportion_gp79_high, accuracy = 1)), hjust = 0, size = 2.7) +
-  scale_x_continuous(labels = scales::percent_format(accuracy = 10), expand = expansion(mult = c(0, 0.02))) +
-  scale_fill_manual(values = gp79_broad_colors) +
-  coord_cartesian(xlim = c(0, gp79_xmax * 1.15), clip = "off") +
-  labs(
-    x = "Proportion of activated CD4 cells with GP79 loading > 0.1", y = NULL, fill = "Condition broad",
-    title = "GP79-high fraction across activated CD4 conditions",
-    subtitle = paste0("condition_detailed_simplified categories with >= ", min_cells_gp79_condition, " activated CD4 cells")
-  ) +
-  theme_classic(base_size = 11) +
-  theme(
-    legend.position = "right", legend.title = element_text(face = "bold"),
-    plot.title = element_text(face = "bold", hjust = 0.5), plot.subtitle = element_text(hjust = 0.5),
-    axis.text.y = element_text(size = 8), plot.margin = margin(10, 45, 10, 10)
-  )
-ggsave(filename = paste0(figure_path, "s4d.pdf"), plot = p_s4d, width = 9, height = gp79_plot_height, limitsize = FALSE)
-
-# ============================================================
-# s4e: Per-cell log2FC heatmap of activation GPs (activated cells only),
-#      relative to each cell's own-lineage resting baseline
-# ============================================================
-L <- L_pm_filtered[c(CD4_cells, CD8_cells), GPs_of_interest, drop = FALSE]
-cell_ids <- rownames(L)
-cell_type <- seurat_meta_filtered$annotation_level2[match(cell_ids, seurat_meta_filtered$cellID)]
-
-set.seed(123)
-total_budget <- 8000
-small_keep_all <- 150
-min_per_cluster <- 150
-max_per_cluster <- 600
-cells_by_ct <- split(cell_ids, cell_type)
-sizes <- sapply(cells_by_ct, length)
-alloc <- ifelse(sizes <= small_keep_all, sizes, pmin(min_per_cluster, sizes))
-remaining <- total_budget - sum(alloc)
-if (remaining > 0) {
-  room <- pmax(pmin(sizes, max_per_cluster) - alloc, 0)
-  if (sum(room) > 0) {
-    extra <- floor(remaining * room / sum(room))
-    alloc <- alloc + extra
-    leftover <- total_budget - sum(alloc)
-    if (leftover > 0) {
-      idx <- order(room, decreasing = TRUE)
-      for (j in idx) {
-        if (leftover <= 0) break
-        addable <- pmin(room[j] - extra[j], leftover)
-        if (addable > 0) {
-          alloc[j] <- alloc[j] + addable
-          leftover <- leftover - addable
-        }
+  # Cap each cluster's width so one large cluster cannot crowd out the rest.
+  set.seed(1234)
+  keep <- unlist(lapply(
+    split(seq_along(lineage_cells), level2_all[lineage_cells]),
+    function(idx) {
+      if (length(idx) > structure_plot_max_cells_per_cluster) {
+        sample(idx, structure_plot_max_cells_per_cluster)
+      } else {
+        idx
       }
     }
+  ))
+  lineage_cells <- lineage_cells[keep]
+
+  fit_lineage <- L_pm_filtered[lineage_cells, gps_lineage, drop = FALSE]
+  grouping_lineage <- factor(level2_all[lineage_cells])
+
+  # This row's colors, assigned from the top of the palette without reference to
+  # any other row. structure_plot_row_colors() returns them in ascending GP
+  # order, which is the column order here.
+  # --- internal ---
+  # structure_plot() renames the colors it is given positionally, by the columns
+  # of the matrix, so a palette in any other order would mislabel every bar.
+  # --- end internal ---
+  colors_lineage <- structure_plot_row_colors(gps_lineage)
+  if (!identical(names(colors_lineage), colnames(fit_lineage))) {
+    stop(sprintf("panel %s: palette order does not match its GP columns.", panel))
   }
+
+  set.seed(1234)
+  p <- structure_plot(
+    fit_lineage,
+    topics = gps_lineage,
+    gap = 40,
+    n = 10000,
+    colors = colors_lineage,
+    grouping = grouping_lineage,
+    ggplot_call = rasterized_structure_plot_call
+  ) +
+    labs(
+      y = "membership",
+      color = "",
+      fill = "",
+      title = sprintf(
+        "%s (%d GPs, AUC > %.1f)",
+        lineage,
+        length(gps_lineage),
+        structure_plot_auc_threshold
+      )
+    ) +
+    guides(
+      fill = guide_legend(ncol = 2),
+      color = guide_legend(ncol = 2)
+    ) +
+    theme(
+      plot.title = element_text(size = 11, face = "bold"),
+      axis.text.x = element_text(size = 6, angle = 45, hjust = 1),
+      axis.text.y = element_text(size = 9),
+      axis.title = element_text(size = 10, face = "bold"),
+      legend.position = "right",
+      legend.key.size = unit(0.25, "cm"),
+      legend.text = element_text(size = 5),
+      legend.spacing.y = unit(0.02, "cm")
+    )
+
+  lineage_plots[[lineage]] <- p
+
+  # What this row used, for the alignment check. Every cluster of the lineage
+  # is listed, drawn or not: the GP selection above uses all of them.
+  lineage_clusters <- sort(auc_clusters[prefix_lineage == lineage])
+  drawn_size <- table(droplevels(factor(level2_all[lineage_cells])))
+  cluster_records[[lineage]] <- data.frame(
+    panel = panel,
+    lineage = lineage,
+    cluster = lineage_clusters,
+    n_cells_healthy = as.integer(cluster_size[lineage_clusters]),
+    n_cells_drawn = as.integer(ifelse(
+      lineage_clusters %in% names(drawn_size),
+      drawn_size[lineage_clusters],
+      0L
+    )),
+    stringsAsFactors = FALSE
+  )
+  gp_records[[lineage]] <- data.frame(
+    panel = panel,
+    lineage = lineage,
+    gp = gps_lineage,
+    color = unname(colors_lineage),
+    max_auc_in_lineage = unname(apply(
+      auc_level2[lineage_clusters, gps_lineage, drop = FALSE], 2,
+      max, na.rm = TRUE
+    )),
+    stringsAsFactors = FALSE
+  )
 }
-sampled_cells <- unlist(mapply(function(v, m) if (length(v) <= m) v else sample(v, m), cells_by_ct, pmin(alloc, sizes), SIMPLIFY = FALSE), use.names = FALSE)
 
-cell_group_s <- seurat_meta_filtered$annotation_level2_group[match(sampled_cells, seurat_meta_filtered$cellID)]
-cell_level2_s <- seurat_meta_filtered$annotation_level2[match(sampled_cells, seurat_meta_filtered$cellID)]
-cell_group_s <- trimws(tolower(as.character(cell_group_s)))
-cell_level2_s <- trimws(as.character(cell_level2_s))
-cell_level1_s <- sapply(strsplit(cell_level2_s, "[_.]"), `[`, 1)
-is_w_cell <- grepl("\\.w", cell_level2_s)
-valid_idx <- which(!is.na(cell_level2_s) & !tolower(cell_level2_s) %in% c("", "na", "nan") & cell_group_s %in% c("resting", "activated") & !is_w_cell)
-final_cells <- sampled_cells[valid_idx]
-final_group <- cell_group_s[valid_idx]
-final_level1 <- cell_level1_s[valid_idx]
-final_level2 <- cell_level2_s[valid_idx]
-col_order <- order(final_group, final_level1, final_level2)
-final_cells <- final_cells[col_order]
-final_group <- final_group[col_order]
-final_level1 <- final_level1[col_order]
-final_level2 <- final_level2[col_order]
-
-pc <- 1e-10
-cap <- 2
-group_counts <- sapply(
-  list(
-    c("GP56", "GP162", "GP36", "GP152", "GP161", "GP177", "GP79", "GP12", "GP13", "GP159"),
-    c("GP10", "GP58", "GP181", "GP176"),
-    c("GP25", "GP26", "GP35", "GP32", "GP80", "GP57"),
-    c("GP9", "GP171", "GP49", "GP41", "GP11")
-  ),
-  function(gp_group) sum(ordered_GPs %in% gp_group)
+# Rows are stacked in the map's order and labelled a-g. align = "v" equalises
+# everything outside the plotting panel -- y-axis labels and the per-row legends,
+# which differ in width because the rows show 9 to 44 GPs -- so the cluster
+# blocks line up down the figure instead of each row starting at its own x.
+p_s4 <- cowplot::plot_grid(
+  plotlist = lineage_plots[names(structure_plot_panels)],
+  nrow = length(structure_plot_panels),
+  align = "v",
+  labels = "auto",
+  label_size = 14
 )
-group_counts <- group_counts[group_counts > 0]
-gaps_row <- cumsum(group_counts)[-length(group_counts)]
+ggsave(
+  filename = paste0(figure_path, "s4.pdf"),
+  plot = p_s4,
+  width = structure_plot_width,
+  height = structure_plot_row_height * length(structure_plot_panels),
+  dpi = 300,
+  limitsize = FALSE
+)
 
-act_idx <- which(final_group == "activated")
-act_cells <- final_cells[act_idx]
-act_level1 <- final_level1[act_idx]
-act_level2 <- final_level2[act_idx]
-act_order <- order(act_level1, act_level2)
-act_cells <- act_cells[act_order]
-act_level1 <- act_level1[act_order]
-act_level2 <- act_level2[act_order]
+# ============================================================
+# What each panel drew, for the alignment check
+# ============================================================
+# --- internal ---
+# script/verify_structure_plot_gps.R reads these two files, so that it can
+# re-derive the panels' GP sets from the published Extended Data Table 6 without
+# reloading the 1 GB loading matrix, and check the clusters drawn and omitted
+# against the display filters above.
+# --- end internal ---
+cluster_record <- do.call(rbind, cluster_records)
+cluster_record$n_cells_healthy[is.na(cluster_record$n_cells_healthy)] <- 0L
+write.csv(
+  cluster_record,
+  paste0(record_path, "s4_panel_clusters.csv"),
+  row.names = FALSE
+)
+write.csv(
+  do.call(rbind, gp_records),
+  paste0(record_path, "s4_panel_gps.csv"),
+  row.names = FALSE
+)
 
-L_sub_act <- L[act_cells, , drop = FALSE]
-M_raw_act <- t(L_sub_act)
-
-# Per-lineage resting baseline: each activated cell's log2FC is computed
-# against the mean loading in resting cells of its own lineage.
-mu_resting_CD4 <- colMeans(L_pm_filtered[CD4_resting_cells, GPs_of_interest, drop = FALSE])
-mu_resting_CD8 <- colMeans(L_pm_filtered[CD8_resting_cells, GPs_of_interest, drop = FALSE])
-baseline_mat <- matrix(NA_real_, nrow = nrow(M_raw_act), ncol = ncol(M_raw_act))
-rownames(baseline_mat) <- rownames(M_raw_act)
-baseline_mat[, act_level1 == "CD4"] <- mu_resting_CD4[rownames(M_raw_act)]
-baseline_mat[, act_level1 == "CD8"] <- mu_resting_CD8[rownames(M_raw_act)]
-M_fc_act <- log2((M_raw_act + pc) / (baseline_mat + pc))
-M_fc_act_cap <- pmax(pmin(M_fc_act, cap), -cap)
-M_fc_act_cap <- M_fc_act_cap[ordered_GPs, , drop = FALSE]
-
-ann_col_act <- data.frame(Level2 = factor(act_level2), Level1 = factor(act_level1))
-rownames(ann_col_act) <- colnames(M_fc_act_cap)
-present_level1_act <- levels(ann_col_act$Level1)
-present_level2_act <- levels(ann_col_act$Level2)
-level1_cols_act <- ZemmourLib::immgent_colors$level1
-level1_cols_act <- level1_cols_act[names(level1_cols_act) %in% present_level1_act]
-level2_cols_act <- ZemmourLib::immgent_colors$level2
-level2_cols_act <- level2_cols_act[names(level2_cols_act) %in% present_level2_act]
-missing_l2_act <- setdiff(present_level2_act, names(level2_cols_act))
-if (length(missing_l2_act) > 0) {
-  level2_cols_act <- c(level2_cols_act, setNames(rep("grey80", length(missing_l2_act)), missing_l2_act))
+# ============================================================
+# Did this run actually write the figure?
+# ============================================================
+expected_panel <- paste0(figure_path, "s4.pdf")
+if (!file.exists(expected_panel) ||
+      file.mtime(expected_panel) < run_started_at ||
+      file.size(expected_panel) == 0) {
+  stop(sprintf(
+    "%s was not written by this run (missing, empty, or older than the run)",
+    expected_panel
+  ))
 }
-ann_colors_act <- list(Level1 = level1_cols_act, Level2 = level2_cols_act)
-
-rle_l1_act <- rle(as.character(ann_col_act$Level1))
-gaps_col_act <- cumsum(rle_l1_act$lengths)
-gaps_col_act <- gaps_col_act[-length(gaps_col_act)]
-
-pheatmap(
-  M_fc_act_cap,
-  cluster_rows = FALSE, cluster_cols = FALSE,
-  gaps_row = gaps_row, gaps_col = gaps_col_act,
-  color = colorRampPalette(c("#7A0177", "black", "#FFD700"))(101),
-  breaks = seq(-cap, cap, length.out = 102),
-  show_colnames = FALSE, fontsize_row = 7, fontface_row = "bold", border_color = NA,
-  annotation_col = ann_col_act, annotation_colors = ann_colors_act, annotation_names_col = TRUE,
-  useRaster = TRUE,
-  main = "GP Log2FC vs per-lineage RESTING baseline (CD4 cells vs CD4 resting; CD8 vs CD8 resting)",
-  filename = paste0(figure_path, "s4e.pdf"),
-  width = 12, height = 4
-)
+message(sprintf(
+  "wrote %s (%d rows, %.0f x %.0f in)",
+  expected_panel, length(structure_plot_panels), structure_plot_width,
+  structure_plot_row_height * length(structure_plot_panels)
+))

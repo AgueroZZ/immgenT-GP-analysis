@@ -1,11 +1,11 @@
-# Shared setup for the Figure 6 / Figure S6 / Figure S7 scripts (CITE-seq protein
+# Shared setup for the Figure 7 / Figure S5 / Figure S6 scripts (CITE-seq protein
 # projection). All three figure scripts subset to CITE-seq-measured cells, build
 # the same curated marker table (df_markers2), the same cell exclusions
 # (thymocyte/proliferating/miniverse), and the same protein quality filter
 # (select_proteins) -- factored here so each sources it once instead of
-# repeating ~50 lines of setup each. (Figure S6 uses only the protein filters;
-# it is the protein-program heatmap that was Figure S7's first panel until
-# 2026-07-30.)
+# repeating ~50 lines of setup each. (Figure S5 uses only the protein filters;
+# it is the protein-program heatmap that was the CD69/gating figure's first
+# panel until 2026-07-30.)
 #
 # Requires data_path to already be set. Defines/overwrites: L_pm_filtered,
 # F_pm_filtered, seurat_meta_filtered, protein_mat_normalized_lognorm,
@@ -79,8 +79,8 @@ miniverse_cells <- seurat_meta_filtered %>% dplyr::filter(annotation_level2_grou
 
 # GPs judged well-aligned between protein gating and GP loading (manually
 # curated; see data/CITEseq_alignment_scores_manual.csv). The gating panels that
-# ship are a curated subset of this list: Figure 6e-6j (GP171, GP12, GP80, GP23,
-# GP77, GP8) and Figure S7c-S7f (GP29, GP58, GP22, GP68). The remaining 17 were
+# ship are a curated subset of this list: Figure 7e-7j (GP171, GP12, GP80, GP23,
+# GP77, GP8) and Figure S6c-S6f (GP29, GP58, GP22, GP68). The remaining 17 were
 # shown as a two-page gallery until 2026-07-28 and are no longer published;
 # script/verify_gating_gps.R checks the ten shipped GPs against this list.
 well_aligned_gps <- c(
@@ -96,13 +96,13 @@ L_pm_for_gating <- L_pm_filtered
 colnames(L_pm_for_gating) <- paste0("K", seq_len(ncol(L_pm_for_gating)))
 
 # A few GPs get slightly larger highlighted points in their gating panels, for
-# visibility even at high cell counts. Shared so Figure 6 and Figure S7 cannot
+# visibility even at high cell counts. Shared so Figure 7 and Figure S6 cannot
 # draw the same GP at two different point sizes.
 enlarge_gps <- c("GP8", "GP30", "GP170", "GP107")
 
 # --- doc:cd69 ---
-# The CD69-associated GP subset, shared by Figure 6d (the up/down gene heatmap)
-# and Figure S7a/S7b (the same GPs' mean activity per tissue and per lineage).
+# The CD69-associated GP subset, shared by Figure 7d (the up/down gene heatmap)
+# and Figure S6a/S6b (the same GPs' mean activity per tissue and per lineage).
 # Defined once here because those panels live in two different scripts and must
 # show the same GPs in the same axis order. Curated, not a computed top-10.
 # --- internal ---

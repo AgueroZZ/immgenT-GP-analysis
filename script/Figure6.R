@@ -1,223 +1,480 @@
-# Figure 6. Linking GPs to proteins.
+# Figure 6. GPs and tissue.
 #
-# Panels produced (see analysis/Figure6.Rmd for the caption text):
-#   6a  Schematic of the projection (EBMF on scRNA, then EBMF on CITE-seq
-#       with cell loadings fixed). Hand-drawn in other software -- NOT
-#       code-generated, no source to port. Not produced by this script.
-#   6b,6c  KLRG1 modulation: CD8 vs CD4 (b) and CD8 vs Treg (c).
-#   6d  Heatmap of top-5 gene scores per GP for the 10 curated CD69-associated
-#       GPs (cd69_top_gps_subset, defined in code/R/citeseq_shared_setup.R),
-#       with a CD69-correlation strip.
-#   6e-6j  Protein-gate vs. GP-loading comparison on the MDE embedding, for the
-#       6 curated GPs GP171/GP12/GP80/GP23/GP77/GP8.
+# --- internal ---
+# NOTE the renumbering: this figure's published counterpart is
+# figures/Previous/bits/Figure *4* (4a-4e), not its "Figure 6" -- that one is
+# the published CITE-seq figure, which is ours Figure 7. Full caption text:
+# ../immgen-t-factors/figures/Figure_Organ/Figure_Organ_caption.md.
+# --- end internal ---
+# Panels produced:
+#   6a  Max AUC (organ) vs max AUC (level-1 lineage) scatter, per GP.
+#   6b  GP37+ rate by lineage, mammary gland vs. the same lineage elsewhere.
+#   6c  Marker genes of the 7 organ-specific GPs: per-GP gene-score heatmap.
+# --- internal ---
+#       The published panel (4c) paired this heatmap with an across-organ
+#       expression dotplot on its left; the dotplot half was dropped on
+#       purpose, so 6c is half the width of 5c by design (see the caption in
+#       analysis/Figure6.Rmd, which describes the heatmap only).
+# --- end internal ---
+#   6d  As 6a, but organ AUC vs Level-2 (fine-grained sub-lineage/cluster)
+#       AUC, with the 7 organ-specific GPs (red) and a contrasting
+#       cluster-specific set (blue) highlighted.
+#   6e  Alluvial diagram: organ of origin -> GP -> Level-2 cell type, for
+#       GP+ cells of the 7 organ-specific GPs.
 #
-# Reordered 2026-07-28. The published figure was a-k and lettered differently;
-# for anyone diffing against figures/Previous/bits/Figure 6/:
+# --- internal ---
+# Source: ported from Figure_Organ.R, which mixed these 5 panels with
+# other exploratory analyses (extra AUC scatter variants, per-organ ROC
+# curves, a broken/undefined-object "gp_decomposition.pdf" panel) that are
+# dropped here since they don't correspond to a final figure panel.
 #
-#   now  was    what
-#   6a   6a     schematic (unchanged)
-#   6b   6g     KLRG1 CD8 vs CD4
-#   6c   6h     KLRG1 CD8 vs Treg
-#   6d   6i     CD69 up/down gene heatmap
-#   6e   6c     gating, GP171
-#   6f   6d     gating, GP12
-#   6g   6e     gating, GP80
-#   6h   6f     gating, GP23
-#   6i   --     gating, GP77   (new panel)
-#   6j   --     gating, GP8    (new panel, promoted from the retired S6 gallery)
-#   --   6b     protein-program heatmap  -> moved out; since 2026-07-30 it is
-#                 its own figure, now Figure S6 (script/FigureS6.R)
-#   --   6j,6k  CD69 GPs per tissue/lineage -> moved to Figure S7, s7a/s7b
-#
-# Source: ported from Figure_CITEseq.R (panels b, c, d) and
-# gated_protein_loading_plot.R (panels e-j, using
-# plot_gated_gp_vs_protein() from code/R/gated_protein_helpers.R,
-# shared with FigureS7.R).
-#
-# Required inputs (data/), read via code/R/citeseq_shared_setup.R below --
-# see code/README.md's "Data provenance" table for the full picture:
-#   L_pm_filtered.rds, F_pm_filtered.rds        [code/pipeline/01b_filter_cells.R]
-#   igt1_96_..._ADTonly.Rds                     [primary input Seurat object]
-#   protein_mat_normalized_lognorm.rds          [code/other/prepare_citeseq_protein_matrices_20260206.R]
-#   umap_result.rds                             [gap, no producer script here]
-#   protein_flash_selected_summary_lognorm_backfit200.rds
-#     [code/other/fit_citeseq_fixed_loading_ebmf_20260206.R]
-#   TableS4_citeseq_qc_20250513.csv             [external: manuscript's own Table S4]
-#   Thresholds_Selected_Proteins.csv            [curated input, hand-revised; NOT regenerated
-#     by code/pipeline/03_protein_thresholds.R -- see that script's header]
-#   CITEseq_markers_full.rds                    [code/pipeline/04_protein_projection.R, using the
-#     non-backfit200 protein summary -- see caveat above]
+# --- end internal ---
+# Required inputs (data/) -- see code/README.md's "Data provenance" table
+# for the full picture:
+#   L_pm_filtered.rds, F_pm_filtered.rds     [code/pipeline/01b_filter_cells.R]
+#   igt1_96_..._ADTonly.Rds                  [primary input Seurat object]
+#   level_1_AUC_list_figure_no_thymocytes_healthy.rds,
+#   level_2_AUC_list_figure_no_thymocytes_healthy.rds,
+#   organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds
+#     [code/pipeline/02_compute_auc.R]
 
-# --- doc:setup ---
 library(ggplot2)
 library(ggrepel)
-library(dplyr)
 library(patchwork)
+library(dplyr)
 library(tidyr)
-library(Matrix) # protein matrices are dgCMatrix; must be attached for `[` to dispatch
+library(purrr)
+library(tibble)
+library(Matrix)
+library(viridis)
+library(cowplot)
+library(ggalluvial)
 
 data_path <- "data/"
 figure_path <- "figures/final-selected/Figure 6/"
-source("code/R/gated_protein_helpers.R")
-
-# 6a: hand-drawn schematic -- not code-generated, no output here.
 
 # ============================================================
-# Load data (shared with FigureS6.R and FigureS7.R)
+# Load data (healthy, non-thymocyte reference)
 # ============================================================
-source("code/R/citeseq_shared_setup.R")
-
-# ============================================================
-# 6b/6c: KLRG1 modulation (CD8 vs CD4, CD8 vs Treg)
-# ============================================================
-FlashierDGE_corrected <- function(F1, L1, group1, group2, title_plot = "") {
-  loadings_group1 <- colMeans(L1[group1, ])
-  loadings_group2 <- colMeans(L1[group2, ])
-  mean_change_loadings <- loadings_group1 - loadings_group2
-  vplot <- data.frame(SYMBOL = names(mean_change_loadings), mean_change_loadings = mean_change_loadings, AveExpr = colMeans(L1[c(group1, group2), ]))
-  list(diff_factors = vplot)
-}
-get_klrg1_split <- function(cell_type_label, meta, protein_data, threshold) {
-  cells <- meta$cellID[meta$annotation_level1 == cell_type_label]
-  cells <- intersect(cells, rownames(protein_data))
-  list(pos = cells[protein_data[cells, "KLRG1"] >= threshold], neg = cells[protein_data[cells, "KLRG1"] < threshold])
-}
-run_checked_dge <- function(group_list, F_mat, L_mat, label) {
-  if (length(group_list$pos) < 3 || length(group_list$neg) < 3) stop(paste("Insufficient data:", label))
-  df <- FlashierDGE_corrected(F1 = F_mat, L1 = L_mat, group1 = group_list$pos, group2 = group_list$neg)$diff_factors
-  if (!"SYMBOL" %in% colnames(df)) df$SYMBOL <- rownames(df)
-  df
-}
-plot_target_gps <- function(df, x_var, y_var, label_var, target_gps, highlight_color = "darkorange", background_color = "black",
-                             x_limits = c(-0.5, 0.5), y_limits = c(-0.5, 0.5), background_alpha = 0.5,
-                             xlab = "Difference in Mean Loading", ylab = "Difference in Mean Loading", title = "Comparison of Specific GP Loadings") {
-  highlight_df <- df %>% filter({{ label_var }} %in% target_gps) %>% mutate(.label_display = as.character({{ label_var }}))
-  ggplot(df, aes(x = {{ x_var }}, y = {{ y_var }})) +
-    geom_point(color = background_color, alpha = background_alpha) +
-    geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
-    geom_hline(yintercept = 0, linetype = "dashed", color = "blue") +
-    geom_vline(xintercept = 0, linetype = "dashed", color = "blue") +
-    geom_point(data = highlight_df, aes(color = {{ label_var }}), size = 2) +
-    ggrepel::geom_text_repel(seed = 42, data = highlight_df, aes(label = .label_display, color = {{ label_var }}), max.overlaps = Inf, size = 3.5, box.padding = 0.35, point.padding = 0.5, segment.color = "grey50", show.legend = FALSE) +
-    scale_color_manual(values = highlight_color, guide = "none") +
-    coord_cartesian(xlim = x_limits, ylim = y_limits) +
-    labs(x = xlab, y = ylab, title = title) +
-    theme_minimal()
-}
-
-klrg1_threshold <- threshold_results_subset_manual$Threshold[threshold_results_subset_manual$Protein == "KLRG1"]
-cd8_split <- get_klrg1_split("CD8", seurat_meta_filtered, protein_mat_normalized_lognorm, klrg1_threshold)
-CD4_split <- get_klrg1_split("CD4", seurat_meta_filtered, protein_mat_normalized_lognorm, klrg1_threshold)
-treg_split <- get_klrg1_split("Treg", seurat_meta_filtered, protein_mat_normalized_lognorm, klrg1_threshold)
-
-diff_CD8 <- run_checked_dge(cd8_split, F_pm_filtered, L_pm_filtered, "CD8") %>% rename(mean_change_CD8 = mean_change_loadings, AveExpr_CD8 = AveExpr)
-diff_CD4 <- run_checked_dge(CD4_split, F_pm_filtered, L_pm_filtered, "CD4") %>% rename(mean_change_CD4 = mean_change_loadings, AveExpr_CD4 = AveExpr)
-diff_Treg <- run_checked_dge(treg_split, F_pm_filtered, L_pm_filtered, "Treg") %>% rename(mean_change_Treg = mean_change_loadings, AveExpr_Treg = AveExpr)
-
-# 6b: CD8 vs CD4
-merged_cd4 <- inner_join(diff_CD4, diff_CD8, by = "SYMBOL")
-p_6b <- plot_target_gps(
-  df = merged_cd4, x_var = mean_change_CD8, y_var = mean_change_CD4, label_var = SYMBOL,
-  target_gps = c("GP10", "GP58", "GP25", "GP26", "GP43"), background_alpha = 0.8, x_limits = c(-0.2, 0.4), y_limits = c(-0.2, 0.4),
-  highlight_color = c("GP10" = "darkorange2", "GP25" = "blue", "GP43" = "blue", "GP26" = "blue", "GP58" = "darkorange2"),
-  title = "KLRG1 Modulation: CD8 vs CD4", xlab = "Effect Size in CD8 (KLRG1+ - KLRG1-)", ylab = "Effect Size in CD4 (KLRG1+ - KLRG1-)"
-) + theme_bw()
-ggsave(paste0(figure_path, "6b.pdf"), p_6b, width = 7, height = 6)
-
-# 6c: CD8 vs Treg
-merged_treg <- inner_join(diff_Treg, diff_CD8, by = "SYMBOL")
-p_6c <- plot_target_gps(
-  df = merged_treg, x_var = mean_change_CD8, y_var = mean_change_Treg, label_var = SYMBOL,
-  target_gps = c("GP6", "GP10", "GP12", "GP27", "GP68", "GP58"), background_alpha = 0.8, x_limits = c(-0.2, 0.4), y_limits = c(-0.2, 0.4),
-  highlight_color = c("GP10" = "darkorange2", "GP27" = "deeppink", "GP6" = "deeppink", "GP68" = "deeppink", "GP12" = "deeppink", "GP58" = "darkorange2"),
-  title = "KLRG1 Modulation: CD8 vs Treg", xlab = "Effect Size in CD8 (KLRG1+ - KLRG1-)", ylab = "Effect Size in Treg (KLRG1+ - KLRG1-)"
-) + theme_bw()
-ggsave(paste0(figure_path, "6c.pdf"), p_6c, width = 7, height = 6)
-
-# ============================================================
-# 6d: up/down genes across the 10 curated CD69-associated GPs
-# (cd69_top_gps_subset / cd69_corr / cd69_top_gps_sorted come from
-# citeseq_shared_setup.R, which Figure S7's s7a/s7b panels share)
-# ============================================================
-D_scale6 <- diag(1 / apply(F_pm_filtered, 2, function(x) max(abs(x), na.rm = TRUE)))
-F_pm_filtered_scaled <- F_pm_filtered %*% D_scale6
-colnames(F_pm_filtered_scaled) <- paste0("GP", 1:ncol(F_pm_filtered_scaled))
-
-plot_factor_heatmap <- function(F_matrix, gp_vector, n_top = 5, min_abs_loading = 0.5, transpose = FALSE,
-                                 title = "Factor loadings – top genes per GP", low_color = "steelblue", mid_color = "white", high_color = "firebrick", font_size = 9) {
-  F_sub <- F_matrix[, gp_vector, drop = FALSE]
-  selected_genes <- lapply(gp_vector, function(gp) {
-    vals <- F_sub[, gp]
-    top_pos <- names(sort(vals, decreasing = TRUE))[seq_len(min(n_top, sum(vals > 0)))]
-    top_neg <- names(sort(vals, decreasing = FALSE))[seq_len(min(n_top, sum(vals < 0)))]
-    c(top_pos, top_neg)
-  })
-  selected_genes <- unique(unlist(selected_genes))
-  if (min_abs_loading > 0) {
-    max_abs <- apply(F_sub[selected_genes, , drop = FALSE], 1, function(x) max(abs(x), na.rm = TRUE))
-    selected_genes <- names(max_abs[max_abs >= min_abs_loading])
-  }
-  hc_genes <- hclust(dist(F_sub[selected_genes, , drop = FALSE]))
-  gene_order <- rownames(F_sub[selected_genes, , drop = FALSE])[hc_genes$order]
-  plot_df <- F_sub[selected_genes, , drop = FALSE] %>%
-    as.data.frame() %>%
-    tibble::rownames_to_column("Gene") %>%
-    tidyr::pivot_longer(cols = -Gene, names_to = "GP", values_to = "Loading") %>%
-    mutate(GP = factor(GP, levels = gp_vector), Gene = factor(Gene, levels = gene_order))
-  limit <- max(abs(plot_df$Loading), na.rm = TRUE)
-  x_aes <- if (transpose) "Gene" else "GP"
-  y_aes <- if (transpose) "GP" else "Gene"
-  ggplot(plot_df, aes(x = .data[[x_aes]], y = .data[[y_aes]], fill = Loading)) +
-    geom_tile() +
-    scale_fill_gradient2(low = low_color, mid = mid_color, high = high_color, midpoint = 0, limits = c(-limit, limit), name = "Loading") +
-    # Axis titles are the faceting variables themselves ("Gene" / "GP").
-    labs(title = title, x = x_aes, y = y_aes) +
-    theme_minimal(base_size = font_size) +
-    theme(axis.text.x = element_text(angle = if (transpose) 90 else 45, hjust = 1, size = font_size), axis.text.y = element_text(size = font_size), panel.grid = element_blank(), plot.title = element_text(face = "bold"))
-}
-
-p_heatmap <- plot_factor_heatmap(F_matrix = F_pm_filtered_scaled, gp_vector = cd69_top_gps_sorted, n_top = 5, font_size = 9, transpose = TRUE, low_color = "#4DAF4A", mid_color = "white", high_color = "#984EA3")
-
-corr_strip_df <- data.frame(GP = factor(cd69_top_gps_sorted, levels = cd69_top_gps_sorted), Correlation = cd69_corr[cd69_top_gps_sorted], x = "Corr")
-corr_limit <- max(abs(corr_strip_df$Correlation))
-p_corr_strip <- ggplot(corr_strip_df, aes(x = x, y = GP, fill = Correlation)) +
-  geom_tile() +
-  scale_fill_gradient2(low = "royalblue", mid = "white", high = "tomato", midpoint = 0, limits = c(-corr_limit, corr_limit), name = "Corr\n(CD69)") +
-  labs(x = NULL, y = NULL) +
-  theme_minimal(base_size = 9) +
-  theme(axis.text.x = element_text(size = 9, angle = 45, hjust = 1), axis.text.y = element_blank(), axis.ticks.y = element_blank(), panel.grid = element_blank())
-
-p_6d <- p_corr_strip + p_heatmap + patchwork::plot_layout(widths = c(0.06, 1), guides = "collect")
-ggsave(paste0(figure_path, "6d.pdf"), p_6d, width = 11, height = 5)
-
-# ============================================================
-# 6e-6j: protein-gate vs. GP-loading comparison for the 6 curated main-figure
-# GPs (df_markers2, thymocyte/proliferating/miniverse_cells, L_pm_for_gating,
-# select_proteins, threshold_results_subset_manual, enlarge_gps all come from
-# citeseq_shared_setup.R above)
-# ============================================================
-# Panel lettering is carried by this named vector and the loop iterates over its
-# names, so a GP can never be drawn under another GP's letter.
+level_1_AUC_list <- readRDS(paste0(
+  data_path, "level_1_AUC_list_figure_no_thymocytes_healthy.rds"
+))
+level_2_AUC_list <- readRDS(paste0(
+  data_path, "level_2_AUC_list_figure_no_thymocytes_healthy.rds"
+))
+organ_AUC_list <- readRDS(paste0(
+  data_path, "organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds"
+))
+# Metadata is read from the Seurat object directly.
 # --- internal ---
-# An earlier version kept the GP list and the letters in two separate vectors
-# and assigned the letters positionally, which silently permuted three of the
-# panels -- do not reintroduce that shape.
+# Not from the cached data/seurat_meta.rds, which is stale -- see
+# code/R/setup_data.R for why.
 # --- end internal ---
-fig6_gating <- c("GP171" = "6e", "GP12" = "6f", "GP80" = "6g", "GP23" = "6h", "GP77" = "6i", "GP8" = "6j")
-for (gp in names(fig6_gating)) {
-  k_name <- paste0("K", sub("^GP", "", gp))
-  plot_gated_gp_vs_protein(
-    gp_name = k_name,
-    df_markers = df_markers2,
-    protein_mat = protein_mat_normalized_lognorm,
-    loading_mat = L_pm_for_gating,
-    mde_emb = mde_result,
-    missing_threshold_action = "skip",
-    threshold_df = threshold_results_subset_manual,
-    exclude_cells = c(thymocyte_cells, proliferating_cells, miniverse_cells),
-    selected_proteins = select_proteins,
-    loading_q = NULL,
-    min_pointsize = if (gp %in% enlarge_gps) 3L else 0L,
-    save_path = paste0(figure_path, fig6_gating[gp], ".pdf")
-  )
+seurat_meta <- readRDS(paste0(
+  data_path, "igt1_96_withtotalvi20260206_clean_ADTonly.Rds"
+))@meta.data
+L_pm_filtered <- readRDS(paste0(data_path, "L_pm_filtered.rds"))
+seurat_meta_filtered <- seurat_meta[rownames(L_pm_filtered), ]
+
+# Rename K## to GP## for display consistency
+colnames(L_pm_filtered) <- gsub("^K", "GP", colnames(L_pm_filtered))
+colnames(level_1_AUC_list$auc) <- gsub("^K", "GP", colnames(level_1_AUC_list$auc))
+colnames(level_2_AUC_list$auc) <- gsub("^K", "GP", colnames(level_2_AUC_list$auc))
+colnames(level_2_AUC_list$threshold) <- gsub("^K", "GP", colnames(level_2_AUC_list$threshold))
+colnames(organ_AUC_list$auc) <- gsub("^K", "GP", colnames(organ_AUC_list$auc))
+colnames(organ_AUC_list$threshold) <- gsub("^K", "GP", colnames(organ_AUC_list$threshold))
+
+# Restrict reference to healthy, non-thymocyte cells
+seurat_meta_filtered_no_thymocytes_healthy <- seurat_meta_filtered %>%
+  filter(annotation_level1 != "thymocyte", condition_broad == "healthy")
+
+# The 7 organ-specific GPs highlighted throughout this figure (caption 6d/6e)
+gps_of_interest <- c("GP3", "GP6", "GP11", "GP26", "GP29", "GP37", "GP177")
+
+# Labels a highlighted point with its top categories above `threshold` AUC.
+top_cats_label <- function(factor_name, auc_matrix, positive_mask, threshold = 0.85, n = 3) {
+  vals <- auc_matrix[, factor_name]
+  vals <- vals[positive_mask[, factor_name]]
+  vals <- sort(vals[vals > threshold], decreasing = TRUE)
+  cats <- names(vals)[seq_len(min(n, length(vals)))]
+  if (length(cats) == 0) return(factor_name)
+  paste0(factor_name, ":\n", paste(cats, collapse = "\n"))
 }
+
+# ============================================================
+# 6a: Max AUC Organ vs Level-1
+# ============================================================
+level_1_small_count <- table(seurat_meta_filtered_no_thymocytes_healthy$annotation_level1)
+level_1_small_count <- names(level_1_small_count[level_1_small_count < 1000])
+level_1_AUC <- level_1_AUC_list$auc
+level_1_AUC <- level_1_AUC[!rownames(level_1_AUC) %in% level_1_small_count, ]
+
+organ_AUC <- organ_AUC_list$auc
+organ_small_count <- table(seurat_meta_filtered_no_thymocytes_healthy$organ_simplified)
+organ_small_count <- names(organ_small_count[organ_small_count < 100])
+organ_AUC <- organ_AUC[!rownames(organ_AUC) %in% organ_small_count, ]
+
+# Positivity masks: mean loading in category > overall mean -> high loading predicts membership
+healthy_cells <- rownames(seurat_meta_filtered_no_thymocytes_healthy)
+L_healthy <- L_pm_filtered[healthy_cells, ]
+overall_mean <- colMeans(L_healthy, na.rm = TRUE)
+
+level_1_cat_mean <- t(sapply(rownames(level_1_AUC), function(cat) {
+  idx <- seurat_meta_filtered_no_thymocytes_healthy$annotation_level1 == cat
+  colMeans(L_healthy[idx, , drop = FALSE], na.rm = TRUE)
+}))
+level_1_AUC_positive <- sweep(level_1_cat_mean, 2, overall_mean, "-") > 0
+
+organ_cat_mean <- t(sapply(rownames(organ_AUC), function(cat) {
+  idx <- seurat_meta_filtered_no_thymocytes_healthy$organ_simplified == cat
+  colMeans(L_healthy[idx, , drop = FALSE], na.rm = TRUE)
+}))
+organ_AUC_positive <- sweep(organ_cat_mean, 2, overall_mean, "-") > 0
+
+level_1_AUC_masked <- level_1_AUC
+level_1_AUC_masked[!level_1_AUC_positive] <- NA
+level_1_AUC_max <- apply(level_1_AUC_masked, 2, max, na.rm = TRUE)
+level_1_AUC_max_name <- apply(level_1_AUC_masked, 2, function(x) rownames(level_1_AUC_masked)[which.max(x)])
+o <- order(level_1_AUC_max, decreasing = TRUE)
+table_level_1_AUC <- data.frame(
+  Factor = colnames(level_1_AUC)[o], Max_AUC = level_1_AUC_max[o], Annotation = level_1_AUC_max_name[o]
+)
+
+organ_AUC_masked <- organ_AUC
+organ_AUC_masked[!organ_AUC_positive] <- NA
+organ_AUC_max <- apply(organ_AUC_masked, 2, max, na.rm = TRUE)
+organ_AUC_max_name <- apply(organ_AUC_masked, 2, function(x) rownames(organ_AUC_masked)[which.max(x)])
+
+max_AUC_df <- data.frame(
+  Factor = table_level_1_AUC$Factor,
+  annotation_Level1 = table_level_1_AUC$Annotation,
+  annotation_Organ = organ_AUC_max_name[match(table_level_1_AUC$Factor, names(organ_AUC_max))],
+  Max_AUC_Organ = organ_AUC_max[match(table_level_1_AUC$Factor, names(organ_AUC_max))],
+  Max_AUC_Level1 = table_level_1_AUC$Max_AUC
+)
+df <- max_AUC_df %>% mutate(residual = Max_AUC_Level1 - Max_AUC_Organ, abs_res = abs(residual))
+
+# Factors to highlight: AUC > 0.9 in at least one axis (organ or level-1)
+highlighted_factors <- df %>%
+  filter(is.finite(residual), Max_AUC_Organ > 0.9 | Max_AUC_Level1 > 0.9) %>%
+  pull(Factor)
+
+label_above <- df %>%
+  filter(Factor %in% highlighted_factors, residual > 0) %>%
+  mutate(nudge_x = -0.035, label_text = sapply(Factor, top_cats_label, auc_matrix = level_1_AUC, positive_mask = level_1_AUC_positive))
+label_below <- df %>%
+  filter(Factor %in% highlighted_factors, residual <= 0) %>%
+  mutate(nudge_x = 0.035, label_text = sapply(Factor, top_cats_label, auc_matrix = organ_AUC, positive_mask = organ_AUC_positive))
+
+p_6a <- ggplot(df, aes(Max_AUC_Organ, Max_AUC_Level1)) +
+  geom_point(alpha = 0.3, size = 1.8) +
+  geom_point(data = label_above, color = "#1f78b4", alpha = 0.8, size = 1.8) +
+  geom_point(data = label_below, color = "#e31a1c", alpha = 0.8, size = 1.8) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black") +
+  coord_cartesian(xlim = c(0.46, 1.04), ylim = c(0.5, 1.02), expand = FALSE) +
+  labs(x = "Max AUC (Organ Simplified)", y = "Max AUC (Level-1)", title = "Max AUC: Organ vs Level-1") +
+  theme_minimal(base_size = 13) +
+  geom_text_repel(
+    seed = 42,
+    data = label_above, aes(label = label_text), color = "#1f78b4", size = 2.5, lineheight = 0.85,
+    direction = "y", nudge_x = label_above$nudge_x, segment.color = "#1f78b4",
+    arrow = arrow(length = unit(0.008, "npc"), type = "closed", angle = 20),
+    force = 3, force_pull = 0.1, box.padding = 0.4, point.padding = 0.15,
+    max.time = 10, max.iter = 2e4, max.overlaps = 20, min.segment.length = 0.01, segment.alpha = 0.7
+  ) +
+  geom_text_repel(
+    seed = 42,
+    data = label_below, aes(label = label_text), color = "#e31a1c", size = 2.5, lineheight = 0.85,
+    direction = "y", nudge_x = label_below$nudge_x, segment.color = "#e31a1c",
+    arrow = arrow(length = unit(0.008, "npc"), type = "closed", angle = 20),
+    force = 3, force_pull = 0.1, box.padding = 0.4, point.padding = 0.15,
+    max.time = 10, max.iter = 2e4, max.overlaps = 20, min.segment.length = 0.01, segment.alpha = 0.7
+  )
+ggsave(filename = paste0(figure_path, "6a.pdf"), plot = p_6a, width = 8, height = 8, dpi = 300)
+
+# ============================================================
+# 6d prep: Max AUC Organ vs Level-2
+# ============================================================
+level_2_AUC <- level_2_AUC_list$auc
+level_2_small_count <- table(seurat_meta_filtered_no_thymocytes_healthy$annotation_level2)
+level_2_small_count <- names(level_2_small_count[level_2_small_count < 100])
+level_2_AUC <- level_2_AUC[!rownames(level_2_AUC) %in% level_2_small_count, ]
+
+level_2_cat_mean <- t(sapply(rownames(level_2_AUC), function(cat) {
+  idx <- seurat_meta_filtered_no_thymocytes_healthy$annotation_level2 == cat
+  colMeans(L_healthy[idx, , drop = FALSE], na.rm = TRUE)
+}))
+level_2_AUC_positive <- sweep(level_2_cat_mean, 2, overall_mean, "-") > 0
+
+# 6d/6e reuse `organ_AUC_max_name`, but recomputed against the Level-2
+# category-count filter.
+organ_AUC_masked_l2 <- organ_AUC
+organ_AUC_positive_l2 <- sweep(
+  t(sapply(rownames(organ_AUC), function(cat) {
+    idx <- seurat_meta_filtered_no_thymocytes_healthy$organ_simplified == cat
+    colMeans(L_healthy[idx, , drop = FALSE], na.rm = TRUE)
+  })),
+  2, overall_mean, "-"
+) > 0
+organ_AUC_masked_l2[!organ_AUC_positive_l2] <- NA
+organ_AUC_max <- apply(organ_AUC_masked_l2, 2, max, na.rm = TRUE)
+organ_AUC_max_name <- apply(organ_AUC_masked_l2, 2, function(x) rownames(organ_AUC_masked_l2)[which.max(x)])
+
+# 6d's own max-AUC table, over the Level-2 categories.
+# --- internal ---
+# It must not reuse 6a's `df`, whose Max_AUC_Level1 column holds the Level-1
+# maxima -- doing so silently plots Level-1 AUC on this panel's
+# "Max AUC (Level-2)" axis.
+#
+# The original Figure_Organ.R rebuilds `max_AUC_df`/`df` at this point from
+# `table_level_2_AUC`, storing the Level-2 maxima in a column it still calls
+# `Max_AUC_Level1` -- a misleading name we drop here in favour of
+# `Max_AUC_Level2`.
+# --- end internal ---
+level_2_AUC_masked <- level_2_AUC
+level_2_AUC_masked[!level_2_AUC_positive] <- NA
+level_2_AUC_max <- apply(level_2_AUC_masked, 2, max, na.rm = TRUE)
+level_2_AUC_max_name <- apply(level_2_AUC_masked, 2, function(x) {
+  rownames(level_2_AUC_masked)[which.max(x)]
+})
+o_l2 <- order(level_2_AUC_max, decreasing = TRUE)
+table_level_2_AUC <- data.frame(
+  Factor = colnames(level_2_AUC)[o_l2],
+  Max_AUC = level_2_AUC_max[o_l2],
+  Annotation = level_2_AUC_max_name[o_l2]
+)
+df_l2 <- data.frame(
+  Factor = table_level_2_AUC$Factor,
+  annotation_Level2 = table_level_2_AUC$Annotation,
+  annotation_Organ = organ_AUC_max_name[match(table_level_2_AUC$Factor, names(organ_AUC_max))],
+  Max_AUC_Organ = organ_AUC_max[match(table_level_2_AUC$Factor, names(organ_AUC_max))],
+  Max_AUC_Level2 = table_level_2_AUC$Max_AUC
+) %>%
+  mutate(residual = Max_AUC_Level2 - Max_AUC_Organ, abs_res = abs(residual))
+
+# ============================================================
+# 6d: Max AUC Organ vs Level-2, 7 organ-specific GPs (red) vs.
+#     contrasting cluster-specific GPs (blue) highlighted
+# ============================================================
+seven_gp_df <- df_l2 |>
+  dplyr::filter(Factor %in% gps_of_interest) |>
+  dplyr::mutate(label_text = sapply(Factor, top_cats_label, auc_matrix = level_2_AUC, positive_mask = level_2_AUC_positive, threshold = 0.9, n = 3))
+
+top_left_gps <- c("GP14", "GP36", "GP16", "GP151", "GP21", "GP122", "GP2", "GP171", "GP5", "GP13")
+top_left_df <- df_l2 |>
+  dplyr::filter(Factor %in% top_left_gps) |>
+  dplyr::mutate(label_text = sapply(Factor, top_cats_label, auc_matrix = level_2_AUC, positive_mask = level_2_AUC_positive, threshold = 0.9, n = 3))
+
+p_6d <- ggplot(df_l2, aes(Max_AUC_Organ, Max_AUC_Level2)) +
+  geom_point(alpha = 0.2, size = 1.5, color = "grey60") +
+  geom_point(data = top_left_df, color = "#1f78b4", size = 2.2, alpha = 0.9) +
+  geom_text_repel(
+    seed = 42,
+    data = top_left_df, aes(label = label_text), color = "#1f78b4", lineheight = 0.85, size = 2.5,
+    direction = "y", nudge_x = -0.1, segment.color = "#1f78b4",
+    arrow = arrow(length = unit(0.008, "npc"), type = "closed", angle = 20),
+    force = 4, force_pull = 0.05, box.padding = 0.5, point.padding = 0.15,
+    max.time = 10, max.iter = 2e4, max.overlaps = 30, min.segment.length = 0.01, segment.alpha = 0.7
+  ) +
+  geom_point(data = seven_gp_df, color = "#e31a1c", size = 2.2, alpha = 0.9) +
+  geom_text_repel(
+    seed = 42,
+    data = seven_gp_df, aes(label = label_text), color = "#e31a1c", size = 2.5, lineheight = 0.85,
+    direction = "y", nudge_x = 0.18, xlim = c(1.0, NA), segment.color = "#e31a1c",
+    arrow = arrow(length = unit(0.008, "npc"), type = "closed", angle = 20),
+    force = 6, force_pull = 0.02, box.padding = 0.6, point.padding = 0.15,
+    max.time = 10, max.iter = 2e4, max.overlaps = 30, min.segment.length = 0.01, segment.alpha = 0.7
+  ) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black") +
+  coord_cartesian(xlim = c(0.46, 1.04), ylim = c(0.5, 1.02), expand = FALSE, clip = "off") +
+  labs(x = "Max AUC (Organ Simplified)", y = "Max AUC (Level-2)", title = "Max AUC: Organ vs Level-2 - organ-specific GPs") +
+  theme_minimal(base_size = 13) +
+  theme(plot.margin = margin(10, 80, 10, 80))
+ggsave(filename = paste0(figure_path, "6d.pdf"), plot = p_6d, width = 8, height = 8, dpi = 300)
+
+# ============================================================
+# 6b: GP37+ rate by lineage, mammary gland vs. elsewhere
+# ============================================================
+plot_gp_threshold_group_activation_rate <- function(
+  gp, organ, threshold, loading_mat, organ_info, group_info,
+  group_label = "Level-2", base_size = 13, min_in_organ = 10,
+  group_colors = ZemmourLib::immgent_colors$level2, fallback_group_color = "grey60",
+  reference = c("not_in_group", "not_in_organ")
+) {
+  reference <- match.arg(reference)
+  if (!gp %in% colnames(loading_mat)) stop(sprintf("GP '%s' not found in loading matrix.", gp))
+  if (!organ %in% organ_info) stop(sprintf("Organ '%s' not found in organ_info.", organ))
+
+  loading <- loading_mat[, gp]
+  keep <- !(is.na(loading) | is.na(organ_info) | is.na(group_info))
+  loading <- loading[keep]
+  organ_info <- organ_info[keep]
+  group_info <- as.character(group_info[keep])
+
+  in_organ <- organ_info == organ
+  positive <- loading > threshold
+  group_levels <- sort(unique(group_info))
+
+  rate_df <- data.frame(
+    group = group_levels,
+    n_in_organ = vapply(group_levels, function(l) sum(group_info == l & in_organ), integer(1)),
+    n_pos_in_organ = vapply(group_levels, function(l) sum(group_info == l & in_organ & positive), integer(1))
+  )
+
+  if (reference == "not_in_group") {
+    rate_df$n_ref <- vapply(group_levels, function(l) sum(group_info != l & in_organ), integer(1))
+    rate_df$n_pos_ref <- vapply(group_levels, function(l) sum(group_info != l & in_organ & positive), integer(1))
+    ref_label <- "Not in group (same organ)"
+    title_vs <- sprintf("%s vs. same-organ non-group", organ)
+  } else {
+    rate_df$n_ref <- vapply(group_levels, function(l) sum(group_info == l & !in_organ), integer(1))
+    rate_df$n_pos_ref <- vapply(group_levels, function(l) sum(group_info == l & !in_organ & positive), integer(1))
+    ref_label <- "Not in organ (same group)"
+    title_vs <- sprintf("%s vs. same-group non-organ", organ)
+  }
+
+  rate_df$rate_in_organ <- rate_df$n_pos_in_organ / rate_df$n_in_organ
+  rate_df$rate_ref <- rate_df$n_pos_ref / rate_df$n_ref
+  rate_df <- rate_df[rate_df$n_in_organ >= min_in_organ, , drop = FALSE]
+  if (nrow(rate_df) == 0) stop(sprintf("No %s type has >= %d cells in '%s'.", group_label, min_in_organ, organ))
+
+  long_df <- data.frame(
+    group = rep(rate_df$group, 2),
+    type = factor(rep(c("In organ", ref_label), each = nrow(rate_df)), levels = c("In organ", ref_label)),
+    rate = c(rate_df$rate_in_organ, rate_df$rate_ref)
+  )
+  level_order <- rate_df$group[order(rate_df$rate_in_organ, decreasing = TRUE)]
+  long_df$group <- factor(long_df$group, levels = level_order)
+
+  fill_values <- group_colors[as.character(level_order)]
+  missing_colors <- is.na(fill_values)
+  if (any(missing_colors)) {
+    fill_values[missing_colors] <- fallback_group_color
+    warning(sprintf(
+      "%s annotations missing from group_colors and colored %s: %s",
+      group_label, fallback_group_color, paste(level_order[missing_colors], collapse = ", ")
+    ))
+  }
+  alpha_vals <- c(1, 0.35)
+  names(alpha_vals) <- c("In organ", ref_label)
+
+  ggplot(long_df, aes(x = group, y = rate, fill = group, alpha = type)) +
+    geom_col(position = position_dodge(width = 0.8), width = 0.75, color = "grey35", linewidth = 0.15) +
+    scale_fill_manual(values = fill_values, guide = "none") +
+    scale_alpha_manual(values = alpha_vals, guide = guide_legend(override.aes = list(fill = "grey40"))) +
+    labs(
+      x = sprintf("%s annotation", group_label),
+      y = sprintf("Proportion of cells with %s > %.3g", gp, threshold),
+      alpha = NULL,
+      title = sprintf("%s+ rate by %s: %s", gp, group_label, title_vs),
+      subtitle = sprintf("threshold = %.3g; %s types with < %d cells in %s dropped", threshold, group_label, min_in_organ, organ)
+    ) +
+    theme_minimal(base_size = base_size) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "top")
+}
+
+p_6b <- plot_gp_threshold_group_activation_rate(
+  gp = "GP37",
+  organ = "mammary gland",
+  threshold = organ_AUC_list$threshold["mammary gland", "GP37"],
+  min_in_organ = 100,
+  loading_mat = L_pm_filtered[rownames(seurat_meta_filtered_no_thymocytes_healthy), ],
+  organ_info = seurat_meta_filtered_no_thymocytes_healthy$organ_simplified,
+  group_info = seurat_meta_filtered_no_thymocytes_healthy$annotation_level1,
+  group_label = "Level-1",
+  group_colors = ZemmourLib::immgent_colors$level1,
+  reference = "not_in_organ"
+)
+ggsave(filename = paste0(figure_path, "6b.pdf"), plot = p_6b, width = 8, height = 5, dpi = 300)
+
+# ============================================================
+# 6e: alluvial, organ -> GP -> Level-2, for GP+ cells of the
+#     7 organ-specific GPs
+# ============================================================
+best_organ_per_gp <- organ_AUC_max_name[gps_of_interest]
+gp_thresholds <- mapply(function(gp, organ) organ_AUC_list$threshold[organ, gp], gps_of_interest, best_organ_per_gp)
+names(gp_thresholds) <- gps_of_interest
+
+n_cap_gp <- 300
+set.seed(42)
+alluvial_rows <- lapply(gps_of_interest, function(gp) {
+  positive_idx <- L_healthy[, gp] > gp_thresholds[gp]
+  meta_pos <- seurat_meta_filtered_no_thymocytes_healthy[positive_idx, ]
+  d <- data.frame(gp_program = gp, organ = meta_pos$organ_simplified, level2 = meta_pos$annotation_level2, stringsAsFactors = FALSE)
+  if (nrow(d) > n_cap_gp) d <- dplyr::slice_sample(d, n = n_cap_gp)
+  d
+})
+
+count_df <- do.call(rbind, alluvial_rows) |>
+  dplyr::count(organ, gp_program, level2, name = "n") |>
+  dplyr::filter(!is.na(organ), !is.na(level2), n >= 5)
+
+organ_order <- count_df |> dplyr::summarise(total = sum(n), .by = organ) |> dplyr::arrange(dplyr::desc(total)) |> dplyr::pull(organ)
+level2_order <- count_df |> dplyr::summarise(total = sum(n), .by = level2) |> dplyr::arrange(dplyr::desc(total)) |> dplyr::pull(level2)
+
+count_df <- count_df |>
+  dplyr::mutate(
+    organ = factor(organ, levels = rev(organ_order)),
+    gp_program = factor(gp_program, levels = rev(gps_of_interest)),
+    level2 = factor(level2, levels = rev(level2_order))
+  )
+
+gp_colors <- ZemmourLib::immgent_colors$organ_simplified[unname(best_organ_per_gp)]
+gp_colors[is.na(gp_colors)] <- "grey60"
+names(gp_colors) <- gps_of_interest
+
+p_6e <- ggplot(count_df, aes(axis1 = organ, axis2 = gp_program, axis3 = level2, y = n)) +
+  ggalluvial::geom_alluvium(aes(fill = gp_program), width = 1 / 4, alpha = 0.6, knot.pos = 0.4) +
+  ggalluvial::geom_stratum(width = 1 / 4, fill = "grey92", color = "grey50", linewidth = 0.3) +
+  ggplot2::geom_text(stat = ggalluvial::StatStratum, aes(label = after_stat(stratum)), size = 3, angle = 90) +
+  scale_fill_manual(values = gp_colors, guide = "none") +
+  scale_x_discrete(limits = c("Organ", "GP", "Level-2"), expand = c(0.12, 0.12)) +
+  labs(y = "Number of GP+ cells", title = "GP+ cells: organ origin and cell type") +
+  theme_minimal(base_size = 12) +
+  theme(panel.grid = element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank()) +
+  coord_flip()
+ggsave(filename = paste0(figure_path, "6e.pdf"), plot = p_6e, width = 20, height = 10, dpi = 300)
+
+# ============================================================
+# 6c: organ marker genes - per-GP gene-score heatmap
+# ============================================================
+F_pm_filtered <- readRDS(paste0(data_path, "F_pm_filtered.rds"))
+colnames(F_pm_filtered) <- gsub("^F", "GP", colnames(F_pm_filtered))
+D_scale <- diag(1 / apply(F_pm_filtered, 2, function(x) max(abs(x), na.rm = TRUE)))
+F_pm_scaled <- F_pm_filtered %*% D_scale
+colnames(F_pm_scaled) <- colnames(F_pm_filtered)
+
+n_top_genes <- 20
+min_loading <- 0.25
+F_sub <- F_pm_scaled[, gps_of_interest, drop = FALSE]
+selected_genes <- lapply(gps_of_interest, function(gp) {
+  vals <- F_sub[, gp]
+  names(sort(vals[vals > min_loading], decreasing = TRUE))[seq_len(min(n_top_genes, sum(vals > min_loading)))]
+})
+selected_genes <- unique(unlist(selected_genes))
+
+# Diagonal gene ordering by dominant GP (highest loading)
+GP_orders <- c("GP37", "GP26", "GP6", "GP177", "GP3", "GP29", "GP11")
+dominant_gp <- apply(F_sub[selected_genes, , drop = FALSE], 1, function(x) GP_orders[which.max(x[GP_orders])])
+dominant_loading <- mapply(function(g, gp) F_sub[g, gp], selected_genes, dominant_gp)
+gene_order_df <- data.frame(Gene = selected_genes, dominant_gp = factor(dominant_gp, levels = GP_orders), loading = dominant_loading, stringsAsFactors = FALSE)
+gene_order_df <- gene_order_df[order(gene_order_df$dominant_gp, -gene_order_df$loading), ]
+heatmap_gene_order <- gene_order_df$Gene
+
+plot_df_hm <- as.data.frame(F_sub[heatmap_gene_order, , drop = FALSE])
+plot_df_hm$Gene <- rownames(plot_df_hm)
+plot_df_hm <- tidyr::pivot_longer(plot_df_hm, cols = -Gene, names_to = "GP", values_to = "Loading")
+plot_df_hm$GP <- factor(plot_df_hm$GP, levels = GP_orders)
+plot_df_hm$Gene <- factor(plot_df_hm$Gene, levels = rev(heatmap_gene_order))
+limit_hm <- max(abs(plot_df_hm$Loading), na.rm = TRUE)
+
+p_gene_heatmap <- ggplot(plot_df_hm, aes(x = GP, y = Gene, fill = Loading)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "steelblue", mid = "white", high = "firebrick", midpoint = 0, limits = c(-limit_hm, limit_hm), name = "Loading") +
+  labs(title = "Top positive genes per organ GP", x = NULL, y = NULL) +
+  theme_minimal(base_size = 9) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 9), axis.text.y = element_text(size = 8), panel.grid = element_blank(), plot.title = element_text(face = "bold", size = 11))
+
+pdf(paste0(figure_path, "6c.pdf"), width = 5, height = 16, useDingbats = FALSE)
+print(p_gene_heatmap)
+dev.off()

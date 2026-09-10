@@ -1,87 +1,103 @@
 ---
-title: "Figure 7b: A nonlinear deep-learning framework independently recovers the immgenT gene-program landscape"
+title: "Figure 7: Surface-marker associations are context-dependent, but combinatorial gating resolves specific gene programs"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
   chunk_output_type: console
 ---
 
-This page documents **Figure 7b**. The other panels of Figure 7 (A nonlinear
-deep-learning framework independently recovers the immgenT gene-program
-landscape) are produced by the RQVI framework and are documented in the
-companion repository for RQVI.
+```{r doc-code, include=FALSE}
+source("../code/R/doc_code.R")
+```
 
-Figure 7b asks whether the fine-grained cluster-level patterns captured by the
-200 EBMF GPs are recovered by an independent factorization. It compares each EBMF
-GP with a matched RQVI GP -- RQVI being an alternative matrix factorization of
-the same cells, run across 10 random-seed initializations (256 GPs per seed). The
-two heatmaps share the same row and column order and use a white-to-blue scale of
-per-GP relative loading on `[0, 1]`, with broad lineage annotations above the
-columns.
+All panels except (a) are produced by
+[`script/Figure7.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure7.R),
+which shares its CITE-seq setup with [Extended Data Figure 5](FigureS5.html) and
+[Extended Data Figure 6](FigureS6.html) via
+`code/R/citeseq_shared_setup.R`. The code below is shown for
+reference (not re-executed on this page, since this script takes about a
+minute to run); the images are its pre-rendered output.
 
-Cells are the `L_pm_filtered` GP loadings (cells passing the iterative
-total-loading filter), restricted to non-thymocytes (`annotation_level1 !=
-"thymocyte"`, all conditions) and to cells that also carry an RQVI loading. EBMF
-and RQVI loadings are averaged within `annotation_level2` on these common cells,
-and each RQVI GP is shown on the row of its matched EBMF GP. In the code and in
-the intermediate files the EBMF GPs are named F1-F200; those are GP1-GP200.
+## Setup
 
-## Figure 7b {#fig7b}
+```{r fig7-setup, code=code_for("../script/Figure7.R", "doc:setup"), eval=FALSE}
+```
 
-```{r fig7b-img, echo=FALSE, out.width="100%"}
-knitr::include_graphics("assets/Figure7/7B.png")
+Panels (b) onward additionally load the shared CITE-seq cell/protein setup:
+
+```{r fig7-setup2, code=code_for("../script/Figure7.R", "Load data"), eval=FALSE}
+```
+
+## (a) Protein-signature schematic {#fig7a}
+
+This panel is a hand-drawn schematic, not generated from code.
+
+How the protein factor matrix is estimated is documented in
+[Methods: fitting CITE-seq protein programs with fixed scRNA loadings](Methods_FlashierFit_Citeseq.html).
+
+::: {.figcaption}
+**Fig. 7a.** Schematic illustrating how protein signatures were defined for
+each GP. Holding the cell-loading matrix L fixed from the GP model, a protein
+factor matrix was estimated by EBMF from the paired CITE-seq protein
+measurements, Y ≈ LUᵀ (cells × proteins matrix), yielding a protein signature
+U (proteins × GPs matrix) for each GP.
+:::
+
+## (b, c) KLRG1 modulation across lineages {#fig7bc}
+
+```{r fig7bc-code, code=code_for("../script/Figure7.R", "7b"), eval=FALSE}
+```
+
+```{r fig7bc-img, echo=FALSE, out.width="49%"}
+knitr::include_graphics(c("assets/Figure7/7b.png", "assets/Figure7/7c.png"))
 ```
 
 ::: {.figcaption}
-**Fig. 7b.** Cluster-level activity profiles of corresponding EBMF and RQVI
-GPs. EBMF cell loadings (left) and matched RQVI program loadings (right) were
-averaged within the 107 level-2 clusters.
+**Fig. 7b, c.** GPs associated with KLRG1 protein expression in CD4, Tregs,
+and CD8. Effect-size versus effect-size plots, where each GP's effect size is
+the difference in its mean activity between KLRG1+ and KLRG1- cells, comparing
+CD8+ T cells (x-axis) with CD4+ T cells (b) or Treg cells (c).
 :::
 
-## How the figure is made
+## (d) Genes up- and down-regulated across the CD69-associated GPs {#fig7d}
 
-Three steps, run from the repository root:
+The ten GPs, and the correlation-based order they are drawn in, are defined once
+in `code/R/citeseq_shared_setup.R`, because
+[Extended Data Fig. 6a, b](FigureS6.html#figs6ab) show the same GPs in the same
+order from a different script:
 
-```bash
-Rscript script/Figure7b.R          # cluster-mean matrices + column/palette metadata
-python  script/Figure7b_rematch.py # one-to-one EBMF-RQVI program matching
-python  script/Figure7b_plot.py    # heatmaps
+```{r fig7d-gps, code=code_for("../code/R/citeseq_shared_setup.R", "doc:cd69"), eval=FALSE}
 ```
 
-The Python steps require `matplotlib`, `pandas`, `scipy`, `h5py`, and `numpy`.
-The RQVI cell-level loadings are read as input from `data/`, which is a
-git-ignored symlink and is not tracked here.
-
-### Cluster means
-
-`script/Figure7b.R` builds the raw `annotation_level2` cluster-mean matrix for the
-EBMF GPs on the common non-thymocyte cells, together with the column order
-(Figure-1 level1 lineage order, alphabetical within each lineage) and the lineage
-color palette. The matched RQVI cluster means are produced by the matching step
-below.
-
-```{r fig7b-data, code=readLines("../script/Figure7b.R"), eval=FALSE}
+```{r fig7d-code, code=code_for("../script/Figure7.R", "7d"), eval=FALSE}
 ```
 
-### Matching
+```{r fig7d-img, echo=FALSE, out.width="100%"}
+knitr::include_graphics("assets/Figure7/7d.png")
+```
 
-Each GP's mean-loading profile is z-scored across clusters; the signed
-Pearson correlation between every EBMF GP and all 2,560 candidate RQVI
-GPs is computed; candidates with a constant profile are excluded; and a
-maximum-weight one-to-one assignment (`scipy.optimize.linear_sum_assignment`)
-matches each EBMF GP to a distinct RQVI GP so that the total signed
-correlation is maximized. The assignment is computed over all common cells (108
-`annotation_level2` clusters); the figure displays the 107 non-thymocyte
-clusters. The median per-GP correlation is 0.766, with 92.5% at r >= 0.5.
-Code:
-[`script/Figure7b_rematch.py`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure7b_rematch.py).
+::: {.figcaption}
+**Fig. 7d.** Heatmap of the top five most strongly up- and down-regulated gene
+scores for ten GPs correlated with CD69 expression, with the left strip
+indicating the Spearman correlation between GP activity and CD69 expression.
+:::
 
-### Plotting
+## (e-j) Protein-gated vs. GP-loading populations {#fig7ej}
 
-`script/Figure7b_plot.py` orders the EBMF rows by hierarchical clustering (average
-linkage, correlation distance, optimal leaf ordering), rescales every GP to
-`[0, 1]` across clusters, and draws the two heatmaps with a shared colorbar; the
-matched RQVI panel reuses the EBMF row order. The published PDF and the PNG this
-page shows come out of the same matplotlib figure in one call, so the two cannot
-drift apart. Code:
-[`script/Figure7b_plot.py`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure7b_plot.py).
+```{r fig7ej-code, code=code_for("../script/Figure7.R", "7e"), eval=FALSE}
+```
+
+```{r fig7ej-img, echo=FALSE, out.width="49%"}
+knitr::include_graphics(c(
+  "assets/Figure7/7e.png", "assets/Figure7/7f.png",
+  "assets/Figure7/7g.png", "assets/Figure7/7h.png",
+  "assets/Figure7/7i.png", "assets/Figure7/7j.png"
+))
+```
+
+::: {.figcaption}
+**Fig. 7e-j.** Examples of gating strategies used to identify GP-active cells.
+All-T MDE plots highlight cells selected by the proposed gating strategy
+(left) and the corresponding GP-active cells (right). Color indicates cell
+density.
+:::

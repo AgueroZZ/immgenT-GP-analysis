@@ -1,5 +1,5 @@
 ---
-title: "Figure 5: Tissue-associated gene programs reflect both tissue adaptation and T cell subset composition"
+title: "Figure 5: Activated T cell states arise from shared and lineage-biased combinations of gene programs"
 author: "Ziang Zhang"
 output: workflowr::wflow_html
 editor_options:
@@ -11,9 +11,11 @@ source("../code/R/doc_code.R")
 ```
 
 All panels are produced by
-[`script/Figure5.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure5.R).
-The code below is shown for reference (not re-executed on this page); the
-images are its pre-rendered output.
+[`script/Figure5.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure5.R),
+which shares its curated GP set with [Extended Data Figure 3](FigureS3.html) via
+`code/R/activation_shared_setup.R`. The code below is shown for
+reference (not re-executed on this page); the images are its pre-rendered
+output.
 
 ## Setup
 
@@ -22,78 +24,65 @@ Data loading, shared across all panels below.
 ```{r fig5-setup, code=code_for("../script/Figure5.R", c("^", "Load data")), eval=FALSE}
 ```
 
-## (a) Max AUC: organ vs. lineage {#fig5a}
+## (a) Activation effect, CD4 vs. CD8 {#fig5a}
 
 ```{r fig5a-code, code=code_for("../script/Figure5.R", "5a"), eval=FALSE}
 ```
 
-```{r fig5a-img, echo=FALSE, out.width="60%"}
+```{r fig5a-img, echo=FALSE, out.width="50%"}
 knitr::include_graphics("assets/Figure5/5a.png")
 ```
 
 ::: {.figcaption}
-**Fig. 5a.** Scatterplot showing each GP's prediction (AUC) of organ of origin
-(x-axis) versus lineage (y-axis). GPs reaching AUC > 0.9 on either axis are
-colored and labeled (organ-specific in red; lineage-specific in blue).
+**Fig. 5a.** Standardized mean difference in GP activity between activated and
+resting cells in CD4+ T cells (x-axis) and CD8+ T cells (y-axis). Points are
+colored according to whether they are highly upregulated in both CD4+ and CD8+
+activation (brown), downregulated in both (green), or preferentially
+upregulated in CD4 (blue) or CD8 (orange).
 :::
 
-## (b) GP37+ rate in mammary gland vs. elsewhere {#fig5b}
+## (b) GP-gene signature network {#fig5b}
 
 ```{r fig5b-code, code=code_for("../script/Figure5.R", "5b"), eval=FALSE}
 ```
 
-```{r fig5b-img, echo=FALSE, out.width="60%"}
+```{r fig5b-img, echo=FALSE, out.width="50%"}
 knitr::include_graphics("assets/Figure5/5b.png")
 ```
 
 ::: {.figcaption}
-**Fig. 5b.** Proportion of GP37-active cells in each lineage in the mammary
-gland compared with all other organs (faded color bar).
+**Fig. 5b.** GP-gene network in which each GP is linked to its five most
+strongly regulated genes, based on GP gene scores. Edges are colored by the
+sign of the gene score (red for upregulated, blue for downregulated). GP nodes
+are colored as in (a).
 :::
 
-## (c) Marker genes of the 7 organ-specific GPs {#fig5c}
+## (c) Log2FC heatmap across conditions {#fig5c}
 
 ```{r fig5c-code, code=code_for("../script/Figure5.R", "5c"), eval=FALSE}
 ```
 
-```{r fig5c-img, echo=FALSE, out.width="60%"}
+```{r fig5c-img, echo=FALSE, out.width="50%"}
 knitr::include_graphics("assets/Figure5/5c.png")
 ```
 
 ::: {.figcaption}
-**Fig. 5c.** Genes associated with the seven organ-specific GPs shown in (a).
-Heatmap of the per-GP scaled gene scores for the top upregulated genes of each
-GP (top 20 per GP, gene score > 0.25; blue, negative; red, positive).
+**Fig. 5c.** Heatmap of log2 fold change in mean GP activity across
+experimental conditions for activated CD4+ and CD8+ T cells, computed relative
+to each GP’s mean loading across all CD4+/CD8+ cells. Columns grouped and
+annotated by immune challenge category. GPs are ordered and colored as in (a).
 :::
 
-## (d) Max AUC: organ vs. cluster {#fig5d}
+## (d) Mean loading by sub-lineage {#fig5d}
 
-```{r fig5d-code, code=code_for("../script/Figure5.R", c("5d prep", "5d:")), eval=FALSE}
+```{r fig5d-code, code=code_for("../script/Figure5.R", "5d"), eval=FALSE}
 ```
 
-```{r fig5d-img, echo=FALSE, out.width="60%"}
+```{r fig5d-img, echo=FALSE, out.width="50%"}
 knitr::include_graphics("assets/Figure5/5d.png")
 ```
 
 ::: {.figcaption}
-**Fig. 5d.** As in (a), but predictive performance is measured against level 2
-clusters (y-axis). The seven organ-specific GPs from (a) are highlighted in
-red, and a contrasting set of cluster-specific GPs (high cluster AUC, low
-organ AUC) in blue.
-:::
-
-## (e) Organ, GP, and cluster alluvial diagram {#fig5e}
-
-```{r fig5e-code, code=code_for("../script/Figure5.R", "5e"), eval=FALSE}
-```
-
-```{r fig5e-img, echo=FALSE, out.width="80%"}
-knitr::include_graphics("assets/Figure5/5e.png")
-```
-
-::: {.figcaption}
-**Fig. 5e.** Alluvial plot showing how tissue-specific GP activity is
-distributed across clusters. For each organ, GP-active cells are traced to
-their cluster annotation. Flows are colored by GP, and width is proportional
-to the number of cells.
+**Fig. 5d.** Heatmap of mean GP activity per level 2 cluster, with the top bar
+denoting parent lineage. GP ordered and colored as in (a).
 :::

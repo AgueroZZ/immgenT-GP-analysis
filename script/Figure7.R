@@ -1,0 +1,223 @@
+# Figure 7. Linking GPs to proteins.
+#
+# Panels produced (see analysis/Figure7.Rmd for the caption text):
+#   7a  Schematic of the projection (EBMF on scRNA, then EBMF on CITE-seq
+#       with cell loadings fixed). Hand-drawn in other software -- NOT
+#       code-generated, no source to port. Not produced by this script.
+#   7b,7c  KLRG1 modulation: CD8 vs CD4 (b) and CD8 vs Treg (c).
+#   7d  Heatmap of top-5 gene scores per GP for the 10 curated CD69-associated
+#       GPs (cd69_top_gps_subset, defined in code/R/citeseq_shared_setup.R),
+#       with a CD69-correlation strip.
+#   7e-7j  Protein-gate vs. GP-loading comparison on the MDE embedding, for the
+#       6 curated GPs GP171/GP12/GP80/GP23/GP77/GP8.
+#
+# Reordered 2026-07-28. The published figure was a-k and lettered differently;
+# for anyone diffing against figures/Previous/bits/Figure 6/:
+#
+#   now  was    what
+#   7a   7a     schematic (unchanged)
+#   7b   7g     KLRG1 CD8 vs CD4
+#   7c   7h     KLRG1 CD8 vs Treg
+#   7d   7i     CD69 up/down gene heatmap
+#   7e   7c     gating, GP171
+#   7f   7d     gating, GP12
+#   7g   7e     gating, GP80
+#   7h   7f     gating, GP23
+#   7i   --     gating, GP77   (new panel)
+#   7j   --     gating, GP8    (new panel, promoted from the retired S6 gallery)
+#   --   7b     protein-program heatmap  -> moved out; since 2026-07-30 it is
+#                 its own figure, now Figure S6 (script/FigureS6.R)
+#   --   7j,6k  CD69 GPs per tissue/lineage -> moved to Figure S6, s6a/s6b
+#
+# Source: ported from Figure_CITEseq.R (panels b, c, d) and
+# gated_protein_loading_plot.R (panels e-j, using
+# plot_gated_gp_vs_protein() from code/R/gated_protein_helpers.R,
+# shared with FigureS6.R).
+#
+# Required inputs (data/), read via code/R/citeseq_shared_setup.R below --
+# see code/README.md's "Data provenance" table for the full picture:
+#   L_pm_filtered.rds, F_pm_filtered.rds        [code/pipeline/01b_filter_cells.R]
+#   igt1_96_..._ADTonly.Rds                     [primary input Seurat object]
+#   protein_mat_normalized_lognorm.rds          [code/other/prepare_citeseq_protein_matrices_20260206.R]
+#   umap_result.rds                             [gap, no producer script here]
+#   protein_flash_selected_summary_lognorm_backfit200.rds
+#     [code/other/fit_citeseq_fixed_loading_ebmf_20260206.R]
+#   TableS4_citeseq_qc_20250513.csv             [external: manuscript's own Table S4]
+#   Thresholds_Selected_Proteins.csv            [curated input, hand-revised; NOT regenerated
+#     by code/pipeline/03_protein_thresholds.R -- see that script's header]
+#   CITEseq_markers_full.rds                    [code/pipeline/04_protein_projection.R, using the
+#     non-backfit200 protein summary -- see caveat above]
+
+# --- doc:setup ---
+library(ggplot2)
+library(ggrepel)
+library(dplyr)
+library(patchwork)
+library(tidyr)
+library(Matrix) # protein matrices are dgCMatrix; must be attached for `[` to dispatch
+
+data_path <- "data/"
+figure_path <- "figures/final-selected/Figure 7/"
+source("code/R/gated_protein_helpers.R")
+
+# 7a: hand-drawn schematic -- not code-generated, no output here.
+
+# ============================================================
+# Load data (shared with FigureS5.R and FigureS6.R)
+# ============================================================
+source("code/R/citeseq_shared_setup.R")
+
+# ============================================================
+# 7b/7c: KLRG1 modulation (CD8 vs CD4, CD8 vs Treg)
+# ============================================================
+FlashierDGE_corrected <- function(F1, L1, group1, group2, title_plot = "") {
+  loadings_group1 <- colMeans(L1[group1, ])
+  loadings_group2 <- colMeans(L1[group2, ])
+  mean_change_loadings <- loadings_group1 - loadings_group2
+  vplot <- data.frame(SYMBOL = names(mean_change_loadings), mean_change_loadings = mean_change_loadings, AveExpr = colMeans(L1[c(group1, group2), ]))
+  list(diff_factors = vplot)
+}
+get_klrg1_split <- function(cell_type_label, meta, protein_data, threshold) {
+  cells <- meta$cellID[meta$annotation_level1 == cell_type_label]
+  cells <- intersect(cells, rownames(protein_data))
+  list(pos = cells[protein_data[cells, "KLRG1"] >= threshold], neg = cells[protein_data[cells, "KLRG1"] < threshold])
+}
+run_checked_dge <- function(group_list, F_mat, L_mat, label) {
+  if (length(group_list$pos) < 3 || length(group_list$neg) < 3) stop(paste("Insufficient data:", label))
+  df <- FlashierDGE_corrected(F1 = F_mat, L1 = L_mat, group1 = group_list$pos, group2 = group_list$neg)$diff_factors
+  if (!"SYMBOL" %in% colnames(df)) df$SYMBOL <- rownames(df)
+  df
+}
+plot_target_gps <- function(df, x_var, y_var, label_var, target_gps, highlight_color = "darkorange", background_color = "black",
+                             x_limits = c(-0.5, 0.5), y_limits = c(-0.5, 0.5), background_alpha = 0.5,
+                             xlab = "Difference in Mean Loading", ylab = "Difference in Mean Loading", title = "Comparison of Specific GP Loadings") {
+  highlight_df <- df %>% filter({{ label_var }} %in% target_gps) %>% mutate(.label_display = as.character({{ label_var }}))
+  ggplot(df, aes(x = {{ x_var }}, y = {{ y_var }})) +
+    geom_point(color = background_color, alpha = background_alpha) +
+    geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
+    geom_hline(yintercept = 0, linetype = "dashed", color = "blue") +
+    geom_vline(xintercept = 0, linetype = "dashed", color = "blue") +
+    geom_point(data = highlight_df, aes(color = {{ label_var }}), size = 2) +
+    ggrepel::geom_text_repel(seed = 42, data = highlight_df, aes(label = .label_display, color = {{ label_var }}), max.overlaps = Inf, size = 3.5, box.padding = 0.35, point.padding = 0.5, segment.color = "grey50", show.legend = FALSE) +
+    scale_color_manual(values = highlight_color, guide = "none") +
+    coord_cartesian(xlim = x_limits, ylim = y_limits) +
+    labs(x = xlab, y = ylab, title = title) +
+    theme_minimal()
+}
+
+klrg1_threshold <- threshold_results_subset_manual$Threshold[threshold_results_subset_manual$Protein == "KLRG1"]
+cd8_split <- get_klrg1_split("CD8", seurat_meta_filtered, protein_mat_normalized_lognorm, klrg1_threshold)
+CD4_split <- get_klrg1_split("CD4", seurat_meta_filtered, protein_mat_normalized_lognorm, klrg1_threshold)
+treg_split <- get_klrg1_split("Treg", seurat_meta_filtered, protein_mat_normalized_lognorm, klrg1_threshold)
+
+diff_CD8 <- run_checked_dge(cd8_split, F_pm_filtered, L_pm_filtered, "CD8") %>% rename(mean_change_CD8 = mean_change_loadings, AveExpr_CD8 = AveExpr)
+diff_CD4 <- run_checked_dge(CD4_split, F_pm_filtered, L_pm_filtered, "CD4") %>% rename(mean_change_CD4 = mean_change_loadings, AveExpr_CD4 = AveExpr)
+diff_Treg <- run_checked_dge(treg_split, F_pm_filtered, L_pm_filtered, "Treg") %>% rename(mean_change_Treg = mean_change_loadings, AveExpr_Treg = AveExpr)
+
+# 7b: CD8 vs CD4
+merged_cd4 <- inner_join(diff_CD4, diff_CD8, by = "SYMBOL")
+p_7b <- plot_target_gps(
+  df = merged_cd4, x_var = mean_change_CD8, y_var = mean_change_CD4, label_var = SYMBOL,
+  target_gps = c("GP10", "GP58", "GP25", "GP26", "GP43"), background_alpha = 0.8, x_limits = c(-0.2, 0.4), y_limits = c(-0.2, 0.4),
+  highlight_color = c("GP10" = "darkorange2", "GP25" = "blue", "GP43" = "blue", "GP26" = "blue", "GP58" = "darkorange2"),
+  title = "KLRG1 Modulation: CD8 vs CD4", xlab = "Effect Size in CD8 (KLRG1+ - KLRG1-)", ylab = "Effect Size in CD4 (KLRG1+ - KLRG1-)"
+) + theme_bw()
+ggsave(paste0(figure_path, "7b.pdf"), p_7b, width = 7, height = 6)
+
+# 7c: CD8 vs Treg
+merged_treg <- inner_join(diff_Treg, diff_CD8, by = "SYMBOL")
+p_7c <- plot_target_gps(
+  df = merged_treg, x_var = mean_change_CD8, y_var = mean_change_Treg, label_var = SYMBOL,
+  target_gps = c("GP6", "GP10", "GP12", "GP27", "GP68", "GP58"), background_alpha = 0.8, x_limits = c(-0.2, 0.4), y_limits = c(-0.2, 0.4),
+  highlight_color = c("GP10" = "darkorange2", "GP27" = "deeppink", "GP6" = "deeppink", "GP68" = "deeppink", "GP12" = "deeppink", "GP58" = "darkorange2"),
+  title = "KLRG1 Modulation: CD8 vs Treg", xlab = "Effect Size in CD8 (KLRG1+ - KLRG1-)", ylab = "Effect Size in Treg (KLRG1+ - KLRG1-)"
+) + theme_bw()
+ggsave(paste0(figure_path, "7c.pdf"), p_7c, width = 7, height = 6)
+
+# ============================================================
+# 7d: up/down genes across the 10 curated CD69-associated GPs
+# (cd69_top_gps_subset / cd69_corr / cd69_top_gps_sorted come from
+# citeseq_shared_setup.R, which Figure S6's s6a/s6b panels share)
+# ============================================================
+D_scale6 <- diag(1 / apply(F_pm_filtered, 2, function(x) max(abs(x), na.rm = TRUE)))
+F_pm_filtered_scaled <- F_pm_filtered %*% D_scale6
+colnames(F_pm_filtered_scaled) <- paste0("GP", 1:ncol(F_pm_filtered_scaled))
+
+plot_factor_heatmap <- function(F_matrix, gp_vector, n_top = 5, min_abs_loading = 0.5, transpose = FALSE,
+                                 title = "Factor loadings – top genes per GP", low_color = "steelblue", mid_color = "white", high_color = "firebrick", font_size = 9) {
+  F_sub <- F_matrix[, gp_vector, drop = FALSE]
+  selected_genes <- lapply(gp_vector, function(gp) {
+    vals <- F_sub[, gp]
+    top_pos <- names(sort(vals, decreasing = TRUE))[seq_len(min(n_top, sum(vals > 0)))]
+    top_neg <- names(sort(vals, decreasing = FALSE))[seq_len(min(n_top, sum(vals < 0)))]
+    c(top_pos, top_neg)
+  })
+  selected_genes <- unique(unlist(selected_genes))
+  if (min_abs_loading > 0) {
+    max_abs <- apply(F_sub[selected_genes, , drop = FALSE], 1, function(x) max(abs(x), na.rm = TRUE))
+    selected_genes <- names(max_abs[max_abs >= min_abs_loading])
+  }
+  hc_genes <- hclust(dist(F_sub[selected_genes, , drop = FALSE]))
+  gene_order <- rownames(F_sub[selected_genes, , drop = FALSE])[hc_genes$order]
+  plot_df <- F_sub[selected_genes, , drop = FALSE] %>%
+    as.data.frame() %>%
+    tibble::rownames_to_column("Gene") %>%
+    tidyr::pivot_longer(cols = -Gene, names_to = "GP", values_to = "Loading") %>%
+    mutate(GP = factor(GP, levels = gp_vector), Gene = factor(Gene, levels = gene_order))
+  limit <- max(abs(plot_df$Loading), na.rm = TRUE)
+  x_aes <- if (transpose) "Gene" else "GP"
+  y_aes <- if (transpose) "GP" else "Gene"
+  ggplot(plot_df, aes(x = .data[[x_aes]], y = .data[[y_aes]], fill = Loading)) +
+    geom_tile() +
+    scale_fill_gradient2(low = low_color, mid = mid_color, high = high_color, midpoint = 0, limits = c(-limit, limit), name = "Loading") +
+    # Axis titles are the faceting variables themselves ("Gene" / "GP").
+    labs(title = title, x = x_aes, y = y_aes) +
+    theme_minimal(base_size = font_size) +
+    theme(axis.text.x = element_text(angle = if (transpose) 90 else 45, hjust = 1, size = font_size), axis.text.y = element_text(size = font_size), panel.grid = element_blank(), plot.title = element_text(face = "bold"))
+}
+
+p_heatmap <- plot_factor_heatmap(F_matrix = F_pm_filtered_scaled, gp_vector = cd69_top_gps_sorted, n_top = 5, font_size = 9, transpose = TRUE, low_color = "#4DAF4A", mid_color = "white", high_color = "#984EA3")
+
+corr_strip_df <- data.frame(GP = factor(cd69_top_gps_sorted, levels = cd69_top_gps_sorted), Correlation = cd69_corr[cd69_top_gps_sorted], x = "Corr")
+corr_limit <- max(abs(corr_strip_df$Correlation))
+p_corr_strip <- ggplot(corr_strip_df, aes(x = x, y = GP, fill = Correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "royalblue", mid = "white", high = "tomato", midpoint = 0, limits = c(-corr_limit, corr_limit), name = "Corr\n(CD69)") +
+  labs(x = NULL, y = NULL) +
+  theme_minimal(base_size = 9) +
+  theme(axis.text.x = element_text(size = 9, angle = 45, hjust = 1), axis.text.y = element_blank(), axis.ticks.y = element_blank(), panel.grid = element_blank())
+
+p_7d <- p_corr_strip + p_heatmap + patchwork::plot_layout(widths = c(0.06, 1), guides = "collect")
+ggsave(paste0(figure_path, "7d.pdf"), p_7d, width = 11, height = 5)
+
+# ============================================================
+# 7e-7j: protein-gate vs. GP-loading comparison for the 6 curated main-figure
+# GPs (df_markers2, thymocyte/proliferating/miniverse_cells, L_pm_for_gating,
+# select_proteins, threshold_results_subset_manual, enlarge_gps all come from
+# citeseq_shared_setup.R above)
+# ============================================================
+# Panel lettering is carried by this named vector and the loop iterates over its
+# names, so a GP can never be drawn under another GP's letter.
+# --- internal ---
+# An earlier version kept the GP list and the letters in two separate vectors
+# and assigned the letters positionally, which silently permuted three of the
+# panels -- do not reintroduce that shape.
+# --- end internal ---
+fig7_gating <- c("GP171" = "7e", "GP12" = "7f", "GP80" = "7g", "GP23" = "7h", "GP77" = "7i", "GP8" = "7j")
+for (gp in names(fig7_gating)) {
+  k_name <- paste0("K", sub("^GP", "", gp))
+  plot_gated_gp_vs_protein(
+    gp_name = k_name,
+    df_markers = df_markers2,
+    protein_mat = protein_mat_normalized_lognorm,
+    loading_mat = L_pm_for_gating,
+    mde_emb = mde_result,
+    missing_threshold_action = "skip",
+    threshold_df = threshold_results_subset_manual,
+    exclude_cells = c(thymocyte_cells, proliferating_cells, miniverse_cells),
+    selected_proteins = select_proteins,
+    loading_q = NULL,
+    min_pointsize = if (gp %in% enlarge_gps) 3L else 0L,
+    save_path = paste0(figure_path, fig7_gating[gp], ".pdf")
+  )
+}

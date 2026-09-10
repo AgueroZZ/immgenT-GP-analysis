@@ -5,7 +5,7 @@
 # This historical pipeline variant saves a shorter, unnumbered summary after
 # 100 non-extrapolated plus 40 extrapolated iterations. The exact six-stage
 # workflow that produces the backfit20/40/80/120/160/200 checkpoints consumed
-# by Figure6.R/FigureS7.R is preserved in
+# by Figure7.R/FigureS6.R is preserved in
 # code/other/fit_citeseq_fixed_loading_ebmf_20260206.R.
 #
 # Source: ported from analyze_protein_selected_lognorm_full.R,
