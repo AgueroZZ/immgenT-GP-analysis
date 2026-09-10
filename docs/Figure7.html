@@ -517,15 +517,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree4307b28577441a16a09628b04b38fbd8808c6c0etargetblank4307b28a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree284d321fb3727074b391bc827360edf617bcef41targetblank284d321a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/4307b28577441a16a09628b04b38fbd8808c6c0e" target="_blank">4307b28</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/284d321fb3727074b391bc827360edf617bcef41" target="_blank">284d321</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree4307b28577441a16a09628b04b38fbd8808c6c0etargetblank4307b28a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree284d321fb3727074b391bc827360edf617bcef41targetblank284d321a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -535,7 +535,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/4307b28577441a16a09628b04b38fbd8808c6c0e" target="_blank">4307b28</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/284d321fb3727074b391bc827360edf617bcef41" target="_blank">284d321</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -562,25 +562,11 @@ Ignored files:
     Ignored:    data
     Ignored:    experiments/
     Ignored:    figures/.DS_Store
-    Ignored:    figures/Previous/.DS_Store
-    Ignored:    figures/Previous/bits/.DS_Store
-    Ignored:    figures/Previous/bits/Figure 1/.DS_Store
-    Ignored:    figures/Previous/bits/Figure 2/.DS_Store
-    Ignored:    figures/Previous/bits/Figure 3/.DS_Store
-    Ignored:    figures/Previous/bits/Figure 4/.DS_Store
-    Ignored:    figures/Previous/bits/Figure 6/.DS_Store
-    Ignored:    figures/Previous/bits/Figure 7/.DS_Store
-    Ignored:    figures/Previous/bits/Figure S1/.DS_Store
-    Ignored:    figures/Previous/bits/Figure S2/.DS_Store
-    Ignored:    figures/Previous/bits/Figure S3/.DS_Store
-    Ignored:    figures/Previous/bits/Figure S6/.DS_Store
-    Ignored:    figures/Previous/bits/Figure S7/.DS_Store
     Ignored:    figures/final-selected/.DS_Store
     Ignored:    figures/final-selected/Figure 1/.DS_Store
     Ignored:    figures/final-selected/Figure 2/.DS_Store
     Ignored:    figures/final-selected/Figure 5/.DS_Store
     Ignored:    figures/final-selected/Figure S1/.DS_Store
-    Ignored:    figures/templates_20260729/
     Ignored:    internal/
     Ignored:    log/
     Ignored:    output/.DS_Store
@@ -632,6 +618,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/58744165cc8d55ee6c72d8ddc89e5fd846e0cf1d/docs/Figure7.html" target="_blank">5874416</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+<td>
+Build site: main Figure 4 inserted, Extended Data back to 1-7
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1008,6 +1011,43 @@ p_7c &lt;- plot_target_gps(
 ) + theme_bw()
 ggsave(paste0(figure_path, &quot;7c.pdf&quot;), p_7c, width = 7, height = 6)</code></pre>
 <p><img src="assets/Figure7/7b.png" width="49%" style="display: block; margin: auto;" /><img src="assets/Figure7/7c.png" width="49%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-7c">
+Past versions of 7c.png
+</button>
+</p>
+<div id="fig-7c" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/58744165cc8d55ee6c72d8ddc89e5fd846e0cf1d/docs/assets/Figure7/7c.png" target="_blank">5874416</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div class="figcaption">
 <p><strong>Fig. 7b, c.</strong> GPs associated with KLRG1 protein
 expression in CD4, Tregs, and CD8. Effect-size versus effect-size plots,
@@ -1088,6 +1128,43 @@ p_corr_strip &lt;- ggplot(corr_strip_df, aes(x = x, y = GP, fill = Correlation))
 p_7d &lt;- p_corr_strip + p_heatmap + patchwork::plot_layout(widths = c(0.06, 1), guides = &quot;collect&quot;)
 ggsave(paste0(figure_path, &quot;7d.pdf&quot;), p_7d, width = 11, height = 5)</code></pre>
 <p><img src="assets/Figure7/7d.png" width="100%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-7d">
+Past versions of 7d.png
+</button>
+</p>
+<div id="fig-7d" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/58744165cc8d55ee6c72d8ddc89e5fd846e0cf1d/docs/assets/Figure7/7d.png" target="_blank">5874416</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div class="figcaption">
 <p><strong>Fig. 7d.</strong> Heatmap of the top five most strongly up-
 and down-regulated gene scores for ten GPs correlated with CD69
@@ -1123,7 +1200,234 @@ for (gp in names(fig7_gating)) {
     save_path = paste0(figure_path, fig7_gating[gp], &quot;.pdf&quot;)
   )
 }</code></pre>
-<p><img src="assets/Figure7/7e.png" width="49%" style="display: block; margin: auto;" /><img src="assets/Figure7/7f.png" width="49%" style="display: block; margin: auto;" /><img src="assets/Figure7/7g.png" width="49%" style="display: block; margin: auto;" /><img src="assets/Figure7/7h.png" width="49%" style="display: block; margin: auto;" /><img src="assets/Figure7/7i.png" width="49%" style="display: block; margin: auto;" /><img src="assets/Figure7/7j.png" width="49%" style="display: block; margin: auto;" /></p>
+<p><img src="assets/Figure7/7e.png" width="49%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-7e">
+Past versions of 7e.png
+</button>
+</p>
+<div id="fig-7e" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/58744165cc8d55ee6c72d8ddc89e5fd846e0cf1d/docs/assets/Figure7/7e.png" target="_blank">5874416</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="assets/Figure7/7f.png" width="49%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-7f">
+Past versions of 7f.png
+</button>
+</p>
+<div id="fig-7f" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/58744165cc8d55ee6c72d8ddc89e5fd846e0cf1d/docs/assets/Figure7/7f.png" target="_blank">5874416</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="assets/Figure7/7g.png" width="49%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-7g">
+Past versions of 7g.png
+</button>
+</p>
+<div id="fig-7g" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/58744165cc8d55ee6c72d8ddc89e5fd846e0cf1d/docs/assets/Figure7/7g.png" target="_blank">5874416</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="assets/Figure7/7h.png" width="49%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-7h">
+Past versions of 7h.png
+</button>
+</p>
+<div id="fig-7h" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/58744165cc8d55ee6c72d8ddc89e5fd846e0cf1d/docs/assets/Figure7/7h.png" target="_blank">5874416</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="assets/Figure7/7i.png" width="49%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-7i">
+Past versions of 7i.png
+</button>
+</p>
+<div id="fig-7i" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/58744165cc8d55ee6c72d8ddc89e5fd846e0cf1d/docs/assets/Figure7/7i.png" target="_blank">5874416</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="assets/Figure7/7j.png" width="49%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-7j">
+Past versions of 7j.png
+</button>
+</p>
+<div id="fig-7j" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/58744165cc8d55ee6c72d8ddc89e5fd846e0cf1d/docs/assets/Figure7/7j.png" target="_blank">5874416</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div class="figcaption">
 <p><strong>Fig. 7e-j.</strong> Examples of gating strategies used to
 identify GP-active cells. All-T MDE plots highlight cells selected by
