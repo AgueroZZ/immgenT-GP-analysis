@@ -562,11 +562,11 @@ ggsave(
 # The point of these panels is to be that figure's GPs and cells in another
 # form, so they are checked against what it recorded rather than against a
 # second copy of the rule.
-s5_gps <- read.csv("output/FigureS4/s4_panel_gps.csv", stringsAsFactors = FALSE)
-s5_clusters <- read.csv("output/FigureS4/s4_panel_clusters.csv", stringsAsFactors = FALSE)
+s4_gps <- read.csv("output/FigureS4/s4_panel_gps.csv", stringsAsFactors = FALSE)
+s4_clusters <- read.csv("output/FigureS4/s4_panel_clusters.csv", stringsAsFactors = FALSE)
 
 for (lineage in names(structure_plot_panels)) {
-  recorded <- s5_gps[s5_gps$lineage == lineage, ]
+  recorded <- s4_gps[s4_gps$lineage == lineage, ]
   drawn_colors <- structure_plot_row_colors(panel_gps[[lineage]])
   if (!identical(recorded$gp, unname(names(drawn_colors))) ||
         !identical(recorded$color, unname(drawn_colors))) {
@@ -574,8 +574,8 @@ for (lineage in names(structure_plot_panels)) {
   }
   # b keeps every cluster that figure drew; c and d drop the lineage's .wM
   # cluster and nothing else.
-  recorded_clusters <- sort(s5_clusters$cluster[
-    s5_clusters$lineage == lineage & s5_clusters$n_cells_drawn > 0
+  recorded_clusters <- sort(s4_clusters$cluster[
+    s4_clusters$lineage == lineage & s4_clusters$n_cells_drawn > 0
   ])
   drawn_clusters <- sort(unique(as.character(level2_all[lineage_cells_drawn[[lineage]]])))
   if (!identical(recorded_clusters, drawn_clusters)) {
@@ -625,9 +625,9 @@ if (share_diff > 1e-12) {
 # same cells: same 100-cell filter, same 2000-cell cap, same seed, hence the
 # same per-cluster counts.
 d_drawn <- table(droplevels(factor(level2_all[cells_d])))
-d_recorded <- s5_clusters[
-  s5_clusters$lineage == d_lineage & s5_clusters$n_cells_drawn > 0 &
-    !grepl(bar_cluster_pattern_dropped, s5_clusters$cluster),
+d_recorded <- s4_clusters[
+  s4_clusters$lineage == d_lineage & s4_clusters$n_cells_drawn > 0 &
+    !grepl(bar_cluster_pattern_dropped, s4_clusters$cluster),
 ]
 d_recorded <- d_recorded[order(d_recorded$cluster), ]
 if (!identical(names(d_drawn), d_recorded$cluster) ||
