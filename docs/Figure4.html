@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree8eacf9c6110a31bf39bcab0514d46b888b2fdff2targetblank8eacf9ca">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec21f51f13f9efc7cb5230f6d28b3f29d58a2b95ctargetblankc21f51fa">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/8eacf9c6110a31bf39bcab0514d46b888b2fdff2" target="_blank">8eacf9c</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c21f51f13f9efc7cb5230f6d28b3f29d58a2b95c" target="_blank">c21f51f</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree8eacf9c6110a31bf39bcab0514d46b888b2fdff2targetblank8eacf9ca"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreec21f51f13f9efc7cb5230f6d28b3f29d58a2b95ctargetblankc21f51fa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/8eacf9c6110a31bf39bcab0514d46b888b2fdff2" target="_blank">8eacf9c</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/c21f51f13f9efc7cb5230f6d28b3f29d58a2b95c" target="_blank">c21f51f</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -617,6 +617,41 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/c21f51f13f9efc7cb5230f6d28b3f29d58a2b95c/analysis/Figure4.Rmd" target="_blank">c21f51f</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+<td>
+Remove the per-lineage structure-plot figure; keep its record for Figure
+4
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/60125af49b77a90c93e42e60f7310cac38f92d31/docs/Figure4.html" target="_blank">60125af</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+<td>
+Build site: Figure 4b on the shared column colours
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1379,13 +1414,12 @@ Initial commit: immgenT-GP-analysis
 </div>
 <p>All panels are produced by <a
 href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure4.R"><code>script/Figure4.R</code></a>,
-which shares its GP selection and cells with <a
-href="FigureS4.html">Extended Data Figure 4</a> via
-<code>code/R/structure_plot_panels.R</code>, and its heatmap rendering
-with <a href="FigureS2.html#figs2d">Extended Data Figure 2d</a> via
-<code>code/R/centered_mean_heatmap.R</code>. The code below is shown for
-reference (not re-executed on this page); the images are its
-pre-rendered output.</p>
+which shares its GP selection and cells with the per-lineage
+structure-plot record via <code>code/R/structure_plot_panels.R</code>,
+and its heatmap rendering with <a href="FigureS2.html#figs2d">Extended
+Data Figure 2d</a> via <code>code/R/centered_mean_heatmap.R</code>. The
+code below is shown for reference (not re-executed on this page); the
+images are its pre-rendered output.</p>
 <div id="setup" class="section level2">
 <h2>Setup</h2>
 <p>Data loading, shared across all panels below.</p>
@@ -1405,7 +1439,7 @@ pre-rendered output.</p>
 if (!file.exists(&quot;code/R/structure_plot_panels.R&quot;)) {
   stop(&quot;Run this script from the immgenT-GP-analysis repository root.&quot;)
 }
-source(&quot;code/R/structure_plot_panels.R&quot;)   # Extended Data Figure 4&#39;s rows, GP rule, palette
+source(&quot;code/R/structure_plot_panels.R&quot;)   # the per-lineage structure plots&#39; rows, GP rule, palette
 source(&quot;code/R/centered_mean_heatmap.R&quot;)   # Extended Data Figure 2d&#39;s heatmap rendering
 source(&quot;code/R/level2_group_palette.R&quot;)    # EXCLUDE_LEVEL2_GROUPS, as Figure 1d and ED 2d use
 
@@ -1962,7 +1996,7 @@ excluded.</p>
 <pre class="r"><code># ============================================================
 # 4c: one stacked bar of mean loadings per level-2 cluster, the Treg row
 # ============================================================
-# The Treg row of Extended Data Figure 4 with one bar per cluster, holding that
+# The Treg structure-plot row with one bar per cluster, holding that
 # cluster&#39;s mean loading per GP instead of one bar per cell -- the average of
 # that row&#39;s bars. Same GPs (the 11 with AUC &gt; 0.9 in some Treg cluster), same
 # per-row palette, same cells, minus Treg.wM.
@@ -1973,7 +2007,7 @@ excluded.</p>
 # more total activity over the row&#39;s GPs, not just a different mix.
 #
 #
-# Unlike 4d and Extended Data Figure 4 this panel is not drawn at the structure
+# Unlike 4d and the structure plots this panel is not drawn at the structure
 # plot&#39;s 16 x 3 in: a chart of seven bars does not need a structure plot&#39;s
 # width, and Ziang asked for tall and narrow.
 bar_figure_width &lt;- 5.5  # inches
@@ -1990,7 +2024,7 @@ bar_means &lt;- function(lineage) {
   }
 
   # This row&#39;s colours, assigned from the top of the palette without reference
-  # to any other row -- the same per-row rule Extended Data Figure 4 uses, so
+  # to any other row -- the same per-row rule the structure plots use, so
   # colour means different GPs in different rows.
   colors_lineage &lt;- structure_plot_row_colors(gps_lineage)
   if (!identical(names(colors_lineage), colnames(bar_matrix))) {
@@ -2226,9 +2260,9 @@ not shown.</p>
 <div id="fig4d" class="section level2">
 <h2>(d) The same GPs and cells, cell by cell</h2>
 <pre class="r"><code># ============================================================
-# 4d: Extended Data Figure 4&#39;s Treg row on its own
+# 4d: the Treg structure-plot row on its own
 # ============================================================
-# FigureS4.R&#39;s loop body for one lineage, unchanged including its seeds and its
+# structure_plot_record.R&#39;s loop body for one lineage, unchanged including its seeds and its
 # 2000-cell cap, so this is that row and not a redrawing of it.
 d_lineage &lt;- &quot;Treg&quot;
 gps_d &lt;- panel_gps[[d_lineage]]
