@@ -21,6 +21,17 @@ set -uo pipefail
 
 NEW_ROOT="figures/final-selected"
 OLD_ROOT="figures/Previous/bits"
+
+# The published panel set was deleted on 2026-09-10 (Ziang's call: outdated).
+# Without it this script has nothing to compare against -- and an empty loop
+# would print "0 panels compared" and exit 0, a check that cannot fail. Stop
+# instead, so a green run always means panels were actually compared.
+if [ ! -d "$OLD_ROOT" ]; then
+  echo "$OLD_ROOT does not exist: the published panel set was removed on 2026-09-10." >&2
+  echo "Nothing to verify against. Restore it (git checkout -- figures/Previous)" >&2
+  echo "to run this comparison, or retire this script." >&2
+  exit 2
+fi
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT
 DENSITY=${DENSITY:-110}

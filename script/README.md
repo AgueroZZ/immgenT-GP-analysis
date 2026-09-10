@@ -169,6 +169,18 @@ still uses `level2_column_order()` and the two-track annotation.
 
 ## Which published panel is the ground truth
 
+**The published panel set was deleted on 2026-09-10** (Ziang's call: outdated).
+`figures/Previous/bits/` is gone, so `verify_panels.sh` has nothing to compare
+against and now stops with exit 2 instead of reporting "0 panels compared" --
+a check that cannot fail is worse than no check. It is recoverable from git
+history (`git checkout -- figures/Previous`) if a comparison is ever needed
+again.
+
+The mapping below is kept because it explains why our panel letters differ from
+the published figure, which the captions and the scripts' headers still refer
+to. Read it as history, not as something you can now diff against.
+
+
 `figures/Previous/bits/` is the published panel set and still uses the OLD
 numbering. Figure 1 was split into Figures 1+2, everything from the old Figure 2
 onward shifted up by one, and a new cluster-level Figure 4 was inserted on
