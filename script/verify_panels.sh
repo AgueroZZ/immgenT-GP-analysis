@@ -93,9 +93,7 @@ Figure 5/5a	Figure 3/3c
 Figure 5/5b	Figure 3/3d
 Figure 5/5c	Figure 3/3f
 Figure 5/5d	Figure 3/3g
-Figure 6/6a	Figure 4/4a
-Figure 6/6b	Figure 4/4b
-Figure 6/6c	Figure 4/4c
+Figure 6/6c	Figure 4/4b
 Figure 6/6d	Figure 4/4d
 Figure 6/6e	Figure 4/4e
 Figure 7/7a	Figure 6/6a
@@ -122,7 +120,10 @@ Figure S3/s3f	Figure S3/s3g
 EOF
 )
 # Published panels with no counterpart HERE any more: Figure 3/3e, the TF-GP
-# network dropped from Figure 4 on 2026-07-29, and the published Figure S1/S1C
+# network dropped from the activation figure on 2026-07-29; Figure 4/4a (the
+# organ-vs-lineage AUC scatter) and Figure 4/4c (the organ marker-gene
+# heatmap), both dropped from Figure 6 on 2026-09-10 when it was rebuilt from
+# the experiments/fig_n5/ draft; and the published Figure S1/S1C
 # (mean vs. variance of per-IGT mean loading) and S1D (top-variance heatmap),
 # both replaced on 2026-07-30 by a different analysis -- see the header of
 # script/FigureS1.R.
@@ -131,7 +132,8 @@ EOF
 # reproductions; S1E is new; S1F is the former S1E, which never had one),
 # Figure S2/S2D (the cluster heatmap, all that survives of the retired
 # all-200-GP tissue/cluster figure), Figure S4/* (a new figure),
-# Figure 4/4a-4d (a new figure), Figure 7/7i (GP77) and 7j (GP8),
+# Figure 4/4a-4d (a new figure), Figure 6/6a and 6b (the tissue and lineage
+# mean-loading heatmaps, new on 2026-09-10), Figure 7/7i (GP77) and 7j (GP8),
 # Figure S6/s6c-s6f (their GPs were only ever drawn inside the retired
 # s6-1/s6-2 gallery pages, not as standalone panels), and Figure 8/8B (ours
 # since 2026-07-28 -- it is the former

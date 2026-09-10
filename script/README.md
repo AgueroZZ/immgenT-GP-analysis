@@ -23,7 +23,7 @@ Run any script from the repo root, e.g. `Rscript script/Figure5.R`.
 | 3 | `Figure3.R` | `Figure_Lineage.R` |
 | 4 | `Figure4.R` | new (no published counterpart; inserted 2026-09-10) |
 | 5 | `Figure5.R` | `Figure_Activation.R` |
-| 6 | `Figure6.R` | `Figure_Organ.R` |
+| 6 | `Figure6.R` | `Figure_Organ.R` (6c-6e; 6a/6b are new) |
 | 7 | `Figure7.R` | `Figure_CITEseq.R` + `gated_protein_loading_plot.R` |
 | 8, panel b only | `Figure8b.R` + `Figure8b_rematch.py` + `Figure8b_plot.py` | new (was Extended Data Figure 5 until 2026-07-28) |
 | S1 | `FigureS1.R` | `Figure_Saturation.R` + `Figure_batch.R` |
@@ -201,7 +201,8 @@ everywhere -- and for S4/S5/S6 a same-*number* comparison is wrong too:
 | 4a-4d | *(new figure, inserted 2026-09-10 -- GPs across level-2 clusters; no published counterpart)* |
 | 5a, 5b | Figure 3/**3c, 3d** (the old 3a/3b moved to Figure S3's a/b slot) |
 | 5c, 5d | Figure 3/**3f, 3g** (the published 3e, a TF-GP network, was dropped from the figure on 2026-07-29 and has no counterpart here) |
-| 6a-6e | **4a-4e** |
+| 6a, 6b | *(new panels -- the tissue and lineage mean-loading heatmaps, added 2026-09-10)* |
+| 6c, 6d, 6e | Figure 4/**4b, 4d, 4e** (the published 4a, an organ-vs-lineage AUC scatter, and 4c, an organ marker-gene heatmap, were dropped from the figure on 2026-09-10) |
 | 7a | Figure 6/**6a** |
 | 7b, 7c | Figure 6/**6g, 6h** (KLRG1) |
 | 7d | Figure 6/**6i** (CD69 gene heatmap) |
@@ -215,6 +216,14 @@ everywhere -- and for S4/S5/S6 a same-*number* comparison is wrong too:
 | 8B | *(ours since 2026-07-28 -- the Extended Data Figure 5 of the time, assembled; it replaced a different published 7B, which is therefore NOT its counterpart)* |
 | S1A-S1D, S2A-S2C | same letters |
 | S1E, S2/S2D, S4* | *(new panels)* |
+
+**Figure 6 was rebuilt on 2026-09-10** from the `experiments/fig_n5/` draft: the two
+mean-loading heatmaps became 6a and 6b, the surviving published panels moved to
+6c-6e, and 4a/4c were dropped. 6c, 6d and 6e are pixel-identical (RMSE 0) to the
+panels they were relettered from, and 6a/6b are pixel-identical to the draft's
+n5a/n5b. The 32 GPs they show are the union of the two tissue-associated
+criteria; `Figure6.R` asserts the counts (31, 7, 32), the exact GP set, and that
+the AUC-derived seven equal the `gps_of_interest` the figure highlights in 6d/6e.
 
 Two published directories have no counterpart here despite matching one of our
 names: `Previous/bits/Figure S6/` is the retired two-page gallery (`s6-1`,

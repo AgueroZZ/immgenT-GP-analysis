@@ -17,43 +17,61 @@ images are its pre-rendered output.
 
 ## Setup
 
-Data loading, shared across all panels below.
+Data loading and the tissue-associated GP set, shared across the panels below.
 
-```{r fig6-setup, code=code_for("../script/Figure6.R", c("^", "Load data")), eval=FALSE}
+```{r fig6-setup, code=code_for("../script/Figure6.R", c("^", "Load data", "Shared AUC setup")), eval=FALSE}
 ```
 
-## (a) Max AUC: organ vs. lineage {#fig6a}
+### The 32 tissue-associated GPs
 
-```{r fig6a-code, code=code_for("../script/Figure6.R", "6a"), eval=FALSE}
+Panels (a) and (b) show the union of the two criteria by which a GP is called
+tissue-associated: its raw mean loading reaches 0.1 in at least one of the 18
+tissues (31 GPs), or its one-vs-rest tissue AUC exceeds 0.9 under the
+positivity mask (7 GPs, the organ-specific set highlighted in (d) and (e)).
+Six GPs satisfy both, so 32 are shown.
+
+```{r fig6-selection, code=code_for("../script/Figure6.R", "6a/6b selection"), eval=FALSE}
 ```
 
-```{r fig6a-img, echo=FALSE, out.width="60%"}
+## (a) Tissue mean loading {#fig6a}
+
+```{r fig6a-code, code=code_for("../script/Figure6.R", "6a:"), eval=FALSE}
+```
+
+```{r fig6a-img, echo=FALSE, out.width="100%"}
 knitr::include_graphics("assets/Figure6/6a.png")
 ```
 
 ::: {.figcaption}
-**Fig. 6a.** Scatterplot showing each GP's prediction (AUC) of organ of origin
-(x-axis) versus lineage (y-axis). GPs reaching AUC > 0.9 on either axis are
-colored and labeled (organ-specific in red; lineage-specific in blue).
+**Fig. 6a.** Row-centered mean GP activity across 18 tissues, for the 32
+tissue-associated GPs. For each GP, its mean loading across tissues is
+subtracted from every tissue mean, so the color says where a program is more
+or less active than its own average. Mean GP activity computed in samples at
+baseline. GP37 is shown on the last row: it is strongly mammary-gland-specific
+but active in few cells, so its mean loading is small at every tissue (see
+(c)).
 :::
 
-## (b) GP37+ rate in mammary gland vs. elsewhere {#fig6b}
+## (b) Lineage mean loading {#fig6b}
 
-```{r fig6b-code, code=code_for("../script/Figure6.R", "6b"), eval=FALSE}
+```{r fig6b-code, code=code_for("../script/Figure6.R", "6b:"), eval=FALSE}
 ```
 
-```{r fig6b-img, echo=FALSE, out.width="60%"}
+```{r fig6b-img, echo=FALSE, out.width="70%"}
 knitr::include_graphics("assets/Figure6/6b.png")
 ```
 
 ::: {.figcaption}
-**Fig. 6b.** Proportion of GP37-active cells in each lineage in the mammary
-gland compared with all other organs (faded color bar).
+**Fig. 6b.** The same 32 GPs across the 8 T cell lineages, in the row order of
+(a). Mean GP activity computed in samples at baseline. Note the different
+color scale: green-purple rather than blue-red, and -0.1 to 0.1 rather than
+-0.2 to 0.2, since spreading a program over 8 lineages instead of 18 tissues
+gives correspondingly smaller deviations.
 :::
 
-## (c) Marker genes of the 7 organ-specific GPs {#fig6c}
+## (c) GP37+ rate in mammary gland vs. elsewhere {#fig6c}
 
-```{r fig6c-code, code=code_for("../script/Figure6.R", "6c"), eval=FALSE}
+```{r fig6c-code, code=code_for("../script/Figure6.R", "6c:"), eval=FALSE}
 ```
 
 ```{r fig6c-img, echo=FALSE, out.width="60%"}
@@ -61,9 +79,8 @@ knitr::include_graphics("assets/Figure6/6c.png")
 ```
 
 ::: {.figcaption}
-**Fig. 6c.** Genes associated with the seven organ-specific GPs shown in (a).
-Heatmap of the per-GP scaled gene scores for the top upregulated genes of each
-GP (top 20 per GP, gene score > 0.25; blue, negative; red, positive).
+**Fig. 6c.** Proportion of GP37-active cells in each lineage in the mammary
+gland compared with all other organs (faded color bar).
 :::
 
 ## (d) Max AUC: organ vs. cluster {#fig6d}
@@ -76,15 +93,15 @@ knitr::include_graphics("assets/Figure6/6d.png")
 ```
 
 ::: {.figcaption}
-**Fig. 6d.** As in (a), but predictive performance is measured against level 2
-clusters (y-axis). The seven organ-specific GPs from (a) are highlighted in
-red, and a contrasting set of cluster-specific GPs (high cluster AUC, low
-organ AUC) in blue.
+**Fig. 6d.** Scatterplot showing each GP's prediction (AUC) of organ of origin
+(x-axis) versus level 2 cluster (y-axis). The seven organ-specific GPs are
+highlighted in red, and a contrasting set of cluster-specific GPs (high
+cluster AUC, low organ AUC) in blue.
 :::
 
 ## (e) Organ, GP, and cluster alluvial diagram {#fig6e}
 
-```{r fig6e-code, code=code_for("../script/Figure6.R", "6e"), eval=FALSE}
+```{r fig6e-code, code=code_for("../script/Figure6.R", "6e:"), eval=FALSE}
 ```
 
 ```{r fig6e-img, echo=FALSE, out.width="80%"}
