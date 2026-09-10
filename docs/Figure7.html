@@ -12,7 +12,7 @@
 <meta name="author" content="Ziang Zhang" />
 
 
-<title>Figure 7b: A nonlinear deep-learning framework independently recovers the immgenT gene-program landscape</title>
+<title>Figure 7: Surface-marker associations are context-dependent, but combinatorial gating resolves specific gene programs</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -353,8 +353,9 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Figure 7b: A nonlinear deep-learning
-framework independently recovers the immgenT gene-program landscape</h1>
+<h1 class="title toc-ignore">Figure 7: Surface-marker associations are
+context-dependent, but combinatorial gating resolves specific gene
+programs</h1>
 <h4 class="author">Ziang Zhang</h4>
 
 </div>
@@ -384,7 +385,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-09-09
+<strong>Last updated:</strong> 2026-09-10
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +517,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0e84840937f3e5cd6e9797a08404989152da6628targetblank0e84840a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree4307b28577441a16a09628b04b38fbd8808c6c0etargetblank4307b28a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0e84840937f3e5cd6e9797a08404989152da6628" target="_blank">0e84840</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/4307b28577441a16a09628b04b38fbd8808c6c0e" target="_blank">4307b28</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0e84840937f3e5cd6e9797a08404989152da6628targetblank0e84840a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree4307b28577441a16a09628b04b38fbd8808c6c0etargetblank4307b28a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +535,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0e84840937f3e5cd6e9797a08404989152da6628" target="_blank">0e84840</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/4307b28577441a16a09628b04b38fbd8808c6c0e" target="_blank">4307b28</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -577,14 +578,13 @@ Ignored files:
     Ignored:    figures/final-selected/.DS_Store
     Ignored:    figures/final-selected/Figure 1/.DS_Store
     Ignored:    figures/final-selected/Figure 2/.DS_Store
-    Ignored:    figures/final-selected/Figure 4/.DS_Store
+    Ignored:    figures/final-selected/Figure 5/.DS_Store
     Ignored:    figures/final-selected/Figure S1/.DS_Store
     Ignored:    figures/templates_20260729/
     Ignored:    internal/
     Ignored:    log/
     Ignored:    output/.DS_Store
     Ignored:    output/Figure2/
-    Ignored:    output/Figure7b/7b_cell_metadata.csv.gz
     Ignored:    plan/
     Ignored:    tables/
     Ignored:    tmp/
@@ -632,6 +632,41 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/4307b28577441a16a09628b04b38fbd8808c6c0e/analysis/Figure7.Rmd" target="_blank">4307b28</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+<td>
+New main Figure 4, and fold the cluster heatmap into Extended Data
+Figure 2
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/a7a481feaa81a930533e380487fd08ccea0b0d0e/docs/Figure7.html" target="_blank">a7a481f</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-09
+</td>
+<td>
+Build site: the rebuilt Figure 1d and the Extended Data renumbering
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -861,232 +896,240 @@ Reorder Figures 6, S6 and S3; make the ex-S5 figure Figure 7b
 </div>
 </div>
 </div>
-<p>This page documents <strong>Figure 7b</strong>. The other panels of
-Figure 7 (A nonlinear deep-learning framework independently recovers the
-immgenT gene-program landscape) are produced by the RQVI framework and
-are documented in the companion repository for RQVI.</p>
-<p>Figure 7b asks whether the fine-grained cluster-level patterns
-captured by the 200 EBMF GPs are recovered by an independent
-factorization. It compares each EBMF GP with a matched RQVI GP – RQVI
-being an alternative matrix factorization of the same cells, run across
-10 random-seed initializations (256 GPs per seed). The two heatmaps
-share the same row and column order and use a white-to-blue scale of
-per-GP relative loading on <code>[0, 1]</code>, with broad lineage
-annotations above the columns.</p>
-<p>Cells are the <code>L_pm_filtered</code> GP loadings (cells passing
-the iterative total-loading filter), restricted to non-thymocytes
-(<code>annotation_level1 != "thymocyte"</code>, all conditions) and to
-cells that also carry an RQVI loading. EBMF and RQVI loadings are
-averaged within <code>annotation_level2</code> on these common cells,
-and each RQVI GP is shown on the row of its matched EBMF GP. In the code
-and in the intermediate files the EBMF GPs are named F1-F200; those are
-GP1-GP200.</p>
-<div id="fig7b" class="section level2">
-<h2>Figure 7b</h2>
-<p><img src="assets/Figure7/7B.png" width="100%" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-7B">
-Past versions of 7B.png
-</button>
-</p>
-<div id="fig-7B" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/d538aa21ca31faac7d6daceb42bcef57800ff26c/docs/assets/Figure7/7B.png" target="_blank">d538aa2</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-28
-</td>
-</tr>
-</tbody>
-</table>
+<p>All panels except (a) are produced by <a
+href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure7.R"><code>script/Figure7.R</code></a>,
+which shares its CITE-seq setup with <a href="FigureS5.html">Extended
+Data Figure 5</a> and <a href="FigureS6.html">Extended Data Figure 6</a>
+via <code>code/R/citeseq_shared_setup.R</code>. The code below is shown
+for reference (not re-executed on this page, since this script takes
+about a minute to run); the images are its pre-rendered output.</p>
+<div id="setup" class="section level2">
+<h2>Setup</h2>
+<pre class="r"><code>library(ggplot2)
+library(ggrepel)
+library(dplyr)
+library(patchwork)
+library(tidyr)
+library(Matrix) # protein matrices are dgCMatrix; must be attached for `[` to dispatch
+
+data_path &lt;- &quot;data/&quot;
+figure_path &lt;- &quot;figures/final-selected/Figure 7/&quot;
+source(&quot;code/R/gated_protein_helpers.R&quot;)
+
+# 7a: hand-drawn schematic -- not code-generated, no output here.</code></pre>
+<p>Panels (b) onward additionally load the shared CITE-seq cell/protein
+setup:</p>
+<pre class="r"><code># ============================================================
+# Load data (shared with FigureS5.R and FigureS6.R)
+# ============================================================
+source(&quot;code/R/citeseq_shared_setup.R&quot;)</code></pre>
 </div>
-</div>
+<div id="fig7a" class="section level2">
+<h2>(a) Protein-signature schematic</h2>
+<p>This panel is a hand-drawn schematic, not generated from code.</p>
+<p>How the protein factor matrix is estimated is documented in <a
+href="Methods_FlashierFit_Citeseq.html">Methods: fitting CITE-seq
+protein programs with fixed scRNA loadings</a>.</p>
 <div class="figcaption">
-<p><strong>Fig. 7b.</strong> Cluster-level activity profiles of
-corresponding EBMF and RQVI GPs. EBMF cell loadings (left) and matched
-RQVI program loadings (right) were averaged within the 107 level-2
-clusters.</p>
+<p><strong>Fig. 7a.</strong> Schematic illustrating how protein
+signatures were defined for each GP. Holding the cell-loading matrix L
+fixed from the GP model, a protein factor matrix was estimated by EBMF
+from the paired CITE-seq protein measurements, Y ≈ LUᵀ (cells × proteins
+matrix), yielding a protein signature U (proteins × GPs matrix) for each
+GP.</p>
 </div>
 </div>
-<div id="how-the-figure-is-made" class="section level2">
-<h2>How the figure is made</h2>
-<p>Three steps, run from the repository root:</p>
-<pre class="bash"><code>Rscript script/Figure7b.R          # cluster-mean matrices + column/palette metadata
-python  script/Figure7b_rematch.py # one-to-one EBMF-RQVI program matching
-python  script/Figure7b_plot.py    # heatmaps</code></pre>
-<p>The Python steps require <code>matplotlib</code>,
-<code>pandas</code>, <code>scipy</code>, <code>h5py</code>, and
-<code>numpy</code>. The RQVI cell-level loadings are read as input from
-<code>data/</code>, which is a git-ignored symlink and is not tracked
-here.</p>
-<div id="cluster-means" class="section level3">
-<h3>Cluster means</h3>
-<p><code>script/Figure7b.R</code> builds the raw
-<code>annotation_level2</code> cluster-mean matrix for the EBMF GPs on
-the common non-thymocyte cells, together with the column order (Figure-1
-level1 lineage order, alphabetical within each lineage) and the lineage
-color palette. The matched RQVI cluster means are produced by the
-matching step below.</p>
-<pre class="r"><code># Figure 7b (data step): EBMF cluster-mean matrix and column/palette metadata for
-# the EBMF vs RQVI gene-program comparison across annotation_level2 clusters.
-#
-#   * Cells: L_pm_filtered gene-program loadings (cells passing the iterative
-#     total-loading filter), restricted to non-thymocytes (annotation_level1 !=
-#     &quot;thymocyte&quot;, all conditions) and to cells that also carry an RQVI loading
-#     (&quot;common cells&quot;). The RQVI cell set is taken from the cell_id index of the
-#     RQVI loading table.
-#   * EBMF matrix: flashier loadings L_pm_filtered (GP1..GP200), averaged within
-#     annotation_level2 on the common cells.
-#   * Columns (level2 clusters) are ordered by the Figure-1 level1 lineage order,
-#     alphabetically within each lineage.
-#
-# This script writes the EBMF cluster-mean matrix, a cell-&gt;annotation table, and
-# the column order + lineage palette. The RQVI cluster means and the one-to-one
-# EBMF-RQVI matching are computed by script/Figure7b_rematch.py; row ordering,
-# per-program [0,1] scaling, and the heatmaps by script/Figure7b_plot.py.
-
-suppressPackageStartupMessages({
-  library(arrow)
-  library(data.table)
-  library(ZemmourLib)
-})
-
-if (!file.exists(&quot;code/R/setup_data.R&quot;)) {
-  stop(&quot;Run this script from the immgenT-GP-analysis repository root.&quot;)
+<div id="fig7bc" class="section level2">
+<h2>(b, c) KLRG1 modulation across lineages</h2>
+<pre class="r"><code># ============================================================
+# 7b/7c: KLRG1 modulation (CD8 vs CD4, CD8 vs Treg)
+# ============================================================
+FlashierDGE_corrected &lt;- function(F1, L1, group1, group2, title_plot = &quot;&quot;) {
+  loadings_group1 &lt;- colMeans(L1[group1, ])
+  loadings_group2 &lt;- colMeans(L1[group2, ])
+  mean_change_loadings &lt;- loadings_group1 - loadings_group2
+  vplot &lt;- data.frame(SYMBOL = names(mean_change_loadings), mean_change_loadings = mean_change_loadings, AveExpr = colMeans(L1[c(group1, group2), ]))
+  list(diff_factors = vplot)
 }
-source(&quot;code/R/setup_data.R&quot;)
+get_klrg1_split &lt;- function(cell_type_label, meta, protein_data, threshold) {
+  cells &lt;- meta$cellID[meta$annotation_level1 == cell_type_label]
+  cells &lt;- intersect(cells, rownames(protein_data))
+  list(pos = cells[protein_data[cells, &quot;KLRG1&quot;] &gt;= threshold], neg = cells[protein_data[cells, &quot;KLRG1&quot;] &lt; threshold])
+}
+run_checked_dge &lt;- function(group_list, F_mat, L_mat, label) {
+  if (length(group_list$pos) &lt; 3 || length(group_list$neg) &lt; 3) stop(paste(&quot;Insufficient data:&quot;, label))
+  df &lt;- FlashierDGE_corrected(F1 = F_mat, L1 = L_mat, group1 = group_list$pos, group2 = group_list$neg)$diff_factors
+  if (!&quot;SYMBOL&quot; %in% colnames(df)) df$SYMBOL &lt;- rownames(df)
+  df
+}
+plot_target_gps &lt;- function(df, x_var, y_var, label_var, target_gps, highlight_color = &quot;darkorange&quot;, background_color = &quot;black&quot;,
+                             x_limits = c(-0.5, 0.5), y_limits = c(-0.5, 0.5), background_alpha = 0.5,
+                             xlab = &quot;Difference in Mean Loading&quot;, ylab = &quot;Difference in Mean Loading&quot;, title = &quot;Comparison of Specific GP Loadings&quot;) {
+  highlight_df &lt;- df %&gt;% filter({{ label_var }} %in% target_gps) %&gt;% mutate(.label_display = as.character({{ label_var }}))
+  ggplot(df, aes(x = {{ x_var }}, y = {{ y_var }})) +
+    geom_point(color = background_color, alpha = background_alpha) +
+    geom_abline(slope = 1, intercept = 0, linetype = &quot;dashed&quot;, color = &quot;red&quot;) +
+    geom_hline(yintercept = 0, linetype = &quot;dashed&quot;, color = &quot;blue&quot;) +
+    geom_vline(xintercept = 0, linetype = &quot;dashed&quot;, color = &quot;blue&quot;) +
+    geom_point(data = highlight_df, aes(color = {{ label_var }}), size = 2) +
+    ggrepel::geom_text_repel(seed = 42, data = highlight_df, aes(label = .label_display, color = {{ label_var }}), max.overlaps = Inf, size = 3.5, box.padding = 0.35, point.padding = 0.5, segment.color = &quot;grey50&quot;, show.legend = FALSE) +
+    scale_color_manual(values = highlight_color, guide = &quot;none&quot;) +
+    coord_cartesian(xlim = x_limits, ylim = y_limits) +
+    labs(x = xlab, y = ylab, title = title) +
+    theme_minimal()
+}
 
-outdir &lt;- &quot;output/Figure7b&quot;   # build intermediates; final panels come from Figure7b_plot.py
-dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
+klrg1_threshold &lt;- threshold_results_subset_manual$Threshold[threshold_results_subset_manual$Protein == &quot;KLRG1&quot;]
+cd8_split &lt;- get_klrg1_split(&quot;CD8&quot;, seurat_meta_filtered, protein_mat_normalized_lognorm, klrg1_threshold)
+CD4_split &lt;- get_klrg1_split(&quot;CD4&quot;, seurat_meta_filtered, protein_mat_normalized_lognorm, klrg1_threshold)
+treg_split &lt;- get_klrg1_split(&quot;Treg&quot;, seurat_meta_filtered, protein_mat_normalized_lognorm, klrg1_threshold)
 
-PKG &lt;- &quot;data/rqvi_loading/RQVI_EBMF_heatmap_data_v1/data&quot;
-rqvi_loading_path &lt;- file.path(PKG, &quot;rqvi_matched_200_cell_loadings.parquet&quot;)
-level1_order &lt;- c(&quot;CD8&quot;, &quot;CD4&quot;, &quot;Treg&quot;, &quot;gdT&quot;, &quot;CD8aa&quot;, &quot;Tz&quot;, &quot;DN&quot;, &quot;DP&quot;)
+diff_CD8 &lt;- run_checked_dge(cd8_split, F_pm_filtered, L_pm_filtered, &quot;CD8&quot;) %&gt;% rename(mean_change_CD8 = mean_change_loadings, AveExpr_CD8 = AveExpr)
+diff_CD4 &lt;- run_checked_dge(CD4_split, F_pm_filtered, L_pm_filtered, &quot;CD4&quot;) %&gt;% rename(mean_change_CD4 = mean_change_loadings, AveExpr_CD4 = AveExpr)
+diff_Treg &lt;- run_checked_dge(treg_split, F_pm_filtered, L_pm_filtered, &quot;Treg&quot;) %&gt;% rename(mean_change_Treg = mean_change_loadings, AveExpr_Treg = AveExpr)
 
-## ---- EBMF loadings + metadata ----
-gp &lt;- load_gp_data()
-L  &lt;- gp$L_pm_filtered
-colnames(L) &lt;- paste0(&quot;GP&quot;, seq_len(ncol(L)))
-meta &lt;- gp$seurat_meta_filtered
-stopifnot(identical(rownames(L), rownames(meta)), ncol(L) == 200L)
+# 7b: CD8 vs CD4
+merged_cd4 &lt;- inner_join(diff_CD4, diff_CD8, by = &quot;SYMBOL&quot;)
+p_7b &lt;- plot_target_gps(
+  df = merged_cd4, x_var = mean_change_CD8, y_var = mean_change_CD4, label_var = SYMBOL,
+  target_gps = c(&quot;GP10&quot;, &quot;GP58&quot;, &quot;GP25&quot;, &quot;GP26&quot;, &quot;GP43&quot;), background_alpha = 0.8, x_limits = c(-0.2, 0.4), y_limits = c(-0.2, 0.4),
+  highlight_color = c(&quot;GP10&quot; = &quot;darkorange2&quot;, &quot;GP25&quot; = &quot;blue&quot;, &quot;GP43&quot; = &quot;blue&quot;, &quot;GP26&quot; = &quot;blue&quot;, &quot;GP58&quot; = &quot;darkorange2&quot;),
+  title = &quot;KLRG1 Modulation: CD8 vs CD4&quot;, xlab = &quot;Effect Size in CD8 (KLRG1+ - KLRG1-)&quot;, ylab = &quot;Effect Size in CD4 (KLRG1+ - KLRG1-)&quot;
+) + theme_bw()
+ggsave(paste0(figure_path, &quot;7b.pdf&quot;), p_7b, width = 7, height = 6)
 
-nonthy &lt;- meta$annotation_level1 != &quot;thymocyte&quot;
-if (anyNA(nonthy)) stop(&quot;annotation_level1 has missing values.&quot;)
-
-## ---- common cells (non-thymocyte, in L_pm, and with an RQVI loading) ----
-rqvi_cell_ids &lt;- as.data.frame(arrow::read_parquet(rqvi_loading_path, col_select = &quot;cell_id&quot;))$cell_id
-our_nonthy_ids &lt;- rownames(L)[nonthy]
-common_ids &lt;- our_nonthy_ids[our_nonthy_ids %in% rqvi_cell_ids]
-grp &lt;- droplevels(factor(as.character(meta$annotation_level2[match(common_ids, rownames(meta))])))
-if (anyNA(grp) || any(as.character(grp) == &quot;&quot;)) stop(&quot;Missing level2 labels on common cells.&quot;)
-
-message(sprintf(&quot;common non-thymocyte cells: %d (healthy %d / non-healthy %d); level2 clusters: %d&quot;,
-                length(common_ids),
-                sum(meta$condition_broad[match(common_ids, rownames(meta))] == &quot;healthy&quot;),
-                sum(meta$condition_broad[match(common_ids, rownames(meta))] != &quot;healthy&quot;),
-                nlevels(grp)))
-
-## ---- EBMF cluster means (columns F1..F200) ----
-Lc &lt;- L[common_ids, , drop = FALSE]
-colnames(Lc) &lt;- paste0(&quot;F&quot;, seq_len(ncol(Lc)))
-esum &lt;- rowsum(Lc, grp)
-ecnt &lt;- as.integer(table(grp)[rownames(esum)])
-ebmf_means &lt;- sweep(esum, 1L, ecnt, &quot;/&quot;)                 # K x 200
-stopifnot(nrow(ebmf_means) == 107L, ncol(ebmf_means) == 200L)
-
-## ---- level2 column order (Figure-1 level1 order, alphabetical within) ----
-l2  &lt;- rownames(ebmf_means)
-lmap &lt;- unique(data.frame(level2 = as.character(meta$annotation_level2),
-                          level1 = as.character(meta$annotation_level1),
-                          stringsAsFactors = FALSE))
-if (anyDuplicated(lmap$level2)) stop(&quot;A level2 label maps to multiple level1 labels.&quot;)
-lin &lt;- lmap$level1[match(l2, lmap$level2)]
-if (anyNA(lin) || !all(lin %in% level1_order)) stop(&quot;Unexpected level1 lineage among clusters.&quot;)
-ord &lt;- order(match(lin, level1_order), l2)
-cluster_order &lt;- data.frame(
-  level2_cluster = l2[ord],
-  level1         = lin[ord],
-  display_column = seq_along(ord) - 1L,
-  n_cells        = ecnt[ord],
-  stringsAsFactors = FALSE
-)
-
-## ---- level1 palette (canonical lineage colors) as hex ----
-l1pal &lt;- ZemmourLib::immgent_colors$level1
-hex &lt;- vapply(l1pal, function(cc) {
-  v &lt;- grDevices::col2rgb(cc)
-  grDevices::rgb(v[1], v[2], v[3], maxColorValue = 255)
-}, character(1))
-pal_df &lt;- data.frame(level1 = names(hex), color = unname(hex), stringsAsFactors = FALSE)
-
-## ---- write outputs ----
-# cell -&gt; level1/level2 for all L_pm_filtered cells; consumed by Figure7b_rematch.py
-# to define common cells and clusters (avoids any machine-specific path).
-fwrite(data.frame(
-  cellID            = rownames(L),
-  annotation_level1 = as.character(meta$annotation_level1),
-  annotation_level2 = as.character(meta$annotation_level2),
-  stringsAsFactors  = FALSE
-), file.path(outdir, &quot;7b_cell_metadata.csv.gz&quot;))
-
-fwrite(data.frame(level2_cluster = rownames(ebmf_means), ebmf_means, check.names = FALSE),
-       file.path(outdir, &quot;7b_ebmf_raw_means_level2.csv&quot;))
-fwrite(cluster_order, file.path(outdir, &quot;7b_cluster_order.csv&quot;))
-fwrite(pal_df,        file.path(outdir, &quot;7b_level1_palette.csv&quot;))
-fwrite(data.frame(
-  metric = c(&quot;common_cells&quot;, &quot;healthy_cells&quot;, &quot;nonhealthy_cells&quot;, &quot;level2_clusters&quot;, &quot;ebmf_factors&quot;),
-  value  = c(length(common_ids),
-             sum(meta$condition_broad[match(common_ids, rownames(meta))] == &quot;healthy&quot;),
-             sum(meta$condition_broad[match(common_ids, rownames(meta))] != &quot;healthy&quot;),
-             nlevels(grp), 200L)
-), file.path(outdir, &quot;7b_build_summary.csv&quot;))
-
-message(&quot;Wrote Fig S5 data inputs to &quot;, normalizePath(outdir))</code></pre>
+# 7c: CD8 vs Treg
+merged_treg &lt;- inner_join(diff_Treg, diff_CD8, by = &quot;SYMBOL&quot;)
+p_7c &lt;- plot_target_gps(
+  df = merged_treg, x_var = mean_change_CD8, y_var = mean_change_Treg, label_var = SYMBOL,
+  target_gps = c(&quot;GP6&quot;, &quot;GP10&quot;, &quot;GP12&quot;, &quot;GP27&quot;, &quot;GP68&quot;, &quot;GP58&quot;), background_alpha = 0.8, x_limits = c(-0.2, 0.4), y_limits = c(-0.2, 0.4),
+  highlight_color = c(&quot;GP10&quot; = &quot;darkorange2&quot;, &quot;GP27&quot; = &quot;deeppink&quot;, &quot;GP6&quot; = &quot;deeppink&quot;, &quot;GP68&quot; = &quot;deeppink&quot;, &quot;GP12&quot; = &quot;deeppink&quot;, &quot;GP58&quot; = &quot;darkorange2&quot;),
+  title = &quot;KLRG1 Modulation: CD8 vs Treg&quot;, xlab = &quot;Effect Size in CD8 (KLRG1+ - KLRG1-)&quot;, ylab = &quot;Effect Size in Treg (KLRG1+ - KLRG1-)&quot;
+) + theme_bw()
+ggsave(paste0(figure_path, &quot;7c.pdf&quot;), p_7c, width = 7, height = 6)</code></pre>
+<p><img src="assets/Figure7/7b.png" width="49%" style="display: block; margin: auto;" /><img src="assets/Figure7/7c.png" width="49%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 7b, c.</strong> GPs associated with KLRG1 protein
+expression in CD4, Tregs, and CD8. Effect-size versus effect-size plots,
+where each GP’s effect size is the difference in its mean activity
+between KLRG1+ and KLRG1- cells, comparing CD8+ T cells (x-axis) with
+CD4+ T cells (b) or Treg cells (c).</p>
 </div>
-<div id="matching" class="section level3">
-<h3>Matching</h3>
-<p>Each GP’s mean-loading profile is z-scored across clusters; the
-signed Pearson correlation between every EBMF GP and all 2,560 candidate
-RQVI GPs is computed; candidates with a constant profile are excluded;
-and a maximum-weight one-to-one assignment
-(<code>scipy.optimize.linear_sum_assignment</code>) matches each EBMF GP
-to a distinct RQVI GP so that the total signed correlation is maximized.
-The assignment is computed over all common cells (108
-<code>annotation_level2</code> clusters); the figure displays the 107
-non-thymocyte clusters. The median per-GP correlation is 0.766, with
-92.5% at r &gt;= 0.5. Code: <a
-href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure7b_rematch.py"><code>script/Figure7b_rematch.py</code></a>.</p>
 </div>
-<div id="plotting" class="section level3">
-<h3>Plotting</h3>
-<p><code>script/Figure7b_plot.py</code> orders the EBMF rows by
-hierarchical clustering (average linkage, correlation distance, optimal
-leaf ordering), rescales every GP to <code>[0, 1]</code> across
-clusters, and draws the two heatmaps with a shared colorbar; the matched
-RQVI panel reuses the EBMF row order. The published PDF and the PNG this
-page shows come out of the same matplotlib figure in one call, so the
-two cannot drift apart. Code: <a
-href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure7b_plot.py"><code>script/Figure7b_plot.py</code></a>.</p>
+<div id="fig7d" class="section level2">
+<h2>(d) Genes up- and down-regulated across the CD69-associated GPs</h2>
+<p>The ten GPs, and the correlation-based order they are drawn in, are
+defined once in <code>code/R/citeseq_shared_setup.R</code>, because <a
+href="FigureS6.html#figs6ab">Extended Data Fig. 6a, b</a> show the same
+GPs in the same order from a different script:</p>
+<pre class="r"><code># The CD69-associated GP subset, shared by Figure 7d (the up/down gene heatmap)
+# and Figure S6a/S6b (the same GPs&#39; mean activity per tissue and per lineage).
+# Defined once here because those panels live in two different scripts and must
+# show the same GPs in the same axis order. Curated, not a computed top-10.
+cd69_top_gps_subset &lt;- c(&quot;GP35&quot;, &quot;GP6&quot;, &quot;GP170&quot;, &quot;GP26&quot;, &quot;GP58&quot;, &quot;GP171&quot;, &quot;GP63&quot;, &quot;GP62&quot;, &quot;GP3&quot;, &quot;GP29&quot;)
+shared_cells_cd69 &lt;- intersect(rownames(L_pm_filtered), rownames(protein_mat_normalized_lognorm))
+cd69_expr_vec &lt;- protein_mat_normalized_lognorm[shared_cells_cd69, &quot;CD69&quot;]
+cd69_corr &lt;- sapply(cd69_top_gps_subset, function(gp) cor(L_pm_filtered[shared_cells_cd69, gp], cd69_expr_vec, method = &quot;spearman&quot;))
+# most-correlated GP ends up at the top of the y-axis in all three panels
+cd69_top_gps_sorted &lt;- names(sort(cd69_corr, decreasing = FALSE))</code></pre>
+<pre class="r"><code># ============================================================
+# 7d: up/down genes across the 10 curated CD69-associated GPs
+# (cd69_top_gps_subset / cd69_corr / cd69_top_gps_sorted come from
+# citeseq_shared_setup.R, which Figure S6&#39;s s6a/s6b panels share)
+# ============================================================
+D_scale6 &lt;- diag(1 / apply(F_pm_filtered, 2, function(x) max(abs(x), na.rm = TRUE)))
+F_pm_filtered_scaled &lt;- F_pm_filtered %*% D_scale6
+colnames(F_pm_filtered_scaled) &lt;- paste0(&quot;GP&quot;, 1:ncol(F_pm_filtered_scaled))
+
+plot_factor_heatmap &lt;- function(F_matrix, gp_vector, n_top = 5, min_abs_loading = 0.5, transpose = FALSE,
+                                 title = &quot;Factor loadings – top genes per GP&quot;, low_color = &quot;steelblue&quot;, mid_color = &quot;white&quot;, high_color = &quot;firebrick&quot;, font_size = 9) {
+  F_sub &lt;- F_matrix[, gp_vector, drop = FALSE]
+  selected_genes &lt;- lapply(gp_vector, function(gp) {
+    vals &lt;- F_sub[, gp]
+    top_pos &lt;- names(sort(vals, decreasing = TRUE))[seq_len(min(n_top, sum(vals &gt; 0)))]
+    top_neg &lt;- names(sort(vals, decreasing = FALSE))[seq_len(min(n_top, sum(vals &lt; 0)))]
+    c(top_pos, top_neg)
+  })
+  selected_genes &lt;- unique(unlist(selected_genes))
+  if (min_abs_loading &gt; 0) {
+    max_abs &lt;- apply(F_sub[selected_genes, , drop = FALSE], 1, function(x) max(abs(x), na.rm = TRUE))
+    selected_genes &lt;- names(max_abs[max_abs &gt;= min_abs_loading])
+  }
+  hc_genes &lt;- hclust(dist(F_sub[selected_genes, , drop = FALSE]))
+  gene_order &lt;- rownames(F_sub[selected_genes, , drop = FALSE])[hc_genes$order]
+  plot_df &lt;- F_sub[selected_genes, , drop = FALSE] %&gt;%
+    as.data.frame() %&gt;%
+    tibble::rownames_to_column(&quot;Gene&quot;) %&gt;%
+    tidyr::pivot_longer(cols = -Gene, names_to = &quot;GP&quot;, values_to = &quot;Loading&quot;) %&gt;%
+    mutate(GP = factor(GP, levels = gp_vector), Gene = factor(Gene, levels = gene_order))
+  limit &lt;- max(abs(plot_df$Loading), na.rm = TRUE)
+  x_aes &lt;- if (transpose) &quot;Gene&quot; else &quot;GP&quot;
+  y_aes &lt;- if (transpose) &quot;GP&quot; else &quot;Gene&quot;
+  ggplot(plot_df, aes(x = .data[[x_aes]], y = .data[[y_aes]], fill = Loading)) +
+    geom_tile() +
+    scale_fill_gradient2(low = low_color, mid = mid_color, high = high_color, midpoint = 0, limits = c(-limit, limit), name = &quot;Loading&quot;) +
+    # Axis titles are the faceting variables themselves (&quot;Gene&quot; / &quot;GP&quot;).
+    labs(title = title, x = x_aes, y = y_aes) +
+    theme_minimal(base_size = font_size) +
+    theme(axis.text.x = element_text(angle = if (transpose) 90 else 45, hjust = 1, size = font_size), axis.text.y = element_text(size = font_size), panel.grid = element_blank(), plot.title = element_text(face = &quot;bold&quot;))
+}
+
+p_heatmap &lt;- plot_factor_heatmap(F_matrix = F_pm_filtered_scaled, gp_vector = cd69_top_gps_sorted, n_top = 5, font_size = 9, transpose = TRUE, low_color = &quot;#4DAF4A&quot;, mid_color = &quot;white&quot;, high_color = &quot;#984EA3&quot;)
+
+corr_strip_df &lt;- data.frame(GP = factor(cd69_top_gps_sorted, levels = cd69_top_gps_sorted), Correlation = cd69_corr[cd69_top_gps_sorted], x = &quot;Corr&quot;)
+corr_limit &lt;- max(abs(corr_strip_df$Correlation))
+p_corr_strip &lt;- ggplot(corr_strip_df, aes(x = x, y = GP, fill = Correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = &quot;royalblue&quot;, mid = &quot;white&quot;, high = &quot;tomato&quot;, midpoint = 0, limits = c(-corr_limit, corr_limit), name = &quot;Corr\n(CD69)&quot;) +
+  labs(x = NULL, y = NULL) +
+  theme_minimal(base_size = 9) +
+  theme(axis.text.x = element_text(size = 9, angle = 45, hjust = 1), axis.text.y = element_blank(), axis.ticks.y = element_blank(), panel.grid = element_blank())
+
+p_7d &lt;- p_corr_strip + p_heatmap + patchwork::plot_layout(widths = c(0.06, 1), guides = &quot;collect&quot;)
+ggsave(paste0(figure_path, &quot;7d.pdf&quot;), p_7d, width = 11, height = 5)</code></pre>
+<p><img src="assets/Figure7/7d.png" width="100%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 7d.</strong> Heatmap of the top five most strongly up-
+and down-regulated gene scores for ten GPs correlated with CD69
+expression, with the left strip indicating the Spearman correlation
+between GP activity and CD69 expression.</p>
+</div>
+</div>
+<div id="fig7ej" class="section level2">
+<h2>(e-j) Protein-gated vs. GP-loading populations</h2>
+<pre class="r"><code># ============================================================
+# 7e-7j: protein-gate vs. GP-loading comparison for the 6 curated main-figure
+# GPs (df_markers2, thymocyte/proliferating/miniverse_cells, L_pm_for_gating,
+# select_proteins, threshold_results_subset_manual, enlarge_gps all come from
+# citeseq_shared_setup.R above)
+# ============================================================
+# Panel lettering is carried by this named vector and the loop iterates over its
+# names, so a GP can never be drawn under another GP&#39;s letter.
+fig7_gating &lt;- c(&quot;GP171&quot; = &quot;7e&quot;, &quot;GP12&quot; = &quot;7f&quot;, &quot;GP80&quot; = &quot;7g&quot;, &quot;GP23&quot; = &quot;7h&quot;, &quot;GP77&quot; = &quot;7i&quot;, &quot;GP8&quot; = &quot;7j&quot;)
+for (gp in names(fig7_gating)) {
+  k_name &lt;- paste0(&quot;K&quot;, sub(&quot;^GP&quot;, &quot;&quot;, gp))
+  plot_gated_gp_vs_protein(
+    gp_name = k_name,
+    df_markers = df_markers2,
+    protein_mat = protein_mat_normalized_lognorm,
+    loading_mat = L_pm_for_gating,
+    mde_emb = mde_result,
+    missing_threshold_action = &quot;skip&quot;,
+    threshold_df = threshold_results_subset_manual,
+    exclude_cells = c(thymocyte_cells, proliferating_cells, miniverse_cells),
+    selected_proteins = select_proteins,
+    loading_q = NULL,
+    min_pointsize = if (gp %in% enlarge_gps) 3L else 0L,
+    save_path = paste0(figure_path, fig7_gating[gp], &quot;.pdf&quot;)
+  )
+}</code></pre>
+<p><img src="assets/Figure7/7e.png" width="49%" style="display: block; margin: auto;" /><img src="assets/Figure7/7f.png" width="49%" style="display: block; margin: auto;" /><img src="assets/Figure7/7g.png" width="49%" style="display: block; margin: auto;" /><img src="assets/Figure7/7h.png" width="49%" style="display: block; margin: auto;" /><img src="assets/Figure7/7i.png" width="49%" style="display: block; margin: auto;" /><img src="assets/Figure7/7j.png" width="49%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 7e-j.</strong> Examples of gating strategies used to
+identify GP-active cells. All-T MDE plots highlight cells selected by
+the proposed gating strategy (left) and the corresponding GP-active
+cells (right). Color indicates cell density.</p>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1124,7 +1167,6 @@ loaded via a namespace (and not attached):
 [29] pkgconfig_2.0.3 later_1.4.4     digest_0.6.39   R6_2.6.1       
 [33] pillar_1.11.1   magrittr_2.0.5  bslib_0.9.0     tools_4.5.1    
 [37] cachem_1.1.0   </code></pre>
-</div>
 </div>
 </div>
 </div>

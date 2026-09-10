@@ -12,7 +12,7 @@
 <meta name="author" content="Ziang Zhang" />
 
 
-<title>Figure 6: Surface-marker associations are context-dependent, but combinatorial gating resolves specific gene programs</title>
+<title>Figure 6: Tissue-associated gene programs reflect both tissue adaptation and T cell subset composition</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -353,9 +353,8 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Figure 6: Surface-marker associations are
-context-dependent, but combinatorial gating resolves specific gene
-programs</h1>
+<h1 class="title toc-ignore">Figure 6: Tissue-associated gene programs
+reflect both tissue adaptation and T cell subset composition</h1>
 <h4 class="author">Ziang Zhang</h4>
 
 </div>
@@ -385,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-09-09
+<strong>Last updated:</strong> 2026-09-10
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -517,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree6f01135f9b18a451dc592896a6a20e560b3a587dtargetblank6f01135a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree4307b28577441a16a09628b04b38fbd8808c6c0etargetblank4307b28a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/6f01135f9b18a451dc592896a6a20e560b3a587d" target="_blank">6f01135</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/4307b28577441a16a09628b04b38fbd8808c6c0e" target="_blank">4307b28</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree6f01135f9b18a451dc592896a6a20e560b3a587dtargetblank6f01135a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree4307b28577441a16a09628b04b38fbd8808c6c0etargetblank4307b28a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -535,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/6f01135f9b18a451dc592896a6a20e560b3a587d" target="_blank">6f01135</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/4307b28577441a16a09628b04b38fbd8808c6c0e" target="_blank">4307b28</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -578,14 +577,13 @@ Ignored files:
     Ignored:    figures/final-selected/.DS_Store
     Ignored:    figures/final-selected/Figure 1/.DS_Store
     Ignored:    figures/final-selected/Figure 2/.DS_Store
-    Ignored:    figures/final-selected/Figure 4/.DS_Store
+    Ignored:    figures/final-selected/Figure 5/.DS_Store
     Ignored:    figures/final-selected/Figure S1/.DS_Store
     Ignored:    figures/templates_20260729/
     Ignored:    internal/
     Ignored:    log/
     Ignored:    output/.DS_Store
     Ignored:    output/Figure2/
-    Ignored:    output/Figure7b/7b_cell_metadata.csv.gz
     Ignored:    plan/
     Ignored:    tables/
     Ignored:    tmp/
@@ -633,6 +631,41 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/4307b28577441a16a09628b04b38fbd8808c6c0e/analysis/Figure6.Rmd" target="_blank">4307b28</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+<td>
+New main Figure 4, and fold the cluster heatmap into Extended Data
+Figure 2
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/bf4f612749b5874cfa192ac62bef24895dd43a2b/docs/Figure6.html" target="_blank">bf4f612</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-09
+</td>
+<td>
+Build site: Extended Data back to 1-8
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1426,118 +1459,290 @@ Initial commit: immgenT-GP-analysis
 </div>
 </div>
 </div>
-<p>All panels except (a) are produced by <a
-href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure6.R"><code>script/Figure6.R</code></a>,
-which shares its CITE-seq setup with <a href="FigureS6.html">Extended
-Data Figure 6</a> and <a href="FigureS7.html">Extended Data Figure 7</a>
-via <code>code/R/citeseq_shared_setup.R</code>. The code below is shown
-for reference (not re-executed on this page, since this script takes
-about a minute to run); the images are its pre-rendered output.</p>
+<p>All panels are produced by <a
+href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure6.R"><code>script/Figure6.R</code></a>.
+The code below is shown for reference (not re-executed on this page);
+the images are its pre-rendered output.</p>
 <div id="setup" class="section level2">
 <h2>Setup</h2>
-<pre class="r"><code>library(ggplot2)
+<p>Data loading, shared across all panels below.</p>
+<pre class="r"><code># Figure 6. GPs and tissue.
+#
+# Panels produced:
+#   6a  Max AUC (organ) vs max AUC (level-1 lineage) scatter, per GP.
+#   6b  GP37+ rate by lineage, mammary gland vs. the same lineage elsewhere.
+#   6c  Marker genes of the 7 organ-specific GPs: per-GP gene-score heatmap.
+#   6d  As 6a, but organ AUC vs Level-2 (fine-grained sub-lineage/cluster)
+#       AUC, with the 7 organ-specific GPs (red) and a contrasting
+#       cluster-specific set (blue) highlighted.
+#   6e  Alluvial diagram: organ of origin -&gt; GP -&gt; Level-2 cell type, for
+#       GP+ cells of the 7 organ-specific GPs.
+#
+# Required inputs (data/) -- see code/README.md&#39;s &quot;Data provenance&quot; table
+# for the full picture:
+#   L_pm_filtered.rds, F_pm_filtered.rds     [code/pipeline/01b_filter_cells.R]
+#   igt1_96_..._ADTonly.Rds                  [primary input Seurat object]
+#   level_1_AUC_list_figure_no_thymocytes_healthy.rds,
+#   level_2_AUC_list_figure_no_thymocytes_healthy.rds,
+#   organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds
+#     [code/pipeline/02_compute_auc.R]
+
+library(ggplot2)
 library(ggrepel)
-library(dplyr)
 library(patchwork)
+library(dplyr)
 library(tidyr)
-library(Matrix) # protein matrices are dgCMatrix; must be attached for `[` to dispatch
+library(purrr)
+library(tibble)
+library(Matrix)
+library(viridis)
+library(cowplot)
+library(ggalluvial)
 
 data_path &lt;- &quot;data/&quot;
 figure_path &lt;- &quot;figures/final-selected/Figure 6/&quot;
-source(&quot;code/R/gated_protein_helpers.R&quot;)
 
-# 6a: hand-drawn schematic -- not code-generated, no output here.</code></pre>
-<p>Panels (b) onward additionally load the shared CITE-seq cell/protein
-setup:</p>
-<pre class="r"><code># ============================================================
-# Load data (shared with FigureS6.R and FigureS7.R)
 # ============================================================
-source(&quot;code/R/citeseq_shared_setup.R&quot;)</code></pre>
+# Load data (healthy, non-thymocyte reference)
+# ============================================================
+level_1_AUC_list &lt;- readRDS(paste0(
+  data_path, &quot;level_1_AUC_list_figure_no_thymocytes_healthy.rds&quot;
+))
+level_2_AUC_list &lt;- readRDS(paste0(
+  data_path, &quot;level_2_AUC_list_figure_no_thymocytes_healthy.rds&quot;
+))
+organ_AUC_list &lt;- readRDS(paste0(
+  data_path, &quot;organ_simplified_AUC_list_figure_no_thymocytes_healthy.rds&quot;
+))
+# Metadata is read from the Seurat object directly.
+seurat_meta &lt;- readRDS(paste0(
+  data_path, &quot;igt1_96_withtotalvi20260206_clean_ADTonly.Rds&quot;
+))@meta.data
+L_pm_filtered &lt;- readRDS(paste0(data_path, &quot;L_pm_filtered.rds&quot;))
+seurat_meta_filtered &lt;- seurat_meta[rownames(L_pm_filtered), ]
+
+# Rename K## to GP## for display consistency
+colnames(L_pm_filtered) &lt;- gsub(&quot;^K&quot;, &quot;GP&quot;, colnames(L_pm_filtered))
+colnames(level_1_AUC_list$auc) &lt;- gsub(&quot;^K&quot;, &quot;GP&quot;, colnames(level_1_AUC_list$auc))
+colnames(level_2_AUC_list$auc) &lt;- gsub(&quot;^K&quot;, &quot;GP&quot;, colnames(level_2_AUC_list$auc))
+colnames(level_2_AUC_list$threshold) &lt;- gsub(&quot;^K&quot;, &quot;GP&quot;, colnames(level_2_AUC_list$threshold))
+colnames(organ_AUC_list$auc) &lt;- gsub(&quot;^K&quot;, &quot;GP&quot;, colnames(organ_AUC_list$auc))
+colnames(organ_AUC_list$threshold) &lt;- gsub(&quot;^K&quot;, &quot;GP&quot;, colnames(organ_AUC_list$threshold))
+
+# Restrict reference to healthy, non-thymocyte cells
+seurat_meta_filtered_no_thymocytes_healthy &lt;- seurat_meta_filtered %&gt;%
+  filter(annotation_level1 != &quot;thymocyte&quot;, condition_broad == &quot;healthy&quot;)
+
+# The 7 organ-specific GPs highlighted throughout this figure (caption 6d/6e)
+gps_of_interest &lt;- c(&quot;GP3&quot;, &quot;GP6&quot;, &quot;GP11&quot;, &quot;GP26&quot;, &quot;GP29&quot;, &quot;GP37&quot;, &quot;GP177&quot;)
+
+# Labels a highlighted point with its top categories above `threshold` AUC.
+top_cats_label &lt;- function(factor_name, auc_matrix, positive_mask, threshold = 0.85, n = 3) {
+  vals &lt;- auc_matrix[, factor_name]
+  vals &lt;- vals[positive_mask[, factor_name]]
+  vals &lt;- sort(vals[vals &gt; threshold], decreasing = TRUE)
+  cats &lt;- names(vals)[seq_len(min(n, length(vals)))]
+  if (length(cats) == 0) return(factor_name)
+  paste0(factor_name, &quot;:\n&quot;, paste(cats, collapse = &quot;\n&quot;))
+}</code></pre>
 </div>
 <div id="fig6a" class="section level2">
-<h2>(a) Protein-signature schematic</h2>
-<p>This panel is a hand-drawn schematic, not generated from code.</p>
-<p>How the protein factor matrix is estimated is documented in <a
-href="Methods_FlashierFit_Citeseq.html">Methods: fitting CITE-seq
-protein programs with fixed scRNA loadings</a>.</p>
-<div class="figcaption">
-<p><strong>Fig. 6a.</strong> Schematic illustrating how protein
-signatures were defined for each GP. Holding the cell-loading matrix L
-fixed from the GP model, a protein factor matrix was estimated by EBMF
-from the paired CITE-seq protein measurements, Y ≈ LUᵀ (cells × proteins
-matrix), yielding a protein signature U (proteins × GPs matrix) for each
-GP.</p>
-</div>
-</div>
-<div id="fig6bc" class="section level2">
-<h2>(b, c) KLRG1 modulation across lineages</h2>
+<h2>(a) Max AUC: organ vs. lineage</h2>
 <pre class="r"><code># ============================================================
-# 6b/6c: KLRG1 modulation (CD8 vs CD4, CD8 vs Treg)
+# 6a: Max AUC Organ vs Level-1
 # ============================================================
-FlashierDGE_corrected &lt;- function(F1, L1, group1, group2, title_plot = &quot;&quot;) {
-  loadings_group1 &lt;- colMeans(L1[group1, ])
-  loadings_group2 &lt;- colMeans(L1[group2, ])
-  mean_change_loadings &lt;- loadings_group1 - loadings_group2
-  vplot &lt;- data.frame(SYMBOL = names(mean_change_loadings), mean_change_loadings = mean_change_loadings, AveExpr = colMeans(L1[c(group1, group2), ]))
-  list(diff_factors = vplot)
-}
-get_klrg1_split &lt;- function(cell_type_label, meta, protein_data, threshold) {
-  cells &lt;- meta$cellID[meta$annotation_level1 == cell_type_label]
-  cells &lt;- intersect(cells, rownames(protein_data))
-  list(pos = cells[protein_data[cells, &quot;KLRG1&quot;] &gt;= threshold], neg = cells[protein_data[cells, &quot;KLRG1&quot;] &lt; threshold])
-}
-run_checked_dge &lt;- function(group_list, F_mat, L_mat, label) {
-  if (length(group_list$pos) &lt; 3 || length(group_list$neg) &lt; 3) stop(paste(&quot;Insufficient data:&quot;, label))
-  df &lt;- FlashierDGE_corrected(F1 = F_mat, L1 = L_mat, group1 = group_list$pos, group2 = group_list$neg)$diff_factors
-  if (!&quot;SYMBOL&quot; %in% colnames(df)) df$SYMBOL &lt;- rownames(df)
-  df
-}
-plot_target_gps &lt;- function(df, x_var, y_var, label_var, target_gps, highlight_color = &quot;darkorange&quot;, background_color = &quot;black&quot;,
-                             x_limits = c(-0.5, 0.5), y_limits = c(-0.5, 0.5), background_alpha = 0.5,
-                             xlab = &quot;Difference in Mean Loading&quot;, ylab = &quot;Difference in Mean Loading&quot;, title = &quot;Comparison of Specific GP Loadings&quot;) {
-  highlight_df &lt;- df %&gt;% filter({{ label_var }} %in% target_gps) %&gt;% mutate(.label_display = as.character({{ label_var }}))
-  ggplot(df, aes(x = {{ x_var }}, y = {{ y_var }})) +
-    geom_point(color = background_color, alpha = background_alpha) +
-    geom_abline(slope = 1, intercept = 0, linetype = &quot;dashed&quot;, color = &quot;red&quot;) +
-    geom_hline(yintercept = 0, linetype = &quot;dashed&quot;, color = &quot;blue&quot;) +
-    geom_vline(xintercept = 0, linetype = &quot;dashed&quot;, color = &quot;blue&quot;) +
-    geom_point(data = highlight_df, aes(color = {{ label_var }}), size = 2) +
-    ggrepel::geom_text_repel(seed = 42, data = highlight_df, aes(label = .label_display, color = {{ label_var }}), max.overlaps = Inf, size = 3.5, box.padding = 0.35, point.padding = 0.5, segment.color = &quot;grey50&quot;, show.legend = FALSE) +
-    scale_color_manual(values = highlight_color, guide = &quot;none&quot;) +
-    coord_cartesian(xlim = x_limits, ylim = y_limits) +
-    labs(x = xlab, y = ylab, title = title) +
-    theme_minimal()
+level_1_small_count &lt;- table(seurat_meta_filtered_no_thymocytes_healthy$annotation_level1)
+level_1_small_count &lt;- names(level_1_small_count[level_1_small_count &lt; 1000])
+level_1_AUC &lt;- level_1_AUC_list$auc
+level_1_AUC &lt;- level_1_AUC[!rownames(level_1_AUC) %in% level_1_small_count, ]
+
+organ_AUC &lt;- organ_AUC_list$auc
+organ_small_count &lt;- table(seurat_meta_filtered_no_thymocytes_healthy$organ_simplified)
+organ_small_count &lt;- names(organ_small_count[organ_small_count &lt; 100])
+organ_AUC &lt;- organ_AUC[!rownames(organ_AUC) %in% organ_small_count, ]
+
+# Positivity masks: mean loading in category &gt; overall mean -&gt; high loading predicts membership
+healthy_cells &lt;- rownames(seurat_meta_filtered_no_thymocytes_healthy)
+L_healthy &lt;- L_pm_filtered[healthy_cells, ]
+overall_mean &lt;- colMeans(L_healthy, na.rm = TRUE)
+
+level_1_cat_mean &lt;- t(sapply(rownames(level_1_AUC), function(cat) {
+  idx &lt;- seurat_meta_filtered_no_thymocytes_healthy$annotation_level1 == cat
+  colMeans(L_healthy[idx, , drop = FALSE], na.rm = TRUE)
+}))
+level_1_AUC_positive &lt;- sweep(level_1_cat_mean, 2, overall_mean, &quot;-&quot;) &gt; 0
+
+organ_cat_mean &lt;- t(sapply(rownames(organ_AUC), function(cat) {
+  idx &lt;- seurat_meta_filtered_no_thymocytes_healthy$organ_simplified == cat
+  colMeans(L_healthy[idx, , drop = FALSE], na.rm = TRUE)
+}))
+organ_AUC_positive &lt;- sweep(organ_cat_mean, 2, overall_mean, &quot;-&quot;) &gt; 0
+
+level_1_AUC_masked &lt;- level_1_AUC
+level_1_AUC_masked[!level_1_AUC_positive] &lt;- NA
+level_1_AUC_max &lt;- apply(level_1_AUC_masked, 2, max, na.rm = TRUE)
+level_1_AUC_max_name &lt;- apply(level_1_AUC_masked, 2, function(x) rownames(level_1_AUC_masked)[which.max(x)])
+o &lt;- order(level_1_AUC_max, decreasing = TRUE)
+table_level_1_AUC &lt;- data.frame(
+  Factor = colnames(level_1_AUC)[o], Max_AUC = level_1_AUC_max[o], Annotation = level_1_AUC_max_name[o]
+)
+
+organ_AUC_masked &lt;- organ_AUC
+organ_AUC_masked[!organ_AUC_positive] &lt;- NA
+organ_AUC_max &lt;- apply(organ_AUC_masked, 2, max, na.rm = TRUE)
+organ_AUC_max_name &lt;- apply(organ_AUC_masked, 2, function(x) rownames(organ_AUC_masked)[which.max(x)])
+
+max_AUC_df &lt;- data.frame(
+  Factor = table_level_1_AUC$Factor,
+  annotation_Level1 = table_level_1_AUC$Annotation,
+  annotation_Organ = organ_AUC_max_name[match(table_level_1_AUC$Factor, names(organ_AUC_max))],
+  Max_AUC_Organ = organ_AUC_max[match(table_level_1_AUC$Factor, names(organ_AUC_max))],
+  Max_AUC_Level1 = table_level_1_AUC$Max_AUC
+)
+df &lt;- max_AUC_df %&gt;% mutate(residual = Max_AUC_Level1 - Max_AUC_Organ, abs_res = abs(residual))
+
+# Factors to highlight: AUC &gt; 0.9 in at least one axis (organ or level-1)
+highlighted_factors &lt;- df %&gt;%
+  filter(is.finite(residual), Max_AUC_Organ &gt; 0.9 | Max_AUC_Level1 &gt; 0.9) %&gt;%
+  pull(Factor)
+
+label_above &lt;- df %&gt;%
+  filter(Factor %in% highlighted_factors, residual &gt; 0) %&gt;%
+  mutate(nudge_x = -0.035, label_text = sapply(Factor, top_cats_label, auc_matrix = level_1_AUC, positive_mask = level_1_AUC_positive))
+label_below &lt;- df %&gt;%
+  filter(Factor %in% highlighted_factors, residual &lt;= 0) %&gt;%
+  mutate(nudge_x = 0.035, label_text = sapply(Factor, top_cats_label, auc_matrix = organ_AUC, positive_mask = organ_AUC_positive))
+
+p_6a &lt;- ggplot(df, aes(Max_AUC_Organ, Max_AUC_Level1)) +
+  geom_point(alpha = 0.3, size = 1.8) +
+  geom_point(data = label_above, color = &quot;#1f78b4&quot;, alpha = 0.8, size = 1.8) +
+  geom_point(data = label_below, color = &quot;#e31a1c&quot;, alpha = 0.8, size = 1.8) +
+  geom_abline(slope = 1, intercept = 0, linetype = &quot;dashed&quot;, color = &quot;black&quot;) +
+  coord_cartesian(xlim = c(0.46, 1.04), ylim = c(0.5, 1.02), expand = FALSE) +
+  labs(x = &quot;Max AUC (Organ Simplified)&quot;, y = &quot;Max AUC (Level-1)&quot;, title = &quot;Max AUC: Organ vs Level-1&quot;) +
+  theme_minimal(base_size = 13) +
+  geom_text_repel(
+    seed = 42,
+    data = label_above, aes(label = label_text), color = &quot;#1f78b4&quot;, size = 2.5, lineheight = 0.85,
+    direction = &quot;y&quot;, nudge_x = label_above$nudge_x, segment.color = &quot;#1f78b4&quot;,
+    arrow = arrow(length = unit(0.008, &quot;npc&quot;), type = &quot;closed&quot;, angle = 20),
+    force = 3, force_pull = 0.1, box.padding = 0.4, point.padding = 0.15,
+    max.time = 10, max.iter = 2e4, max.overlaps = 20, min.segment.length = 0.01, segment.alpha = 0.7
+  ) +
+  geom_text_repel(
+    seed = 42,
+    data = label_below, aes(label = label_text), color = &quot;#e31a1c&quot;, size = 2.5, lineheight = 0.85,
+    direction = &quot;y&quot;, nudge_x = label_below$nudge_x, segment.color = &quot;#e31a1c&quot;,
+    arrow = arrow(length = unit(0.008, &quot;npc&quot;), type = &quot;closed&quot;, angle = 20),
+    force = 3, force_pull = 0.1, box.padding = 0.4, point.padding = 0.15,
+    max.time = 10, max.iter = 2e4, max.overlaps = 20, min.segment.length = 0.01, segment.alpha = 0.7
+  )
+ggsave(filename = paste0(figure_path, &quot;6a.pdf&quot;), plot = p_6a, width = 8, height = 8, dpi = 300)</code></pre>
+<p><img src="assets/Figure6/6a.png" width="60%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 6a.</strong> Scatterplot showing each GP’s prediction
+(AUC) of organ of origin (x-axis) versus lineage (y-axis). GPs reaching
+AUC &gt; 0.9 on either axis are colored and labeled (organ-specific in
+red; lineage-specific in blue).</p>
+</div>
+</div>
+<div id="fig6b" class="section level2">
+<h2>(b) GP37+ rate in mammary gland vs. elsewhere</h2>
+<pre class="r"><code># ============================================================
+# 6b: GP37+ rate by lineage, mammary gland vs. elsewhere
+# ============================================================
+plot_gp_threshold_group_activation_rate &lt;- function(
+  gp, organ, threshold, loading_mat, organ_info, group_info,
+  group_label = &quot;Level-2&quot;, base_size = 13, min_in_organ = 10,
+  group_colors = ZemmourLib::immgent_colors$level2, fallback_group_color = &quot;grey60&quot;,
+  reference = c(&quot;not_in_group&quot;, &quot;not_in_organ&quot;)
+) {
+  reference &lt;- match.arg(reference)
+  if (!gp %in% colnames(loading_mat)) stop(sprintf(&quot;GP &#39;%s&#39; not found in loading matrix.&quot;, gp))
+  if (!organ %in% organ_info) stop(sprintf(&quot;Organ &#39;%s&#39; not found in organ_info.&quot;, organ))
+
+  loading &lt;- loading_mat[, gp]
+  keep &lt;- !(is.na(loading) | is.na(organ_info) | is.na(group_info))
+  loading &lt;- loading[keep]
+  organ_info &lt;- organ_info[keep]
+  group_info &lt;- as.character(group_info[keep])
+
+  in_organ &lt;- organ_info == organ
+  positive &lt;- loading &gt; threshold
+  group_levels &lt;- sort(unique(group_info))
+
+  rate_df &lt;- data.frame(
+    group = group_levels,
+    n_in_organ = vapply(group_levels, function(l) sum(group_info == l &amp; in_organ), integer(1)),
+    n_pos_in_organ = vapply(group_levels, function(l) sum(group_info == l &amp; in_organ &amp; positive), integer(1))
+  )
+
+  if (reference == &quot;not_in_group&quot;) {
+    rate_df$n_ref &lt;- vapply(group_levels, function(l) sum(group_info != l &amp; in_organ), integer(1))
+    rate_df$n_pos_ref &lt;- vapply(group_levels, function(l) sum(group_info != l &amp; in_organ &amp; positive), integer(1))
+    ref_label &lt;- &quot;Not in group (same organ)&quot;
+    title_vs &lt;- sprintf(&quot;%s vs. same-organ non-group&quot;, organ)
+  } else {
+    rate_df$n_ref &lt;- vapply(group_levels, function(l) sum(group_info == l &amp; !in_organ), integer(1))
+    rate_df$n_pos_ref &lt;- vapply(group_levels, function(l) sum(group_info == l &amp; !in_organ &amp; positive), integer(1))
+    ref_label &lt;- &quot;Not in organ (same group)&quot;
+    title_vs &lt;- sprintf(&quot;%s vs. same-group non-organ&quot;, organ)
+  }
+
+  rate_df$rate_in_organ &lt;- rate_df$n_pos_in_organ / rate_df$n_in_organ
+  rate_df$rate_ref &lt;- rate_df$n_pos_ref / rate_df$n_ref
+  rate_df &lt;- rate_df[rate_df$n_in_organ &gt;= min_in_organ, , drop = FALSE]
+  if (nrow(rate_df) == 0) stop(sprintf(&quot;No %s type has &gt;= %d cells in &#39;%s&#39;.&quot;, group_label, min_in_organ, organ))
+
+  long_df &lt;- data.frame(
+    group = rep(rate_df$group, 2),
+    type = factor(rep(c(&quot;In organ&quot;, ref_label), each = nrow(rate_df)), levels = c(&quot;In organ&quot;, ref_label)),
+    rate = c(rate_df$rate_in_organ, rate_df$rate_ref)
+  )
+  level_order &lt;- rate_df$group[order(rate_df$rate_in_organ, decreasing = TRUE)]
+  long_df$group &lt;- factor(long_df$group, levels = level_order)
+
+  fill_values &lt;- group_colors[as.character(level_order)]
+  missing_colors &lt;- is.na(fill_values)
+  if (any(missing_colors)) {
+    fill_values[missing_colors] &lt;- fallback_group_color
+    warning(sprintf(
+      &quot;%s annotations missing from group_colors and colored %s: %s&quot;,
+      group_label, fallback_group_color, paste(level_order[missing_colors], collapse = &quot;, &quot;)
+    ))
+  }
+  alpha_vals &lt;- c(1, 0.35)
+  names(alpha_vals) &lt;- c(&quot;In organ&quot;, ref_label)
+
+  ggplot(long_df, aes(x = group, y = rate, fill = group, alpha = type)) +
+    geom_col(position = position_dodge(width = 0.8), width = 0.75, color = &quot;grey35&quot;, linewidth = 0.15) +
+    scale_fill_manual(values = fill_values, guide = &quot;none&quot;) +
+    scale_alpha_manual(values = alpha_vals, guide = guide_legend(override.aes = list(fill = &quot;grey40&quot;))) +
+    labs(
+      x = sprintf(&quot;%s annotation&quot;, group_label),
+      y = sprintf(&quot;Proportion of cells with %s &gt; %.3g&quot;, gp, threshold),
+      alpha = NULL,
+      title = sprintf(&quot;%s+ rate by %s: %s&quot;, gp, group_label, title_vs),
+      subtitle = sprintf(&quot;threshold = %.3g; %s types with &lt; %d cells in %s dropped&quot;, threshold, group_label, min_in_organ, organ)
+    ) +
+    theme_minimal(base_size = base_size) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = &quot;top&quot;)
 }
 
-klrg1_threshold &lt;- threshold_results_subset_manual$Threshold[threshold_results_subset_manual$Protein == &quot;KLRG1&quot;]
-cd8_split &lt;- get_klrg1_split(&quot;CD8&quot;, seurat_meta_filtered, protein_mat_normalized_lognorm, klrg1_threshold)
-CD4_split &lt;- get_klrg1_split(&quot;CD4&quot;, seurat_meta_filtered, protein_mat_normalized_lognorm, klrg1_threshold)
-treg_split &lt;- get_klrg1_split(&quot;Treg&quot;, seurat_meta_filtered, protein_mat_normalized_lognorm, klrg1_threshold)
-
-diff_CD8 &lt;- run_checked_dge(cd8_split, F_pm_filtered, L_pm_filtered, &quot;CD8&quot;) %&gt;% rename(mean_change_CD8 = mean_change_loadings, AveExpr_CD8 = AveExpr)
-diff_CD4 &lt;- run_checked_dge(CD4_split, F_pm_filtered, L_pm_filtered, &quot;CD4&quot;) %&gt;% rename(mean_change_CD4 = mean_change_loadings, AveExpr_CD4 = AveExpr)
-diff_Treg &lt;- run_checked_dge(treg_split, F_pm_filtered, L_pm_filtered, &quot;Treg&quot;) %&gt;% rename(mean_change_Treg = mean_change_loadings, AveExpr_Treg = AveExpr)
-
-# 6b: CD8 vs CD4
-merged_cd4 &lt;- inner_join(diff_CD4, diff_CD8, by = &quot;SYMBOL&quot;)
-p_6b &lt;- plot_target_gps(
-  df = merged_cd4, x_var = mean_change_CD8, y_var = mean_change_CD4, label_var = SYMBOL,
-  target_gps = c(&quot;GP10&quot;, &quot;GP58&quot;, &quot;GP25&quot;, &quot;GP26&quot;, &quot;GP43&quot;), background_alpha = 0.8, x_limits = c(-0.2, 0.4), y_limits = c(-0.2, 0.4),
-  highlight_color = c(&quot;GP10&quot; = &quot;darkorange2&quot;, &quot;GP25&quot; = &quot;blue&quot;, &quot;GP43&quot; = &quot;blue&quot;, &quot;GP26&quot; = &quot;blue&quot;, &quot;GP58&quot; = &quot;darkorange2&quot;),
-  title = &quot;KLRG1 Modulation: CD8 vs CD4&quot;, xlab = &quot;Effect Size in CD8 (KLRG1+ - KLRG1-)&quot;, ylab = &quot;Effect Size in CD4 (KLRG1+ - KLRG1-)&quot;
-) + theme_bw()
-ggsave(paste0(figure_path, &quot;6b.pdf&quot;), p_6b, width = 7, height = 6)
-
-# 6c: CD8 vs Treg
-merged_treg &lt;- inner_join(diff_Treg, diff_CD8, by = &quot;SYMBOL&quot;)
-p_6c &lt;- plot_target_gps(
-  df = merged_treg, x_var = mean_change_CD8, y_var = mean_change_Treg, label_var = SYMBOL,
-  target_gps = c(&quot;GP6&quot;, &quot;GP10&quot;, &quot;GP12&quot;, &quot;GP27&quot;, &quot;GP68&quot;, &quot;GP58&quot;), background_alpha = 0.8, x_limits = c(-0.2, 0.4), y_limits = c(-0.2, 0.4),
-  highlight_color = c(&quot;GP10&quot; = &quot;darkorange2&quot;, &quot;GP27&quot; = &quot;deeppink&quot;, &quot;GP6&quot; = &quot;deeppink&quot;, &quot;GP68&quot; = &quot;deeppink&quot;, &quot;GP12&quot; = &quot;deeppink&quot;, &quot;GP58&quot; = &quot;darkorange2&quot;),
-  title = &quot;KLRG1 Modulation: CD8 vs Treg&quot;, xlab = &quot;Effect Size in CD8 (KLRG1+ - KLRG1-)&quot;, ylab = &quot;Effect Size in Treg (KLRG1+ - KLRG1-)&quot;
-) + theme_bw()
-ggsave(paste0(figure_path, &quot;6c.pdf&quot;), p_6c, width = 7, height = 6)</code></pre>
-<p><img src="assets/Figure6/6b.png" width="49%" style="display: block; margin: auto;" /></p>
+p_6b &lt;- plot_gp_threshold_group_activation_rate(
+  gp = &quot;GP37&quot;,
+  organ = &quot;mammary gland&quot;,
+  threshold = organ_AUC_list$threshold[&quot;mammary gland&quot;, &quot;GP37&quot;],
+  min_in_organ = 100,
+  loading_mat = L_pm_filtered[rownames(seurat_meta_filtered_no_thymocytes_healthy), ],
+  organ_info = seurat_meta_filtered_no_thymocytes_healthy$organ_simplified,
+  group_info = seurat_meta_filtered_no_thymocytes_healthy$annotation_level1,
+  group_label = &quot;Level-1&quot;,
+  group_colors = ZemmourLib::immgent_colors$level1,
+  reference = &quot;not_in_organ&quot;
+)
+ggsave(filename = paste0(figure_path, &quot;6b.pdf&quot;), plot = p_6b, width = 8, height = 5, dpi = 300)</code></pre>
+<p><img src="assets/Figure6/6b.png" width="60%" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-6b">
 Past versions of 6b.png
@@ -1652,7 +1857,58 @@ Ziang Zhang
 </table>
 </div>
 </div>
-<p><img src="assets/Figure6/6c.png" width="49%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Fig. 6b.</strong> Proportion of GP37-active cells in each
+lineage in the mammary gland compared with all other organs (faded color
+bar).</p>
+</div>
+</div>
+<div id="fig6c" class="section level2">
+<h2>(c) Marker genes of the 7 organ-specific GPs</h2>
+<pre class="r"><code># ============================================================
+# 6c: organ marker genes - per-GP gene-score heatmap
+# ============================================================
+F_pm_filtered &lt;- readRDS(paste0(data_path, &quot;F_pm_filtered.rds&quot;))
+colnames(F_pm_filtered) &lt;- gsub(&quot;^F&quot;, &quot;GP&quot;, colnames(F_pm_filtered))
+D_scale &lt;- diag(1 / apply(F_pm_filtered, 2, function(x) max(abs(x), na.rm = TRUE)))
+F_pm_scaled &lt;- F_pm_filtered %*% D_scale
+colnames(F_pm_scaled) &lt;- colnames(F_pm_filtered)
+
+n_top_genes &lt;- 20
+min_loading &lt;- 0.25
+F_sub &lt;- F_pm_scaled[, gps_of_interest, drop = FALSE]
+selected_genes &lt;- lapply(gps_of_interest, function(gp) {
+  vals &lt;- F_sub[, gp]
+  names(sort(vals[vals &gt; min_loading], decreasing = TRUE))[seq_len(min(n_top_genes, sum(vals &gt; min_loading)))]
+})
+selected_genes &lt;- unique(unlist(selected_genes))
+
+# Diagonal gene ordering by dominant GP (highest loading)
+GP_orders &lt;- c(&quot;GP37&quot;, &quot;GP26&quot;, &quot;GP6&quot;, &quot;GP177&quot;, &quot;GP3&quot;, &quot;GP29&quot;, &quot;GP11&quot;)
+dominant_gp &lt;- apply(F_sub[selected_genes, , drop = FALSE], 1, function(x) GP_orders[which.max(x[GP_orders])])
+dominant_loading &lt;- mapply(function(g, gp) F_sub[g, gp], selected_genes, dominant_gp)
+gene_order_df &lt;- data.frame(Gene = selected_genes, dominant_gp = factor(dominant_gp, levels = GP_orders), loading = dominant_loading, stringsAsFactors = FALSE)
+gene_order_df &lt;- gene_order_df[order(gene_order_df$dominant_gp, -gene_order_df$loading), ]
+heatmap_gene_order &lt;- gene_order_df$Gene
+
+plot_df_hm &lt;- as.data.frame(F_sub[heatmap_gene_order, , drop = FALSE])
+plot_df_hm$Gene &lt;- rownames(plot_df_hm)
+plot_df_hm &lt;- tidyr::pivot_longer(plot_df_hm, cols = -Gene, names_to = &quot;GP&quot;, values_to = &quot;Loading&quot;)
+plot_df_hm$GP &lt;- factor(plot_df_hm$GP, levels = GP_orders)
+plot_df_hm$Gene &lt;- factor(plot_df_hm$Gene, levels = rev(heatmap_gene_order))
+limit_hm &lt;- max(abs(plot_df_hm$Loading), na.rm = TRUE)
+
+p_gene_heatmap &lt;- ggplot(plot_df_hm, aes(x = GP, y = Gene, fill = Loading)) +
+  geom_tile() +
+  scale_fill_gradient2(low = &quot;steelblue&quot;, mid = &quot;white&quot;, high = &quot;firebrick&quot;, midpoint = 0, limits = c(-limit_hm, limit_hm), name = &quot;Loading&quot;) +
+  labs(title = &quot;Top positive genes per organ GP&quot;, x = NULL, y = NULL) +
+  theme_minimal(base_size = 9) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 9), axis.text.y = element_text(size = 8), panel.grid = element_blank(), plot.title = element_text(face = &quot;bold&quot;, size = 11))
+
+pdf(paste0(figure_path, &quot;6c.pdf&quot;), width = 5, height = 16, useDingbats = FALSE)
+print(p_gene_heatmap)
+dev.off()</code></pre>
+<p><img src="assets/Figure6/6c.png" width="60%" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-6c">
 Past versions of 6c.png
@@ -1757,85 +2013,104 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 6b, c.</strong> GPs associated with KLRG1 protein
-expression in CD4, Tregs, and CD8. Effect-size versus effect-size plots,
-where each GP’s effect size is the difference in its mean activity
-between KLRG1+ and KLRG1- cells, comparing CD8+ T cells (x-axis) with
-CD4+ T cells (b) or Treg cells (c).</p>
+<p><strong>Fig. 6c.</strong> Genes associated with the seven
+organ-specific GPs shown in (a). Heatmap of the per-GP scaled gene
+scores for the top upregulated genes of each GP (top 20 per GP, gene
+score &gt; 0.25; blue, negative; red, positive).</p>
 </div>
 </div>
 <div id="fig6d" class="section level2">
-<h2>(d) Genes up- and down-regulated across the CD69-associated GPs</h2>
-<p>The ten GPs, and the correlation-based order they are drawn in, are
-defined once in <code>code/R/citeseq_shared_setup.R</code>, because <a
-href="FigureS7.html#figs7ab">Extended Data Fig. 7a, b</a> show the same
-GPs in the same order from a different script:</p>
-<pre class="r"><code># The CD69-associated GP subset, shared by Figure 6d (the up/down gene heatmap)
-# and Figure S7a/S7b (the same GPs&#39; mean activity per tissue and per lineage).
-# Defined once here because those panels live in two different scripts and must
-# show the same GPs in the same axis order. Curated, not a computed top-10.
-cd69_top_gps_subset &lt;- c(&quot;GP35&quot;, &quot;GP6&quot;, &quot;GP170&quot;, &quot;GP26&quot;, &quot;GP58&quot;, &quot;GP171&quot;, &quot;GP63&quot;, &quot;GP62&quot;, &quot;GP3&quot;, &quot;GP29&quot;)
-shared_cells_cd69 &lt;- intersect(rownames(L_pm_filtered), rownames(protein_mat_normalized_lognorm))
-cd69_expr_vec &lt;- protein_mat_normalized_lognorm[shared_cells_cd69, &quot;CD69&quot;]
-cd69_corr &lt;- sapply(cd69_top_gps_subset, function(gp) cor(L_pm_filtered[shared_cells_cd69, gp], cd69_expr_vec, method = &quot;spearman&quot;))
-# most-correlated GP ends up at the top of the y-axis in all three panels
-cd69_top_gps_sorted &lt;- names(sort(cd69_corr, decreasing = FALSE))</code></pre>
+<h2>(d) Max AUC: organ vs. cluster</h2>
 <pre class="r"><code># ============================================================
-# 6d: up/down genes across the 10 curated CD69-associated GPs
-# (cd69_top_gps_subset / cd69_corr / cd69_top_gps_sorted come from
-# citeseq_shared_setup.R, which Figure S7&#39;s s7a/s7b panels share)
+# 6d prep: Max AUC Organ vs Level-2
 # ============================================================
-D_scale6 &lt;- diag(1 / apply(F_pm_filtered, 2, function(x) max(abs(x), na.rm = TRUE)))
-F_pm_filtered_scaled &lt;- F_pm_filtered %*% D_scale6
-colnames(F_pm_filtered_scaled) &lt;- paste0(&quot;GP&quot;, 1:ncol(F_pm_filtered_scaled))
+level_2_AUC &lt;- level_2_AUC_list$auc
+level_2_small_count &lt;- table(seurat_meta_filtered_no_thymocytes_healthy$annotation_level2)
+level_2_small_count &lt;- names(level_2_small_count[level_2_small_count &lt; 100])
+level_2_AUC &lt;- level_2_AUC[!rownames(level_2_AUC) %in% level_2_small_count, ]
 
-plot_factor_heatmap &lt;- function(F_matrix, gp_vector, n_top = 5, min_abs_loading = 0.5, transpose = FALSE,
-                                 title = &quot;Factor loadings – top genes per GP&quot;, low_color = &quot;steelblue&quot;, mid_color = &quot;white&quot;, high_color = &quot;firebrick&quot;, font_size = 9) {
-  F_sub &lt;- F_matrix[, gp_vector, drop = FALSE]
-  selected_genes &lt;- lapply(gp_vector, function(gp) {
-    vals &lt;- F_sub[, gp]
-    top_pos &lt;- names(sort(vals, decreasing = TRUE))[seq_len(min(n_top, sum(vals &gt; 0)))]
-    top_neg &lt;- names(sort(vals, decreasing = FALSE))[seq_len(min(n_top, sum(vals &lt; 0)))]
-    c(top_pos, top_neg)
-  })
-  selected_genes &lt;- unique(unlist(selected_genes))
-  if (min_abs_loading &gt; 0) {
-    max_abs &lt;- apply(F_sub[selected_genes, , drop = FALSE], 1, function(x) max(abs(x), na.rm = TRUE))
-    selected_genes &lt;- names(max_abs[max_abs &gt;= min_abs_loading])
-  }
-  hc_genes &lt;- hclust(dist(F_sub[selected_genes, , drop = FALSE]))
-  gene_order &lt;- rownames(F_sub[selected_genes, , drop = FALSE])[hc_genes$order]
-  plot_df &lt;- F_sub[selected_genes, , drop = FALSE] %&gt;%
-    as.data.frame() %&gt;%
-    tibble::rownames_to_column(&quot;Gene&quot;) %&gt;%
-    tidyr::pivot_longer(cols = -Gene, names_to = &quot;GP&quot;, values_to = &quot;Loading&quot;) %&gt;%
-    mutate(GP = factor(GP, levels = gp_vector), Gene = factor(Gene, levels = gene_order))
-  limit &lt;- max(abs(plot_df$Loading), na.rm = TRUE)
-  x_aes &lt;- if (transpose) &quot;Gene&quot; else &quot;GP&quot;
-  y_aes &lt;- if (transpose) &quot;GP&quot; else &quot;Gene&quot;
-  ggplot(plot_df, aes(x = .data[[x_aes]], y = .data[[y_aes]], fill = Loading)) +
-    geom_tile() +
-    scale_fill_gradient2(low = low_color, mid = mid_color, high = high_color, midpoint = 0, limits = c(-limit, limit), name = &quot;Loading&quot;) +
-    # Axis titles are the faceting variables themselves (&quot;Gene&quot; / &quot;GP&quot;).
-    labs(title = title, x = x_aes, y = y_aes) +
-    theme_minimal(base_size = font_size) +
-    theme(axis.text.x = element_text(angle = if (transpose) 90 else 45, hjust = 1, size = font_size), axis.text.y = element_text(size = font_size), panel.grid = element_blank(), plot.title = element_text(face = &quot;bold&quot;))
-}
+level_2_cat_mean &lt;- t(sapply(rownames(level_2_AUC), function(cat) {
+  idx &lt;- seurat_meta_filtered_no_thymocytes_healthy$annotation_level2 == cat
+  colMeans(L_healthy[idx, , drop = FALSE], na.rm = TRUE)
+}))
+level_2_AUC_positive &lt;- sweep(level_2_cat_mean, 2, overall_mean, &quot;-&quot;) &gt; 0
 
-p_heatmap &lt;- plot_factor_heatmap(F_matrix = F_pm_filtered_scaled, gp_vector = cd69_top_gps_sorted, n_top = 5, font_size = 9, transpose = TRUE, low_color = &quot;#4DAF4A&quot;, mid_color = &quot;white&quot;, high_color = &quot;#984EA3&quot;)
+# 6d/6e reuse `organ_AUC_max_name`, but recomputed against the Level-2
+# category-count filter.
+organ_AUC_masked_l2 &lt;- organ_AUC
+organ_AUC_positive_l2 &lt;- sweep(
+  t(sapply(rownames(organ_AUC), function(cat) {
+    idx &lt;- seurat_meta_filtered_no_thymocytes_healthy$organ_simplified == cat
+    colMeans(L_healthy[idx, , drop = FALSE], na.rm = TRUE)
+  })),
+  2, overall_mean, &quot;-&quot;
+) &gt; 0
+organ_AUC_masked_l2[!organ_AUC_positive_l2] &lt;- NA
+organ_AUC_max &lt;- apply(organ_AUC_masked_l2, 2, max, na.rm = TRUE)
+organ_AUC_max_name &lt;- apply(organ_AUC_masked_l2, 2, function(x) rownames(organ_AUC_masked_l2)[which.max(x)])
 
-corr_strip_df &lt;- data.frame(GP = factor(cd69_top_gps_sorted, levels = cd69_top_gps_sorted), Correlation = cd69_corr[cd69_top_gps_sorted], x = &quot;Corr&quot;)
-corr_limit &lt;- max(abs(corr_strip_df$Correlation))
-p_corr_strip &lt;- ggplot(corr_strip_df, aes(x = x, y = GP, fill = Correlation)) +
-  geom_tile() +
-  scale_fill_gradient2(low = &quot;royalblue&quot;, mid = &quot;white&quot;, high = &quot;tomato&quot;, midpoint = 0, limits = c(-corr_limit, corr_limit), name = &quot;Corr\n(CD69)&quot;) +
-  labs(x = NULL, y = NULL) +
-  theme_minimal(base_size = 9) +
-  theme(axis.text.x = element_text(size = 9, angle = 45, hjust = 1), axis.text.y = element_blank(), axis.ticks.y = element_blank(), panel.grid = element_blank())
+# 6d&#39;s own max-AUC table, over the Level-2 categories.
+level_2_AUC_masked &lt;- level_2_AUC
+level_2_AUC_masked[!level_2_AUC_positive] &lt;- NA
+level_2_AUC_max &lt;- apply(level_2_AUC_masked, 2, max, na.rm = TRUE)
+level_2_AUC_max_name &lt;- apply(level_2_AUC_masked, 2, function(x) {
+  rownames(level_2_AUC_masked)[which.max(x)]
+})
+o_l2 &lt;- order(level_2_AUC_max, decreasing = TRUE)
+table_level_2_AUC &lt;- data.frame(
+  Factor = colnames(level_2_AUC)[o_l2],
+  Max_AUC = level_2_AUC_max[o_l2],
+  Annotation = level_2_AUC_max_name[o_l2]
+)
+df_l2 &lt;- data.frame(
+  Factor = table_level_2_AUC$Factor,
+  annotation_Level2 = table_level_2_AUC$Annotation,
+  annotation_Organ = organ_AUC_max_name[match(table_level_2_AUC$Factor, names(organ_AUC_max))],
+  Max_AUC_Organ = organ_AUC_max[match(table_level_2_AUC$Factor, names(organ_AUC_max))],
+  Max_AUC_Level2 = table_level_2_AUC$Max_AUC
+) %&gt;%
+  mutate(residual = Max_AUC_Level2 - Max_AUC_Organ, abs_res = abs(residual))
 
-p_6d &lt;- p_corr_strip + p_heatmap + patchwork::plot_layout(widths = c(0.06, 1), guides = &quot;collect&quot;)
-ggsave(paste0(figure_path, &quot;6d.pdf&quot;), p_6d, width = 11, height = 5)</code></pre>
-<p><img src="assets/Figure6/6d.png" width="100%" style="display: block; margin: auto;" /></p>
+# ============================================================
+# 6d: Max AUC Organ vs Level-2, 7 organ-specific GPs (red) vs.
+#     contrasting cluster-specific GPs (blue) highlighted
+# ============================================================
+seven_gp_df &lt;- df_l2 |&gt;
+  dplyr::filter(Factor %in% gps_of_interest) |&gt;
+  dplyr::mutate(label_text = sapply(Factor, top_cats_label, auc_matrix = level_2_AUC, positive_mask = level_2_AUC_positive, threshold = 0.9, n = 3))
+
+top_left_gps &lt;- c(&quot;GP14&quot;, &quot;GP36&quot;, &quot;GP16&quot;, &quot;GP151&quot;, &quot;GP21&quot;, &quot;GP122&quot;, &quot;GP2&quot;, &quot;GP171&quot;, &quot;GP5&quot;, &quot;GP13&quot;)
+top_left_df &lt;- df_l2 |&gt;
+  dplyr::filter(Factor %in% top_left_gps) |&gt;
+  dplyr::mutate(label_text = sapply(Factor, top_cats_label, auc_matrix = level_2_AUC, positive_mask = level_2_AUC_positive, threshold = 0.9, n = 3))
+
+p_6d &lt;- ggplot(df_l2, aes(Max_AUC_Organ, Max_AUC_Level2)) +
+  geom_point(alpha = 0.2, size = 1.5, color = &quot;grey60&quot;) +
+  geom_point(data = top_left_df, color = &quot;#1f78b4&quot;, size = 2.2, alpha = 0.9) +
+  geom_text_repel(
+    seed = 42,
+    data = top_left_df, aes(label = label_text), color = &quot;#1f78b4&quot;, lineheight = 0.85, size = 2.5,
+    direction = &quot;y&quot;, nudge_x = -0.1, segment.color = &quot;#1f78b4&quot;,
+    arrow = arrow(length = unit(0.008, &quot;npc&quot;), type = &quot;closed&quot;, angle = 20),
+    force = 4, force_pull = 0.05, box.padding = 0.5, point.padding = 0.15,
+    max.time = 10, max.iter = 2e4, max.overlaps = 30, min.segment.length = 0.01, segment.alpha = 0.7
+  ) +
+  geom_point(data = seven_gp_df, color = &quot;#e31a1c&quot;, size = 2.2, alpha = 0.9) +
+  geom_text_repel(
+    seed = 42,
+    data = seven_gp_df, aes(label = label_text), color = &quot;#e31a1c&quot;, size = 2.5, lineheight = 0.85,
+    direction = &quot;y&quot;, nudge_x = 0.18, xlim = c(1.0, NA), segment.color = &quot;#e31a1c&quot;,
+    arrow = arrow(length = unit(0.008, &quot;npc&quot;), type = &quot;closed&quot;, angle = 20),
+    force = 6, force_pull = 0.02, box.padding = 0.6, point.padding = 0.15,
+    max.time = 10, max.iter = 2e4, max.overlaps = 30, min.segment.length = 0.01, segment.alpha = 0.7
+  ) +
+  geom_abline(slope = 1, intercept = 0, linetype = &quot;dashed&quot;, color = &quot;black&quot;) +
+  coord_cartesian(xlim = c(0.46, 1.04), ylim = c(0.5, 1.02), expand = FALSE, clip = &quot;off&quot;) +
+  labs(x = &quot;Max AUC (Organ Simplified)&quot;, y = &quot;Max AUC (Level-2)&quot;, title = &quot;Max AUC: Organ vs Level-2 - organ-specific GPs&quot;) +
+  theme_minimal(base_size = 13) +
+  theme(plot.margin = margin(10, 80, 10, 80))
+ggsave(filename = paste0(figure_path, &quot;6d.pdf&quot;), plot = p_6d, width = 8, height = 8, dpi = 300)</code></pre>
+<p><img src="assets/Figure6/6d.png" width="60%" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-6d">
 Past versions of 6d.png
@@ -1940,41 +2215,62 @@ Ziang Zhang
 </div>
 </div>
 <div class="figcaption">
-<p><strong>Fig. 6d.</strong> Heatmap of the top five most strongly up-
-and down-regulated gene scores for ten GPs correlated with CD69
-expression, with the left strip indicating the Spearman correlation
-between GP activity and CD69 expression.</p>
+<p><strong>Fig. 6d.</strong> As in (a), but predictive performance is
+measured against level 2 clusters (y-axis). The seven organ-specific GPs
+from (a) are highlighted in red, and a contrasting set of
+cluster-specific GPs (high cluster AUC, low organ AUC) in blue.</p>
 </div>
 </div>
-<div id="fig6ej" class="section level2">
-<h2>(e-j) Protein-gated vs. GP-loading populations</h2>
+<div id="fig6e" class="section level2">
+<h2>(e) Organ, GP, and cluster alluvial diagram</h2>
 <pre class="r"><code># ============================================================
-# 6e-6j: protein-gate vs. GP-loading comparison for the 6 curated main-figure
-# GPs (df_markers2, thymocyte/proliferating/miniverse_cells, L_pm_for_gating,
-# select_proteins, threshold_results_subset_manual, enlarge_gps all come from
-# citeseq_shared_setup.R above)
+# 6e: alluvial, organ -&gt; GP -&gt; Level-2, for GP+ cells of the
+#     7 organ-specific GPs
 # ============================================================
-# Panel lettering is carried by this named vector and the loop iterates over its
-# names, so a GP can never be drawn under another GP&#39;s letter.
-fig6_gating &lt;- c(&quot;GP171&quot; = &quot;6e&quot;, &quot;GP12&quot; = &quot;6f&quot;, &quot;GP80&quot; = &quot;6g&quot;, &quot;GP23&quot; = &quot;6h&quot;, &quot;GP77&quot; = &quot;6i&quot;, &quot;GP8&quot; = &quot;6j&quot;)
-for (gp in names(fig6_gating)) {
-  k_name &lt;- paste0(&quot;K&quot;, sub(&quot;^GP&quot;, &quot;&quot;, gp))
-  plot_gated_gp_vs_protein(
-    gp_name = k_name,
-    df_markers = df_markers2,
-    protein_mat = protein_mat_normalized_lognorm,
-    loading_mat = L_pm_for_gating,
-    mde_emb = mde_result,
-    missing_threshold_action = &quot;skip&quot;,
-    threshold_df = threshold_results_subset_manual,
-    exclude_cells = c(thymocyte_cells, proliferating_cells, miniverse_cells),
-    selected_proteins = select_proteins,
-    loading_q = NULL,
-    min_pointsize = if (gp %in% enlarge_gps) 3L else 0L,
-    save_path = paste0(figure_path, fig6_gating[gp], &quot;.pdf&quot;)
+best_organ_per_gp &lt;- organ_AUC_max_name[gps_of_interest]
+gp_thresholds &lt;- mapply(function(gp, organ) organ_AUC_list$threshold[organ, gp], gps_of_interest, best_organ_per_gp)
+names(gp_thresholds) &lt;- gps_of_interest
+
+n_cap_gp &lt;- 300
+set.seed(42)
+alluvial_rows &lt;- lapply(gps_of_interest, function(gp) {
+  positive_idx &lt;- L_healthy[, gp] &gt; gp_thresholds[gp]
+  meta_pos &lt;- seurat_meta_filtered_no_thymocytes_healthy[positive_idx, ]
+  d &lt;- data.frame(gp_program = gp, organ = meta_pos$organ_simplified, level2 = meta_pos$annotation_level2, stringsAsFactors = FALSE)
+  if (nrow(d) &gt; n_cap_gp) d &lt;- dplyr::slice_sample(d, n = n_cap_gp)
+  d
+})
+
+count_df &lt;- do.call(rbind, alluvial_rows) |&gt;
+  dplyr::count(organ, gp_program, level2, name = &quot;n&quot;) |&gt;
+  dplyr::filter(!is.na(organ), !is.na(level2), n &gt;= 5)
+
+organ_order &lt;- count_df |&gt; dplyr::summarise(total = sum(n), .by = organ) |&gt; dplyr::arrange(dplyr::desc(total)) |&gt; dplyr::pull(organ)
+level2_order &lt;- count_df |&gt; dplyr::summarise(total = sum(n), .by = level2) |&gt; dplyr::arrange(dplyr::desc(total)) |&gt; dplyr::pull(level2)
+
+count_df &lt;- count_df |&gt;
+  dplyr::mutate(
+    organ = factor(organ, levels = rev(organ_order)),
+    gp_program = factor(gp_program, levels = rev(gps_of_interest)),
+    level2 = factor(level2, levels = rev(level2_order))
   )
-}</code></pre>
-<p><img src="assets/Figure6/6e.png" width="49%" style="display: block; margin: auto;" /></p>
+
+gp_colors &lt;- ZemmourLib::immgent_colors$organ_simplified[unname(best_organ_per_gp)]
+gp_colors[is.na(gp_colors)] &lt;- &quot;grey60&quot;
+names(gp_colors) &lt;- gps_of_interest
+
+p_6e &lt;- ggplot(count_df, aes(axis1 = organ, axis2 = gp_program, axis3 = level2, y = n)) +
+  ggalluvial::geom_alluvium(aes(fill = gp_program), width = 1 / 4, alpha = 0.6, knot.pos = 0.4) +
+  ggalluvial::geom_stratum(width = 1 / 4, fill = &quot;grey92&quot;, color = &quot;grey50&quot;, linewidth = 0.3) +
+  ggplot2::geom_text(stat = ggalluvial::StatStratum, aes(label = after_stat(stratum)), size = 3, angle = 90) +
+  scale_fill_manual(values = gp_colors, guide = &quot;none&quot;) +
+  scale_x_discrete(limits = c(&quot;Organ&quot;, &quot;GP&quot;, &quot;Level-2&quot;), expand = c(0.12, 0.12)) +
+  labs(y = &quot;Number of GP+ cells&quot;, title = &quot;GP+ cells: organ origin and cell type&quot;) +
+  theme_minimal(base_size = 12) +
+  theme(panel.grid = element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank()) +
+  coord_flip()
+ggsave(filename = paste0(figure_path, &quot;6e.pdf&quot;), plot = p_6e, width = 20, height = 10, dpi = 300)</code></pre>
+<p><img src="assets/Figure6/6e.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-6e">
 Past versions of 6e.png
@@ -2078,531 +2374,11 @@ Ziang Zhang
 </table>
 </div>
 </div>
-<p><img src="assets/Figure6/6f.png" width="49%" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-6f">
-Past versions of 6f.png
-</button>
-</p>
-<div id="fig-6f" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/d538aa21ca31faac7d6daceb42bcef57800ff26c/docs/assets/Figure6/6f.png" target="_blank">d538aa2</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-28
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/710259816a5471e4ec442a7a27b8732d9dd67e8d/docs/assets/Figure6/6f.png" target="_blank">7102598</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/6c1a613526a5e79e96a566eb3ed8c22e91015cba/docs/assets/Figure6/6f.png" target="_blank">6c1a613</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/bf7afcfe360b8947b96a4b905fcaa82ecd923a67/docs/assets/Figure6/6f.png" target="_blank">bf7afcf</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/ea3ecc24d9da3261943163a384b2262252fcceea/docs/assets/Figure6/6f.png" target="_blank">ea3ecc2</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/78e3bbad835aff2b513ff86f600f6b01b2beb5e3/docs/assets/Figure6/6f.png" target="_blank">78e3bba</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/06b2461eba2147f353f2ce082bdebe22f5dcee26/docs/assets/Figure6/6f.png" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><img src="assets/Figure6/6g.png" width="49%" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-6g">
-Past versions of 6g.png
-</button>
-</p>
-<div id="fig-6g" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/d538aa21ca31faac7d6daceb42bcef57800ff26c/docs/assets/Figure6/6g.png" target="_blank">d538aa2</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-28
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/710259816a5471e4ec442a7a27b8732d9dd67e8d/docs/assets/Figure6/6g.png" target="_blank">7102598</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/6c1a613526a5e79e96a566eb3ed8c22e91015cba/docs/assets/Figure6/6g.png" target="_blank">6c1a613</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/bf7afcfe360b8947b96a4b905fcaa82ecd923a67/docs/assets/Figure6/6g.png" target="_blank">bf7afcf</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/ea3ecc24d9da3261943163a384b2262252fcceea/docs/assets/Figure6/6g.png" target="_blank">ea3ecc2</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/78e3bbad835aff2b513ff86f600f6b01b2beb5e3/docs/assets/Figure6/6g.png" target="_blank">78e3bba</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/06b2461eba2147f353f2ce082bdebe22f5dcee26/docs/assets/Figure6/6g.png" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><img src="assets/Figure6/6h.png" width="49%" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-6h">
-Past versions of 6h.png
-</button>
-</p>
-<div id="fig-6h" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/d538aa21ca31faac7d6daceb42bcef57800ff26c/docs/assets/Figure6/6h.png" target="_blank">d538aa2</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-28
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/710259816a5471e4ec442a7a27b8732d9dd67e8d/docs/assets/Figure6/6h.png" target="_blank">7102598</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/6c1a613526a5e79e96a566eb3ed8c22e91015cba/docs/assets/Figure6/6h.png" target="_blank">6c1a613</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/bf7afcfe360b8947b96a4b905fcaa82ecd923a67/docs/assets/Figure6/6h.png" target="_blank">bf7afcf</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/ea3ecc24d9da3261943163a384b2262252fcceea/docs/assets/Figure6/6h.png" target="_blank">ea3ecc2</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/78e3bbad835aff2b513ff86f600f6b01b2beb5e3/docs/assets/Figure6/6h.png" target="_blank">78e3bba</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/06b2461eba2147f353f2ce082bdebe22f5dcee26/docs/assets/Figure6/6h.png" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><img src="assets/Figure6/6i.png" width="49%" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-6i">
-Past versions of 6i.png
-</button>
-</p>
-<div id="fig-6i" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/d538aa21ca31faac7d6daceb42bcef57800ff26c/docs/assets/Figure6/6i.png" target="_blank">d538aa2</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-28
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/710259816a5471e4ec442a7a27b8732d9dd67e8d/docs/assets/Figure6/6i.png" target="_blank">7102598</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/6c1a613526a5e79e96a566eb3ed8c22e91015cba/docs/assets/Figure6/6i.png" target="_blank">6c1a613</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/bf7afcfe360b8947b96a4b905fcaa82ecd923a67/docs/assets/Figure6/6i.png" target="_blank">bf7afcf</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/ea3ecc24d9da3261943163a384b2262252fcceea/docs/assets/Figure6/6i.png" target="_blank">ea3ecc2</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/78e3bbad835aff2b513ff86f600f6b01b2beb5e3/docs/assets/Figure6/6i.png" target="_blank">78e3bba</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/06b2461eba2147f353f2ce082bdebe22f5dcee26/docs/assets/Figure6/6i.png" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><img src="assets/Figure6/6j.png" width="49%" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-6j">
-Past versions of 6j.png
-</button>
-</p>
-<div id="fig-6j" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/d538aa21ca31faac7d6daceb42bcef57800ff26c/docs/assets/Figure6/6j.png" target="_blank">d538aa2</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-28
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/710259816a5471e4ec442a7a27b8732d9dd67e8d/docs/assets/Figure6/6j.png" target="_blank">7102598</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/6c1a613526a5e79e96a566eb3ed8c22e91015cba/docs/assets/Figure6/6j.png" target="_blank">6c1a613</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/bf7afcfe360b8947b96a4b905fcaa82ecd923a67/docs/assets/Figure6/6j.png" target="_blank">bf7afcf</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/ea3ecc24d9da3261943163a384b2262252fcceea/docs/assets/Figure6/6j.png" target="_blank">ea3ecc2</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/78e3bbad835aff2b513ff86f600f6b01b2beb5e3/docs/assets/Figure6/6j.png" target="_blank">78e3bba</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/06b2461eba2147f353f2ce082bdebe22f5dcee26/docs/assets/Figure6/6j.png" target="_blank">06b2461</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2026-07-02
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
 <div class="figcaption">
-<p><strong>Fig. 6e-j.</strong> Examples of gating strategies used to
-identify GP-active cells. All-T MDE plots highlight cells selected by
-the proposed gating strategy (left) and the corresponding GP-active
-cells (right). Color indicates cell density.</p>
+<p><strong>Fig. 6e.</strong> Alluvial plot showing how tissue-specific
+GP activity is distributed across clusters. For each organ, GP-active
+cells are traced to their cluster annotation. Flows are colored by GP,
+and width is proportional to the number of cells.</p>
 </div>
 <br>
 <p>

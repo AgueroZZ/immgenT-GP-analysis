@@ -12,7 +12,7 @@
 <meta name="author" content="Ziang Zhang" />
 
 
-<title>Extended Data Figure 2: Tz- and CD8-specific GPs (GP30 and GP58, respectively)</title>
+<title>Extended Data Figure 2: Tz- and CD8-specific GPs (GP30 and GP58, respectively), and GP activity across T cell clusters</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -354,7 +354,8 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Extended Data Figure 2: Tz- and
-CD8-specific GPs (GP30 and GP58, respectively)</h1>
+CD8-specific GPs (GP30 and GP58, respectively), and GP activity across T
+cell clusters</h1>
 <h4 class="author">Ziang Zhang</h4>
 
 </div>
@@ -384,7 +385,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-09-09
+<strong>Last updated:</strong> 2026-09-10
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +517,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0e84840937f3e5cd6e9797a08404989152da6628targetblank0e84840a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree4307b28577441a16a09628b04b38fbd8808c6c0etargetblank4307b28a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0e84840937f3e5cd6e9797a08404989152da6628" target="_blank">0e84840</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/4307b28577441a16a09628b04b38fbd8808c6c0e" target="_blank">4307b28</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0e84840937f3e5cd6e9797a08404989152da6628targetblank0e84840a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree4307b28577441a16a09628b04b38fbd8808c6c0etargetblank4307b28a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +535,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0e84840937f3e5cd6e9797a08404989152da6628" target="_blank">0e84840</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/4307b28577441a16a09628b04b38fbd8808c6c0e" target="_blank">4307b28</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -577,14 +578,13 @@ Ignored files:
     Ignored:    figures/final-selected/.DS_Store
     Ignored:    figures/final-selected/Figure 1/.DS_Store
     Ignored:    figures/final-selected/Figure 2/.DS_Store
-    Ignored:    figures/final-selected/Figure 4/.DS_Store
+    Ignored:    figures/final-selected/Figure 5/.DS_Store
     Ignored:    figures/final-selected/Figure S1/.DS_Store
     Ignored:    figures/templates_20260729/
     Ignored:    internal/
     Ignored:    log/
     Ignored:    output/.DS_Store
     Ignored:    output/Figure2/
-    Ignored:    output/Figure7b/7b_cell_metadata.csv.gz
     Ignored:    plan/
     Ignored:    tables/
     Ignored:    tmp/
@@ -632,6 +632,41 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/4307b28577441a16a09628b04b38fbd8808c6c0e/analysis/FigureS2.Rmd" target="_blank">4307b28</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+<td>
+New main Figure 4, and fold the cluster heatmap into Extended Data
+Figure 2
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/a7a481feaa81a930533e380487fd08ccea0b0d0e/docs/FigureS2.html" target="_blank">a7a481f</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-09
+</td>
+<td>
+Build site: the rebuilt Figure 1d and the Extended Data renumbering
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1133,11 +1168,15 @@ Initial commit: immgenT-GP-analysis
 </div>
 </div>
 </div>
-<p>All panels are produced by <a
+<p>Panels (a)-(c) are produced by <a
 href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS2.R"><code>script/FigureS2.R</code></a>,
 which shares its source data setup with <a href="Figure3.html">Figure
-3</a>. The code below is shown for reference (not re-executed on this
-page); the images are its pre-rendered output.</p>
+3</a>. Panel (d) is produced by <a
+href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS2d.R"><code>script/FigureS2d.R</code></a>,
+which shares nothing with them – a different reference cell set and a
+different rendering module – and so is kept as its own script. The code
+below is shown for reference (not re-executed on this page); the images
+are its pre-rendered output.</p>
 <div id="setup" class="section level2">
 <h2>Setup</h2>
 <pre class="r"><code># Figure S2. GP30 and GP58 loadings across T-cell subsets.
@@ -1570,6 +1609,177 @@ Ziang Zhang
 protein expression (CITE-seq, log-normalized counts) in resting and
 activated CD8+ T cells.</p>
 </div>
+</div>
+<div id="figs2d" class="section level2">
+<h2>(d) GP activity across T cell clusters</h2>
+<p>This panel shows the full row-centered matrix: all 200 GPs against
+the 99 level-2 clusters observed in healthy non-thymocyte cells
+(<code>condition_broad == "healthy"</code> and
+<code>annotation_level1 != "thymocyte"</code>), with the miniverse
+(<code>.wM</code>) clusters excluded as in <a
+href="Figure1.html#fig1d">Fig. 1d</a>. For each GP, its mean loading
+across clusters is subtracted from every cluster mean, so a row says
+where a program is more or less active than its own average rather than
+how large its loading is. The centered color scale is fixed at -0.2 to
+0.2; values outside this range are saturated at the endpoint colors. The
+columns carry the same two annotations Fig. 1d gives its cells – lineage
+and <code>annotation_level2_group</code>, each with a legend – rather
+than a per-cluster color bar, since the column labels already name every
+cluster. The columns are also ordered the way Fig. 1d orders its cells –
+lineage, then <code>annotation_level2_group</code> as a contiguous
+block, then cluster alphabetically within the block, which is what puts
+each lineage’s proliferating (<code>.P</code>) cluster at the end of its
+lineage rather than mid-alphabet – and the GP rows follow the columns,
+in dominant-cluster blocks. It is the mean-loading counterpart of <a
+href="FigureS4.html">Extended Data Figure 4</a>, which resolves the same
+clusters cell by cell.</p>
+<div id="setup-centering-and-ordering" class="section level3">
+<h3>Setup, centering, and ordering</h3>
+<pre class="r"><code># Figure S2, panel d. GP activity across T cell clusters.
+#
+# One panel (see analysis/FigureS2.Rmd for the caption text):
+#   S2D  Row-centered mean GP activity across the 99 level-2 clusters, all
+#        200 GPs, in healthy non-thymocyte cells.
+#
+# Panels S2A-S2C come from script/FigureS2.R; this panel is kept in its own
+# script because it shares nothing with them -- a different reference cell
+# set, a different rendering module -- and re-running it means loading the
+# full cell-by-GP loading matrix.
+#
+#
+# For each GP, its mean loading across clusters is subtracted from every cluster
+# mean, so the panel shows where a program is more or less active than its own
+# average rather than how large its loading is. The centered color scale is
+# fixed at [-0.2, 0.2]; values outside this range saturate at the endpoint
+# colors. Level2 columns follow Figure 1&#39;s level1 order, with level2 labels
+# alphabetized within each level1 block. The columns are annotated the way
+# Figure 1d annotates its cells -- a level1 bar and an annotation_level2_group
+# bar, each with a legend, and no per-cluster colour bar, since the column
+# labels already name every cluster.
+#
+# Required inputs (data/) -- see code/README.md&#39;s &quot;Data provenance&quot; table
+# for the full picture:
+#   L_pm_filtered.rds                        [code/pipeline/01b_filter_cells.R]
+#   igt1_96_..._ADTonly.Rds                  [primary input Seurat object]
+
+suppressPackageStartupMessages({
+  library(ComplexHeatmap)
+  library(circlize)
+  library(grid)
+  library(ZemmourLib)
+})
+
+if (!file.exists(&quot;code/R/setup_data.R&quot;)) {
+  stop(&quot;Run this script from the immgenT-GP-analysis repository root.&quot;)
+}
+
+source(&quot;code/R/setup_data.R&quot;)
+source(&quot;code/R/centered_mean_heatmap.R&quot;)
+source(&quot;code/R/level2_group_palette.R&quot;)
+
+figure_path &lt;- &quot;figures/final-selected/Figure S2&quot;
+dir.create(figure_path, recursive = TRUE, showWarnings = FALSE)
+
+# ============================================================
+# Setup, centering, and ordering
+# ============================================================
+gp_data &lt;- load_gp_data()
+reference &lt;- healthy_nonthymocyte_reference(gp_data)
+
+# Drop the miniverse clusters, as Figure 1d does: they are the &quot;.wM&quot; clusters,
+# eight of them here (Figure 1d sees seven, because it drops DP as well), so
+# 107 level2 clusters become 99. The exclusion is applied to the cells before
+# any mean is taken, so the centering is over the columns that remain.
+keep &lt;- !reference$meta$annotation_level2_group %in% EXCLUDE_LEVEL2_GROUPS
+if (anyNA(keep) || !any(keep)) {
+  stop(&quot;annotation_level2_group is missing for some healthy non-thymocyte cells.&quot;)
+}
+L_reference &lt;- reference$L[keep, , drop = FALSE]
+meta_reference &lt;- reference$meta[keep, , drop = FALSE]
+
+centered_color_limit &lt;- 0.2
+level1_order &lt;- c(&quot;CD8&quot;, &quot;CD4&quot;, &quot;Treg&quot;, &quot;gdT&quot;, &quot;CD8aa&quot;, &quot;Tz&quot;, &quot;DN&quot;, &quot;DP&quot;)
+
+level2_result &lt;- mean_loading_by_group(L_reference, meta_reference$annotation_level2)
+level2_raw &lt;- level2_result$matrix
+level2_centered &lt;- center_by_gp_mean(level2_raw)
+
+level2_group_level1 &lt;- level2_to_level1_map(
+  meta_reference, colnames(level2_raw), level1_order
+)
+level2_group_group &lt;- level2_to_group_map(meta_reference, colnames(level2_raw))
+# Columns follow Figure 1d exactly: lineage, then annotation_level2_group as a
+# contiguous block, then cluster alphabetically -- so each lineage&#39;s &quot;.P&quot;
+# cluster sits at the end of its lineage rather than mid-alphabet. GP rows then
+# follow the columns, in dominant-cluster blocks.
+level2_order &lt;- dominant_group_order(
+  level2_raw,
+  level2_group_block_order(
+    colnames(level2_raw), level2_group_level1, level2_group_group, level1_order
+  )
+)
+
+stopifnot(
+  nrow(level2_centered) == 200L,
+  ncol(level2_centered) == 99L,
+  !any(level2_group_group %in% EXCLUDE_LEVEL2_GROUPS),
+  max(abs(rowMeans(level2_centered))) &lt; 1e-12
+)
+
+level1_palette &lt;- ZemmourLib::immgent_colors$level1[level1_order]</code></pre>
+</div>
+<div id="cluster-mean-loading" class="section level3">
+<h3>Cluster mean loading</h3>
+<pre class="r"><code>render_centered_heatmap(
+  level2_centered,
+  NULL,
+  &quot;cluster (annotation_level2)&quot;,
+  file.path(figure_path, &quot;S2D.pdf&quot;),
+  level2_order$row_order,
+  level2_order$column_order,
+  centered_color_limit,
+  paste0(
+    &quot;all 200 GPs; level2 columns: Figure 1 level1 order &quot;,
+    &quot;(CD8, CD4, Treg, gdT, CD8aa, Tz, DN, DP); &quot;,
+    &quot;level2_group blocks, alphabetical within block; &quot;,
+    &quot;miniverse (.wM) clusters excluded; &quot;,
+    &quot;GP rows: dominant-group blocks&quot;
+  ),
+  group_level1 = level2_group_level1,
+  level1_palette = level1_palette,
+  group_annotation = level2_group_group,
+  group_annotation_palette = LEVEL2_GROUP_COLORS[LEVEL2_GROUP_ORDER]
+)
+
+summary_dir &lt;- &quot;output/FigureS2d&quot;   # build intermediate (not a manuscript panel)
+dir.create(summary_dir, recursive = TRUE, showWarnings = FALSE)
+write.csv(
+  data.frame(
+    panel = &quot;S2D&quot;,
+    grouping = &quot;annotation_level2&quot;,
+    view = &quot;full row-centered mean loading&quot;,
+    gp_count = nrow(level2_centered),
+    group_count = ncol(level2_centered),
+    excluded_level2_groups = paste(EXCLUDE_LEVEL2_GROUPS, collapse = &quot;;&quot;),
+    centered_definition = &quot;group mean minus mean across groups for each GP&quot;,
+    color_min = -centered_color_limit,
+    color_mid = 0,
+    color_max = centered_color_limit,
+    observed_min = min(level2_centered),
+    observed_max = max(level2_centered)
+  ),
+  file.path(summary_dir, &quot;S2D_summary.csv&quot;),
+  row.names = FALSE,
+  quote = FALSE
+)
+
+message(&quot;Wrote Figure S2 panel d to &quot;, normalizePath(figure_path))</code></pre>
+<p><img src="assets/FigureS2/S2D.png" width="100%" style="display: block; margin: auto;" /></p>
+<div class="figcaption">
+<p><strong>Extended Data Fig. 2d.</strong> Row-centered mean GP activity
+across the 99 level-2 clusters. Mean GP activity computed in samples at
+baseline.</p>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1607,6 +1817,7 @@ loaded via a namespace (and not attached):
 [29] pkgconfig_2.0.3 later_1.4.4     digest_0.6.39   R6_2.6.1       
 [33] pillar_1.11.1   magrittr_2.0.5  bslib_0.9.0     tools_4.5.1    
 [37] cachem_1.1.0   </code></pre>
+</div>
 </div>
 </div>
 </div>

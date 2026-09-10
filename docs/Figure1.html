@@ -384,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-09-09
+<strong>Last updated:</strong> 2026-09-10
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0e84840937f3e5cd6e9797a08404989152da6628targetblank0e84840a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree4307b28577441a16a09628b04b38fbd8808c6c0etargetblank4307b28a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0e84840937f3e5cd6e9797a08404989152da6628" target="_blank">0e84840</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/4307b28577441a16a09628b04b38fbd8808c6c0e" target="_blank">4307b28</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0e84840937f3e5cd6e9797a08404989152da6628targetblank0e84840a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree4307b28577441a16a09628b04b38fbd8808c6c0etargetblank4307b28a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0e84840937f3e5cd6e9797a08404989152da6628" target="_blank">0e84840</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/4307b28577441a16a09628b04b38fbd8808c6c0e" target="_blank">4307b28</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -577,14 +577,13 @@ Ignored files:
     Ignored:    figures/final-selected/.DS_Store
     Ignored:    figures/final-selected/Figure 1/.DS_Store
     Ignored:    figures/final-selected/Figure 2/.DS_Store
-    Ignored:    figures/final-selected/Figure 4/.DS_Store
+    Ignored:    figures/final-selected/Figure 5/.DS_Store
     Ignored:    figures/final-selected/Figure S1/.DS_Store
     Ignored:    figures/templates_20260729/
     Ignored:    internal/
     Ignored:    log/
     Ignored:    output/.DS_Store
     Ignored:    output/Figure2/
-    Ignored:    output/Figure7b/7b_cell_metadata.csv.gz
     Ignored:    plan/
     Ignored:    tables/
     Ignored:    tmp/
@@ -632,6 +631,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/a7a481feaa81a930533e380487fd08ccea0b0d0e/docs/Figure1.html" target="_blank">a7a481f</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-09
+</td>
+<td>
+Build site: the rebuilt Figure 1d and the Extended Data renumbering
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1776,16 +1792,11 @@ GP_HIGHLIGHTS &lt;- c(
   GP1  = &quot;cyan2&quot;,  GP56 = &quot;red2&quot;,    GP161 = &quot;brown&quot;, GP6  = &quot;green2&quot;,
   GP7  = &quot;green3&quot;, GP196 = &quot;yellow3&quot;)
 
-# No annotation_level2_group order or palette exists in ZemmourLib, so both are
-# defined here. The colours are a deliberately different family from the level1
-# primaries so the two annotation bars cannot be confused, and none is
-# near-white (against the white heatmap body a pale category would read as
-# missing data rather than as a level).
-LEVEL2_GROUP_ORDER  &lt;- c(&quot;resting&quot;, &quot;activated&quot;, &quot;proliferating&quot;, &quot;miniverse&quot;, &quot;other&quot;)
-LEVEL2_GROUP_COLORS &lt;- c(resting       = &quot;#80cdc1&quot;, activated = &quot;#b2182b&quot;,
-                         proliferating = &quot;#542788&quot;, miniverse = &quot;#8c510a&quot;,
-                         other         = &quot;#bdbdbd&quot;)
-EXCLUDE_LEVEL2_GROUPS &lt;- c(&quot;miniverse&quot;)
+# LEVEL2_GROUP_ORDER, LEVEL2_GROUP_COLORS and EXCLUDE_LEVEL2_GROUPS: no
+# annotation_level2_group order or palette exists in ZemmourLib, so they are
+# defined in code/R/level2_group_palette.R and shared with Extended Data
+# Figure 2d, which annotates its columns the same way.
+source(&quot;code/R/level2_group_palette.R&quot;)
 
 set.seed(6173)
 MIN_CELLS &lt;- 20; N_SAMPLE &lt;- 80; K_ANCHOR &lt;- 5
@@ -1905,6 +1916,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/a7a481feaa81a930533e380487fd08ccea0b0d0e/docs/assets/Figure1/1D.png" target="_blank">a7a481f</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-09
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/710259816a5471e4ec442a7a27b8732d9dd67e8d/docs/assets/Figure1/1D.png" target="_blank">7102598</a>
