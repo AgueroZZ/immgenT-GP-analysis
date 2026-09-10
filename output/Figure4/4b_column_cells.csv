@@ -13,7 +13,6 @@
 "CD4.R","CD4",512
 "CD4.S","CD4",300
 "CD4.T","CD4",495
-"CD4.wM","CD4",10543
 "CD4.wN","CD4",1162
 "CD4.wZ","CD4",468
 "CD4.X","CD4",887
@@ -33,7 +32,6 @@
 "CD8.Q","CD8",2445
 "CD8.R","CD8",1006
 "CD8.T","CD8",901
-"CD8.wM","CD8",6174
 "CD8.wV","CD8",481
 "CD8.wY","CD8",234
 "CD8aa.A","CD8aa",8296
@@ -42,7 +40,6 @@
 "CD8aa.D","CD8aa",1350
 "CD8aa.E","CD8aa",1138
 "CD8aa.P","CD8aa",503
-"CD8aa.wM","CD8aa",247
 "DN.A","DN",579
 "DN.B","DN",3462
 "DN.C","DN",1757
@@ -52,7 +49,6 @@
 "DN.I","DN",232
 "DN.J","DN",107
 "DN.P","DN",320
-"DN.wM","DN",822
 "gdT.A","gdT",2231
 "gdT.B","gdT",5563
 "gdT.C","gdT",1319
@@ -70,7 +66,6 @@
 "gdT.T","gdT",218
 "gdT.U","gdT",1518
 "gdT.V","gdT",1883
-"gdT.wM","gdT",1732
 "gdT.Z","gdT",3331
 "Treg.A","Treg",8101
 "Treg.B","Treg",2510
@@ -79,10 +74,8 @@
 "Treg.E","Treg",1866
 "Treg.F","Treg",2941
 "Treg.P","Treg",1786
-"Treg.wM","Treg",654
 "Tz.A","Tz",6663
 "Tz.B","Tz",846
 "Tz.C","Tz",1939
 "Tz.D","Tz",1565
 "Tz.P","Tz",228
-"Tz.wM","Tz",706

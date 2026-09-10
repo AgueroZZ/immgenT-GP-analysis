@@ -56,9 +56,10 @@ knitr::include_graphics("assets/Figure4/4b.png")
 **Fig. 4b.** Heatmap of mean GP activity per level 2 cluster, for the 69 GPs
 that reach AUC > 0.9 in at least one cluster. Each row is centered on that GP's
 mean across the clusters shown (blue, below; red, above; saturating at 0.2).
-Columns are the clusters with at least 100 healthy non-thymocyte cells, grouped
-by lineage (top bar) and alphabetical within each lineage; rows are grouped by
-the cluster in which the GP is most active.
+Columns are the 80 clusters with at least 100 healthy non-thymocyte cells,
+grouped by lineage (top bar) and alphabetical within each lineage; rows are
+grouped by the cluster in which the GP is most active. The miniverse (`.wM`)
+clusters are excluded, as in Figure 1d and Extended Data Fig. 2d.
 :::
 
 ## (c) Mean GP activity of the Treg clusters {#fig4c}
@@ -74,8 +75,8 @@ knitr::include_graphics("assets/Figure4/4c.png")
 **Fig. 4c.** Mean GP activity of each Treg cluster, for the 11 GPs reaching
 AUC > 0.9 in at least one Treg cluster. Each bar is one cluster and is stacked
 by GP, so its height is that cluster's total mean loading over these GPs.
-Clusters with fewer than 100 healthy non-thymocyte cells, and the wM cluster,
-are not shown.
+Clusters with fewer than 100 healthy non-thymocyte cells, and the miniverse
+(`.wM`) cluster, are not shown.
 :::
 
 ## (d) The same GPs and cells, cell by cell {#fig4d}

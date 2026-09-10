@@ -29,7 +29,7 @@
 # them above the diagonal); 4c's bars are raw mean loadings, not renormalized,
 # because that is what makes them the average of a structure plot's bars; 4c is
 # drawn tall and narrow rather than at the structure plot's shape; and every
-# lineage's .wM cluster is dropped from 4c and 4d, but not from 4b.
+# lineage's miniverse (.wM) cluster is dropped, as in Figure 1d.
 # --- end internal ---
 #
 # Required inputs (data/) -- see code/README.md's "Data provenance" table:
@@ -57,6 +57,7 @@ if (!file.exists("code/R/structure_plot_panels.R")) {
 }
 source("code/R/structure_plot_panels.R")   # Extended Data Figure 4's rows, GP rule, palette
 source("code/R/centered_mean_heatmap.R")   # Extended Data Figure 2d's heatmap rendering
+source("code/R/level2_group_palette.R")    # EXCLUDE_LEVEL2_GROUPS, as Figure 1d and ED 2d use
 
 data_path   <- "data/"
 figure_path <- "figures/final-selected/Figure 4/"
@@ -285,21 +286,43 @@ for (lineage in names(structure_plot_panels)) {
   lineage_cells_drawn[[lineage]] <- cells[level2_all[cells] %in% keep]
 }
 
-# c and d additionally drop the .wM cluster of every lineage (all seven have
-# one: CD4.wM 10543 cells, CD8.wM 6174, gdT.wM 1732, DN.wM 822, Tz.wM 706,
-# Treg.wM 654, CD8aa.wM 247 healthy non-thymocyte cells).
+# Every panel here drops the miniverse clusters, as Figure 1d and Extended Data
+# Figure 2d do -- the exclusion comes from their EXCLUDE_LEVEL2_GROUPS rather
+# than from a rule of this figure's own, so the four heatmaps cannot disagree
+# about what is shown. In this cell set that is seven clusters: CD4.wM 10543
+# cells, CD8.wM 6174, gdT.wM 1732, DN.wM 822, Tz.wM 706, Treg.wM 654,
+# CD8aa.wM 247.
 # --- internal ---
-# Ziang's request, 2026-09-09, stated as temporary. It is a display filter and
-# nothing else: the GP sets still come from every cluster of the lineage, as
-# they do in Extended Data Figure 4, and 4b keeps its wM columns, so 4c's clusters
-# are a subset of 4b's rather than a different selection. Only .wM goes -- the
-# other w-clusters (CD8.wV, CD8.wY, CD4.wN, CD4.wZ, ...) stay.
+# 4c and 4d dropped them from 2026-09-09 (Ziang's request, then stated as
+# temporary) but 4b did not, which left this figure disagreeing with itself and
+# with Figure 1d. Made uniform on 2026-09-10, on Ziang's call, by switching to
+# the shared constant.
 # --- end internal ---
-bar_cluster_pattern_dropped <- "[.]wM$"
-drop_wM <- function(cells) {
-  cells[!grepl(bar_cluster_pattern_dropped, as.character(level2_all[cells]))]
+level2_group_all <- seurat_meta_filtered$annotation_level2_group
+if (anyNA(level2_group_all[healthy_non_thymocyte])) {
+  stop("annotation_level2_group is missing for some healthy non-thymocyte cells.")
 }
-lineage_cells_bars <- lapply(lineage_cells_drawn, drop_wM)
+drop_miniverse <- function(cells) {
+  cells[!level2_group_all[cells] %in% EXCLUDE_LEVEL2_GROUPS]
+}
+
+# The group label and the ".wM" cluster names have to pick out the same
+# clusters, or the caption and the panel would describe different sets.
+excluded_clusters <- sort(unique(as.character(
+  level2_all[healthy_non_thymocyte][
+    level2_group_all[healthy_non_thymocyte] %in% EXCLUDE_LEVEL2_GROUPS
+  ]
+)))
+if (!all(grepl("[.]wM$", excluded_clusters))) {
+  stop(sprintf(
+    "annotation_level2_group '%s' is not exactly the .wM clusters: %s",
+    paste(EXCLUDE_LEVEL2_GROUPS, collapse = ", "), paste(excluded_clusters, collapse = ", ")
+  ))
+}
+message(sprintf("dropping %d miniverse clusters: %s",
+                length(excluded_clusters), paste(excluded_clusters, collapse = ", ")))
+
+lineage_cells_drawn <- lapply(lineage_cells_drawn, drop_miniverse)
 
 # Mean loading per cluster, over the GPs of that cluster's lineage row.
 mean_loading_by_cluster <- function(cells, gps) {
@@ -320,7 +343,7 @@ mean_loading_by_cluster <- function(cells, gps) {
 # panel's matrix: the columns here are the clusters Extended Data Figure 4 draws
 # (>= 100 healthy non-thymocyte cells, no DP, no thymocytes), and each GP is
 # centered on its mean across those columns. It keeps the .wM clusters that c
-# and d drop, so its columns are the wider set.
+# and 4d drop.
 # --- end internal ---
 cells_drawn <- sort(unlist(lineage_cells_drawn, use.names = FALSE))
 labels_drawn <- droplevels(factor(level2_all[cells_drawn]))
@@ -410,7 +433,7 @@ bar_figure_height <- 7
 # Mean loading per cluster over the row's GPs, plus the record of every segment.
 bar_means <- function(lineage) {
   gps_lineage <- panel_gps[[lineage]]
-  means <- mean_loading_by_cluster(lineage_cells_bars[[lineage]], gps_lineage)
+  means <- mean_loading_by_cluster(lineage_cells_drawn[[lineage]], gps_lineage)
   bar_matrix <- means$matrix
   totals <- rowSums(bar_matrix)
   if (any(!is.finite(totals)) || any(totals <= 0)) {
@@ -506,7 +529,7 @@ cells_d <- healthy_non_thymocyte[level1_all[healthy_non_thymocyte] == d_lineage]
 cluster_size_d <- table(droplevels(factor(level2_all[cells_d])))
 small_d <- names(cluster_size_d)[cluster_size_d < structure_plot_min_cluster_cells]
 cells_d <- cells_d[!level2_all[cells_d] %in% small_d]
-cells_d <- drop_wM(cells_d)   # as in 4c; Treg.wM's 654 cells are not drawn
+cells_d <- drop_miniverse(cells_d)   # as in 4b and 4c
 
 set.seed(1234)
 keep_d <- unlist(lapply(
@@ -572,21 +595,18 @@ for (lineage in names(structure_plot_panels)) {
         !identical(recorded$color, unname(drawn_colors))) {
     stop(sprintf("row %s: GPs or colours differ from Extended Data Figure 4's record.", lineage))
   }
-  # b keeps every cluster that figure drew; c and d drop the lineage's .wM
-  # cluster and nothing else.
+  # Every panel here shows the clusters that figure drew, minus this lineage's
+  # miniverse cluster and nothing else.
   recorded_clusters <- sort(s4_clusters$cluster[
     s4_clusters$lineage == lineage & s4_clusters$n_cells_drawn > 0
   ])
+  expected_clusters <- setdiff(recorded_clusters, excluded_clusters)
   drawn_clusters <- sort(unique(as.character(level2_all[lineage_cells_drawn[[lineage]]])))
-  if (!identical(recorded_clusters, drawn_clusters)) {
-    stop(sprintf("row %s: clusters differ from Extended Data Figure 4's record.", lineage))
-  }
-  bar_clusters <- sort(unique(as.character(level2_all[lineage_cells_bars[[lineage]]])))
-  expected_bar_clusters <- grep(bar_cluster_pattern_dropped, recorded_clusters,
-                                value = TRUE, invert = TRUE)
-  if (!identical(bar_clusters, expected_bar_clusters) ||
-        length(bar_clusters) == length(recorded_clusters)) {
-    stop(sprintf("row %s: c and d dropped something other than the .wM cluster.", lineage))
+  if (!identical(drawn_clusters, expected_clusters) ||
+        length(drawn_clusters) == length(recorded_clusters)) {
+    stop(sprintf(
+      "row %s: this figure dropped something other than the miniverse cluster.", lineage
+    ))
   }
 }
 
@@ -621,13 +641,13 @@ if (share_diff > 1e-12) {
   stop(sprintf("the record's shares are not 4c's bars rescaled (max |diff| = %g).", share_diff))
 }
 
-# d is that row minus Treg.wM, so on the clusters it keeps it must have kept the
-# same cells: same 100-cell filter, same 2000-cell cap, same seed, hence the
-# same per-cluster counts.
+# 4d is that row minus Treg's miniverse cluster, so on the clusters it keeps it
+# must have kept the same cells: same 100-cell filter, same 2000-cell cap, same
+# seed, hence the same per-cluster counts.
 d_drawn <- table(droplevels(factor(level2_all[cells_d])))
 d_recorded <- s4_clusters[
   s4_clusters$lineage == d_lineage & s4_clusters$n_cells_drawn > 0 &
-    !grepl(bar_cluster_pattern_dropped, s4_clusters$cluster),
+    !s4_clusters$cluster %in% excluded_clusters,
 ]
 d_recorded <- d_recorded[order(d_recorded$cluster), ]
 if (!identical(names(d_drawn), d_recorded$cluster) ||
