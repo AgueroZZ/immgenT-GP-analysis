@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree284d321fb3727074b391bc827360edf617bcef41targetblank284d321a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree8eacf9c6110a31bf39bcab0514d46b888b2fdff2targetblank8eacf9ca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/284d321fb3727074b391bc827360edf617bcef41" target="_blank">284d321</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/8eacf9c6110a31bf39bcab0514d46b888b2fdff2" target="_blank">8eacf9c</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree284d321fb3727074b391bc827360edf617bcef41targetblank284d321a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree8eacf9c6110a31bf39bcab0514d46b888b2fdff2targetblank8eacf9ca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/284d321fb3727074b391bc827360edf617bcef41" target="_blank">284d321</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/8eacf9c6110a31bf39bcab0514d46b888b2fdff2" target="_blank">8eacf9c</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -617,6 +617,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/8eacf9c6110a31bf39bcab0514d46b888b2fdff2/analysis/Figure4.Rmd" target="_blank">8eacf9c</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+<td>
+Figure 4b: the column colours and order of Figure 1d and ED Fig 2d
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/88ee8478c5ea7c3deb1166dd7616497393675798/docs/Figure4.html" target="_blank">88ee847</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+<td>
+Build site: Figure 4b without the miniverse clusters
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1710,20 +1744,26 @@ level1_order &lt;- c(&quot;CD8&quot;, &quot;CD4&quot;, &quot;Treg&quot;, &quot;g
 level2_group_level1 &lt;- level2_to_level1_map(
   meta_reference, colnames(heat_raw), level1_order
 )
+level2_group_group &lt;- level2_to_group_map(meta_reference, colnames(heat_raw))
+
+# Columns follow Figure 1d and Extended Data Figure 2d exactly: lineage, then
+# annotation_level2_group as a contiguous block, then cluster alphabetically --
+# so each lineage&#39;s &quot;.P&quot; cluster sits at the end of its lineage rather than
+# mid-alphabet, and the level2_group bar reads as blocks. GP rows then follow
+# the columns, in dominant-cluster blocks.
 heat_order &lt;- dominant_group_order(
   heat_raw,
-  level2_column_order(colnames(heat_raw), level2_group_level1, level1_order)
+  level2_group_block_order(
+    colnames(heat_raw), level2_group_level1, level2_group_group, level1_order
+  )
 )
 
-level2_palette &lt;- palette_for_groups(
-  colnames(heat_centered), ZemmourLib::immgent_colors$level2, &quot;annotation_level2&quot;
-)
 level1_palette &lt;- ZemmourLib::immgent_colors$level1[level1_order]
 
 centered_color_limit &lt;- 0.2
 render_centered_heatmap(
   heat_centered,
-  level2_palette,
+  NULL,
   &quot;cluster (annotation_level2)&quot;,
   paste0(figure_path, &quot;4b.pdf&quot;),
   heat_order$row_order,
@@ -1731,14 +1771,17 @@ render_centered_heatmap(
   centered_color_limit,
   sprintf(
     paste0(
-      &quot;%d GPs with AUC &gt; %.1f in some cluster; level2 columns: level1 order &quot;,
-      &quot;(%s); alphabetical within level1; GP rows: dominant-cluster blocks&quot;
+      &quot;%d GPs with AUC &gt; %.1f in some cluster; miniverse (.wM) clusters excluded\n&quot;,
+      &quot;level2 columns: level1 order (%s); level2_group blocks, alphabetical &quot;,
+      &quot;within block; GP rows: dominant-cluster blocks&quot;
     ),
     nrow(heat_centered), structure_plot_auc_threshold,
     paste(level1_order, collapse = &quot;, &quot;)
   ),
   group_level1 = level2_group_level1,
-  level1_palette = level1_palette
+  level1_palette = level1_palette,
+  group_annotation = level2_group_group,
+  group_annotation_palette = LEVEL2_GROUP_COLORS[LEVEL2_GROUP_ORDER]
 )
 
 write.csv(
@@ -1776,6 +1819,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/8eacf9c6110a31bf39bcab0514d46b888b2fdff2/docs/assets/Figure4/4b.png" target="_blank">8eacf9c</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/75c6f9bbbccf46cf638de001fb60d0e8491897e4/docs/assets/Figure4/4b.png" target="_blank">75c6f9b</a>
@@ -1895,10 +1949,12 @@ Ziang Zhang
 cluster, for the 69 GPs that reach AUC &gt; 0.9 in at least one cluster.
 Each row is centered on that GP’s mean across the clusters shown (blue,
 below; red, above; saturating at 0.2). Columns are the 80 clusters with
-at least 100 healthy non-thymocyte cells, grouped by lineage (top bar)
-and alphabetical within each lineage; rows are grouped by the cluster in
-which the GP is most active. The miniverse (<code>.wM</code>) clusters
-are excluded, as in Figure 1d and Extended Data Fig. 2d.</p>
+at least 100 healthy non-thymocyte cells, ordered by lineage (Cell Type
+bar), then by activation state (Level2 Group bar) as a contiguous block,
+then alphabetically; rows are grouped by the cluster in which the GP is
+most active. Colors and column order follow Figure 1d and Extended Data
+Fig. 2d, and as there the miniverse (<code>.wM</code>) clusters are
+excluded.</p>
 </div>
 </div>
 <div id="fig4c" class="section level2">
