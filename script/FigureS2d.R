@@ -1,7 +1,7 @@
 # Figure S2, panel d. GP activity across T cell clusters.
 #
 # One panel (see analysis/FigureS2.Rmd for the caption text):
-#   S2D  Row-centered mean GP activity across the 99 level-2 clusters, all
+#   S2D  Row-centered mean GP activity across the 88 level-2 clusters, all
 #        200 GPs, in healthy non-thymocyte cells.
 #
 # Panels S2A-S2C come from script/FigureS2.R; this panel is kept in its own
@@ -19,15 +19,20 @@
 # internal draft in experiments/fig_n5/). The PDF had been carried over
 # byte-identically through all of that; the 2026-09-10 move is the first time
 # it was re-rendered, on Ziang's call to drop the miniverse clusters and to
-# annotate the columns the way Figure 1d does.
+# annotate the columns the way Figure 1d does. Re-rendered again later the
+# same day, on Ziang's call to drop the DP lineage too: DP appeared in this
+# panel and in Figure 1a, 6b-6e, 8b and Extended Data 5b, but in no other
+# cluster-level panel, and Figure 1d -- the panel this one's columns follow --
+# had never shown it. 99 columns become 88.
 # --- end internal ---
 #
 # For each GP, its mean loading across clusters is subtracted from every cluster
 # mean, so the panel shows where a program is more or less active than its own
 # average rather than how large its loading is. The centered color scale is
 # fixed at [-0.2, 0.2]; values outside this range saturate at the endpoint
-# colors. Level2 columns follow Figure 1's level1 order, with level2 labels
-# alphabetized within each level1 block. The columns are annotated the way
+# colors. Level2 columns follow Figure 1's level1 order -- seven lineages, DP
+# excluded as Figure 1d excludes it -- with level2 labels alphabetized within
+# each level1 block. The columns are annotated the way
 # Figure 1d annotates its cells -- a level1 bar and an annotation_level2_group
 # bar, each with a legend, and no per-cluster colour bar, since the column
 # labels already name every cluster.
@@ -61,19 +66,21 @@ dir.create(figure_path, recursive = TRUE, showWarnings = FALSE)
 gp_data <- load_gp_data()
 reference <- healthy_nonthymocyte_reference(gp_data)
 
-# Drop the miniverse clusters, as Figure 1d does: they are the ".wM" clusters,
-# eight of them here (Figure 1d sees seven, because it drops DP as well), so
-# 107 level2 clusters become 99. The exclusion is applied to the cells before
-# any mean is taken, so the centering is over the columns that remain.
-keep <- !reference$meta$annotation_level2_group %in% EXCLUDE_LEVEL2_GROUPS
+# Drop the DP lineage and the miniverse clusters, both as Figure 1d does: DP
+# contributes 12 of the 107 level2 clusters (one of them its own ".wM"), and
+# seven ".wM" clusters remain once DP is gone, so 107 level2 clusters become
+# 88. Both exclusions are applied to the cells before any mean is taken, so
+# the centering is over the columns that remain.
+level1_order <- c("CD8", "CD4", "Treg", "gdT", "CD8aa", "Tz", "DN")
+keep <- !reference$meta$annotation_level2_group %in% EXCLUDE_LEVEL2_GROUPS &
+  reference$meta$annotation_level1 %in% level1_order
 if (anyNA(keep) || !any(keep)) {
-  stop("annotation_level2_group is missing for some healthy non-thymocyte cells.")
+  stop("annotation_level2_group or annotation_level1 is missing for some healthy non-thymocyte cells.")
 }
 L_reference <- reference$L[keep, , drop = FALSE]
 meta_reference <- reference$meta[keep, , drop = FALSE]
 
 centered_color_limit <- 0.2
-level1_order <- c("CD8", "CD4", "Treg", "gdT", "CD8aa", "Tz", "DN", "DP")
 
 level2_result <- mean_loading_by_group(L_reference, meta_reference$annotation_level2)
 level2_raw <- level2_result$matrix
@@ -96,8 +103,13 @@ level2_order <- dominant_group_order(
 
 stopifnot(
   nrow(level2_centered) == 200L,
-  ncol(level2_centered) == 99L,
+  ncol(level2_centered) == 88L,
   !any(level2_group_group %in% EXCLUDE_LEVEL2_GROUPS),
+  # level2_to_level1_map() already errors on a lineage outside level1_order;
+  # this names the exclusion the caption promises, so a DP cluster reaching
+  # the panel fails here rather than silently widening it.
+  !any(level2_group_level1 == "DP"),
+  !any(grepl("^DP[.]", colnames(level2_centered))),
   max(abs(rowMeans(level2_centered))) < 1e-12
 )
 
@@ -112,11 +124,16 @@ render_centered_heatmap(
   level2_order$row_order,
   level2_order$column_order,
   centered_color_limit,
+  # Two lines, not one. At 16pt the title is ~8.3pt per character and the page
+  # is only as wide as the heatmap, so a single 217-character line ran 189pt
+  # off each edge and was clipped in the PDF -- it already overran by 80pt at
+  # 99 columns, and dropping DP narrowed the page by another 131pt. Break at a
+  # semicolon and both halves fit.
   paste0(
     "all 200 GPs; level2 columns: Figure 1 level1 order ",
-    "(CD8, CD4, Treg, gdT, CD8aa, Tz, DN, DP); ",
-    "level2_group blocks, alphabetical within block; ",
-    "miniverse (.wM) clusters excluded; ",
+    "(CD8, CD4, Treg, gdT, CD8aa, Tz, DN); ",
+    "level2_group blocks, alphabetical within block\n",
+    "DP lineage and miniverse (.wM) clusters excluded; ",
     "GP rows: dominant-group blocks"
   ),
   group_level1 = level2_group_level1,
@@ -135,6 +152,7 @@ write.csv(
     gp_count = nrow(level2_centered),
     group_count = ncol(level2_centered),
     excluded_level2_groups = paste(EXCLUDE_LEVEL2_GROUPS, collapse = ";"),
+    excluded_level1 = "DP",
     centered_definition = "group mean minus mean across groups for each GP",
     color_min = -centered_color_limit,
     color_mid = 0,

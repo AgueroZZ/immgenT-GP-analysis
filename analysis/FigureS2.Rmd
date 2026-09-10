@@ -70,11 +70,12 @@ knitr::include_graphics("assets/FigureS2/S2C.png")
 
 ## (d) GP activity across T cell clusters {#figs2d}
 
-This panel shows the full row-centered matrix: all 200 GPs against the 99
+This panel shows the full row-centered matrix: all 200 GPs against the 88
 level-2 clusters observed in healthy non-thymocyte cells (`condition_broad ==
-"healthy"` and `annotation_level1 != "thymocyte"`), with the miniverse (`.wM`)
-clusters excluded as in [Fig. 1d](Figure1.html#fig1d). For each GP, its mean
-loading across clusters is subtracted from every cluster mean, so a row says
+"healthy"` and `annotation_level1 != "thymocyte"`), with the DP lineage and
+the miniverse (`.wM`) clusters both excluded as in
+[Fig. 1d](Figure1.html#fig1d). For each GP, its mean loading across clusters
+is subtracted from every cluster mean, so a row says
 where a program is more or less active than its own average rather than how
 large its loading is. The centered color scale is fixed at -0.2 to 0.2; values
 outside this range are saturated at the endpoint colors. The columns carry the
@@ -104,6 +105,6 @@ knitr::include_graphics("assets/FigureS2/S2D.png")
 ```
 
 ::: {.figcaption}
-**Extended Data Fig. 2d.** Row-centered mean GP activity across the 99
+**Extended Data Fig. 2d.** Row-centered mean GP activity across the 88
 level-2 clusters. Mean GP activity computed in samples at baseline.
 :::

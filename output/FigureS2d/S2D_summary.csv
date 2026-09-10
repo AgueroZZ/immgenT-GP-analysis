@@ -1,2 +1,2 @@
-panel,grouping,view,gp_count,group_count,excluded_level2_groups,centered_definition,color_min,color_mid,color_max,observed_min,observed_max
-S2D,annotation_level2,full row-centered mean loading,200,99,miniverse,group mean minus mean across groups for each GP,-0.2,0,0.2,-0.163850519505999,0.549964758596865
+panel,grouping,view,gp_count,group_count,excluded_level2_groups,excluded_level1,centered_definition,color_min,color_mid,color_max,observed_min,observed_max
+S2D,annotation_level2,full row-centered mean loading,200,88,miniverse,DP,group mean minus mean across groups for each GP,-0.2,0,0.2,-0.17295150608799,0.498076799937748

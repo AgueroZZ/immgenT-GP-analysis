@@ -170,7 +170,7 @@ all moved with them.
 
 The cluster heatmap is the one exception -- it is the only panel in this pass
 that changed. On the same call it was rebuilt to drop the miniverse (`.wM`)
-clusters, so it now spans **99** level-2 clusters rather than 107, and to
+clusters, taking it from 107 level-2 clusters to 99, and to
 follow Figure 1d's columns: a level1 bar and an `annotation_level2_group` bar,
 each with a legend, in place of the per-cluster colour bar (the column labels
 already name every cluster), and Figure 1d's column *order* -- lineage, then
@@ -178,7 +178,20 @@ already name every cluster), and Figure 1d's column *order* -- lineage, then
 within the block. That last key is what keeps each lineage's `.P` cluster at
 the end of its lineage; ordering columns lineage-then-alphabetically, as
 `level2_column_order()` does, drops `.P` mid-alphabet and splits the
-activated/other run in CD8, CD4, gdT and DP.
+activated/other run in CD8, CD4 and gdT.
+
+Later the same day it was rebuilt once more, to drop the **DP** lineage as
+well: DP is drawn in Figure 1a, 6b-6e, 8b and Extended Data 5b, but Figure 1d
+-- the panel whose columns this one follows -- had never shown it, and no
+other cluster-level panel does. DP contributes 12 of the 107 level-2 clusters
+(one of them its own `.wM`), so the panel now spans **88**. That re-run also
+broke the title's description onto two lines: at 16pt it is ~8.3pt per
+character and the page is only as wide as the heatmap, so the single
+217-character line ran 189pt off each edge and was clipped in the PDF (it
+already overran by 80pt at 99 columns; dropping DP narrowed the page by
+another 131pt). Only this panel calls `render_centered_heatmap()` with a
+description that long -- 4b, 6a and 6b all fit -- so the wrap is in
+`FigureS2d.R`, not in the helper.
 
 The `annotation_level2_group` order and palette moved out of `Figure1.R` into
 `code/R/level2_group_palette.R`, which both scripts now source, so the two
