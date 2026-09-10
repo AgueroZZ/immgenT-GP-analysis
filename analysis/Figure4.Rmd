@@ -57,9 +57,11 @@ knitr::include_graphics("assets/Figure4/4b.png")
 that reach AUC > 0.9 in at least one cluster. Each row is centered on that GP's
 mean across the clusters shown (blue, below; red, above; saturating at 0.2).
 Columns are the 80 clusters with at least 100 healthy non-thymocyte cells,
-grouped by lineage (top bar) and alphabetical within each lineage; rows are
-grouped by the cluster in which the GP is most active. The miniverse (`.wM`)
-clusters are excluded, as in Figure 1d and Extended Data Fig. 2d.
+ordered by lineage (Cell Type bar), then by activation state (Level2 Group bar)
+as a contiguous block, then alphabetically; rows are grouped by the cluster in
+which the GP is most active. Colors and column order follow Figure 1d and
+Extended Data Fig. 2d, and as there the miniverse (`.wM`) clusters are
+excluded.
 :::
 
 ## (c) Mean GP activity of the Treg clusters {#fig4c}

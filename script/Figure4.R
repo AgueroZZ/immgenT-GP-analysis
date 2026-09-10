@@ -337,7 +337,9 @@ mean_loading_by_cluster <- function(cells, gps) {
 # ============================================================
 # --- internal ---
 # The centering, the fixed [-0.2, 0.2] scale, the dominant-group row order and
-# the two-track column annotation are Extended Data Figure 2d's, called from
+# the two column annotation bars (Cell Type + Level2 Group, one legend each)
+# and the lineage/level2_group/cluster column order are Extended Data Figure
+# 2d's -- and through it Figure 1d's -- called from
 # code/R/centered_mean_heatmap.R -- the module that figure itself uses -- rather
 # than copied, so this panel cannot drift from it. It is not a subset of that
 # panel's matrix: the columns here are the clusters Extended Data Figure 4 draws
@@ -358,20 +360,26 @@ level1_order <- c("CD8", "CD4", "Treg", "gdT", "CD8aa", "Tz", "DN")
 level2_group_level1 <- level2_to_level1_map(
   meta_reference, colnames(heat_raw), level1_order
 )
+level2_group_group <- level2_to_group_map(meta_reference, colnames(heat_raw))
+
+# Columns follow Figure 1d and Extended Data Figure 2d exactly: lineage, then
+# annotation_level2_group as a contiguous block, then cluster alphabetically --
+# so each lineage's ".P" cluster sits at the end of its lineage rather than
+# mid-alphabet, and the level2_group bar reads as blocks. GP rows then follow
+# the columns, in dominant-cluster blocks.
 heat_order <- dominant_group_order(
   heat_raw,
-  level2_column_order(colnames(heat_raw), level2_group_level1, level1_order)
+  level2_group_block_order(
+    colnames(heat_raw), level2_group_level1, level2_group_group, level1_order
+  )
 )
 
-level2_palette <- palette_for_groups(
-  colnames(heat_centered), ZemmourLib::immgent_colors$level2, "annotation_level2"
-)
 level1_palette <- ZemmourLib::immgent_colors$level1[level1_order]
 
 centered_color_limit <- 0.2
 render_centered_heatmap(
   heat_centered,
-  level2_palette,
+  NULL,
   "cluster (annotation_level2)",
   paste0(figure_path, "4b.pdf"),
   heat_order$row_order,
@@ -379,14 +387,17 @@ render_centered_heatmap(
   centered_color_limit,
   sprintf(
     paste0(
-      "%d GPs with AUC > %.1f in some cluster; level2 columns: level1 order ",
-      "(%s); alphabetical within level1; GP rows: dominant-cluster blocks"
+      "%d GPs with AUC > %.1f in some cluster; miniverse (.wM) clusters excluded\n",
+      "level2 columns: level1 order (%s); level2_group blocks, alphabetical ",
+      "within block; GP rows: dominant-cluster blocks"
     ),
     nrow(heat_centered), structure_plot_auc_threshold,
     paste(level1_order, collapse = ", ")
   ),
   group_level1 = level2_group_level1,
-  level1_palette = level1_palette
+  level1_palette = level1_palette,
+  group_annotation = level2_group_group,
+  group_annotation_palette = LEVEL2_GROUP_COLORS[LEVEL2_GROUP_ORDER]
 )
 
 write.csv(
