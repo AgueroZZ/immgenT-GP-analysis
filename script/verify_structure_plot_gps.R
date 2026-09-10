@@ -1,12 +1,13 @@
-# Verify Extended Data Figure 4's GP selection against the published cluster AUCs.
+# Verify the per-lineage structure-plot record against the published cluster AUCs.
 #
 #   Rscript script/verify_structure_plot_gps.R    # exits non-zero on any mismatch
 #
-# The figure's content is a selection: each of its seven rows shows the GPs that
-# reach AUC > 0.9 for at least one cluster of its lineage. Those same AUCs are
-# published as Extended Data Table 6, and the per-row GP counts are quoted in
-# the caption -- three places that have to agree, and that nothing in the build
-# checks. This script checks that
+# The record's content is a selection: each of its seven rows holds the GPs
+# that reach AUC > 0.9 for at least one cluster of its lineage. Those same AUCs
+# are published as Extended Data Table 6 -- two places that have to agree, and
+# that nothing in the build checks. Figure 4's panels 4b, 4c and 4d are built
+# from this record, so a drift here is a drift in a published figure. This
+# script checks that
 #
 #   1. the GP set each row drew is exactly what thresholding the *published*
 #      table gives, lineage by lineage, and the recorded per-GP maximum AUCs are
@@ -14,20 +15,20 @@
 #   2. every row's palette is exactly what structure_plot_row_colors() gives for
 #      its GPs -- one color per GP within the row, glasbey's first k in
 #      ascending GP order -- and no row holds a GP that passes only in the DP
-#      clusters this figure omits;
+#      clusters the rows omit;
 #   3. the clusters drawn, and those left out for being too small, follow the
-#      figure's own display filters;
-#   4. the assembled figure is on disk, with no per-row PDF left over from an
-#      earlier layout or lettering; and
-#   5. the caption's per-row GP counts and total still match what was drawn.
+#      rows' own display filters.
+#
+# It used to check two more things -- the assembled figure on disk and its
+# caption -- which went with the Extended Data figure on 2026-09-10.
 #
 # The row map, the AUC threshold, the display filters and the palette rule are read from
-# code/R/structure_plot_panels.R -- the file the figure itself uses -- so this
-# is a re-derivation from the published numbers, not a second copy of the
-# figure's logic. What the figure drew is read from the record it writes into
-# output/FigureS4/ (so this check does not need the 1 GB loading matrix).
+# code/R/structure_plot_panels.R -- the file the rows themselves use -- so this
+# is a re-derivation from the published numbers, not a second copy of their
+# logic. What the rows drew is read from the record written into
+# output/structure_plot_record/ (so this check does not need the 1 GB loading matrix).
 #
-# The three inputs can be pointed elsewhere, which is how the failing path gets
+# Both inputs can be pointed elsewhere, which is how the failing path gets
 # tested:
 #   Rscript script/verify_structure_plot_gps.R --record-dir=/tmp/perturbed
 
@@ -40,10 +41,8 @@ arg_value <- function(name, default) {
   if (length(hit) == 0) default else sub(paste0("^--", name, "="), "", hit)
 }
 
-record_dir <- arg_value("record-dir", "output/FigureS4/")
+record_dir <- arg_value("record-dir", "output/structure_plot_record/")
 table_file <- arg_value("table", "figures/final-selected/ExtendedDataTable6_GP_AUC_cluster.xlsx")
-page_file <- arg_value("page", "analysis/FigureS4.Rmd")
-panel_dir <- arg_value("panel-dir", "figures/final-selected/Figure S4/")
 
 failures <- character(0)
 check <- function(ok, msg) if (!isTRUE(ok)) failures <<- c(failures, msg)
@@ -51,8 +50,8 @@ check <- function(ok, msg) if (!isTRUE(ok)) failures <<- c(failures, msg)
 # ------------------------------------------------------------
 # Inputs
 # ------------------------------------------------------------
-gp_record <- utils::read.csv(file.path(record_dir, "s4_panel_gps.csv"), stringsAsFactors = FALSE)
-cluster_record <- utils::read.csv(file.path(record_dir, "s4_panel_clusters.csv"), stringsAsFactors = FALSE)
+gp_record <- utils::read.csv(file.path(record_dir, "panel_gps.csv"), stringsAsFactors = FALSE)
+cluster_record <- utils::read.csv(file.path(record_dir, "panel_clusters.csv"), stringsAsFactors = FALSE)
 
 # Extended Data Table 6 is one row per GP, one column per cluster; the figure
 # thresholds it the other way round.
@@ -67,9 +66,8 @@ lineage_published <- stats::setNames(
 lineages <- names(structure_plot_panels)
 gp_number <- function(gp) as.integer(sub("^GP", "", gp))
 
-cat(sprintf("record   : %s\ntable    : %s\npage     : %s\nfigure   : %s\n\n",
-            record_dir, table_file, page_file, panel_dir))
-cat(sprintf("=== 0. the figure's own definitions ===\nAUC > %.1f | rows: %s\n",
+cat(sprintf("record   : %s\ntable    : %s\n\n", record_dir, table_file))
+cat(sprintf("=== 0. the rows' own definitions ===\nAUC > %.1f | rows: %s\n",
             structure_plot_auc_threshold,
             paste(sprintf("%s = %s", structure_plot_panels, lineages), collapse = ", ")))
 cat(sprintf("published table: %d clusters x %d GPs\n",
@@ -183,60 +181,6 @@ for (lineage in lineages) {
                 lineage, structure_plot_max_cells_per_cluster))
   check(sum(rec$n_cells_drawn) > 0, sprintf("%s: no cells drawn at all", lineage))
 }
-
-# ------------------------------------------------------------
-# 4. panel PDFs
-# ------------------------------------------------------------
-cat("\n=== 4. the assembled figure is on disk, with no per-row leftovers ===\n")
-want_pdfs <- "s4.pdf"
-on_disk <- list.files(panel_dir, pattern = "\\.pdf$")
-missing <- want_pdfs[!file.exists(file.path(panel_dir, want_pdfs))]
-empty <- want_pdfs[file.exists(file.path(panel_dir, want_pdfs)) &
-                     file.size(file.path(panel_dir, want_pdfs)) == 0]
-orphan <- setdiff(on_disk, want_pdfs)
-cat(sprintf("expected %s | missing: %s | empty: %s | orphan: %s\n",
-            paste(want_pdfs, collapse = ","),
-            if (length(missing)) paste(missing, collapse = ",") else "none",
-            if (length(empty)) paste(empty, collapse = ",") else "none",
-            if (length(orphan)) paste(orphan, collapse = ",") else "none"))
-check(length(missing) == 0, sprintf("no PDF for %s", paste(missing, collapse = ", ")))
-check(length(empty) == 0, sprintf("empty PDF: %s", paste(empty, collapse = ", ")))
-check(length(orphan) == 0,
-      sprintf("%s is in the figure directory but is not the assembled figure -- stale layout?",
-              paste(orphan, collapse = ", ")))
-
-# ------------------------------------------------------------
-# 5. the caption's numbers
-# ------------------------------------------------------------
-# The page carries the published caption verbatim, so it states the row letters
-# and the selection threshold but no per-row GP counts. Check what it does state:
-# that every row letter is paired with the lineage actually drawn under it.
-cat("\n=== 5. the caption's row letters and threshold ===\n")
-page <- paste(readLines(page_file, warn = FALSE), collapse = " ")
-quoted <- regmatches(page, gregexpr("\\([a-g]\\) [A-Za-z0-9]+", page))[[1]]
-parsed <- data.frame(
-  panel = sub("^\\(([a-g])\\).*$", "\\1", quoted),
-  lineage = sub("^\\([a-g]\\) ([A-Za-z0-9]+)$", "\\1", quoted),
-  stringsAsFactors = FALSE
-)
-parsed <- parsed[!duplicated(parsed$panel), , drop = FALSE]
-rownames(parsed) <- NULL
-drawn_rows <- data.frame(
-  panel = unname(structure_plot_panels),
-  lineage = lineages,
-  stringsAsFactors = FALSE
-)
-cat("caption:", if (nrow(parsed)) paste(sprintf("(%s) %s", parsed$panel, parsed$lineage),
-                                        collapse = "; ") else "(no row letters found)", "\n")
-cat("drawn  :", paste(sprintf("(%s) %s", drawn_rows$panel, drawn_rows$lineage),
-                      collapse = "; "), "\n")
-check(isTRUE(all.equal(parsed, drawn_rows, check.attributes = FALSE)),
-      "the caption's row letters or lineage order do not match what was drawn")
-
-threshold_quoted <- sprintf("AUC > %.1f", structure_plot_auc_threshold)
-cat(sprintf("caption states \"%s\": %s\n", threshold_quoted, grepl(threshold_quoted, page, fixed = TRUE)))
-check(grepl(threshold_quoted, page, fixed = TRUE),
-      sprintf("the caption does not state the selection threshold (\"%s\")", threshold_quoted))
 
 # ------------------------------------------------------------
 cat("\n")

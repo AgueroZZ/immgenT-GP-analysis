@@ -45,13 +45,13 @@ check(length(subset_line) == 1,
 published <- eval(parse(text = sub("^cd69_top_gps_subset <- ", "", subset_line[1])))
 
 # Single source of truth: no figure script may keep its own copy of the list.
-for (f in c("script/Figure7.R", "script/FigureS6.R")) {
+for (f in c("script/Figure7.R", "script/FigureS5.R")) {
   copies <- grep("cd69_top_gps_subset <-", readLines(f, warn = FALSE), value = TRUE)
   check(length(copies) == 0,
         sprintf("%s re-assigns cd69_top_gps_subset -- it must come from %s only", f, setup_file))
 }
 
-# Same cells and same CD69 vector as Figure 7d / Figure S6a-b, over all GPs.
+# Same cells and same CD69 vector as Figure 7d / Figure S5a-b, over all GPs.
 shared_cells_cd69 <- intersect(rownames(L_pm_filtered), rownames(protein_mat_normalized_lognorm))
 cd69_expr_vec <- as.numeric(protein_mat_normalized_lognorm[shared_cells_cd69, "CD69"])
 L_all <- as.matrix(L_pm_filtered[shared_cells_cd69, , drop = FALSE])
@@ -123,8 +123,8 @@ check(grepl(paste0("skipping ", paste(setdiff(true_top10_abs, published), collap
 cat("\n=== 6. the old overclaiming wording is gone ===\n")
 # Both captions describe the subset now: Fig. 7d (the gene heatmap) and
 # Fig. S6a, b (the same GPs per tissue and per lineage).
-for (f in c("analysis/Figure7.Rmd", "analysis/FigureS6.Rmd", setup_file,
-            "script/Figure7.R", "script/FigureS6.R")) {
+for (f in c("analysis/Figure7.Rmd", "analysis/FigureS5.Rmd", setup_file,
+            "script/Figure7.R", "script/FigureS5.R")) {
   hits <- grep("(ten|10) GPs most associated", readLines(f, warn = FALSE), value = TRUE)
   cat(sprintf("%-34s %s\n", f, if (length(hits)) paste("STILL PRESENT:", hits[1]) else "clean"))
   check(length(hits) == 0, sprintf("%s still claims these are the ten GPs most associated with CD69", f))

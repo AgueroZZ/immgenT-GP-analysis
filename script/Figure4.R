@@ -4,17 +4,17 @@
 #   4a  Max AUC (level-1 lineage) vs max AUC (level-2 cluster) scatter, per GP.
 #   4b  The 69 cluster-associated GPs across the level-2 clusters: row-centered
 #       mean-loading heatmap, columns grouped by level 1.
-#   4c  The Treg row of Extended Data Figure 4 as stacked bars: one bar per
-#       cluster, holding that cluster's mean loading per GP.
-#   4d  Extended Data Figure 4's Treg structure plot (its panel c), one bar per
-#       cell.
+#   4c  The Treg row of the per-lineage structure plots as stacked bars: one
+#       bar per cluster, holding that cluster's mean loading per GP.
+#   4d  The Treg structure plot itself, one bar per cell.
 #
-# 4b, 4c and 4d show the GPs and the cells of Extended Data Figure 4, so the row
-# map, the AUC > 0.9 rule, the display filters and the palette come from
-# code/R/structure_plot_panels.R, and 4b's rendering from
+# 4b, 4c and 4d show the GPs and the cells of the per-lineage structure plots,
+# so the row map, the AUC > 0.9 rule, the display filters and the palette come
+# from code/R/structure_plot_panels.R, and 4b's rendering from
 # code/R/centered_mean_heatmap.R -- the module Extended Data Figure 2d uses --
 # rather than being restated here. The checks at the bottom compare what this
-# script drew against output/FigureS4/, which is what that figure recorded.
+# script drew against output/structure_plot_record/, written by
+# script/structure_plot_record.R.
 #
 # --- internal ---
 # New figure, inserted at 4 on 2026-09-10 (the activation, tissue and CITE-seq
@@ -55,7 +55,7 @@ suppressPackageStartupMessages({
 if (!file.exists("code/R/structure_plot_panels.R")) {
   stop("Run this script from the immgenT-GP-analysis repository root.")
 }
-source("code/R/structure_plot_panels.R")   # Extended Data Figure 4's rows, GP rule, palette
+source("code/R/structure_plot_panels.R")   # the per-lineage structure plots' rows, GP rule, palette
 source("code/R/centered_mean_heatmap.R")   # Extended Data Figure 2d's heatmap rendering
 source("code/R/level2_group_palette.R")    # EXCLUDE_LEVEL2_GROUPS, as Figure 1d and ED 2d use
 
@@ -251,14 +251,14 @@ write.csv(
 )
 
 # ============================================================
-# Shared with 4b, 4c and 4d: the Extended Data Figure 4 GP sets and cells
+# Shared with 4b, 4c and 4d: the per-lineage structure plots' GP sets and cells
 # ============================================================
 cluster_lineage <- cluster_lineage_map(level2_all, level1_all)
 auc_level2_full <- level_2_AUC_list$auc
 auc_clusters <- rownames(auc_level2_full)
 prefix_lineage <- sub("[.].*$", "", auc_clusters)
 
-# GP selection uses every cluster of the lineage, as it does in FigureS4.R --
+# GP selection uses every cluster of the lineage, as it does in structure_plot_record.R --
 # the 100-cell filter below is a display filter only.
 panel_gps <- gps_above_auc_by_lineage(auc_level2_full, cluster_lineage)
 gp_union <- unique(unlist(panel_gps, use.names = FALSE))
@@ -273,7 +273,7 @@ message(sprintf(
 # Cells and clusters drawn per lineage: the healthy non-thymocyte cells of the
 # lineage, in clusters of at least structure_plot_min_cluster_cells cells.
 # --- internal ---
-# Unlike FigureS4.R these means are taken over every cell of the cluster, with
+# Unlike the structure plots these means are taken over every cell of the cluster, with
 # no 2000-cell cap: the cap is there so one large cluster cannot crowd out the
 # rest of a structure plot's width, and a bar of means has no width to crowd.
 # The cluster *set* is the same, which is what the check at the bottom compares.
@@ -342,7 +342,7 @@ mean_loading_by_cluster <- function(cells, gps) {
 # 2d's -- and through it Figure 1d's -- called from
 # code/R/centered_mean_heatmap.R -- the module that figure itself uses -- rather
 # than copied, so this panel cannot drift from it. It is not a subset of that
-# panel's matrix: the columns here are the clusters Extended Data Figure 4 draws
+# panel's matrix: the columns here are the clusters the structure plots draw
 # (>= 100 healthy non-thymocyte cells, no DP, no thymocytes), and each GP is
 # centered on its mean across those columns. It keeps the .wM clusters that c
 # and 4d drop.
@@ -416,7 +416,7 @@ write.csv(
 # ============================================================
 # 4c: one stacked bar of mean loadings per level-2 cluster, the Treg row
 # ============================================================
-# The Treg row of Extended Data Figure 4 with one bar per cluster, holding that
+# The Treg structure-plot row with one bar per cluster, holding that
 # cluster's mean loading per GP instead of one bar per cell -- the average of
 # that row's bars. Same GPs (the 11 with AUC > 0.9 in some Treg cluster), same
 # per-row palette, same cells, minus Treg.wM.
@@ -435,7 +435,7 @@ write.csv(
 # produced any more, but its numbers are the record's `proportion` column.
 # --- end internal ---
 #
-# Unlike 4d and Extended Data Figure 4 this panel is not drawn at the structure
+# Unlike 4d and the structure plots this panel is not drawn at the structure
 # plot's 16 x 3 in: a chart of seven bars does not need a structure plot's
 # width, and Ziang asked for tall and narrow.
 bar_figure_width <- 5.5  # inches
@@ -452,7 +452,7 @@ bar_means <- function(lineage) {
   }
 
   # This row's colours, assigned from the top of the palette without reference
-  # to any other row -- the same per-row rule Extended Data Figure 4 uses, so
+  # to any other row -- the same per-row rule the structure plots use, so
   # colour means different GPs in different rows.
   colors_lineage <- structure_plot_row_colors(gps_lineage)
   if (!identical(names(colors_lineage), colnames(bar_matrix))) {
@@ -530,9 +530,9 @@ bar_record <- do.call(rbind, lapply(bar_data, `[[`, "record"))
 write.csv(bar_record, file.path(record_path, "4c_mean_loading_by_cluster.csv"), row.names = FALSE)
 
 # ============================================================
-# 4d: Extended Data Figure 4's Treg row on its own
+# 4d: the Treg structure-plot row on its own
 # ============================================================
-# FigureS4.R's loop body for one lineage, unchanged including its seeds and its
+# structure_plot_record.R's loop body for one lineage, unchanged including its seeds and its
 # 2000-cell cap, so this is that row and not a redrawing of it.
 d_lineage <- "Treg"
 gps_d <- panel_gps[[d_lineage]]
@@ -591,22 +591,23 @@ ggsave(
 )
 
 # ============================================================
-# Do 4b, 4c and 4d show what Extended Data Figure 4 shows?
+# Do 4b, 4c and 4d show what the per-lineage structure plots show?
 # ============================================================
-# The point of these panels is to be that figure's GPs and cells in another
-# form, so they are checked against what it recorded rather than against a
-# second copy of the rule.
-s4_gps <- read.csv("output/FigureS4/s4_panel_gps.csv", stringsAsFactors = FALSE)
-s4_clusters <- read.csv("output/FigureS4/s4_panel_clusters.csv", stringsAsFactors = FALSE)
+# The point of these panels is to be those rows' GPs and cells in another form,
+# so they are checked against what the rows recorded rather than against a
+# second copy of the rule. The record is written by
+# script/structure_plot_record.R; run it first if this read fails.
+s4_gps <- read.csv("output/structure_plot_record/panel_gps.csv", stringsAsFactors = FALSE)
+s4_clusters <- read.csv("output/structure_plot_record/panel_clusters.csv", stringsAsFactors = FALSE)
 
 for (lineage in names(structure_plot_panels)) {
   recorded <- s4_gps[s4_gps$lineage == lineage, ]
   drawn_colors <- structure_plot_row_colors(panel_gps[[lineage]])
   if (!identical(recorded$gp, unname(names(drawn_colors))) ||
         !identical(recorded$color, unname(drawn_colors))) {
-    stop(sprintf("row %s: GPs or colours differ from Extended Data Figure 4's record.", lineage))
+    stop(sprintf("row %s: GPs or colours differ from the structure-plot record.", lineage))
   }
-  # Every panel here shows the clusters that figure drew, minus this lineage's
+  # Every panel here shows the clusters those rows drew, minus this lineage's
   # miniverse cluster and nothing else.
   recorded_clusters <- sort(s4_clusters$cluster[
     s4_clusters$lineage == lineage & s4_clusters$n_cells_drawn > 0
@@ -663,7 +664,7 @@ d_recorded <- s4_clusters[
 d_recorded <- d_recorded[order(d_recorded$cluster), ]
 if (!identical(names(d_drawn), d_recorded$cluster) ||
       !identical(as.integer(d_drawn), as.integer(d_recorded$n_cells_drawn))) {
-  stop("4d does not draw the same Treg cells as Extended Data Figure 4's row c.")
+  stop("4d does not draw the same Treg cells as the structure-plot record's Treg row.")
 }
 
 # Did this run actually write the panels?
@@ -674,6 +675,6 @@ for (f in expected) {
   }
 }
 message(sprintf(
-  "wrote %s; 4b/4c/4d match output/FigureS4's record (4c vs 4b max |diff| = %g)",
+  "wrote %s; 4b/4c/4d match output/structure_plot_record (4c vs 4b max |diff| = %g)",
   paste(basename(expected), collapse = ", "), c_vs_b
 ))

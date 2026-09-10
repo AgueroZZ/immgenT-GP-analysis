@@ -2,7 +2,7 @@
 #
 #   Rscript script/verify_gating_gps.R      # exits non-zero on any mismatch
 #
-# Figure 7e-7j and Figure S6c-S6f are ten protein-gate vs. GP-loading panels,
+# Figure 7e-7j and Figure S5c-S5f are ten protein-gate vs. GP-loading panels,
 # drawn by two different scripts from one curated pool (well_aligned_gps). Four
 # things are asserted in prose -- in the two captions and in
 # code/R/citeseq_shared_setup.R's comment -- and nothing in the build checks
@@ -39,12 +39,12 @@ read_letter_map <- function(file, varname) {
 }
 
 fig7 <- read_letter_map("script/Figure7.R", "fig7_gating")
-figs6 <- read_letter_map("script/FigureS6.R", "figs6_gating")
-gps <- c(names(fig7), names(figs6))
+figs5 <- read_letter_map("script/FigureS5.R", "figs5_gating")
+gps <- c(names(fig7), names(figs5))
 
 cat("=== 0. the panels each script declares ===\n")
 cat("Figure 7 :", paste(sprintf("%s = %s", fig7, names(fig7)), collapse = ", "), "\n")
-cat("Figure S6:", paste(sprintf("%s = %s", figs6, names(figs6)), collapse = ", "), "\n")
+cat("Figure S5:", paste(sprintf("%s = %s", figs5, names(figs5)), collapse = ", "), "\n")
 
 cat("\n=== 1. every gated GP comes from the curated well_aligned_gps pool ===\n")
 outside <- setdiff(gps, well_aligned_gps)
@@ -54,15 +54,15 @@ cat(sprintf("pool: %d GPs | published: %d | outside the pool: %s\n",
 check(length(outside) == 0,
       sprintf("gated GP(s) not in well_aligned_gps: %s", paste(outside, collapse = ", ")))
 
-cat("\n=== 2. Figure 7 and Figure S6 show disjoint GPs ===\n")
-both <- intersect(names(fig7), names(figs6))
+cat("\n=== 2. Figure 7 and Figure S5 show disjoint GPs ===\n")
+both <- intersect(names(fig7), names(figs5))
 cat("in both figures:", if (length(both)) paste(both, collapse = ", ") else "none", "\n")
 check(length(both) == 0, sprintf("GP(s) published in both figures: %s", paste(both, collapse = ", ")))
 check(!anyDuplicated(gps), "a GP is lettered twice within one figure")
 
 cat("\n=== 3. every declared letter has a panel PDF, and there are no orphans ===\n")
 for (spec in list(list(map = fig7, dir = "figures/final-selected/Figure 7/", pat = "^7[e-z]\\.pdf$"),
-                  list(map = figs6, dir = "figures/final-selected/Figure S6/", pat = "^s6[c-z]\\.pdf$"))) {
+                  list(map = figs5, dir = "figures/final-selected/Figure S5/", pat = "^s5[c-z]\\.pdf$"))) {
   want <- paste0(spec$map, ".pdf")
   missing <- want[!file.exists(file.path(spec$dir, want))]
   on_disk <- list.files(spec$dir, pattern = spec$pat)

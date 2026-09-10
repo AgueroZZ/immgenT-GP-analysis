@@ -5,7 +5,7 @@
 # lineage's sub-lineage clusters. Two scripts need the same row map, the same
 # selection rule and the same palette:
 #
-#   script/FigureS4.R                    draws the seven rows, stacks them, and
+#   script/structure_plot_record.R       draws the seven rows and records what
 #                                        records what it drew
 #   script/verify_structure_plot_gps.R   re-derives the GP sets from the
 #                                        published Extended Data Table 6 and

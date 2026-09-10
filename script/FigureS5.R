@@ -1,25 +1,38 @@
-# Figure S5. Protein programs across GPs.
+# Figure S5. CD69-associated GPs and further surface-protein gating strategies.
 #
-# One panel (see analysis/FigureS5.Rmd for the caption text):
-#   s5   Heatmap of the re-estimated protein matrix U (sparse: |score| < 0.5
-#        shown white), after removing isotype/low-quality proteins and 4
-#        contamination GPs (GP40/50/55/188). GPs are columns ordered from dense
-#        to sparse; proteins are rows ordered by their rightmost visible GP to
-#        expose a triangular support boundary.
+# Panels produced (see analysis/FigureS5.Rmd for the caption text):
+#   s5a,s5b  Mean loading of the 10 curated CD69-associated GPs
+#        (cd69_top_gps_subset, defined in code/R/citeseq_shared_setup.R) per
+#        tissue (a) and per lineage (b). Figure 7d shows the same GPs' genes,
+#        in the same order, which is why the subset lives in the shared setup.
+#   s5c-s5f  Protein-gate vs. GP-loading comparison on the MDE embedding, for
+#        the 4 curated GPs GP29/GP58/GP22/GP68.
 #
-# Split out of what is now Figure S6 on 2026-07-30. It was that figure's panel
-# s6a (and before 2026-07-28, the published Figure 6b); it became a standalone
-# figure in the Extended Data Figure 5 slot that main Figure 7b vacated, moved
-# to Extended Data Figure 6 on 2026-08-27 when the per-lineage structure plots
-# took slot 5, and back to Extended Data Figure 5 on 2026-09-10, when Extended
-# Data Figure 3 was folded into Extended Data Figure 2 as its panel d and
-# everything after it moved up one. For anyone diffing against
-# figures/Previous/bits/:
+# Reworked 2026-07-28. This page used to be a two-page gallery (s6-1, s6-2) of
+# all 23 well-aligned GPs not shown in Figure 7; that gallery is retired.
+#
+# Re-lettered 2026-07-30, when the protein-program heatmap that was this
+# figure's first panel became a standalone figure (now script/FigureS4.R).
+# Renumbered repeatedly since: S6 -> S7 on 2026-08-27 when the per-lineage
+# structure plots took a slot ahead of it, back to S6 when Extended Data
+# Figure 3 was folded into Figure 2 as its panel d, and to **S5** on
+# 2026-09-10 when the structure-plot figure was removed. Only letters and
+# paths ever moved; no panel was re-rendered. For anyone diffing against
+# figures/Previous/bits/ -- note its `Figure S6/` and `Figure S7/` are the OLD
+# numbering and are NOT this figure:
 #
 #   now   was                    what
-#   s5    Figure 6/6b            protein-program heatmap
+#   s5a   Figure 6/6j            CD69 GPs, mean activity per tissue
+#   s5b   Figure 6/6k            CD69 GPs, mean activity per lineage
+#   s5c   inside Figure S6/s6-1  gating, GP29
+#   s5d   inside Figure S6/s6-1  gating, GP58
+#   s5e   inside Figure S6/s6-1  gating, GP22
+#   s5f   inside Figure S6/s6-2  gating, GP68
+#   --    Figure S6/s6-1, s6-2   the 2-page gallery, retired
 #
-# Source: ported from Figure_CITEseq.R (its panel a).
+# Source: ported from Figure_CITEseq.R (panels b, c) and
+# gated_protein_loading_plot.R (panels c-f, using plot_gated_gp_vs_protein()
+# from code/R/gated_protein_helpers.R, shared with Figure7.R).
 #
 # Required inputs (data/), read via code/R/citeseq_shared_setup.R below --
 # see code/README.md's "Data provenance" table for the full picture:
@@ -34,22 +47,20 @@
 #     by code/pipeline/03_protein_thresholds.R -- see that script's header]
 #   CITEseq_markers_full.rds                    [code/pipeline/04_protein_projection.R, using the
 #     non-backfit200 protein summary -- see caveat above]
-#
-# The shared setup loads more than this one panel needs (it also builds the
-# gating inputs Figure 7 / Figure S6 use); it is sourced as-is rather than
-# trimmed so the protein filters here cannot drift from the ones those figures
-# apply.
 
 # --- doc:setup ---
+library(ggplot2)
 library(dplyr)
-library(pheatmap)
+library(patchwork)
+library(tidyr)
 library(Matrix) # protein matrices are dgCMatrix; must be attached for `[` to dispatch
 
 data_path <- "data/"
 figure_path <- "figures/final-selected/Figure S5/"
+source("code/R/gated_protein_helpers.R")
 source("code/R/citeseq_shared_setup.R")
 
-# Record when this run started, to assert at the end that the panel is newer.
+# Record when this run started, to assert at the end that every panel is newer.
 # --- internal ---
 # A figure script here was once seen to exit 0 with a complete log and write
 # nothing at all -- see script/README.md, "A re-run can silently not write".
@@ -57,98 +68,70 @@ source("code/R/citeseq_shared_setup.R")
 run_started_at <- Sys.time()
 
 # ============================================================
-# s5: sparse protein-program heatmap, contamination GPs removed
+# s5a/s5b: mean loading of the 10 curated CD69-associated GPs, per tissue (a)
+# and per lineage (b). cd69_top_gps_sorted comes from citeseq_shared_setup.R
+# and is the same GP order Figure 7d draws.
 # ============================================================
-# The normalized protein matrix is derived here rather than in
-# citeseq_shared_setup.R because this is its only consumer among the figures.
-Protein_F_pm <- Protein_F_pm_raw[!rownames(Protein_F_pm_raw) %in% isotype_proteins, ]
-Protein_F_pm <- Protein_F_pm[rownames(Protein_F_pm) %in% good_proteins, ]
-Protein_F_pm <- Protein_F_pm[!rownames(Protein_F_pm) %in% exclude_proteins, ]
-Protein_F_pm <- Protein_F_pm[!rownames(Protein_F_pm) %in% thy11_proteins, ]
-D_lognorm <- diag(1 / apply(Protein_F_pm, 2, function(x) max(abs(x))))
-Protein_F_pm <- Protein_F_pm %*% D_lognorm
-colnames(Protein_F_pm) <- paste0("GP", 1:ncol(Protein_F_pm))
-Protein_F_pm[is.na(Protein_F_pm)] <- 0
+cells_for_heatmap <- intersect(rownames(L_pm_filtered), rownames(seurat_meta_filtered))
+L_cd69_sub <- L_pm_filtered[cells_for_heatmap, cd69_top_gps_sorted, drop = FALSE]
+meta_hm <- seurat_meta_filtered[cells_for_heatmap, c("annotation_level1", "organ_simplified")]
 
-threshold_simplified <- 0
-keep_rows_simplified <- apply(Protein_F_pm, 1, function(v) any(abs(v) > threshold_simplified, na.rm = TRUE))
-Protein_F_pm_simplified <- Protein_F_pm[keep_rows_simplified, , drop = FALSE]
-keep_cols_simplified <- apply(Protein_F_pm_simplified, 2, function(v) any(abs(v) > threshold_simplified, na.rm = TRUE))
-Protein_F_pm_simplified <- Protein_F_pm_simplified[, keep_cols_simplified, drop = FALSE]
+mean_loading_long <- function(L_mat, group_vec, gp_levels) {
+  as.data.frame(L_mat) %>%
+    mutate(group = group_vec) %>%
+    tidyr::pivot_longer(cols = -group, names_to = "GP", values_to = "Loading") %>%
+    group_by(group, GP) %>%
+    summarise(mean_loading = mean(Loading, na.rm = TRUE), .groups = "drop") %>%
+    mutate(GP = factor(GP, levels = gp_levels))
+}
+make_mean_loading_heatmap <- function(df, title) {
+  fill_max <- max(df$mean_loading, na.rm = TRUE)
+  ggplot(df, aes(x = group, y = GP, fill = mean_loading)) +
+    geom_tile() +
+    scale_fill_gradient(low = "white", high = "firebrick", limits = c(0, fill_max), name = "Mean\nloading") +
+    labs(title = title, x = NULL, y = NULL) +
+    theme_minimal(base_size = 9) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 9), axis.text.y = element_text(size = 9), panel.grid = element_blank())
+}
 
-GP_contamination <- c("GP40", "GP50", "GP55", "GP188")
-Protein_F_pm_simplified_no_contamination <- Protein_F_pm_simplified[, !colnames(Protein_F_pm_simplified) %in% GP_contamination, drop = FALSE]
+df_organ <- mean_loading_long(L_cd69_sub, meta_hm$organ_simplified, cd69_top_gps_sorted)
+p_s5a <- make_mean_loading_heatmap(df_organ, "Mean GP loading by tissue (organ_simplified)")
+ggsave(paste0(figure_path, "s5a.pdf"), p_s5a, width = 9, height = 5)
 
-sparse_cutoff <- 0.5
-bk_sparse <- unique(c(seq(-1, -sparse_cutoff, length.out = 26), seq(-sparse_cutoff, sparse_cutoff, length.out = 51), seq(sparse_cutoff, 1, length.out = 26)))
-cols_sparse <- c(colorRampPalette(c("#4575B4", "white"))(25), rep("white", 50), colorRampPalette(c("white", "#D73027"))(25))
-
-# Display proteins as rows and GPs as columns. Order GP columns from most to
-# fewest visible proteins. Order protein rows by their rightmost visible GP, so
-# proteins extending into the sparse right side appear first and form a
-# triangular boundary. Visible count and a rarity-weighted support score provide
-# deterministic secondary ordering.
-wide_matrix_s5 <- as.matrix(Protein_F_pm_simplified_no_contamination)
-wide_visible_mask_s5 <- abs(wide_matrix_s5) >= sparse_cutoff
-wide_gp_visible_count_s5 <- colSums(wide_visible_mask_s5)
-wide_protein_visible_count_s5 <- rowSums(wide_visible_mask_s5)
-wide_gp_number_s5 <- as.integer(sub("^GP", "", colnames(wide_matrix_s5)))
-
-wide_gp_order_s5 <- order(-wide_gp_visible_count_s5, wide_gp_number_s5)
-wide_mask_ordered_cols_s5 <- wide_visible_mask_s5[
-  ,
-  wide_gp_order_s5,
-  drop = FALSE
-]
-wide_rightmost_visible_gp_s5 <- apply(
-  wide_mask_ordered_cols_s5,
-  1,
-  function(values) max(which(values))
-)
-wide_rarity_weights_s5 <- seq_len(ncol(wide_mask_ordered_cols_s5))^2
-wide_protein_rarity_score_s5 <- as.numeric(
-  wide_mask_ordered_cols_s5 %*% wide_rarity_weights_s5
-)
-wide_protein_order_s5 <- order(
-  -wide_rightmost_visible_gp_s5,
-  -wide_protein_visible_count_s5,
-  -wide_protein_rarity_score_s5,
-  rownames(wide_matrix_s5)
-)
-wide_ordered_matrix_s5 <- wide_matrix_s5[
-  wide_protein_order_s5,
-  wide_gp_order_s5,
-  drop = FALSE
-]
-
-pdf(paste0(figure_path, "s5.pdf"), width = 48, height = 14)
-pheatmap::pheatmap(
-  wide_ordered_matrix_s5,
-  main = sprintf(
-    paste0(
-      "Protein programs - GP columns, triangular-first protein rows ",
-      "(|score| >= %.1f; protein-row sparsity is not monotone)"
-    ),
-    sparse_cutoff
-  ),
-  color = cols_sparse,
-  breaks = bk_sparse,
-  cluster_rows = FALSE,
-  cluster_cols = FALSE,
-  border_color = "grey75",
-  fontsize = 16,
-  fontsize_row = 16,
-  fontsize_col = 16,
-  angle_col = 90,
-  legend_breaks = c(-1, -sparse_cutoff, 0, sparse_cutoff, 1),
-  legend_labels = c("-1", "-0.5", "0 (white)", "0.5", "1")
-)
-dev.off()
+df_level1 <- mean_loading_long(L_cd69_sub, meta_hm$annotation_level1, cd69_top_gps_sorted)
+p_s5b <- make_mean_loading_heatmap(df_level1, "Mean GP loading by cell type (level1)")
+ggsave(paste0(figure_path, "s5b.pdf"), p_s5b, width = 7, height = 5)
 
 # ============================================================
-# Did this run actually write the panel?
+# s5c-s5f: protein-gate vs. GP-loading comparison for the 4 curated
+# supplementary GPs. Same helper, same inputs and same panel geometry as
+# Figure 7e-7j -- only the GPs differ, and the two sets are disjoint.
 # ============================================================
-expected_panels <- paste0(figure_path, "s5", ".pdf")
+# As in Figure7.R, the loop iterates over the names of the letter map so a GP
+# cannot be drawn under another GP's letter.
+figs5_gating <- c("GP29" = "s5c", "GP58" = "s5d", "GP22" = "s5e", "GP68" = "s5f")
+for (gp in names(figs5_gating)) {
+  k_name <- paste0("K", sub("^GP", "", gp))
+  plot_gated_gp_vs_protein(
+    gp_name = k_name,
+    df_markers = df_markers2,
+    protein_mat = protein_mat_normalized_lognorm,
+    loading_mat = L_pm_for_gating,
+    mde_emb = mde_result,
+    missing_threshold_action = "skip",
+    threshold_df = threshold_results_subset_manual,
+    exclude_cells = c(thymocyte_cells, proliferating_cells, miniverse_cells),
+    selected_proteins = select_proteins,
+    loading_q = NULL,
+    min_pointsize = if (gp %in% enlarge_gps) 3L else 0L,
+    save_path = paste0(figure_path, figs5_gating[gp], ".pdf")
+  )
+}
+
+# ============================================================
+# Did this run actually write the panels?
+# ============================================================
+expected_panels <- paste0(figure_path, c("s5a", "s5b", figs5_gating), ".pdf")
 stale <- expected_panels[!file.exists(expected_panels) |
                            file.mtime(expected_panels) < run_started_at |
                            file.size(expected_panels) == 0]

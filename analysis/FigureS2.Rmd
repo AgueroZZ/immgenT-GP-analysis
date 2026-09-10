@@ -86,7 +86,7 @@ also ordered the way Fig. 1d orders its cells -- lineage, then
 within the block, which is what puts each lineage's proliferating (`.P`)
 cluster at the end of its lineage rather than mid-alphabet -- and the GP rows
 follow the columns, in dominant-cluster blocks. It is the mean-loading
-counterpart of [Extended Data Figure 4](FigureS4.html), which resolves the
+counterpart of [Figure 4](Figure4.html), which resolves the
 same clusters cell by cell.
 
 ### Setup, centering, and ordering

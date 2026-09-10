@@ -13,7 +13,7 @@ source("../code/R/doc_code.R")
 All panels are produced by
 [`script/Figure4.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure4.R),
 which shares its GP selection and cells with
-[Extended Data Figure 4](FigureS4.html) via `code/R/structure_plot_panels.R`,
+the per-lineage structure-plot record via `code/R/structure_plot_panels.R`,
 and its heatmap rendering with [Extended Data Figure 2d](FigureS2.html#figs2d) via
 `code/R/centered_mean_heatmap.R`. The code below is shown for reference (not
 re-executed on this page); the images are its pre-rendered output.

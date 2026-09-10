@@ -9,7 +9,7 @@
 # nothing in the build enforces it:
 #
 #   the curated CSV  ->  threshold_results_subset_manual   (code/R/citeseq_shared_setup.R)
-#                    ->  the threshold_df that Figure7.R and FigureS6.R gate on
+#                    ->  the threshold_df that Figure7.R and FigureS5.R gate on
 #
 # This script builds the second by sourcing the real setup -- not a copy of its
 # logic -- and diffs it against the curated CSV read straight off disk. It also
