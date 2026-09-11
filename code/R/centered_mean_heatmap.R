@@ -11,6 +11,11 @@
 # Figure 1d's arrangement, a level1 bar and a categorical bar, both with a
 # legend and no per-column bar at all.
 #
+# The panels carry no title. `group_label` and `order_description` describe
+# what the columns are and how the matrix was ordered; they go to the run log,
+# not onto the figure, so the only text the panel shows is its own labels and
+# the colour-bar legend. The captions in analysis/*.Rmd carry the prose.
+#
 # --- internal ---
 # Extracted verbatim (bar the added `palette`/`legend_title` arguments and the
 # `keep_gps` selector) from a retired activation-era FigureS4.R, which drew the
@@ -214,12 +219,13 @@ render_centered_heatmap <- function(
       )
     )
   } else if (is.null(group_level1)) {
+    # The bar repeats what the column labels already say, so it carries no
+    # name: naming it printed a bare "group" beside 6a and 6b.
     column_annotation <- ComplexHeatmap::HeatmapAnnotation(
       group = factor(colnames(matrix), levels = colnames(matrix)),
       col = list(group = group_palette),
       show_legend = FALSE,
-      annotation_name_side = "left",
-      annotation_name_gp = grid::gpar(fontsize = 10, fontface = "bold"),
+      show_annotation_name = FALSE,
       annotation_height = grid::unit(4, "mm")
     )
   } else {
@@ -232,11 +238,23 @@ render_centered_heatmap <- function(
       group = factor(colnames(matrix), levels = colnames(matrix)),
       col = list(level1 = level1_palette, group = group_palette),
       show_legend = FALSE,
-      annotation_name_side = "left",
-      annotation_name_gp = grid::gpar(fontsize = 10, fontface = "bold"),
+      show_annotation_name = FALSE,
       annotation_height = grid::unit(c(4, 4), "mm")
     )
   }
+
+  # `group_label` and `order_description` are build provenance -- what the
+  # columns are and how rows and columns were ordered. They used to be drawn
+  # on the panel as a two-line `column_title`, which put a line like
+  # "level2_group blocks, alphabetical within block; miniverse (.wM) clusters
+  # excluded" on a manuscript figure (and, on the widest panel, ran it off both
+  # page edges). Dropped from the panel on 2026-09-10 on Ziang's call: the
+  # figure legend and the page prose say all of it in prose. They are still
+  # required arguments and still logged, so a run records what it drew.
+  message(
+    "  ", basename(filename), ": row-centered GP mean loading by ", group_label,
+    " -- ", gsub("\n", " ", order_description, fixed = TRUE)
+  )
 
   heatmap <- ComplexHeatmap::Heatmap(
     matrix,
@@ -247,10 +265,6 @@ render_centered_heatmap <- function(
     row_order = row_order,
     column_order = column_order,
     top_annotation = column_annotation,
-    column_title = paste0(
-      "Row-centered GP mean loading: ", group_label, "\n", order_description
-    ),
-    column_title_gp = grid::gpar(fontsize = 16, fontface = "bold"),
     row_title = "GP",
     row_title_gp = grid::gpar(fontsize = 12),
     row_names_gp = grid::gpar(fontsize = row_label_fontsize),

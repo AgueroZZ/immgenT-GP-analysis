@@ -184,14 +184,7 @@ Later the same day it was rebuilt once more, to drop the **DP** lineage as
 well: DP is drawn in Figure 1a, 6b-6e, 8b and Extended Data 5b, but Figure 1d
 -- the panel whose columns this one follows -- had never shown it, and no
 other cluster-level panel does. DP contributes 12 of the 107 level-2 clusters
-(one of them its own `.wM`), so the panel now spans **88**. That re-run also
-broke the title's description onto two lines: at 16pt it is ~8.3pt per
-character and the page is only as wide as the heatmap, so the single
-217-character line ran 189pt off each edge and was clipped in the PDF (it
-already overran by 80pt at 99 columns; dropping DP narrowed the page by
-another 131pt). Only this panel calls `render_centered_heatmap()` with a
-description that long -- 4b, 6a and 6b all fit -- so the wrap is in
-`FigureS2d.R`, not in the helper.
+(one of them its own `.wM`), so the panel now spans **88**.
 
 The `annotation_level2_group` order and palette moved out of `Figure1.R` into
 `code/R/level2_group_palette.R`, which both scripts now source, so the two
@@ -200,6 +193,33 @@ holds `level2_group_block_order()`, the column rule above.
 `render_centered_heatmap()` grew a `group_annotation` argument for the new
 column annotation, leaving its other two callers unchanged -- `Figure4.R`'s 4b
 still uses `level2_column_order()` and the two-track annotation.
+
+## The 2026-09-10 removal of the panel titles
+
+`render_centered_heatmap()` used to draw a two-line `column_title` on every
+panel it made, built from its `group_label` and `order_description` arguments
+-- e.g. "Row-centered GP mean loading: tissue (organ_simplified)" over "32
+tissue-associated GPs; organ_simplified order". That is build provenance, not
+figure content, and Ziang called it out as unprofessional on a manuscript
+figure. On the widest panel (S2D) the description line also ran off both page
+edges and was clipped in the shipped PDF: at 16pt it is ~8.3pt per character,
+and the page is only as wide as the heatmap.
+
+The title is gone from all four panels the helper makes -- **4b, 6a, 6b and
+S2D**. The arguments stay: they are still required, and the helper now
+`message()`s them, so a run records what it drew and the call sites keep
+documenting the ordering rule next to the code that implements it. The prose
+lives in the figure legends and the `analysis/*.Rmd` pages, which already
+carried all of it.
+
+The same pass dropped the bare word **`group`** that the unnamed column colour
+bar printed beside **6a** and **6b** (`show_annotation_name = FALSE`). 4b and
+S2D keep their `Cell Type` / `Level2 Group` names -- those label two distinct
+bars and are worth reading.
+
+Re-running `Figure4.R` and `Figure6.R` for this also re-rendered their other
+panels. **4a, 4c, 4d, 6c, 6d and 6e came back pixel-identical (RMSE 0)** at
+110 dpi, ggrepel labels included.
 
 ## Which published panel is the ground truth
 

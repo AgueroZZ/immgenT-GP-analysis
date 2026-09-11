@@ -124,15 +124,12 @@ render_centered_heatmap(
   level2_order$row_order,
   level2_order$column_order,
   centered_color_limit,
-  # Two lines, not one. At 16pt the title is ~8.3pt per character and the page
-  # is only as wide as the heatmap, so a single 217-character line ran 189pt
-  # off each edge and was clipped in the PDF -- it already overran by 80pt at
-  # 99 columns, and dropping DP narrowed the page by another 131pt. Break at a
-  # semicolon and both halves fit.
+  # Goes to the run log, not onto the panel -- render_centered_heatmap() stopped
+  # drawing it on 2026-09-10. The page prose says the same thing in prose.
   paste0(
     "all 200 GPs; level2 columns: Figure 1 level1 order ",
     "(CD8, CD4, Treg, gdT, CD8aa, Tz, DN); ",
-    "level2_group blocks, alphabetical within block\n",
+    "level2_group blocks, alphabetical within block; ",
     "DP lineage and miniverse (.wM) clusters excluded; ",
     "GP rows: dominant-group blocks"
   ),
