@@ -34,6 +34,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
@@ -231,6 +232,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -350,6 +354,14 @@ div.tocify {
 </div><!--/.navbar -->
 
 <div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
 
 
 
@@ -516,15 +528,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedd3c3967a3eae27fd7dbadae0a29a60ac62042e9targetblankdd3c396a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedca7ffb5d555c6432963a9347e0f7c32fcfeb0c3targetblankdca7ffba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/dd3c3967a3eae27fd7dbadae0a29a60ac62042e9" target="_blank">dd3c396</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/dca7ffb5d555c6432963a9347e0f7c32fcfeb0c3" target="_blank">dca7ffb</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedd3c3967a3eae27fd7dbadae0a29a60ac62042e9targetblankdd3c396a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedca7ffb5d555c6432963a9347e0f7c32fcfeb0c3targetblankdca7ffba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +546,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/dd3c3967a3eae27fd7dbadae0a29a60ac62042e9" target="_blank">dd3c396</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/dca7ffb5d555c6432963a9347e0f7c32fcfeb0c3" target="_blank">dca7ffb</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -617,6 +629,41 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/dca7ffb5d555c6432963a9347e0f7c32fcfeb0c3/analysis/Figure1.Rmd" target="_blank">dca7ffb</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+<td>
+Strip the code-narrating prose from every page; fold code chunks by
+default
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/54718c496a5e2b483e85b029393f730f72d7eda8/docs/Figure1.html" target="_blank">54718c4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+<td>
+Build site: the four mean-loading heatmaps without their titles
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1410,14 +1457,12 @@ Initial commit: immgenT-GP-analysis
 </div>
 </div>
 </div>
-<p>All panels except (B) are produced by <a
+<p>All panels except (b) are produced by <a
 href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure1.R"><code>script/Figure1.R</code></a>.
-The code below is shown for reference (not re-executed on this page,
-since some steps such as the panel-D heatmap are slow); the images are
-its pre-rendered output.</p>
+The code below is shown for reference; the images are its pre-rendered
+output.</p>
 <div id="setup" class="section level2">
 <h2>Setup</h2>
-<p>Data loading, shared across all panels below.</p>
 <pre class="r"><code>library(ggplot2)
 library(dplyr)
 library(scattermore)
@@ -1445,7 +1490,6 @@ mde_result &lt;- readRDS(paste0(data_path, &quot;umap_result.rds&quot;))
 colnames(mde_result) &lt;- c(&quot;MDE_1&quot;, &quot;MDE_2&quot;)
 mde_result &lt;- mde_result[rownames(L_pm_filtered), ]
 df_mde &lt;- as.data.frame(mde_result)</code></pre>
-<p>Panels C and D restrict to non-thymocyte cells:</p>
 <pre class="r"><code># Drop thymocytes from all downstream cell-level visualizations.
 non_thymo_cells &lt;- seurat_meta_filtered$cellID[seurat_meta_filtered$annotation_level1 != &quot;thymocyte&quot;]
 L_pm_filtered &lt;- L_pm_filtered[non_thymo_cells, ]
@@ -1589,10 +1633,9 @@ CD4⁺CD8αβ⁺ αβ T cells.</p>
 </div>
 <div id="fig1b" class="section level2">
 <h2>(b) GP-representation schematic</h2>
-<p>This panel is a hand-drawn schematic, not generated from code.</p>
-<p>How the factorization itself is fitted is documented in <a
-href="Methods_FlashierFit.html">Methods: fitting EBMF using
-flashier</a>.</p>
+<p>A hand-drawn schematic, not generated from code. The factorization
+itself is documented in <a href="Methods_FlashierFit.html">Methods:
+fitting EBMF using flashier</a>.</p>
 <div class="figcaption">
 <p><strong>Fig. 1b.</strong> Schematic of the gene-program (GP)
 representation of T cell gene-expression profiles. Each cell is
@@ -2172,6 +2215,11 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 <script>
 $(document).ready(function ()  {

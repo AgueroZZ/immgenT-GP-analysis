@@ -34,6 +34,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
@@ -231,6 +232,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -350,6 +354,14 @@ div.tocify {
 </div><!--/.navbar -->
 
 <div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
 
 
 
@@ -516,15 +528,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedd3c3967a3eae27fd7dbadae0a29a60ac62042e9targetblankdd3c396a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedca7ffb5d555c6432963a9347e0f7c32fcfeb0c3targetblankdca7ffba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/dd3c3967a3eae27fd7dbadae0a29a60ac62042e9" target="_blank">dd3c396</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/dca7ffb5d555c6432963a9347e0f7c32fcfeb0c3" target="_blank">dca7ffb</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedd3c3967a3eae27fd7dbadae0a29a60ac62042e9targetblankdd3c396a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedca7ffb5d555c6432963a9347e0f7c32fcfeb0c3targetblankdca7ffba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +546,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/dd3c3967a3eae27fd7dbadae0a29a60ac62042e9" target="_blank">dd3c396</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/dca7ffb5d555c6432963a9347e0f7c32fcfeb0c3" target="_blank">dca7ffb</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -617,6 +629,41 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/dca7ffb5d555c6432963a9347e0f7c32fcfeb0c3/analysis/Figure8.Rmd" target="_blank">dca7ffb</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+<td>
+Strip the code-narrating prose from every page; fold code chunks by
+default
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/54718c496a5e2b483e85b029393f730f72d7eda8/docs/Figure8.html" target="_blank">54718c4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+<td>
+Build site: the four mean-loading heatmaps without their titles
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -711,24 +758,13 @@ Figure 2
 </div>
 </div>
 <p>This page documents <strong>Figure 8b</strong>. The other panels of
-Figure 8 (A nonlinear deep-learning framework independently recovers the
-immgenT gene-program landscape) are produced by the RQVI framework and
-are documented in the companion repository for RQVI.</p>
-<p>Figure 8b asks whether the fine-grained cluster-level patterns
-captured by the 200 EBMF GPs are recovered by an independent
-factorization. It compares each EBMF GP with a matched RQVI GP – RQVI
-being an alternative matrix factorization of the same cells, run across
-10 random-seed initializations (256 GPs per seed). The two heatmaps
-share the same row and column order and use a white-to-blue scale of
-per-GP relative loading on <code>[0, 1]</code>, with broad lineage
-annotations above the columns.</p>
-<p>Cells are the <code>L_pm_filtered</code> GP loadings (cells passing
-the iterative total-loading filter), restricted to non-thymocytes
-(<code>annotation_level1 != "thymocyte"</code>, all conditions) and to
-cells that also carry an RQVI loading. EBMF and RQVI loadings are
-averaged within <code>annotation_level2</code> on these common cells,
-and each RQVI GP is shown on the row of its matched EBMF GP. In the code
-and in the intermediate files the EBMF GPs are named F1-F200; those are
+Figure 8 are produced by the RQVI framework and are documented in the <a
+href="https://github.com/TianzeCompbio/RQVI_GP_figures/tree/main">companion
+repository for RQVI</a>.</p>
+<p>Each of the 200 EBMF GPs is compared with a matched RQVI GP – RQVI
+being an alternative factorization of the same cells, run across 10
+random-seed initializations (256 GPs per seed). In the code and the
+intermediate files the EBMF GPs are named F1-F200; those are
 GP1-GP200.</p>
 <div id="fig8b" class="section level2">
 <h2>Figure 8b</h2>
@@ -780,22 +816,15 @@ clusters.</p>
 <div id="how-the-figure-is-made" class="section level2">
 <h2>How the figure is made</h2>
 <p>Three steps, run from the repository root:</p>
-<pre class="bash"><code>Rscript script/Figure8b.R          # cluster-mean matrices + column/palette metadata
+<pre class="bash fold-none"><code>Rscript script/Figure8b.R          # cluster-mean matrices + column/palette metadata
 python  script/Figure8b_rematch.py # one-to-one EBMF-RQVI program matching
 python  script/Figure8b_plot.py    # heatmaps</code></pre>
 <p>The Python steps require <code>matplotlib</code>,
-<code>pandas</code>, <code>scipy</code>, <code>h5py</code>, and
-<code>numpy</code>. The RQVI cell-level loadings are read as input from
-<code>data/</code>, which is a git-ignored symlink and is not tracked
-here.</p>
+<code>pandas</code>, <code>scipy</code>, <code>h5py</code> and
+<code>numpy</code>. The RQVI cell-level loadings are read from
+<code>data/</code>, a git-ignored symlink that is not tracked here.</p>
 <div id="cluster-means" class="section level3">
 <h3>Cluster means</h3>
-<p><code>script/Figure8b.R</code> builds the raw
-<code>annotation_level2</code> cluster-mean matrix for the EBMF GPs on
-the common non-thymocyte cells, together with the column order (Figure-1
-level1 lineage order, alphabetical within each lineage) and the lineage
-color palette. The matched RQVI cluster means are produced by the
-matching step below.</p>
 <pre class="r"><code># Figure 8b (data step): EBMF cluster-mean matrix and column/palette metadata for
 # the EBMF vs RQVI gene-program comparison across annotation_level2 clusters.
 #
@@ -914,27 +943,14 @@ message(&quot;Wrote Fig S5 data inputs to &quot;, normalizePath(outdir))</code><
 </div>
 <div id="matching" class="section level3">
 <h3>Matching</h3>
-<p>Each GP’s mean-loading profile is z-scored across clusters; the
-signed Pearson correlation between every EBMF GP and all 2,560 candidate
-RQVI GPs is computed; candidates with a constant profile are excluded;
-and a maximum-weight one-to-one assignment
-(<code>scipy.optimize.linear_sum_assignment</code>) matches each EBMF GP
-to a distinct RQVI GP so that the total signed correlation is maximized.
-The assignment is computed over all common cells (108
-<code>annotation_level2</code> clusters); the figure displays the 107
-non-thymocyte clusters. The median per-GP correlation is 0.766, with
-92.5% at r &gt;= 0.5. Code: <a
+<p>A maximum-weight one-to-one assignment matches each EBMF GP to a
+distinct RQVI GP. The median per-GP correlation is 0.766, with 92.5% at
+r &gt;= 0.5. Code: <a
 href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure8b_rematch.py"><code>script/Figure8b_rematch.py</code></a>.</p>
 </div>
 <div id="plotting" class="section level3">
 <h3>Plotting</h3>
-<p><code>script/Figure8b_plot.py</code> orders the EBMF rows by
-hierarchical clustering (average linkage, correlation distance, optimal
-leaf ordering), rescales every GP to <code>[0, 1]</code> across
-clusters, and draws the two heatmaps with a shared colorbar; the matched
-RQVI panel reuses the EBMF row order. The published PDF and the PNG this
-page shows come out of the same matplotlib figure in one call, so the
-two cannot drift apart. Code: <a
+<p>Code: <a
 href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure8b_plot.py"><code>script/Figure8b_plot.py</code></a>.</p>
 <br>
 <p>
@@ -1031,6 +1047,11 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 <script>
 $(document).ready(function ()  {

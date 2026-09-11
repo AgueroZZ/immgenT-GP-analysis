@@ -33,6 +33,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
@@ -230,6 +231,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -349,6 +353,14 @@ div.tocify {
 </div><!--/.navbar -->
 
 <div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
 
 
 
@@ -514,15 +526,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedd3c3967a3eae27fd7dbadae0a29a60ac62042e9targetblankdd3c396a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedca7ffb5d555c6432963a9347e0f7c32fcfeb0c3targetblankdca7ffba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/dd3c3967a3eae27fd7dbadae0a29a60ac62042e9" target="_blank">dd3c396</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/dca7ffb5d555c6432963a9347e0f7c32fcfeb0c3" target="_blank">dca7ffb</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedd3c3967a3eae27fd7dbadae0a29a60ac62042e9targetblankdd3c396a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedca7ffb5d555c6432963a9347e0f7c32fcfeb0c3targetblankdca7ffba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -532,7 +544,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/dd3c3967a3eae27fd7dbadae0a29a60ac62042e9" target="_blank">dd3c396</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/dca7ffb5d555c6432963a9347e0f7c32fcfeb0c3" target="_blank">dca7ffb</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -616,6 +628,41 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/dca7ffb5d555c6432963a9347e0f7c32fcfeb0c3/analysis/Methods_FlashierFit_Citeseq.Rmd" target="_blank">dca7ffb</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+<td>
+Strip the code-narrating prose from every page; fold code chunks by
+default
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/54718c496a5e2b483e85b029393f730f72d7eda8/docs/Methods_FlashierFit_Citeseq.html" target="_blank">54718c4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+<td>
+Build site: the four mean-loading heatmaps without their titles
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1154,11 +1201,6 @@ href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/code/other/fit_c
 <h2>Key steps</h2>
 <div id="setup" class="section level3">
 <h3>0. Setup</h3>
-<p>The script takes the path to a provided Seurat object and an analysis
-directory. After loading the required packages, it reads the object and
-its cell metadata. The object must contain an <code>ADT</code> assay and
-the <code>cellID</code>, <code>cite_seq</code>, and
-<code>nCount_ADT</code> metadata columns.</p>
 <pre class="r"><code>library(flashier)
 library(Seurat)
 
@@ -1167,11 +1209,9 @@ seurat_meta &lt;- seurat_obj@meta.data</code></pre>
 </div>
 <div id="adt-normalization" class="section level3">
 <h3>1. ADT normalization</h3>
-<p>The ADT assay is stored with proteins in rows and cells in columns.
-We use Seurat <code>LogNormalize</code> with the rounded mean ADT
-library size as the scale factor, then transpose the result so that
-cells are rows and proteins are columns. This is the only ADT
-normalization used anywhere in this project:
+<p>ADT counts are normalized with Seurat <code>LogNormalize</code>,
+using the rounded mean ADT library size as the scale factor. This is the
+only ADT normalization used anywhere in this project:
 <code>protein_mat_normalized_lognorm.rds</code> is the single protein
 matrix read by the fit below, by the protein positivity thresholds, and
 by every figure and table that shows surface-protein levels. No
@@ -1201,10 +1241,8 @@ count and <span class="math inline">\(s\)</span> is
 <div id="select-measured-cells-and-align-matrices"
 class="section level3">
 <h3>2. Select measured cells and align matrices</h3>
-<p>Only cells marked <code>cite_seq == TRUE</code> are eligible. Their
-cell IDs are intersected explicitly with both the normalized protein
-matrix and the scRNA loading matrix, then both matrices are placed in
-the same order before fitting.</p>
+<p>Only cells marked <code>cite_seq == TRUE</code> are used, and only
+those carrying both a protein measurement and an scRNA loading.</p>
 <pre class="r"><code>cells_measured &lt;- seurat_meta$cellID[
   !is.na(seurat_meta$cite_seq) &amp; seurat_meta$cite_seq
 ]
@@ -1225,8 +1263,6 @@ initialization is</p>
 <p><span class="math display">\[
 \hat U^T = (L^T L)^{-1} L^T Y.
 \]</span></p>
-<p>The implementation uses a QR decomposition instead of forming the
-inverse explicitly.</p>
 <pre class="r"><code>qrL &lt;- qr(L_mat)
 U_t &lt;- qr.coef(qrL, Y_mat)
 U &lt;- t(U_t)
@@ -1421,6 +1457,11 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 <script>
 $(document).ready(function ()  {

@@ -34,6 +34,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
@@ -231,6 +232,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -350,6 +354,14 @@ div.tocify {
 </div><!--/.navbar -->
 
 <div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
 
 
 
@@ -516,15 +528,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedd3c3967a3eae27fd7dbadae0a29a60ac62042e9targetblankdd3c396a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedca7ffb5d555c6432963a9347e0f7c32fcfeb0c3targetblankdca7ffba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/dd3c3967a3eae27fd7dbadae0a29a60ac62042e9" target="_blank">dd3c396</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/dca7ffb5d555c6432963a9347e0f7c32fcfeb0c3" target="_blank">dca7ffb</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedd3c3967a3eae27fd7dbadae0a29a60ac62042e9targetblankdd3c396a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedca7ffb5d555c6432963a9347e0f7c32fcfeb0c3targetblankdca7ffba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +546,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/dd3c3967a3eae27fd7dbadae0a29a60ac62042e9" target="_blank">dd3c396</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/dca7ffb5d555c6432963a9347e0f7c32fcfeb0c3" target="_blank">dca7ffb</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -617,6 +629,41 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/dca7ffb5d555c6432963a9347e0f7c32fcfeb0c3/analysis/Figure6.Rmd" target="_blank">dca7ffb</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+<td>
+Strip the code-narrating prose from every page; fold code chunks by
+default
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/54718c496a5e2b483e85b029393f730f72d7eda8/docs/Figure6.html" target="_blank">54718c4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+<td>
+Build site: the four mean-loading heatmaps without their titles
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1549,12 +1596,10 @@ Initial commit: immgenT-GP-analysis
 </div>
 <p>All panels are produced by <a
 href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure6.R"><code>script/Figure6.R</code></a>.
-The code below is shown for reference (not re-executed on this page);
-the images are its pre-rendered output.</p>
+The code below is shown for reference; the images are its pre-rendered
+output.</p>
 <div id="setup" class="section level2">
 <h2>Setup</h2>
-<p>Data loading and the tissue-associated GP set, shared across the
-panels below.</p>
 <pre class="r"><code># Figure 6. GPs and tissue.
 #
 # Panels produced:
@@ -1671,11 +1716,6 @@ overall_mean &lt;- colMeans(L_healthy, na.rm = TRUE)
 stopifnot(nrow(L_healthy) == nrow(seurat_meta_filtered_no_thymocytes_healthy), !anyNA(L_healthy))</code></pre>
 <div id="the-32-tissue-associated-gps" class="section level3">
 <h3>The 32 tissue-associated GPs</h3>
-<p>Panels (a) and (b) show the union of the two criteria by which a GP
-is called tissue-associated: its raw mean loading reaches 0.1 in at
-least one of the 18 tissues (31 GPs), or its one-vs-rest tissue AUC
-exceeds 0.9 under the positivity mask (7 GPs, the organ-specific set
-highlighted in (d) and (e)). Six GPs satisfy both, so 32 are shown.</p>
 <pre class="r"><code># ============================================================
 # 6a/6b selection: the 32 tissue-associated GPs
 # ============================================================
@@ -1805,6 +1845,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/54718c496a5e2b483e85b029393f730f72d7eda8/docs/assets/Figure6/6a.png" target="_blank">54718c4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/7fc9cfa72e81c619e75ca62a028a7aad969a491c/docs/assets/Figure6/6a.png" target="_blank">7fc9cfa</a>
 </td>
 <td>
@@ -1880,6 +1931,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/54718c496a5e2b483e85b029393f730f72d7eda8/docs/assets/Figure6/6b.png" target="_blank">54718c4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/7fc9cfa72e81c619e75ca62a028a7aad969a491c/docs/assets/Figure6/6b.png" target="_blank">7fc9cfa</a>
@@ -2708,6 +2770,11 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 <script>
 $(document).ready(function ()  {

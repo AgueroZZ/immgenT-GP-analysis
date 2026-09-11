@@ -34,6 +34,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
@@ -231,6 +232,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -350,6 +354,14 @@ div.tocify {
 </div><!--/.navbar -->
 
 <div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
 
 
 
@@ -517,15 +529,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedd3c3967a3eae27fd7dbadae0a29a60ac62042e9targetblankdd3c396a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedca7ffb5d555c6432963a9347e0f7c32fcfeb0c3targetblankdca7ffba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/dd3c3967a3eae27fd7dbadae0a29a60ac62042e9" target="_blank">dd3c396</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/dca7ffb5d555c6432963a9347e0f7c32fcfeb0c3" target="_blank">dca7ffb</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedd3c3967a3eae27fd7dbadae0a29a60ac62042e9targetblankdd3c396a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistreedca7ffb5d555c6432963a9347e0f7c32fcfeb0c3targetblankdca7ffba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -535,7 +547,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/dd3c3967a3eae27fd7dbadae0a29a60ac62042e9" target="_blank">dd3c396</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/dca7ffb5d555c6432963a9347e0f7c32fcfeb0c3" target="_blank">dca7ffb</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -618,6 +630,41 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/dca7ffb5d555c6432963a9347e0f7c32fcfeb0c3/analysis/Figure7.Rmd" target="_blank">dca7ffb</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+<td>
+Strip the code-narrating prose from every page; fold code chunks by
+default
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/54718c496a5e2b483e85b029393f730f72d7eda8/docs/Figure7.html" target="_blank">54718c4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-09-10
+</td>
+<td>
+Build site: the four mean-loading heatmaps without their titles
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -986,12 +1033,9 @@ Reorder Figures 6, S6 and S3; make the ex-S5 figure Figure 7b
 </div>
 </div>
 <p>All panels except (a) are produced by <a
-href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure7.R"><code>script/Figure7.R</code></a>,
-which shares its CITE-seq setup with <a href="FigureS5.html">Extended
-Data Figure 5</a> and <a href="FigureS5.html">Extended Data Figure 5</a>
-via <code>code/R/citeseq_shared_setup.R</code>. The code below is shown
-for reference (not re-executed on this page, since this script takes
-about a minute to run); the images are its pre-rendered output.</p>
+href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure7.R"><code>script/Figure7.R</code></a>.
+The code below is shown for reference; the images are its pre-rendered
+output.</p>
 <div id="setup" class="section level2">
 <h2>Setup</h2>
 <pre class="r"><code>library(ggplot2)
@@ -1006,8 +1050,6 @@ figure_path &lt;- &quot;figures/final-selected/Figure 7/&quot;
 source(&quot;code/R/gated_protein_helpers.R&quot;)
 
 # 7a: hand-drawn schematic -- not code-generated, no output here.</code></pre>
-<p>Panels (b) onward additionally load the shared CITE-seq cell/protein
-setup:</p>
 <pre class="r"><code># ============================================================
 # Load data (shared with FigureS4.R and FigureS5.R)
 # ============================================================
@@ -1015,8 +1057,8 @@ source(&quot;code/R/citeseq_shared_setup.R&quot;)</code></pre>
 </div>
 <div id="fig7a" class="section level2">
 <h2>(a) Protein-signature schematic</h2>
-<p>This panel is a hand-drawn schematic, not generated from code.</p>
-<p>How the protein factor matrix is estimated is documented in <a
+<p>A hand-drawn schematic, not generated from code. The protein factor
+matrix is documented in <a
 href="Methods_FlashierFit_Citeseq.html">Methods: fitting CITE-seq
 protein programs with fixed scRNA loadings</a>.</p>
 <div class="figcaption">
@@ -1144,10 +1186,6 @@ CD4+ T cells (b) or Treg cells (c).</p>
 </div>
 <div id="fig7d" class="section level2">
 <h2>(d) Genes up- and down-regulated across the CD69-associated GPs</h2>
-<p>The ten GPs, and the correlation-based order they are drawn in, are
-defined once in <code>code/R/citeseq_shared_setup.R</code>, because <a
-href="FigureS5.html#figs5ab">Extended Data Fig. 5a, b</a> show the same
-GPs in the same order from a different script:</p>
 <pre class="r"><code># The CD69-associated GP subset, shared by Figure 7d (the up/down gene heatmap)
 # and Figure S5a/S5b (the same GPs&#39; mean activity per tissue and per lineage).
 # Defined once here because those panels live in two different scripts and must
@@ -1614,6 +1652,11 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 <script>
 $(document).ready(function ()  {
