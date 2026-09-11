@@ -11,15 +11,10 @@ source("../code/R/doc_code.R")
 ```
 
 All panels are produced by
-[`script/Figure5.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure5.R),
-which shares its curated GP set with [Extended Data Figure 3](FigureS3.html) via
-`code/R/activation_shared_setup.R`. The code below is shown for
-reference (not re-executed on this page); the images are its pre-rendered
-output.
+[`script/Figure5.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure5.R).
+The code below is shown for reference; the images are its pre-rendered output.
 
 ## Setup
-
-Data loading, shared across all panels below.
 
 ```{r fig5-setup, code=code_for("../script/Figure5.R", c("^", "Load data")), eval=FALSE}
 ```

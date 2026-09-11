@@ -11,13 +11,8 @@ source("../code/R/doc_code.R")
 ```
 
 Panels (b)-(f) are produced by
-[`script/FigureS3.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS3.R),
-which shares its curated GP set with [Figure 5](Figure5.html) via
-`code/R/activation_shared_setup.R`. The code below is shown for
-reference (not re-executed on this page); the images are its pre-rendered
-output.
-
-Panel (a) is not generated from code -- see below.
+[`script/FigureS3.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS3.R).
+The code below is shown for reference; the images are its pre-rendered output.
 
 ## Setup
 
@@ -26,8 +21,7 @@ Panel (a) is not generated from code -- see below.
 
 ## (a) Definition of resting and activated CD4/CD8 cells {#figs3a}
 
-This panel shows the CITE-seq gating used to define resting and activated
-cells; it is not generated from code, so only its caption is given here.
+Not generated from code; only the caption is reproduced here.
 
 ::: {.figcaption}
 **Extended Data Fig. 3a.** Definition of resting and activated CD4+ and CD8+ T
@@ -36,11 +30,6 @@ highlighted in each lineage-specific MDE. Gated cells are shown in the
 adjacent CD62L versus CD44 protein-expression plot (CITE-seq, log-normalized
 counts).
 :::
-
-The `annotation_level2_group` "activated"/"resting" labels that every other panel
-on this page (and all of [Figure 5](Figure5.html)) filters on are the labels this
-panel defines, so the gate itself is already in use here -- only the figure
-illustrating it is absent.
 
 ## (b) GP26+ rate by organ {#figs3b}
 

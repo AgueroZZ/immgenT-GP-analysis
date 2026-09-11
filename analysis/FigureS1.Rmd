@@ -12,18 +12,15 @@ source("../code/R/doc_code.R")
 
 All panels are produced by
 [`script/FigureS1.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS1.R).
-The code below is shown for reference (not re-executed on this page); the
-images are its pre-rendered output. Panels A/B reuse a cached per-IGT
-cosine-similarity score matrix (`data/igt_specific_cosine_scores.csv`); see
-`code/pipeline/05_igt_validation.R` for how that matrix itself is
-produced (a much heavier, cluster-scale computation).
+The code below is shown for reference; the images are its pre-rendered output.
+Panels (a) and (b) read a cached per-IGT cosine-similarity score matrix, built
+upstream by
+[`code/pipeline/05_igt_validation.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/code/pipeline/05_igt_validation.R).
 
 ## Setup
 
 ```{r figs1-setup, code=code_for("../script/FigureS1.R", "^"), eval=FALSE}
 ```
-
-Panels A and B both use the cached per-IGT cosine score matrix:
 
 ```{r figs1-setup-ab, code=code_for("../script/FigureS1.R", c("doc:setup-ab", "S1A/S1B")), eval=FALSE}
 ```

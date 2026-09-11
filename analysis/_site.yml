@@ -15,6 +15,7 @@ output:
       collapsed: false
       smooth_scroll: true
     number_sections: false
+    code_folding: hide
     toc_depth: 3
     theme: readable
     highlight: textmate

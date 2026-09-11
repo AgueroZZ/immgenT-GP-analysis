@@ -12,23 +12,14 @@ source("../code/R/doc_code.R")
 
 All panels are produced by
 [`script/Figure6.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure6.R).
-The code below is shown for reference (not re-executed on this page); the
-images are its pre-rendered output.
+The code below is shown for reference; the images are its pre-rendered output.
 
 ## Setup
-
-Data loading and the tissue-associated GP set, shared across the panels below.
 
 ```{r fig6-setup, code=code_for("../script/Figure6.R", c("^", "Load data", "Shared AUC setup")), eval=FALSE}
 ```
 
 ### The 32 tissue-associated GPs
-
-Panels (a) and (b) show the union of the two criteria by which a GP is called
-tissue-associated: its raw mean loading reaches 0.1 in at least one of the 18
-tissues (31 GPs), or its one-vs-rest tissue AUC exceeds 0.9 under the
-positivity mask (7 GPs, the organ-specific set highlighted in (d) and (e)).
-Six GPs satisfy both, so 32 are shown.
 
 ```{r fig6-selection, code=code_for("../script/Figure6.R", "6a/6b selection"), eval=FALSE}
 ```

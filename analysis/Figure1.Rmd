@@ -10,20 +10,14 @@ editor_options:
 source("../code/R/doc_code.R")
 ```
 
-All panels except (B) are produced by
+All panels except (b) are produced by
 [`script/Figure1.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure1.R).
-The code below is shown for reference (not re-executed on this page, since some
-steps such as the panel-D heatmap are slow); the images are its pre-rendered
-output.
+The code below is shown for reference; the images are its pre-rendered output.
 
 ## Setup
 
-Data loading, shared across all panels below.
-
 ```{r fig1-setup1, code=code_for("../script/Figure1.R", c("doc:setup", "Load data")), eval=FALSE}
 ```
-
-Panels C and D restrict to non-thymocyte cells:
 
 ```{r fig1-setup2, code=code_for("../script/Figure1.R", "doc:setup2"), eval=FALSE}
 ```
@@ -47,10 +41,8 @@ CD4⁻CD8αβ⁻ αβ T cells; DP, CD4⁺CD8αβ⁺ αβ T cells.
 
 ## (b) GP-representation schematic {#fig1b}
 
-This panel is a hand-drawn schematic, not generated from code.
-
-How the factorization itself is fitted is documented in
-[Methods: fitting EBMF using flashier](Methods_FlashierFit.html).
+A hand-drawn schematic, not generated from code. The factorization itself is
+documented in [Methods: fitting EBMF using flashier](Methods_FlashierFit.html).
 
 ::: {.figcaption}
 **Fig. 1b.** Schematic of the gene-program (GP) representation of T cell

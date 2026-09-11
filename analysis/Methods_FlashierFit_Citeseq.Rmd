@@ -32,11 +32,6 @@ The complete cluster-scale source scripts are:
 
 ### 0. Setup
 
-The script takes the path to a provided Seurat object and an analysis directory.
-After loading the required packages, it reads the object and its cell metadata.
-The object must contain an `ADT` assay and the `cellID`, `cite_seq`, and
-`nCount_ADT` metadata columns.
-
 ```{r, eval=FALSE}
 library(flashier)
 library(Seurat)
@@ -47,10 +42,9 @@ seurat_meta <- seurat_obj@meta.data
 
 ### 1. ADT normalization
 
-The ADT assay is stored with proteins in rows and cells in columns. We use
-Seurat `LogNormalize` with the rounded mean ADT library size as the scale
-factor, then transpose the result so that cells are rows and proteins are
-columns. This is the only ADT normalization used anywhere in this project:
+ADT counts are normalized with Seurat `LogNormalize`, using the rounded mean
+ADT library size as the scale factor. This is the only ADT normalization used
+anywhere in this project:
 `protein_mat_normalized_lognorm.rds` is the single protein matrix read by the
 fit below, by the protein positivity thresholds, and by every figure and table
 that shows surface-protein levels. No CLR-normalized ADT matrix is used.
@@ -81,9 +75,8 @@ where $C_{ij}$ is the raw ADT count and $s$ is `adt_scale_factor`.
 
 ### 2. Select measured cells and align matrices
 
-Only cells marked `cite_seq == TRUE` are eligible. Their cell IDs are
-intersected explicitly with both the normalized protein matrix and the scRNA
-loading matrix, then both matrices are placed in the same order before fitting.
+Only cells marked `cite_seq == TRUE` are used, and only those carrying both a
+protein measurement and an scRNA loading.
 
 ```{r, eval=FALSE}
 cells_measured <- seurat_meta$cellID[
@@ -107,9 +100,6 @@ With $L$ fixed, the least-squares initialization is
 $$
 \hat U^T = (L^T L)^{-1} L^T Y.
 $$
-
-The implementation uses a QR decomposition instead of forming the inverse
-explicitly.
 
 ```{r, eval=FALSE}
 qrL <- qr(L_mat)

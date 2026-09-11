@@ -14,10 +14,7 @@ Produced by
 
 ## Table {#edt4}
 
-All 200 rows are browsable below: sort by clicking a column header, type a GP
-name into the search box under the **GP** column, or use a per-column box to
-filter by value range. Download the workbook at
-[`figures/final-selected/ExtendedDataTable4_GP_during_activation.xlsx`](https://github.com/AgueroZZ/immgenT-GP-analysis/raw/main/figures/final-selected/ExtendedDataTable4_GP_during_activation.xlsx).
+Download: [`ExtendedDataTable4_GP_during_activation.xlsx`](https://github.com/AgueroZZ/immgenT-GP-analysis/raw/main/figures/final-selected/ExtendedDataTable4_GP_during_activation.xlsx).
 
 ```{r edt4-preview, echo=FALSE, message=FALSE}
 suppressPackageStartupMessages(library(DT))

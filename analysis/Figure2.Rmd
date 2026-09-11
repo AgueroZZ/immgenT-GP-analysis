@@ -12,13 +12,9 @@ source("../code/R/doc_code.R")
 
 All panels are produced by
 [`script/Figure2.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure2.R).
-The code below is shown for reference (not re-executed on this page); the images
-are its pre-rendered output. These panels quantify how many cells and genes are
-"active" in each gene program, over non-thymocyte cells.
+The code below is shown for reference; the images are its pre-rendered output.
 
 ## Setup
-
-Data loading (non-thymocyte cells), shared across all panels below.
 
 ```{r fig2-setup, code=code_for("../script/Figure2.R", c("doc:setup", "Load data")), eval=FALSE}
 ```

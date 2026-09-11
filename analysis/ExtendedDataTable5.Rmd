@@ -14,11 +14,7 @@ Produced by
 
 ## Table {#edt5}
 
-All 200 rows and every tissue column are browsable below: sort by clicking a
-column header, type a GP name into the search box under the **GP** column, or
-use a per-tissue box to filter by AUC range. Scroll horizontally to see all
-tissue columns. Download the workbook at
-[`figures/final-selected/ExtendedDataTable5_GP_AUC_tissue.xlsx`](https://github.com/AgueroZZ/immgenT-GP-analysis/raw/main/figures/final-selected/ExtendedDataTable5_GP_AUC_tissue.xlsx).
+Download: [`ExtendedDataTable5_GP_AUC_tissue.xlsx`](https://github.com/AgueroZZ/immgenT-GP-analysis/raw/main/figures/final-selected/ExtendedDataTable5_GP_AUC_tissue.xlsx).
 
 ```{r edt5-preview, echo=FALSE, message=FALSE}
 suppressPackageStartupMessages(library(DT))

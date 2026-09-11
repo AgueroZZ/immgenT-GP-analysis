@@ -11,28 +11,21 @@ source("../code/R/doc_code.R")
 ```
 
 All panels except (a) are produced by
-[`script/Figure7.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure7.R),
-which shares its CITE-seq setup with [Extended Data Figure 5](FigureS5.html) and
-[Extended Data Figure 5](FigureS5.html) via
-`code/R/citeseq_shared_setup.R`. The code below is shown for
-reference (not re-executed on this page, since this script takes about a
-minute to run); the images are its pre-rendered output.
+[`script/Figure7.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure7.R).
+The code below is shown for reference; the images are its pre-rendered output.
 
 ## Setup
 
 ```{r fig7-setup, code=code_for("../script/Figure7.R", "doc:setup"), eval=FALSE}
 ```
 
-Panels (b) onward additionally load the shared CITE-seq cell/protein setup:
-
 ```{r fig7-setup2, code=code_for("../script/Figure7.R", "Load data"), eval=FALSE}
 ```
 
 ## (a) Protein-signature schematic {#fig7a}
 
-This panel is a hand-drawn schematic, not generated from code.
-
-How the protein factor matrix is estimated is documented in
+A hand-drawn schematic, not generated from code. The protein factor matrix is
+documented in
 [Methods: fitting CITE-seq protein programs with fixed scRNA loadings](Methods_FlashierFit_Citeseq.html).
 
 ::: {.figcaption}
@@ -60,11 +53,6 @@ CD8+ T cells (x-axis) with CD4+ T cells (b) or Treg cells (c).
 :::
 
 ## (d) Genes up- and down-regulated across the CD69-associated GPs {#fig7d}
-
-The ten GPs, and the correlation-based order they are drawn in, are defined once
-in `code/R/citeseq_shared_setup.R`, because
-[Extended Data Fig. 5a, b](FigureS5.html#figs5ab) show the same GPs in the same
-order from a different script:
 
 ```{r fig7d-gps, code=code_for("../code/R/citeseq_shared_setup.R", "doc:cd69"), eval=FALSE}
 ```

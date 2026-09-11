@@ -12,12 +12,9 @@ source("../code/R/doc_code.R")
 
 All panels are produced by
 [`script/Figure3.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/Figure3.R).
-The code below is shown for reference (not re-executed on this page); the
-images are its pre-rendered output.
+The code below is shown for reference; the images are its pre-rendered output.
 
 ## Setup
-
-Data loading, shared across all panels below.
 
 ```{r fig3-setup, code=code_for("../script/Figure3.R", c("^", "Load data")), eval=FALSE}
 ```

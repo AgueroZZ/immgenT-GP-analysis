@@ -23,12 +23,6 @@ gene programs from the data.
 
 ### 0. Setup
 
-The script takes three command-line arguments: the path to a Seurat object
-(`.Rds`), an output directory, and a flag for whether to run backfitting.
-After loading the required libraries, the Seurat object is read into memory
-as `so`. This object contains the raw count matrix and cell-level metadata
-for the full ImmGen-T dataset.
-
 ```r
 libs = c("fastTopics", "flashier", "Matrix", "Seurat", "BPCells")
 sapply(libs, function(x) suppressMessages(library(x, character.only = TRUE, quietly = TRUE)))
@@ -117,10 +111,8 @@ fit = flash(shifted_log_counts,
 saveRDS(fit, file = sprintf("%s/fit.Rds", output_dir))
 ```
 
-The fitted object is saved as `fit.Rds`. A condensed summary of it --
-`flashier_snmf_summary.rds`, holding the loading matrix `L_pm` (cells x GPs),
-the factor matrix `F_pm` (genes x GPs), the ELBO and the PVEs -- is what the
-next step reads.
+The next step reads `flashier_snmf_summary.rds`: the loading matrix `L_pm`
+(cells x GPs), the factor matrix `F_pm` (genes x GPs), the ELBO and the PVEs.
 
 ### 5. Cell filtering by total GP membership
 

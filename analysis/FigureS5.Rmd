@@ -11,12 +11,8 @@ source("../code/R/doc_code.R")
 ```
 
 All panels are produced by
-[`script/FigureS5.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS5.R),
-which shares its CITE-seq setup, gating logic and CD69 GP subset with
-[Figure 7](Figure7.html) via `code/R/citeseq_shared_setup.R` and
-`code/R/gated_protein_helpers.R`. The code below is shown for
-reference (not re-executed on this page, since this script takes about a minute
-to run); the images are its pre-rendered output.
+[`script/FigureS5.R`](https://github.com/AgueroZZ/immgenT-GP-analysis/blob/main/script/FigureS5.R).
+The code below is shown for reference; the images are its pre-rendered output.
 
 ## Setup
 
@@ -24,11 +20,6 @@ to run); the images are its pre-rendered output.
 ```
 
 ## (a, b) CD69-associated GPs across tissues and lineages {#figs5ab}
-
-The ten GPs and their order are defined in `code/R/citeseq_shared_setup.R`, so
-that these two panels and [Fig. 7d](Figure7.html#fig7d) -- which live in
-different figures and therefore in different scripts -- cannot disagree about
-which GPs they show or in what order:
 
 ```{r figs5ab-gps, code=code_for("../code/R/citeseq_shared_setup.R", "doc:cd69"), eval=FALSE}
 ```
