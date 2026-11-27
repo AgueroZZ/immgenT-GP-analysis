@@ -528,15 +528,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0395dffd16f8cb54a76d577a4f37cfae990401eftargetblank0395dffa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree8b8cfe8aced5b51b9f5d5406f3ec505a99aa5617targetblank8b8cfe8a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0395dffd16f8cb54a76d577a4f37cfae990401ef" target="_blank">0395dff</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/8b8cfe8aced5b51b9f5d5406f3ec505a99aa5617" target="_blank">8b8cfe8</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree0395dffd16f8cb54a76d577a4f37cfae990401eftargetblank0395dffa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree8b8cfe8aced5b51b9f5d5406f3ec505a99aa5617targetblank8b8cfe8a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -546,7 +546,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/0395dffd16f8cb54a76d577a4f37cfae990401ef" target="_blank">0395dff</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/8b8cfe8aced5b51b9f5d5406f3ec505a99aa5617" target="_blank">8b8cfe8</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -605,6 +605,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/8b8cfe8aced5b51b9f5d5406f3ec505a99aa5617/analysis/regulatory_analysis.Rmd" target="_blank">8b8cfe8</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-11-27
+</td>
+<td>
+Explain which panel A entries were evaluated with TRRUST
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/4093466610aaacdbadd3a05b98e49f9aaa1bd77b/docs/regulatory_analysis.html" target="_blank">4093466</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-11-27
+</td>
+<td>
+Build the clarified TRRUST section
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -749,13 +783,15 @@ signatures. <a href="https://doi.org/10.1093/nar/gkx1013">TRRUST v2 (Han
 et al., 2018)</a></p>
 <p>Of the 55 TFs in panel A, 27 had at least five TRRUST activation
 targets in our gene universe (the rows of the factor matrix <em>F</em>).
-These 27 TFs accounted for 615 of the 1,068 ChIP-positive TF–GP
-pairs.</p>
-<p>For each of these pairs, we counted the activation targets in the GP
-signature and computed their expected overlap using the same 20
-expression bins. We drew an edge when <strong>(observed + 1) / (expected
-+ 1) &gt; 2</strong>. This is an effect-size threshold. The <em>q</em>
-&lt; 0.05 requirement applies to the ChIP-seq experiment in panel A.</p>
+Across these 27 TF rows in panel A, 615 TF–GP pairs showed significant
+ChIP-seq enrichment (one colored cell per pair). For each of these 615
+pairs, we asked whether the same GP signature was also enriched for that
+TF’s activation targets in TRRUST.</p>
+<p>We counted the activation targets in the GP signature and computed
+their expected overlap using the same 20 expression bins. We drew an
+edge when <strong>(observed + 1) / (expected + 1) &gt; 2</strong>. This
+is an effect-size threshold. The <em>q</em> &lt; 0.05 requirement
+applies to the ChIP-seq experiment in panel A.</p>
 <div id="activation-network" class="section level3">
 <h3>(c) ChIP-seq binding and TRRUST activation targets</h3>
 <p><a href="assets/TRRUST/activation-network.pdf"><img
