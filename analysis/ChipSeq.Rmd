@@ -21,7 +21,8 @@ non-sequence-specific proteins. For each experiment (SRX), we counted a gene
 once if its ChIP-Atlas score was positive within 5 kb of its transcription
 start site in either direction. Requiring at least five target genes among
 the 19,805 genes in the factor matrix left **795 experiments for 77 TFs**.
-[ChIP-Atlas target-gene data](https://chip-atlas.dbcls.jp/target_genes)
+[ChIP-Atlas target-gene data](https://chip-atlas.org/target_genes) ·
+[ChIP-Atlas publication](https://doi.org/10.1093/nar/gkag378)
 
 **GP signatures.** We divided each gene loading by the largest absolute
 loading in its GP. Scores above 0.1 defined the positive signature and scores
