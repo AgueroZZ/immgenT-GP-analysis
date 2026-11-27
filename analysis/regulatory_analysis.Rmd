@@ -86,11 +86,14 @@ TF binding near those genes.
 Mouse TRRUST v2 curates TF–target relationships from the literature across
 cell types. For each TF, we took the genes annotated as activated by that TF,
 excluding pairs with conflicting directions or only unknown direction.
-We tested activation sets with at least five genes in the factor matrix
-against the positive GP signatures. [TRRUST v2 (Han et al., 2018)](https://doi.org/10.1093/nar/gkx1013)
+We compared these activation targets with the positive GP signatures.
+[TRRUST v2 (Han et al., 2018)](https://doi.org/10.1093/nar/gkx1013)
 
-Of the 1,068 TF–GP pairs in panel A, 615 had a TRRUST activation set we
-could test. For each pair, we counted the activation targets in the GP
+Of the 55 TFs in panel A, 27 had at least five TRRUST activation targets in
+our gene universe (the rows of the factor matrix *F*). These 27 TFs accounted
+for 615 of the 1,068 ChIP-positive TF–GP pairs.
+
+For each of these pairs, we counted the activation targets in the GP
 signature and computed their expected overlap using the same 20 expression
 bins. We drew an edge when **(observed + 1) / (expected + 1) > 2**.
 This is an effect-size threshold. The *q* < 0.05 requirement applies to
