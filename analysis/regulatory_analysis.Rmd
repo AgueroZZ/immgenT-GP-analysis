@@ -90,10 +90,12 @@ We compared these activation targets with the positive GP signatures.
 [TRRUST v2 (Han et al., 2018)](https://doi.org/10.1093/nar/gkx1013)
 
 Of the 55 TFs in panel A, 27 had at least five TRRUST activation targets in
-our gene universe (the rows of the factor matrix *F*). These 27 TFs accounted
-for 615 of the 1,068 ChIP-positive TF–GP pairs.
+our gene universe (the rows of the factor matrix *F*). Across these 27 TF
+rows in panel A, 615 TF–GP pairs showed significant ChIP-seq enrichment
+(one colored cell per pair). For each of these 615 pairs, we asked whether
+the same GP signature was also enriched for that TF’s activation targets in TRRUST.
 
-For each of these pairs, we counted the activation targets in the GP
+We counted the activation targets in the GP
 signature and computed their expected overlap using the same 20 expression
 bins. We drew an edge when **(observed + 1) / (expected + 1) > 2**.
 This is an effect-size threshold. The *q* < 0.05 requirement applies to
