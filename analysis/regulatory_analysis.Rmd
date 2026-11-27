@@ -1,5 +1,5 @@
 ---
-title: "Chip-seq analysis"
+title: "regulatory_analysis"
 author: "Ziang Zhang"
 output:
   workflowr::wflow_html:
@@ -7,12 +7,11 @@ output:
       in_header: _noindex.html
 ---
 
-Across 200 ImmGen-T gene programs (GPs), which signatures contain more genes
-bound by a transcription factor (TF) than expected for genes with similar
-expression? We tested each ChIP-seq experiment separately, then summarized
-the results for each TF and GP.
+Across 200 ImmGen-T gene programs (GPs), we asked which signatures are
+enriched for genes bound by a transcription factor (TF), and which of those
+associations also have support from curated TF activation targets.
 
-## Workflow
+## 1. ChIP-seq analysis {#chip-seq-analysis}
 
 **Experiments and target genes.** We selected 1,303 mouse (mm10) primary
 T-cell experiments from ChIP-Atlas, covering 143 distinct ChIP targets.
@@ -54,7 +53,7 @@ expected <- sum(vapply(bins, function(i) {
 adjusted_fold <- sum(in_signature & bound) / expected
 ```
 
-## (a) Positive GP signatures {#positive}
+### (a) Positive GP signatures {#positive}
 
 [![TF binding enrichment in positive GP signatures](assets/ChipSeq/positive.png)](assets/ChipSeq/positive.pdf)
 
@@ -62,13 +61,15 @@ adjusted_fold <- sum(in_signature & bound) / expected
 **A.** Rows are TFs (number of experiments in parentheses) and columns are GPs.
 Color shows the adjusted fold of the passing experiment with the smallest
 *q* (color scale capped at 16-fold). Dot size counts passing experiments
-(1, 2–3, 4–9 or ≥10). A blank cell means none passed. The panel shows the
+(1, 2–3, 4–9 or ≥10). A blank cell means none passed. In both heatmaps,
+teal boxes outline the Foxp3, Stat3, Stat5a and Stat5b rows. Blue boxes mark
+the selected GP columns. The panel shows the
 1,068 passing TF–GP pairs across 55 TFs and 117 GPs. For Foxp3 and GP68,
 5 of 86 experiments passed. The selected Treg experiment (SRX184863)
 had 55 overlapping genes versus 30.33 expected, giving a 1.81-fold enrichment.
 :::
 
-## (b) Negative GP signatures {#negative}
+### (b) Negative GP signatures {#negative}
 
 [![TF binding enrichment in negative GP signatures](assets/ChipSeq/negative.png)](assets/ChipSeq/negative.pdf)
 
@@ -78,4 +79,33 @@ There were 792 passing TF–GP pairs across 52 TFs and 89 GPs. For Stat1 and
 GP20, 14 of 21 experiments passed, with a 3.39-fold enrichment in the selected
 experiment. The negative sign refers to the GP loadings. The assay measures
 TF binding near those genes.
+:::
+
+## 2. TRRUST analysis {#trrust-analysis}
+
+Mouse TRRUST v2 curates TF–target relationships from the literature across
+cell types. For each TF, we took the genes annotated as activated by that TF,
+excluding pairs with conflicting directions or only unknown direction.
+We tested activation sets with at least five genes in the factor matrix
+against the positive GP signatures. [TRRUST v2 (Han et al., 2018)](https://doi.org/10.1093/nar/gkx1013)
+
+Of the 1,068 TF–GP pairs in panel A, 615 had a TRRUST activation set we
+could test. For each pair, we counted the activation targets in the GP
+signature and computed their expected overlap using the same 20 expression
+bins. We drew an edge when **(observed + 1) / (expected + 1) > 2**.
+This is an effect-size threshold. The *q* < 0.05 requirement applies to
+the ChIP-seq experiment in panel A.
+
+### (c) ChIP-seq binding and TRRUST activation targets {#activation-network}
+
+[![Network linking TFs to positive GP signatures with TRRUST activation-target enrichment](assets/TRRUST/activation-network.png)](assets/TRRUST/activation-network.pdf)
+
+::: {.figcaption}
+**C.** The 57 edges connect 16 TFs (left) to 31 GPs (right). Edge width
+shows the selected ChIP experiment's adjusted fold enrichment. Node size
+counts connections, and blue edges lead to highlighted GPs. For example,
+three of five curated Foxp3 activation targets (*Ctla4*, *Il2ra* and
+*Tnfrsf18*) were in GP68_up, compared with 0.16 expected. The resulting
+TRRUST ratio of 3.44 gives Foxp3 and GP68 an edge alongside the 1.81-fold
+ChIP enrichment in panel A.
 :::
