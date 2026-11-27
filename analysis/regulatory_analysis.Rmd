@@ -62,7 +62,7 @@ adjusted_fold <- sum(in_signature & bound) / expected
 Color shows the adjusted fold of the passing experiment with the smallest
 *q* (color scale capped at 16-fold). Dot size counts passing experiments
 (1, 2–3, 4–9 or ≥10). A blank cell means none passed. In both heatmaps,
-teal boxes outline the Foxp3, Stat3, Stat5a and Stat5b rows. Blue boxes mark
+teal boxes outline the Foxp3, Gata3, Stat3, Stat5a and Stat5b rows. Blue boxes mark
 the selected GP columns. The panel shows the
 1,068 passing TF–GP pairs across 55 TFs and 117 GPs. For Foxp3 and GP68,
 5 of 86 experiments passed. The selected Treg experiment (SRX184863)
