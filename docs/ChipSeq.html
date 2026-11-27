@@ -528,15 +528,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree016b847f8d81e1845c10bfe6a6ebb702825d2b7atargetblank016b847a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree63845452a0e7cba2832cd2995c214edbd4969aa6targetblank6384545a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/016b847f8d81e1845c10bfe6a6ebb702825d2b7a" target="_blank">016b847</a>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/63845452a0e7cba2832cd2995c214edbd4969aa6" target="_blank">6384545</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree016b847f8d81e1845c10bfe6a6ebb702825d2b7atargetblank016b847a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZimmgenTGPanalysistree63845452a0e7cba2832cd2995c214edbd4969aa6targetblank6384545a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -546,7 +546,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/016b847f8d81e1845c10bfe6a6ebb702825d2b7a" target="_blank">016b847</a>.
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/tree/63845452a0e7cba2832cd2995c214edbd4969aa6" target="_blank">6384545</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -605,6 +605,41 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/immgenT-GP-analysis/blob/63845452a0e7cba2832cd2995c214edbd4969aa6/analysis/ChipSeq.Rmd" target="_blank">6384545</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-11-27
+</td>
+<td>
+Adjust ChIP-seq enrichment separately for positive and negative
+signatures
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/immgenT-GP-analysis/2f2ac858abc21e3ab1a2e745725af612a965f3bb/docs/ChipSeq.html" target="_blank">2f2ac85</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2026-11-27
+</td>
+<td>
+Build unlisted ChIP-seq analysis page
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -691,11 +726,14 @@ expression. Within each bin, the expected overlap equals the number of
 signature genes times the fraction of genes bound in that experiment. We
 summed these expectations across bins and divided the observed overlap
 by that sum to obtain the adjusted fold enrichment. We used a one-sided,
-expression-stratified hypergeometric test and applied Benjamini–Hochberg
-correction across all 309,255 experiment–signature tests. An experiment
-passed for a signature when <em>q</em> &lt; 0.05 and at least five
-signature genes overlapped its targets. One expression-matched random
-gene set per signature gave zero passing pairs.</p>
+expression-stratified hypergeometric test. We applied Benjamini–Hochberg
+correction separately to the 159,000 positive-signature tests (795
+experiments × 200 signatures) and the 150,255 negative-signature tests
+(795 × 189). Within each direction, an experiment passed for a signature
+when <em>q</em> &lt; 0.05 and at least five signature genes overlapped
+its targets. We repeated each analysis with one expression-matched
+random gene set per signature. Neither control yielded a passing TF–GP
+pair.</p>
 <pre class="r"><code># For one SRX and one GP signature, after excluding the TF&#39;s own gene.
 # in_signature and bound are logical vectors over the same background genes.
 bins &lt;- split(seq_along(in_signature), expression_bin)
@@ -714,8 +752,8 @@ alt="TF binding enrichment in positive GP signatures" /></a></p>
 parentheses) and columns are GPs. Color shows the adjusted fold of the
 passing experiment with the smallest <em>q</em> (color scale capped at
 16-fold). Dot size counts passing experiments (1, 2–3, 4–9 or ≥10). A
-blank cell means none passed. The panel shows the 1,039 passing TF–GP
-pairs across 54 TFs and 117 GPs. For Foxp3 and GP68, 5 of 86 experiments
+blank cell means none passed. The panel shows the 1,068 passing TF–GP
+pairs across 55 TFs and 117 GPs. For Foxp3 and GP68, 5 of 86 experiments
 passed. The selected Treg experiment (SRX184863) had 55 overlapping
 genes versus 30.33 expected, giving a 1.81-fold enrichment.</p>
 </div>
@@ -727,8 +765,8 @@ src="assets/ChipSeq/negative.png"
 alt="TF binding enrichment in negative GP signatures" /></a></p>
 <div class="figcaption">
 <p><strong>B.</strong> The same test and display applied to genes with
-negative GP loadings. There were 843 passing TF–GP pairs across 54 TFs
-and 93 GPs. For Stat1 and GP20, 15 of 21 experiments passed, with a
+negative GP loadings. There were 792 passing TF–GP pairs across 52 TFs
+and 89 GPs. For Stat1 and GP20, 14 of 21 experiments passed, with a
 3.39-fold enrichment in the selected experiment. The negative sign
 refers to the GP loadings. The assay measures TF binding near those
 genes.</p>
