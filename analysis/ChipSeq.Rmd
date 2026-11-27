@@ -1,9 +1,10 @@
 ---
 title: "Chip-seq analysis"
 author: "Ziang Zhang"
-output: workflowr::wflow_html
-header-includes:
-  - '<meta name="robots" content="noindex">'
+output:
+  workflowr::wflow_html:
+    includes:
+      in_header: _noindex.html
 ---
 
 Across 200 ImmGen-T gene programs (GPs), which signatures contain more genes
